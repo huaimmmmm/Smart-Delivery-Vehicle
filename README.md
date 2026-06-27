@@ -1,2 +1,34 @@
 # Smart-Delivery-Vehicle
-This smart autonomous delivery vehicle integrates an MCU and OpenMV edge vision. It uses GPS for precise macro-navigation. Upon arrival, it switches to dynamic visual tracking with a pan-tilt camera. Finally, local LBP facial recognition verifies the recipient's identity to safely complete the delivery process.
+功能：本项目是一个软硬件结合的智能无人派件车系统。它采用“宏观 GPS 巡航 + 微观视觉追踪与人脸核验”的双闭环接力导航架构。车辆能够通过人工示教记录 GPS 目标点，自动闭环寻路前往目的地，并在抵达目标区域后自动唤醒云台与 OpenMV 视觉模块，完成目标追踪与最终的客户人脸身份核验
+
+📦 项目依赖 
+在编译和运行本项目之前，请确保你的软硬件环境满足以下前置依赖
+软件依赖：
+    主控端 IDE：支持 Infineon 系列的交叉编译链与集成开发环境（如 TASKING VX-toolset for TriCore、AURIX Development Studio (ADS) 或 HighTec）。
+    底层驱动库：逐飞科技开源固件库 zf_libraries（项目代码强依赖此库的 GPIO、PWM、PIT、UART 等底层封装）。
+    视觉端 IDE：OpenMV IDE（用于调试视觉代码和阈值获取）。
+硬件依赖：
+    主控核心：多核 MCU（推荐 TC264 或同级别算力平台）。
+    视觉协处理器：OpenMV Cam（需配备 MicroSD 卡用于人脸特征文件存储）。
+    外设传感器：TAU1201 (GNSS)、IMU660RB (SPI接口)、IPS200 (2.0寸 SPI 屏幕)。
+
+🛠️ 安装与编译运行 
+本项目分为“主控底盘”与“视觉中枢”两部分，需分别独立编译与烧录。
+主控端 (MCU) 编译与烧录：
+1.克隆本仓库到本地计算机。
+2.使用对应的 IDE（如 ADS）打开工程目录下的 .project 或 .cproject 文件。
+3.确保 zf_libraries 文件夹已正确包含在工程构建路径 (Build Path) 中。
+4.点击 Build Project 编译代码，检查控制台无 Error 输出。
+5.通过 DAP-Link 或 miniWiggler 仿真器将程序 Download/Flash 至主控板。
+视觉端 (OpenMV) 调试运行：
+1.使用 Type-C 数据线将 OpenMV 连接至电脑，打开 OpenMV IDE。
+2.在 IDE 中打开本仓库中的 人脸图片采集.py 脚本，点击左下角的运行按钮，按照提示完成人脸数据的采集与本地存储。
+3.打开核心视觉代码，点击运行，在 IDE 右上角的帧缓冲区 (Frame Buffer) 观察红块识别与人脸追踪效果。
+
+🚀 部署注意事项 (Deployment)
+当代码调试完毕，准备将小车放入实际场地进行脱机部署时，请务必注意以下工程事项：
+1.传感器供电红线：IMU660RB 陀螺仪与 IPS200 屏幕模块必须使用 3.3V 供电。严禁接入 5V 电源，否则会导致芯片瞬间击穿烧毁。
+2.脱机运行 OpenMV：若要让 OpenMV 脱离电脑独立运行，必须将最终版视觉代码重命名为 main.py，并将其直接保存到 OpenMV 挂载的 U 盘根目录下。每次修改保存后，务必在电脑端执行“安全弹出硬件”操作，防止文件系统损坏。
+3.上电校准约束：每次给系统通电复位后的前 1 秒钟内，绝对禁止触碰或移动小车。系统需要此时间窗口采集 50 帧静止数据来计算陀螺仪的零偏底噪 (gyro_z_offset)。
+4.GPS 搜星环境：TAU1201 模块在室内无法获取有效卫星信号。部署和示教打点必须在室外无严重遮挡的空旷地带进行，并等待屏幕提示 Sats > 4 方可开始任务。
+5.视觉光源干扰：环境中的强烈的红色光源或大面积红色反光物体会导致视觉追踪误判，部署场地需尽量避免红色干扰。
