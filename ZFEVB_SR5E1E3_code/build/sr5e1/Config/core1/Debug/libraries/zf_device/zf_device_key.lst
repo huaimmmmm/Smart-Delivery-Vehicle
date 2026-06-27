@@ -1,0 +1,1161 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_device_key.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	key_default_obj
+  19              		.section	.data.key_default_obj,"aw"
+  20              		.align	2
+  23              	key_default_obj:
+  24 0000 4700     		.short	71
+  25 0002 4800     		.short	72
+  26 0004 4900     		.short	73
+  27 0006 4A00     		.short	74
+  28 0008 00       		.byte	0
+  29 0009 00       		.byte	0
+  30 000a 00       		.byte	0
+  31 000b 00       		.byte	0
+  32 000c 00000000 		.word	0
+  33 0010 00000000 		.word	0
+  34 0014 00000000 		.word	0
+  35 0018 00000000 		.word	0
+  36 001c 00000000 		.word	0
+  37              		.section	.rodata
+  38              		.align	2
+  39              	.LC0:
+  40 0000 6C696272 		.ascii	"libraries/zf_device/zf_device_key.c\000"
+  40      61726965 
+  40      732F7A66 
+  40      5F646576 
+  40      6963652F 
+  41              		.section	.text.key_scanner,"ax",%progbits
+  42              		.align	1
+  43              		.p2align 4,,15
+  44              		.global	key_scanner
+  45              		.syntax unified
+  46              		.thumb
+  47              		.thumb_func
+  49              	key_scanner:
+  50              	.LFB482:
+  51              		.file 1 "libraries/zf_device/zf_device_key.c"
+   1:libraries/zf_device/zf_device_key.c **** /**************************************************************************************************
+   2:libraries/zf_device/zf_device_key.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_device/zf_device_key.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_device/zf_device_key.c **** *
+   5:libraries/zf_device/zf_device_key.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_device/zf_device_key.c **** *
+   7:libraries/zf_device/zf_device_key.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_device/zf_device_key.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_device/zf_device_key.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_device/zf_device_key.c **** *
+  11:libraries/zf_device/zf_device_key.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_device/zf_device_key.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_device/zf_device_key.c **** * 更多细节请参见 GPL
+  14:libraries/zf_device/zf_device_key.c **** *
+  15:libraries/zf_device/zf_device_key.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_device/zf_device_key.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_device/zf_device_key.c **** *
+  18:libraries/zf_device/zf_device_key.c **** * 额外注明：
+  19:libraries/zf_device/zf_device_key.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_device/zf_device_key.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_device/zf_device_key.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_device/zf_device_key.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_device/zf_device_key.c **** *
+  24:libraries/zf_device/zf_device_key.c **** * 文件名称          zf_device_key
+  25:libraries/zf_device/zf_device_key.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_device/zf_device_key.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_device/zf_device_key.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_device/zf_device_key.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_device/zf_device_key.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_device/zf_device_key.c **** ***************************************************************************************************
+  31:libraries/zf_device/zf_device_key.c **** 
+  32:libraries/zf_device/zf_device_key.c **** /**************************************************************************************************
+  33:libraries/zf_device/zf_device_key.c **** * 接线定义：
+  34:libraries/zf_device/zf_device_key.c **** *                   ------------------------------------
+  35:libraries/zf_device/zf_device_key.c **** *                   模块管脚            单片机管脚
+  36:libraries/zf_device/zf_device_key.c **** *                   // 一般是主板按键对应的引脚
+  37:libraries/zf_device/zf_device_key.c **** *                   KEY1/S1             查看 zf_device_key.h 中 KEY_LIST[0]
+  38:libraries/zf_device/zf_device_key.c **** *                   KEY2/S2             查看 zf_device_key.h 中 KEY_LIST[1]
+  39:libraries/zf_device/zf_device_key.c **** *                   KEY3/S3             查看 zf_device_key.h 中 KEY_LIST[2]
+  40:libraries/zf_device/zf_device_key.c **** *                   KEY4/S4             查看 zf_device_key.h 中 KEY_LIST[3]
+  41:libraries/zf_device/zf_device_key.c **** *                   ------------------------------------
+  42:libraries/zf_device/zf_device_key.c **** ***************************************************************************************************
+  43:libraries/zf_device/zf_device_key.c **** 
+  44:libraries/zf_device/zf_device_key.c **** // 自身头文件
+  45:libraries/zf_device/zf_device_key.c **** #include "zf_device_key.h"
+  46:libraries/zf_device/zf_device_key.c **** 
+  47:libraries/zf_device/zf_device_key.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改 这里不允许
+  48:libraries/zf_device/zf_device_key.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  49:libraries/zf_device/zf_device_key.c **** AT_ZF_LIB_SECTION_START
+  50:libraries/zf_device/zf_device_key.c **** AT_ZF_LIB_SECTION key_obj_struct key_default_obj = 
+  51:libraries/zf_device/zf_device_key.c **** {
+  52:libraries/zf_device/zf_device_key.c ****     .pin_list       = KEY_LIST,
+  53:libraries/zf_device/zf_device_key.c ****     .key_state      = KEY_DEFAULT_STATE,
+  54:libraries/zf_device/zf_device_key.c ****     .key_press_time = KEY_DEFAULT_STATE,
+  55:libraries/zf_device/zf_device_key.c ****     .scanner_period = 0
+  56:libraries/zf_device/zf_device_key.c **** };
+  57:libraries/zf_device/zf_device_key.c **** AT_ZF_LIB_SECTION_END
+  58:libraries/zf_device/zf_device_key.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  59:libraries/zf_device/zf_device_key.c **** 
+  60:libraries/zf_device/zf_device_key.c **** // 此处列举 本文件的所有函数声明 [ 其中包括宏定义函数 ] 这里不允许用�
+  61:libraries/zf_device/zf_device_key.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  62:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+  63:libraries/zf_device/zf_device_key.c **** // 函数简介     KEY 断言处理
+  64:libraries/zf_device/zf_device_key.c **** // 参数说明     *file               文件路径
+  65:libraries/zf_device/zf_device_key.c **** // 参数说明     line                报错行
+  66:libraries/zf_device/zf_device_key.c **** // 参数说明     *tips               输出信息
+  67:libraries/zf_device/zf_device_key.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+  68:libraries/zf_device/zf_device_key.c **** // 使用示例     key_assert_handler(file, line, tips);
+  69:libraries/zf_device/zf_device_key.c **** // 备注信息     
+  70:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+  71:libraries/zf_device/zf_device_key.c **** #if KEY_INTERFACE_USE_ZF_COMMON_DEBUG
+  72:libraries/zf_device/zf_device_key.c **** #define key_assert(pass)        zf_assert(pass)
+  73:libraries/zf_device/zf_device_key.c **** #define key_log(pass, tips)     zf_log(pass, tips)
+  74:libraries/zf_device/zf_device_key.c **** #else
+  75:libraries/zf_device/zf_device_key.c **** static uint8 key_assert_handler (char *file, int line, char *tips)
+  76:libraries/zf_device/zf_device_key.c **** {
+  77:libraries/zf_device/zf_device_key.c ****     printf("\r\n GNSS OPERATION ASSERT!\r\n");
+  78:libraries/zf_device/zf_device_key.c ****     printf("\r\n file: %s.\r\n", file);
+  79:libraries/zf_device/zf_device_key.c ****     printf("\r\n line: %d.\r\n", line);
+  80:libraries/zf_device/zf_device_key.c ****     if(NULL != tips)
+  81:libraries/zf_device/zf_device_key.c ****     {
+  82:libraries/zf_device/zf_device_key.c ****         printf("\r\n tips: %s.\r\n", tips);
+  83:libraries/zf_device/zf_device_key.c ****     }
+  84:libraries/zf_device/zf_device_key.c ****     while(1);
+  85:libraries/zf_device/zf_device_key.c ****     return ZF_ERROR;
+  86:libraries/zf_device/zf_device_key.c **** }
+  87:libraries/zf_device/zf_device_key.c **** #define key_assert(pass)        ((pass) ? (0) : key_assert_handler(__FILE__, __LINE__, NULL))
+  88:libraries/zf_device/zf_device_key.c **** #define key_log(pass, tips)     ((pass) ? (0) : key_assert_handler(__FILE__, __LINE__, (tips)))
+  89:libraries/zf_device/zf_device_key.c **** #endif
+  90:libraries/zf_device/zf_device_key.c **** 
+  91:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+  92:libraries/zf_device/zf_device_key.c **** // 函数简介     KEY 按键状态扫描
+  93:libraries/zf_device/zf_device_key.c **** // 参数说明     event               触发中断的事件
+  94:libraries/zf_device/zf_device_key.c **** // 参数说明     *ptr                回调参数
+  95:libraries/zf_device/zf_device_key.c **** // 返回参数     void
+  96:libraries/zf_device/zf_device_key.c **** // 使用示例     key_scanner();
+  97:libraries/zf_device/zf_device_key.c **** // 备注信息     这个函数跟 PIT 中断绑定即可 或者自己周期调用传入 0 和 NUL
+  98:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+  99:libraries/zf_device/zf_device_key.c **** void key_scanner (uint32 event, void *ptr)
+ 100:libraries/zf_device/zf_device_key.c **** {
+  52              		.loc 1 100 1
+  53              		.cfi_startproc
+  54              		@ args = 0, pretend = 0, frame = 16
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56 0000 00B5     		push	{lr}
+  57              		.cfi_def_cfa_offset 4
+  58              		.cfi_offset 14, -4
+  59 0002 87B0     		sub	sp, sp, #28
+  60              		.cfi_def_cfa_offset 32
+  61 0004 0390     		str	r0, [sp, #12]
+  62 0006 0291     		str	r1, [sp, #8]
+ 101:libraries/zf_device/zf_device_key.c ****     (void)event;
+ 102:libraries/zf_device/zf_device_key.c ****     (void)ptr;
+ 103:libraries/zf_device/zf_device_key.c **** 
+ 104:libraries/zf_device/zf_device_key.c ****     do
+ 105:libraries/zf_device/zf_device_key.c ****     {
+ 106:libraries/zf_device/zf_device_key.c ****         if(key_assert(0 != key_default_obj.scanner_period))
+  63              		.loc 1 106 12
+  64 0008 434B     		ldr	r3, .L11
+  65 000a DB69     		ldr	r3, [r3, #28]
+  66              		.loc 1 106 11
+  67 000c 002B     		cmp	r3, #0
+  68 000e 11D1     		bne	.L2
+  69              		.loc 1 106 12 discriminator 1
+  70 0010 414B     		ldr	r3, .L11
+  71 0012 DB69     		ldr	r3, [r3, #28]
+  72 0014 002B     		cmp	r3, #0
+  73 0016 14BF     		ite	ne
+  74 0018 0123     		movne	r3, #1
+  75 001a 0023     		moveq	r3, #0
+  76 001c DBB2     		uxtb	r3, r3
+  77 001e 1946     		mov	r1, r3
+  78 0020 6A23     		movs	r3, #106
+  79 0022 0093     		str	r3, [sp]
+  80 0024 3D4B     		ldr	r3, .L11+4
+  81 0026 0022     		movs	r2, #0
+  82 0028 0220     		movs	r0, #2
+  83 002a FFF7FEFF 		bl	debug_message_handler
+  84 002e 0346     		mov	r3, r0
+  85 0030 002B     		cmp	r3, #0
+  86 0032 6BD1     		bne	.L9
+  87              	.L2:
+  88              	.LBB2:
+ 107:libraries/zf_device/zf_device_key.c ****         {
+ 108:libraries/zf_device/zf_device_key.c ****             break;
+ 109:libraries/zf_device/zf_device_key.c ****         }
+ 110:libraries/zf_device/zf_device_key.c **** 
+ 111:libraries/zf_device/zf_device_key.c ****         // 按键的检测逻辑为
+ 112:libraries/zf_device/zf_device_key.c ****         // 按键短按释放后触发 长按超过预设时长后触发
+ 113:libraries/zf_device/zf_device_key.c ****         // 短按和长按状态触发后保持状态需要手动清空状态 ( 避免程序不能�
+ 114:libraries/zf_device/zf_device_key.c ****         for(uint8 i = 0; KEY_NUM_MAX > i; i ++)
+  89              		.loc 1 114 19
+  90 0034 0023     		movs	r3, #0
+  91 0036 8DF81730 		strb	r3, [sp, #23]
+  92              		.loc 1 114 9
+  93 003a 62E0     		b	.L4
+  94              	.L8:
+ 115:libraries/zf_device/zf_device_key.c ****         {
+ 116:libraries/zf_device/zf_device_key.c ****             if(KEY_RELEASE_LEVEL != zf_gpio_get_level(key_default_obj.pin_list[i]))// 按键按下
+  95              		.loc 1 116 37
+  96 003c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+  97 0040 354A     		ldr	r2, .L11
+  98 0042 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+  99 0046 1846     		mov	r0, r3
+ 100 0048 FFF7FEFF 		bl	zf_gpio_get_level
+ 101 004c 0346     		mov	r3, r0
+ 102              		.loc 1 116 15
+ 103 004e 012B     		cmp	r3, #1
+ 104 0050 22D0     		beq	.L5
+ 117:libraries/zf_device/zf_device_key.c ****             {
+ 118:libraries/zf_device/zf_device_key.c ****                 key_default_obj.key_press_time[i] ++;                           // 进行按键消�
+ 105              		.loc 1 118 47
+ 106 0052 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 107 0056 3049     		ldr	r1, .L11
+ 108 0058 931C     		adds	r3, r2, #2
+ 109 005a 9B00     		lsls	r3, r3, #2
+ 110 005c 0B44     		add	r3, r3, r1
+ 111 005e 5B68     		ldr	r3, [r3, #4]
+ 112              		.loc 1 118 51
+ 113 0060 591C     		adds	r1, r3, #1
+ 114 0062 2D48     		ldr	r0, .L11
+ 115 0064 931C     		adds	r3, r2, #2
+ 116 0066 9B00     		lsls	r3, r3, #2
+ 117 0068 0344     		add	r3, r3, r0
+ 118 006a 5960     		str	r1, [r3, #4]
+ 119:libraries/zf_device/zf_device_key.c ****                 if(     KEY_LONG_PRESS_PERIOD / key_default_obj.scanner_period  // 进行长按判�
+ 119              		.loc 1 119 64
+ 120 006c 2A4B     		ldr	r3, .L11
+ 121 006e DB69     		ldr	r3, [r3, #28]
+ 122              		.loc 1 119 47
+ 123 0070 4FF47A72 		mov	r2, #1000
+ 124 0074 B2FBF3F2 		udiv	r2, r2, r3
+ 120:libraries/zf_device/zf_device_key.c ****                     <=  key_default_obj.key_press_time[i])                      // 如果触发次�
+ 125              		.loc 1 120 55
+ 126 0078 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 127 007c 2649     		ldr	r1, .L11
+ 128 007e 0233     		adds	r3, r3, #2
+ 129 0080 9B00     		lsls	r3, r3, #2
+ 130 0082 0B44     		add	r3, r3, r1
+ 131 0084 5B68     		ldr	r3, [r3, #4]
+ 119:libraries/zf_device/zf_device_key.c ****                 if(     KEY_LONG_PRESS_PERIOD / key_default_obj.scanner_period  // 进行长按判�
+ 132              		.loc 1 119 19
+ 133 0086 9A42     		cmp	r2, r3
+ 134 0088 36D8     		bhi	.L6
+ 121:libraries/zf_device/zf_device_key.c ****                 {
+ 122:libraries/zf_device/zf_device_key.c ****                     key_default_obj.key_state[i] = KEY_LONG_PRESS;              // 那么就会一�
+ 135              		.loc 1 122 46
+ 136 008a 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 137              		.loc 1 122 50
+ 138 008e 224A     		ldr	r2, .L11
+ 139 0090 1344     		add	r3, r3, r2
+ 140 0092 0222     		movs	r2, #2
+ 141 0094 1A72     		strb	r2, [r3, #8]
+ 142 0096 2FE0     		b	.L6
+ 143              	.L5:
+ 123:libraries/zf_device/zf_device_key.c ****                 }
+ 124:libraries/zf_device/zf_device_key.c ****             }
+ 125:libraries/zf_device/zf_device_key.c ****             else                                                                // 按键释放
+ 126:libraries/zf_device/zf_device_key.c ****             {
+ 127:libraries/zf_device/zf_device_key.c ****                 if((    KEY_LONG_PRESS != key_default_obj.key_state[i])         // 如果是按键�
+ 144              		.loc 1 127 68
+ 145 0098 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 146 009c 1E4A     		ldr	r2, .L11
+ 147 009e 1344     		add	r3, r3, r2
+ 148 00a0 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 149              		.loc 1 127 19
+ 150 00a2 022B     		cmp	r3, #2
+ 151 00a4 14D0     		beq	.L7
+ 128:libraries/zf_device/zf_device_key.c ****                     &&  (   KEY_MAX_SHOCK_PERIOD / key_default_obj.scanner_period// 判断是否满
+ 152              		.loc 1 128 67
+ 153 00a6 1C4B     		ldr	r3, .L11
+ 154 00a8 DB69     		ldr	r3, [r3, #28]
+ 155              		.loc 1 128 50
+ 156 00aa 0A22     		movs	r2, #10
+ 157 00ac B2FBF3F2 		udiv	r2, r2, r3
+ 129:libraries/zf_device/zf_device_key.c ****                         <=  key_default_obj.key_press_time[i]))                 // 至少要大于�
+ 158              		.loc 1 129 59
+ 159 00b0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 160 00b4 1849     		ldr	r1, .L11
+ 161 00b6 0233     		adds	r3, r3, #2
+ 162 00b8 9B00     		lsls	r3, r3, #2
+ 163 00ba 0B44     		add	r3, r3, r1
+ 164 00bc 5B68     		ldr	r3, [r3, #4]
+ 128:libraries/zf_device/zf_device_key.c ****                     &&  (   KEY_MAX_SHOCK_PERIOD / key_default_obj.scanner_period// 判断是否满
+ 165              		.loc 1 128 21
+ 166 00be 9A42     		cmp	r2, r3
+ 167 00c0 06D8     		bhi	.L7
+ 130:libraries/zf_device/zf_device_key.c ****                 {
+ 131:libraries/zf_device/zf_device_key.c ****                     key_default_obj.key_state[i] = KEY_SHORT_PRESS;             // 释放后置位�
+ 168              		.loc 1 131 46
+ 169 00c2 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 170              		.loc 1 131 50
+ 171 00c6 144A     		ldr	r2, .L11
+ 172 00c8 1344     		add	r3, r3, r2
+ 173 00ca 0122     		movs	r2, #1
+ 174 00cc 1A72     		strb	r2, [r3, #8]
+ 175 00ce 13E0     		b	.L6
+ 176              	.L7:
+ 132:libraries/zf_device/zf_device_key.c ****                 }
+ 133:libraries/zf_device/zf_device_key.c ****                 else if(KEY_MAX_SHOCK_PERIOD / key_default_obj.scanner_period   // 如果是单纯�
+ 177              		.loc 1 133 63
+ 178 00d0 114B     		ldr	r3, .L11
+ 179 00d2 DB69     		ldr	r3, [r3, #28]
+ 180              		.loc 1 133 46
+ 181 00d4 0A22     		movs	r2, #10
+ 182 00d6 B2FBF3F2 		udiv	r2, r2, r3
+ 134:libraries/zf_device/zf_device_key.c ****                     >   key_default_obj.key_press_time[i])                      // 不满足短按�
+ 183              		.loc 1 134 55
+ 184 00da 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 185 00de 0E49     		ldr	r1, .L11
+ 186 00e0 0233     		adds	r3, r3, #2
+ 187 00e2 9B00     		lsls	r3, r3, #2
+ 188 00e4 0B44     		add	r3, r3, r1
+ 189 00e6 5B68     		ldr	r3, [r3, #4]
+ 133:libraries/zf_device/zf_device_key.c ****                     >   key_default_obj.key_press_time[i])                      // 不满足短按�
+ 190              		.loc 1 133 24
+ 191 00e8 9A42     		cmp	r2, r3
+ 192 00ea 05D9     		bls	.L6
+ 135:libraries/zf_device/zf_device_key.c ****                 {
+ 136:libraries/zf_device/zf_device_key.c ****                     key_default_obj.key_state[i] = KEY_RELEASE;                 // 就标记为默�
+ 193              		.loc 1 136 46
+ 194 00ec 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 195              		.loc 1 136 50
+ 196 00f0 094A     		ldr	r2, .L11
+ 197 00f2 1344     		add	r3, r3, r2
+ 198 00f4 0022     		movs	r2, #0
+ 199 00f6 1A72     		strb	r2, [r3, #8]
+ 200              	.L6:
+ 114:libraries/zf_device/zf_device_key.c ****         {
+ 201              		.loc 1 114 45 discriminator 2
+ 202 00f8 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 203 00fc 0133     		adds	r3, r3, #1
+ 204 00fe 8DF81730 		strb	r3, [sp, #23]
+ 205              	.L4:
+ 114:libraries/zf_device/zf_device_key.c ****         {
+ 206              		.loc 1 114 9 discriminator 1
+ 207 0102 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 208 0106 032B     		cmp	r3, #3
+ 209 0108 98D9     		bls	.L8
+ 210              	.LBE2:
+ 137:libraries/zf_device/zf_device_key.c ****                 }
+ 138:libraries/zf_device/zf_device_key.c ****             }
+ 139:libraries/zf_device/zf_device_key.c ****         }
+ 140:libraries/zf_device/zf_device_key.c ****     }while(0);
+ 141:libraries/zf_device/zf_device_key.c **** }
+ 211              		.loc 1 141 1
+ 212 010a 00E0     		b	.L10
+ 213              	.L9:
+ 108:libraries/zf_device/zf_device_key.c ****         }
+ 214              		.loc 1 108 13
+ 215 010c 00BF     		nop
+ 216              	.L10:
+ 217              		.loc 1 141 1
+ 218 010e 00BF     		nop
+ 219 0110 07B0     		add	sp, sp, #28
+ 220              		.cfi_def_cfa_offset 4
+ 221              		@ sp needed
+ 222 0112 5DF804FB 		ldr	pc, [sp], #4
+ 223              	.L12:
+ 224 0116 00BF     		.align	2
+ 225              	.L11:
+ 226 0118 00000000 		.word	key_default_obj
+ 227 011c 00000000 		.word	.LC0
+ 228              		.cfi_endproc
+ 229              	.LFE482:
+ 231              		.section	.text.key_get_state,"ax",%progbits
+ 232              		.align	1
+ 233              		.p2align 4,,15
+ 234              		.global	key_get_state
+ 235              		.syntax unified
+ 236              		.thumb
+ 237              		.thumb_func
+ 239              	key_get_state:
+ 240              	.LFB483:
+ 142:libraries/zf_device/zf_device_key.c **** 
+ 143:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 144:libraries/zf_device/zf_device_key.c **** // 函数简介     KEY 获取按键状态
+ 145:libraries/zf_device/zf_device_key.c **** // 参数说明     key_index           按键索引
+ 146:libraries/zf_device/zf_device_key.c **** // 返回参数     key_state_enum      按键状态
+ 147:libraries/zf_device/zf_device_key.c **** // 使用示例     key_get_state(key_index);
+ 148:libraries/zf_device/zf_device_key.c **** // 备注信息     
+ 149:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 150:libraries/zf_device/zf_device_key.c **** key_state_enum key_get_state (key_index_enum key_index)
+ 151:libraries/zf_device/zf_device_key.c **** {
+ 241              		.loc 1 151 1
+ 242              		.cfi_startproc
+ 243              		@ args = 0, pretend = 0, frame = 16
+ 244              		@ frame_needed = 0, uses_anonymous_args = 0
+ 245 0000 00B5     		push	{lr}
+ 246              		.cfi_def_cfa_offset 4
+ 247              		.cfi_offset 14, -4
+ 248 0002 87B0     		sub	sp, sp, #28
+ 249              		.cfi_def_cfa_offset 32
+ 250 0004 0346     		mov	r3, r0
+ 251 0006 8DF80F30 		strb	r3, [sp, #15]
+ 152:libraries/zf_device/zf_device_key.c ****     key_state_enum return_value = KEY_RELEASE;
+ 252              		.loc 1 152 20
+ 253 000a 0023     		movs	r3, #0
+ 254 000c 8DF81730 		strb	r3, [sp, #23]
+ 153:libraries/zf_device/zf_device_key.c **** 
+ 154:libraries/zf_device/zf_device_key.c ****     do
+ 155:libraries/zf_device/zf_device_key.c ****     {
+ 156:libraries/zf_device/zf_device_key.c ****         if(key_assert(0 != key_default_obj.scanner_period))
+ 255              		.loc 1 156 12
+ 256 0010 124B     		ldr	r3, .L18
+ 257 0012 DB69     		ldr	r3, [r3, #28]
+ 258              		.loc 1 156 11
+ 259 0014 002B     		cmp	r3, #0
+ 260 0016 11D1     		bne	.L14
+ 261              		.loc 1 156 12 discriminator 1
+ 262 0018 104B     		ldr	r3, .L18
+ 263 001a DB69     		ldr	r3, [r3, #28]
+ 264 001c 002B     		cmp	r3, #0
+ 265 001e 14BF     		ite	ne
+ 266 0020 0123     		movne	r3, #1
+ 267 0022 0023     		moveq	r3, #0
+ 268 0024 DBB2     		uxtb	r3, r3
+ 269 0026 1946     		mov	r1, r3
+ 270 0028 9C23     		movs	r3, #156
+ 271 002a 0093     		str	r3, [sp]
+ 272 002c 0C4B     		ldr	r3, .L18+4
+ 273 002e 0022     		movs	r2, #0
+ 274 0030 0220     		movs	r0, #2
+ 275 0032 FFF7FEFF 		bl	debug_message_handler
+ 276 0036 0346     		mov	r3, r0
+ 277 0038 002B     		cmp	r3, #0
+ 278 003a 07D1     		bne	.L17
+ 279              	.L14:
+ 157:libraries/zf_device/zf_device_key.c ****         {
+ 158:libraries/zf_device/zf_device_key.c ****             break;
+ 159:libraries/zf_device/zf_device_key.c ****         }
+ 160:libraries/zf_device/zf_device_key.c **** 
+ 161:libraries/zf_device/zf_device_key.c ****         return_value = key_default_obj.key_state[key_index];
+ 280              		.loc 1 161 49
+ 281 003c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 282              		.loc 1 161 22
+ 283 0040 064A     		ldr	r2, .L18
+ 284 0042 1344     		add	r3, r3, r2
+ 285 0044 1B7A     		ldrb	r3, [r3, #8]
+ 286 0046 8DF81730 		strb	r3, [sp, #23]
+ 287 004a 00E0     		b	.L15
+ 288              	.L17:
+ 158:libraries/zf_device/zf_device_key.c ****         }
+ 289              		.loc 1 158 13
+ 290 004c 00BF     		nop
+ 291              	.L15:
+ 162:libraries/zf_device/zf_device_key.c ****     }while(0);
+ 163:libraries/zf_device/zf_device_key.c **** 
+ 164:libraries/zf_device/zf_device_key.c ****     return return_value;
+ 292              		.loc 1 164 12
+ 293 004e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 165:libraries/zf_device/zf_device_key.c **** }
+ 294              		.loc 1 165 1
+ 295 0052 1846     		mov	r0, r3
+ 296 0054 07B0     		add	sp, sp, #28
+ 297              		.cfi_def_cfa_offset 4
+ 298              		@ sp needed
+ 299 0056 5DF804FB 		ldr	pc, [sp], #4
+ 300              	.L19:
+ 301 005a 00BF     		.align	2
+ 302              	.L18:
+ 303 005c 00000000 		.word	key_default_obj
+ 304 0060 00000000 		.word	.LC0
+ 305              		.cfi_endproc
+ 306              	.LFE483:
+ 308              		.section	.text.key_get_all_state,"ax",%progbits
+ 309              		.align	1
+ 310              		.p2align 4,,15
+ 311              		.global	key_get_all_state
+ 312              		.syntax unified
+ 313              		.thumb
+ 314              		.thumb_func
+ 316              	key_get_all_state:
+ 317              	.LFB484:
+ 166:libraries/zf_device/zf_device_key.c **** 
+ 167:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 168:libraries/zf_device/zf_device_key.c **** // 函数简介     KEY 获取所有按键状态
+ 169:libraries/zf_device/zf_device_key.c **** // 参数说明     *state              按键状态缓冲
+ 170:libraries/zf_device/zf_device_key.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / KEY_OPERATION_DONE - 完成 其�
+ 171:libraries/zf_device/zf_device_key.c **** // 使用示例     key_get_all_state(state);
+ 172:libraries/zf_device/zf_device_key.c **** // 备注信息     
+ 173:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 174:libraries/zf_device/zf_device_key.c **** uint8 key_get_all_state (key_state_enum *state)
+ 175:libraries/zf_device/zf_device_key.c **** {
+ 318              		.loc 1 175 1
+ 319              		.cfi_startproc
+ 320              		@ args = 0, pretend = 0, frame = 16
+ 321              		@ frame_needed = 0, uses_anonymous_args = 0
+ 322 0000 00B5     		push	{lr}
+ 323              		.cfi_def_cfa_offset 4
+ 324              		.cfi_offset 14, -4
+ 325 0002 87B0     		sub	sp, sp, #28
+ 326              		.cfi_def_cfa_offset 32
+ 327 0004 0390     		str	r0, [sp, #12]
+ 176:libraries/zf_device/zf_device_key.c ****     key_operation_state_enum return_state = KEY_ERROR_UNKNOW_ERROR;
+ 328              		.loc 1 176 30
+ 329 0006 0123     		movs	r3, #1
+ 330 0008 8DF81730 		strb	r3, [sp, #23]
+ 177:libraries/zf_device/zf_device_key.c **** 
+ 178:libraries/zf_device/zf_device_key.c ****     do
+ 179:libraries/zf_device/zf_device_key.c ****     {
+ 180:libraries/zf_device/zf_device_key.c ****         if(key_assert(0 != key_default_obj.scanner_period))
+ 331              		.loc 1 180 12
+ 332 000c 134B     		ldr	r3, .L24
+ 333 000e DB69     		ldr	r3, [r3, #28]
+ 334              		.loc 1 180 11
+ 335 0010 002B     		cmp	r3, #0
+ 336 0012 15D1     		bne	.L21
+ 337              		.loc 1 180 12 discriminator 1
+ 338 0014 114B     		ldr	r3, .L24
+ 339 0016 DB69     		ldr	r3, [r3, #28]
+ 340 0018 002B     		cmp	r3, #0
+ 341 001a 14BF     		ite	ne
+ 342 001c 0123     		movne	r3, #1
+ 343 001e 0023     		moveq	r3, #0
+ 344 0020 DBB2     		uxtb	r3, r3
+ 345 0022 1946     		mov	r1, r3
+ 346 0024 B423     		movs	r3, #180
+ 347 0026 0093     		str	r3, [sp]
+ 348 0028 0D4B     		ldr	r3, .L24+4
+ 349 002a 0022     		movs	r2, #0
+ 350 002c 0220     		movs	r0, #2
+ 351 002e FFF7FEFF 		bl	debug_message_handler
+ 352 0032 0346     		mov	r3, r0
+ 353 0034 002B     		cmp	r3, #0
+ 354 0036 03D0     		beq	.L21
+ 181:libraries/zf_device/zf_device_key.c ****         {
+ 182:libraries/zf_device/zf_device_key.c ****             return_state = KEY_ERROR_NOT_INIT;
+ 355              		.loc 1 182 26
+ 356 0038 2123     		movs	r3, #33
+ 357 003a 8DF81730 		strb	r3, [sp, #23]
+ 183:libraries/zf_device/zf_device_key.c ****             break;
+ 358              		.loc 1 183 13
+ 359 003e 06E0     		b	.L22
+ 360              	.L21:
+ 361 0040 064B     		ldr	r3, .L24
+ 362 0042 9A68     		ldr	r2, [r3, #8]
+ 184:libraries/zf_device/zf_device_key.c ****         }
+ 185:libraries/zf_device/zf_device_key.c **** 
+ 186:libraries/zf_device/zf_device_key.c ****         memcpy(state, key_default_obj.key_state, sizeof(key_default_obj.key_state));
+ 363              		.loc 1 186 9
+ 364 0044 039B     		ldr	r3, [sp, #12]
+ 365 0046 1A60     		str	r2, [r3]	@ unaligned
+ 187:libraries/zf_device/zf_device_key.c **** 
+ 188:libraries/zf_device/zf_device_key.c ****         return_state = KEY_OPERATION_DONE;
+ 366              		.loc 1 188 22
+ 367 0048 0023     		movs	r3, #0
+ 368 004a 8DF81730 		strb	r3, [sp, #23]
+ 369              	.L22:
+ 189:libraries/zf_device/zf_device_key.c ****     }while(0);
+ 190:libraries/zf_device/zf_device_key.c **** 
+ 191:libraries/zf_device/zf_device_key.c ****     return return_state;
+ 370              		.loc 1 191 12
+ 371 004e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 192:libraries/zf_device/zf_device_key.c **** }
+ 372              		.loc 1 192 1
+ 373 0052 1846     		mov	r0, r3
+ 374 0054 07B0     		add	sp, sp, #28
+ 375              		.cfi_def_cfa_offset 4
+ 376              		@ sp needed
+ 377 0056 5DF804FB 		ldr	pc, [sp], #4
+ 378              	.L25:
+ 379 005a 00BF     		.align	2
+ 380              	.L24:
+ 381 005c 00000000 		.word	key_default_obj
+ 382 0060 00000000 		.word	.LC0
+ 383              		.cfi_endproc
+ 384              	.LFE484:
+ 386              		.section	.text.key_clear_state,"ax",%progbits
+ 387              		.align	1
+ 388              		.p2align 4,,15
+ 389              		.global	key_clear_state
+ 390              		.syntax unified
+ 391              		.thumb
+ 392              		.thumb_func
+ 394              	key_clear_state:
+ 395              	.LFB485:
+ 193:libraries/zf_device/zf_device_key.c **** 
+ 194:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 195:libraries/zf_device/zf_device_key.c **** // 函数简介     KEY 对应按键处于空闲电平时清除触发状态
+ 196:libraries/zf_device/zf_device_key.c **** // 参数说明     key_index           按键索引
+ 197:libraries/zf_device/zf_device_key.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / KEY_OPERATION_DONE - 完成 其�
+ 198:libraries/zf_device/zf_device_key.c **** // 使用示例     key_clear_state(key_index);
+ 199:libraries/zf_device/zf_device_key.c **** // 备注信息     
+ 200:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 201:libraries/zf_device/zf_device_key.c **** uint8 key_clear_state (key_index_enum key_index)
+ 202:libraries/zf_device/zf_device_key.c **** {
+ 396              		.loc 1 202 1
+ 397              		.cfi_startproc
+ 398              		@ args = 0, pretend = 0, frame = 16
+ 399              		@ frame_needed = 0, uses_anonymous_args = 0
+ 400 0000 00B5     		push	{lr}
+ 401              		.cfi_def_cfa_offset 4
+ 402              		.cfi_offset 14, -4
+ 403 0002 87B0     		sub	sp, sp, #28
+ 404              		.cfi_def_cfa_offset 32
+ 405 0004 0346     		mov	r3, r0
+ 406 0006 8DF80F30 		strb	r3, [sp, #15]
+ 203:libraries/zf_device/zf_device_key.c ****     key_operation_state_enum return_state = KEY_ERROR_UNKNOW_ERROR;
+ 407              		.loc 1 203 30
+ 408 000a 0123     		movs	r3, #1
+ 409 000c 8DF81730 		strb	r3, [sp, #23]
+ 204:libraries/zf_device/zf_device_key.c **** 
+ 205:libraries/zf_device/zf_device_key.c ****     do
+ 206:libraries/zf_device/zf_device_key.c ****     {
+ 207:libraries/zf_device/zf_device_key.c ****         if(key_assert(0 != key_default_obj.scanner_period))
+ 410              		.loc 1 207 12
+ 411 0010 1D4B     		ldr	r3, .L31
+ 412 0012 DB69     		ldr	r3, [r3, #28]
+ 413              		.loc 1 207 11
+ 414 0014 002B     		cmp	r3, #0
+ 415 0016 15D1     		bne	.L27
+ 416              		.loc 1 207 12 discriminator 1
+ 417 0018 1B4B     		ldr	r3, .L31
+ 418 001a DB69     		ldr	r3, [r3, #28]
+ 419 001c 002B     		cmp	r3, #0
+ 420 001e 14BF     		ite	ne
+ 421 0020 0123     		movne	r3, #1
+ 422 0022 0023     		moveq	r3, #0
+ 423 0024 DBB2     		uxtb	r3, r3
+ 424 0026 1946     		mov	r1, r3
+ 425 0028 CF23     		movs	r3, #207
+ 426 002a 0093     		str	r3, [sp]
+ 427 002c 174B     		ldr	r3, .L31+4
+ 428 002e 0022     		movs	r2, #0
+ 429 0030 0220     		movs	r0, #2
+ 430 0032 FFF7FEFF 		bl	debug_message_handler
+ 431 0036 0346     		mov	r3, r0
+ 432 0038 002B     		cmp	r3, #0
+ 433 003a 03D0     		beq	.L27
+ 208:libraries/zf_device/zf_device_key.c ****         {
+ 209:libraries/zf_device/zf_device_key.c ****             return_state = KEY_ERROR_NOT_INIT;
+ 434              		.loc 1 209 26
+ 435 003c 2123     		movs	r3, #33
+ 436 003e 8DF81730 		strb	r3, [sp, #23]
+ 210:libraries/zf_device/zf_device_key.c ****             break;
+ 437              		.loc 1 210 13
+ 438 0042 1BE0     		b	.L28
+ 439              	.L27:
+ 211:libraries/zf_device/zf_device_key.c ****         }
+ 212:libraries/zf_device/zf_device_key.c **** 
+ 213:libraries/zf_device/zf_device_key.c ****         key_default_obj.key_state[key_index] = KEY_RELEASE;
+ 440              		.loc 1 213 34
+ 441 0044 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 442              		.loc 1 213 46
+ 443 0048 0F4A     		ldr	r2, .L31
+ 444 004a 1344     		add	r3, r3, r2
+ 445 004c 0022     		movs	r2, #0
+ 446 004e 1A72     		strb	r2, [r3, #8]
+ 214:libraries/zf_device/zf_device_key.c ****         if(KEY_RELEASE_LEVEL == zf_gpio_get_level(key_default_obj.pin_list[key_index]))
+ 447              		.loc 1 214 33
+ 448 0050 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 449 0054 0C4A     		ldr	r2, .L31
+ 450 0056 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 451 005a 1846     		mov	r0, r3
+ 452 005c FFF7FEFF 		bl	zf_gpio_get_level
+ 453 0060 0346     		mov	r3, r0
+ 454              		.loc 1 214 11
+ 455 0062 012B     		cmp	r3, #1
+ 456 0064 07D1     		bne	.L29
+ 215:libraries/zf_device/zf_device_key.c ****         {
+ 216:libraries/zf_device/zf_device_key.c ****             key_default_obj.key_press_time[key_index] = 0;
+ 457              		.loc 1 216 43
+ 458 0066 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 459              		.loc 1 216 55
+ 460 006a 074A     		ldr	r2, .L31
+ 461 006c 0233     		adds	r3, r3, #2
+ 462 006e 9B00     		lsls	r3, r3, #2
+ 463 0070 1344     		add	r3, r3, r2
+ 464 0072 0022     		movs	r2, #0
+ 465 0074 5A60     		str	r2, [r3, #4]
+ 466              	.L29:
+ 217:libraries/zf_device/zf_device_key.c ****         }
+ 218:libraries/zf_device/zf_device_key.c **** 
+ 219:libraries/zf_device/zf_device_key.c ****         return_state = KEY_OPERATION_DONE;
+ 467              		.loc 1 219 22
+ 468 0076 0023     		movs	r3, #0
+ 469 0078 8DF81730 		strb	r3, [sp, #23]
+ 470              	.L28:
+ 220:libraries/zf_device/zf_device_key.c ****     }while(0);
+ 221:libraries/zf_device/zf_device_key.c **** 
+ 222:libraries/zf_device/zf_device_key.c ****     return return_state;
+ 471              		.loc 1 222 12
+ 472 007c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 223:libraries/zf_device/zf_device_key.c **** }
+ 473              		.loc 1 223 1
+ 474 0080 1846     		mov	r0, r3
+ 475 0082 07B0     		add	sp, sp, #28
+ 476              		.cfi_def_cfa_offset 4
+ 477              		@ sp needed
+ 478 0084 5DF804FB 		ldr	pc, [sp], #4
+ 479              	.L32:
+ 480              		.align	2
+ 481              	.L31:
+ 482 0088 00000000 		.word	key_default_obj
+ 483 008c 00000000 		.word	.LC0
+ 484              		.cfi_endproc
+ 485              	.LFE485:
+ 487              		.section	.text.key_clear_all_state,"ax",%progbits
+ 488              		.align	1
+ 489              		.p2align 4,,15
+ 490              		.global	key_clear_all_state
+ 491              		.syntax unified
+ 492              		.thumb
+ 493              		.thumb_func
+ 495              	key_clear_all_state:
+ 496              	.LFB486:
+ 224:libraries/zf_device/zf_device_key.c **** 
+ 225:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 226:libraries/zf_device/zf_device_key.c **** // 函数简介     KEY 清除所有处于空闲电平的按键的触发状态
+ 227:libraries/zf_device/zf_device_key.c **** // 参数说明     void                无
+ 228:libraries/zf_device/zf_device_key.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / KEY_OPERATION_DONE - 完成 其�
+ 229:libraries/zf_device/zf_device_key.c **** // 使用示例     key_clear_all_state();
+ 230:libraries/zf_device/zf_device_key.c **** // 备注信息     
+ 231:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 232:libraries/zf_device/zf_device_key.c **** uint8 key_clear_all_state (void)
+ 233:libraries/zf_device/zf_device_key.c **** {
+ 497              		.loc 1 233 1
+ 498              		.cfi_startproc
+ 499              		@ args = 0, pretend = 0, frame = 8
+ 500              		@ frame_needed = 0, uses_anonymous_args = 0
+ 501 0000 00B5     		push	{lr}
+ 502              		.cfi_def_cfa_offset 4
+ 503              		.cfi_offset 14, -4
+ 504 0002 85B0     		sub	sp, sp, #20
+ 505              		.cfi_def_cfa_offset 24
+ 234:libraries/zf_device/zf_device_key.c ****     key_operation_state_enum return_state = KEY_ERROR_UNKNOW_ERROR;
+ 506              		.loc 1 234 30
+ 507 0004 0123     		movs	r3, #1
+ 508 0006 8DF80F30 		strb	r3, [sp, #15]
+ 235:libraries/zf_device/zf_device_key.c **** 
+ 236:libraries/zf_device/zf_device_key.c ****     do
+ 237:libraries/zf_device/zf_device_key.c ****     {
+ 238:libraries/zf_device/zf_device_key.c ****         if(key_assert(0 != key_default_obj.scanner_period))
+ 509              		.loc 1 238 12
+ 510 000a 244B     		ldr	r3, .L40
+ 511 000c DB69     		ldr	r3, [r3, #28]
+ 512              		.loc 1 238 11
+ 513 000e 002B     		cmp	r3, #0
+ 514 0010 15D1     		bne	.L34
+ 515              		.loc 1 238 12 discriminator 1
+ 516 0012 224B     		ldr	r3, .L40
+ 517 0014 DB69     		ldr	r3, [r3, #28]
+ 518 0016 002B     		cmp	r3, #0
+ 519 0018 14BF     		ite	ne
+ 520 001a 0123     		movne	r3, #1
+ 521 001c 0023     		moveq	r3, #0
+ 522 001e DBB2     		uxtb	r3, r3
+ 523 0020 1946     		mov	r1, r3
+ 524 0022 EE23     		movs	r3, #238
+ 525 0024 0093     		str	r3, [sp]
+ 526 0026 1E4B     		ldr	r3, .L40+4
+ 527 0028 0022     		movs	r2, #0
+ 528 002a 0220     		movs	r0, #2
+ 529 002c FFF7FEFF 		bl	debug_message_handler
+ 530 0030 0346     		mov	r3, r0
+ 531 0032 002B     		cmp	r3, #0
+ 532 0034 03D0     		beq	.L34
+ 239:libraries/zf_device/zf_device_key.c ****         {
+ 240:libraries/zf_device/zf_device_key.c ****             return_state = KEY_ERROR_NOT_INIT;
+ 533              		.loc 1 240 26
+ 534 0036 2123     		movs	r3, #33
+ 535 0038 8DF80F30 		strb	r3, [sp, #15]
+ 241:libraries/zf_device/zf_device_key.c ****             break;
+ 536              		.loc 1 241 13
+ 537 003c 28E0     		b	.L35
+ 538              	.L34:
+ 539              	.LBB3:
+ 242:libraries/zf_device/zf_device_key.c ****         }
+ 243:libraries/zf_device/zf_device_key.c **** 
+ 244:libraries/zf_device/zf_device_key.c ****         for(uint8 i = 0; KEY_NUM_MAX > i; i ++)
+ 540              		.loc 1 244 19
+ 541 003e 0023     		movs	r3, #0
+ 542 0040 8DF80E30 		strb	r3, [sp, #14]
+ 543              		.loc 1 244 9
+ 544 0044 1DE0     		b	.L36
+ 545              	.L38:
+ 245:libraries/zf_device/zf_device_key.c ****         {
+ 246:libraries/zf_device/zf_device_key.c ****             key_default_obj.key_state[i] = KEY_RELEASE;
+ 546              		.loc 1 246 38
+ 547 0046 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 548              		.loc 1 246 42
+ 549 004a 144A     		ldr	r2, .L40
+ 550 004c 1344     		add	r3, r3, r2
+ 551 004e 0022     		movs	r2, #0
+ 552 0050 1A72     		strb	r2, [r3, #8]
+ 247:libraries/zf_device/zf_device_key.c ****             if(KEY_RELEASE_LEVEL == zf_gpio_get_level(key_default_obj.pin_list[i]))
+ 553              		.loc 1 247 37
+ 554 0052 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 555 0056 114A     		ldr	r2, .L40
+ 556 0058 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 557 005c 1846     		mov	r0, r3
+ 558 005e FFF7FEFF 		bl	zf_gpio_get_level
+ 559 0062 0346     		mov	r3, r0
+ 560              		.loc 1 247 15
+ 561 0064 012B     		cmp	r3, #1
+ 562 0066 07D1     		bne	.L37
+ 248:libraries/zf_device/zf_device_key.c ****             {
+ 249:libraries/zf_device/zf_device_key.c ****                 key_default_obj.key_press_time[i] = 0;
+ 563              		.loc 1 249 47
+ 564 0068 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 565              		.loc 1 249 51
+ 566 006c 0B4A     		ldr	r2, .L40
+ 567 006e 0233     		adds	r3, r3, #2
+ 568 0070 9B00     		lsls	r3, r3, #2
+ 569 0072 1344     		add	r3, r3, r2
+ 570 0074 0022     		movs	r2, #0
+ 571 0076 5A60     		str	r2, [r3, #4]
+ 572              	.L37:
+ 244:libraries/zf_device/zf_device_key.c ****         {
+ 573              		.loc 1 244 45 discriminator 2
+ 574 0078 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 575 007c 0133     		adds	r3, r3, #1
+ 576 007e 8DF80E30 		strb	r3, [sp, #14]
+ 577              	.L36:
+ 244:libraries/zf_device/zf_device_key.c ****         {
+ 578              		.loc 1 244 9 discriminator 1
+ 579 0082 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 580 0086 032B     		cmp	r3, #3
+ 581 0088 DDD9     		bls	.L38
+ 582              	.LBE3:
+ 250:libraries/zf_device/zf_device_key.c ****             }
+ 251:libraries/zf_device/zf_device_key.c ****         }
+ 252:libraries/zf_device/zf_device_key.c **** 
+ 253:libraries/zf_device/zf_device_key.c ****         return_state = KEY_OPERATION_DONE;
+ 583              		.loc 1 253 22
+ 584 008a 0023     		movs	r3, #0
+ 585 008c 8DF80F30 		strb	r3, [sp, #15]
+ 586              	.L35:
+ 254:libraries/zf_device/zf_device_key.c ****     }while(0);
+ 255:libraries/zf_device/zf_device_key.c **** 
+ 256:libraries/zf_device/zf_device_key.c ****     return return_state;
+ 587              		.loc 1 256 12
+ 588 0090 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 257:libraries/zf_device/zf_device_key.c **** }
+ 589              		.loc 1 257 1
+ 590 0094 1846     		mov	r0, r3
+ 591 0096 05B0     		add	sp, sp, #20
+ 592              		.cfi_def_cfa_offset 4
+ 593              		@ sp needed
+ 594 0098 5DF804FB 		ldr	pc, [sp], #4
+ 595              	.L41:
+ 596              		.align	2
+ 597              	.L40:
+ 598 009c 00000000 		.word	key_default_obj
+ 599 00a0 00000000 		.word	.LC0
+ 600              		.cfi_endproc
+ 601              	.LFE486:
+ 603              		.section	.text.key_init,"ax",%progbits
+ 604              		.align	1
+ 605              		.p2align 4,,15
+ 606              		.global	key_init
+ 607              		.syntax unified
+ 608              		.thumb
+ 609              		.thumb_func
+ 611              	key_init:
+ 612              	.LFB487:
+ 258:libraries/zf_device/zf_device_key.c **** 
+ 259:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 260:libraries/zf_device/zf_device_key.c **** // 函数简介     KEY 按键初始化
+ 261:libraries/zf_device/zf_device_key.c **** // 参数说明     period              按键扫描周期 以毫秒为单位
+ 262:libraries/zf_device/zf_device_key.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / KEY_OPERATION_DONE - 完成 其�
+ 263:libraries/zf_device/zf_device_key.c **** // 使用示例     key_init(period);
+ 264:libraries/zf_device/zf_device_key.c **** // 备注信息     
+ 265:libraries/zf_device/zf_device_key.c **** //-------------------------------------------------------------------------------------------------
+ 266:libraries/zf_device/zf_device_key.c **** uint8 key_init (uint32 period)
+ 267:libraries/zf_device/zf_device_key.c **** {
+ 613              		.loc 1 267 1
+ 614              		.cfi_startproc
+ 615              		@ args = 0, pretend = 0, frame = 16
+ 616              		@ frame_needed = 0, uses_anonymous_args = 0
+ 617 0000 00B5     		push	{lr}
+ 618              		.cfi_def_cfa_offset 4
+ 619              		.cfi_offset 14, -4
+ 620 0002 87B0     		sub	sp, sp, #28
+ 621              		.cfi_def_cfa_offset 32
+ 622 0004 0390     		str	r0, [sp, #12]
+ 268:libraries/zf_device/zf_device_key.c ****     key_operation_state_enum return_state = KEY_ERROR_UNKNOW_ERROR;
+ 623              		.loc 1 268 30
+ 624 0006 0123     		movs	r3, #1
+ 625 0008 8DF81730 		strb	r3, [sp, #23]
+ 269:libraries/zf_device/zf_device_key.c **** 
+ 270:libraries/zf_device/zf_device_key.c ****     do
+ 271:libraries/zf_device/zf_device_key.c ****     {
+ 272:libraries/zf_device/zf_device_key.c ****         if(key_assert(0 < period))
+ 626              		.loc 1 272 11
+ 627 000c 039B     		ldr	r3, [sp, #12]
+ 628 000e 002B     		cmp	r3, #0
+ 629 0010 15D1     		bne	.L43
+ 630              		.loc 1 272 12 discriminator 1
+ 631 0012 039B     		ldr	r3, [sp, #12]
+ 632 0014 002B     		cmp	r3, #0
+ 633 0016 14BF     		ite	ne
+ 634 0018 0123     		movne	r3, #1
+ 635 001a 0023     		moveq	r3, #0
+ 636 001c DBB2     		uxtb	r3, r3
+ 637 001e 1946     		mov	r1, r3
+ 638 0020 4FF48873 		mov	r3, #272
+ 639 0024 0093     		str	r3, [sp]
+ 640 0026 1A4B     		ldr	r3, .L48
+ 641 0028 0022     		movs	r2, #0
+ 642 002a 0220     		movs	r0, #2
+ 643 002c FFF7FEFF 		bl	debug_message_handler
+ 644 0030 0346     		mov	r3, r0
+ 645 0032 002B     		cmp	r3, #0
+ 646 0034 03D0     		beq	.L43
+ 273:libraries/zf_device/zf_device_key.c ****         {
+ 274:libraries/zf_device/zf_device_key.c ****             return_state = KEY_ERROR_PERIOD_ILLEGAL;
+ 647              		.loc 1 274 26
+ 648 0036 2023     		movs	r3, #32
+ 649 0038 8DF81730 		strb	r3, [sp, #23]
+ 275:libraries/zf_device/zf_device_key.c ****             break;
+ 650              		.loc 1 275 13
+ 651 003c 22E0     		b	.L44
+ 652              	.L43:
+ 653              	.LBB4:
+ 276:libraries/zf_device/zf_device_key.c ****         }
+ 277:libraries/zf_device/zf_device_key.c **** 
+ 278:libraries/zf_device/zf_device_key.c ****         for(uint8 loop_temp = 0; KEY_NUM_MAX > loop_temp; loop_temp ++)
+ 654              		.loc 1 278 19
+ 655 003e 0023     		movs	r3, #0
+ 656 0040 8DF81630 		strb	r3, [sp, #22]
+ 657              		.loc 1 278 9
+ 658 0044 14E0     		b	.L45
+ 659              	.L46:
+ 279:libraries/zf_device/zf_device_key.c ****         {
+ 280:libraries/zf_device/zf_device_key.c ****             zf_gpio_init(key_default_obj.pin_list[loop_temp], GPI_PULL_UP, GPIO_HIGH);
+ 660              		.loc 1 280 13 discriminator 3
+ 661 0046 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 662 004a 124A     		ldr	r2, .L48+4
+ 663 004c 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 664 0050 0122     		movs	r2, #1
+ 665 0052 0321     		movs	r1, #3
+ 666 0054 1846     		mov	r0, r3
+ 667 0056 FFF7FEFF 		bl	zf_gpio_init
+ 281:libraries/zf_device/zf_device_key.c ****             key_default_obj.key_state[loop_temp] = KEY_RELEASE;
+ 668              		.loc 1 281 38 discriminator 3
+ 669 005a 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 670              		.loc 1 281 50 discriminator 3
+ 671 005e 0D4A     		ldr	r2, .L48+4
+ 672 0060 1344     		add	r3, r3, r2
+ 673 0062 0022     		movs	r2, #0
+ 674 0064 1A72     		strb	r2, [r3, #8]
+ 278:libraries/zf_device/zf_device_key.c ****         {
+ 675              		.loc 1 278 69 discriminator 3
+ 676 0066 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 677 006a 0133     		adds	r3, r3, #1
+ 678 006c 8DF81630 		strb	r3, [sp, #22]
+ 679              	.L45:
+ 278:libraries/zf_device/zf_device_key.c ****         {
+ 680              		.loc 1 278 9 discriminator 1
+ 681 0070 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 682 0074 032B     		cmp	r3, #3
+ 683 0076 E6D9     		bls	.L46
+ 684              	.LBE4:
+ 282:libraries/zf_device/zf_device_key.c ****         }
+ 283:libraries/zf_device/zf_device_key.c ****         key_default_obj.scanner_period = period;
+ 685              		.loc 1 283 40
+ 686 0078 064A     		ldr	r2, .L48+4
+ 687 007a 039B     		ldr	r3, [sp, #12]
+ 688 007c D361     		str	r3, [r2, #28]
+ 284:libraries/zf_device/zf_device_key.c **** 
+ 285:libraries/zf_device/zf_device_key.c ****         return_state = KEY_OPERATION_DONE;
+ 689              		.loc 1 285 22
+ 690 007e 0023     		movs	r3, #0
+ 691 0080 8DF81730 		strb	r3, [sp, #23]
+ 692              	.L44:
+ 286:libraries/zf_device/zf_device_key.c ****     }while(0);
+ 287:libraries/zf_device/zf_device_key.c **** 
+ 288:libraries/zf_device/zf_device_key.c ****     return return_state;
+ 693              		.loc 1 288 12
+ 694 0084 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 289:libraries/zf_device/zf_device_key.c **** }
+ 695              		.loc 1 289 1
+ 696 0088 1846     		mov	r0, r3
+ 697 008a 07B0     		add	sp, sp, #28
+ 698              		.cfi_def_cfa_offset 4
+ 699              		@ sp needed
+ 700 008c 5DF804FB 		ldr	pc, [sp], #4
+ 701              	.L49:
+ 702              		.align	2
+ 703              	.L48:
+ 704 0090 00000000 		.word	.LC0
+ 705 0094 00000000 		.word	key_default_obj
+ 706              		.cfi_endproc
+ 707              	.LFE487:
+ 709              		.text
+ 710              	.Letext0:
+ 711              		.file 2 "libraries/zf_common/zf_common_typedef.h"
+ 712              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 713              		.file 4 "libraries/zf_driver/zf_driver_gpio.h"
+ 714              		.file 5 "libraries/zf_driver/zf_driver_adc.h"
+ 715              		.file 6 "libraries/zf_driver/zf_driver_can.h"
+ 716              		.file 7 "libraries/zf_driver/zf_driver_encoder.h"
+ 717              		.file 8 "libraries/zf_driver/zf_driver_exti.h"
+ 718              		.file 9 "libraries/zf_driver/zf_driver_hrtim.h"
+ 719              		.file 10 "libraries/zf_driver/zf_driver_pwm.h"
+ 720              		.file 11 "libraries/zf_driver/zf_driver_spi.h"
+ 721              		.file 12 "libraries/zf_driver/zf_driver_uart.h"
+ 722              		.file 13 "libraries/zf_device/zf_device_key.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_device_key.c
+D:\Users\TMP\cchO4aQp.s:23     .data.key_default_obj:00000000 key_default_obj
+D:\Users\TMP\cchO4aQp.s:20     .data.key_default_obj:00000000 $d
+D:\Users\TMP\cchO4aQp.s:38     .rodata:00000000 $d
+D:\Users\TMP\cchO4aQp.s:42     .text.key_scanner:00000000 $t
+D:\Users\TMP\cchO4aQp.s:49     .text.key_scanner:00000000 key_scanner
+D:\Users\TMP\cchO4aQp.s:226    .text.key_scanner:00000118 $d
+D:\Users\TMP\cchO4aQp.s:232    .text.key_get_state:00000000 $t
+D:\Users\TMP\cchO4aQp.s:239    .text.key_get_state:00000000 key_get_state
+D:\Users\TMP\cchO4aQp.s:303    .text.key_get_state:0000005c $d
+D:\Users\TMP\cchO4aQp.s:309    .text.key_get_all_state:00000000 $t
+D:\Users\TMP\cchO4aQp.s:316    .text.key_get_all_state:00000000 key_get_all_state
+D:\Users\TMP\cchO4aQp.s:381    .text.key_get_all_state:0000005c $d
+D:\Users\TMP\cchO4aQp.s:387    .text.key_clear_state:00000000 $t
+D:\Users\TMP\cchO4aQp.s:394    .text.key_clear_state:00000000 key_clear_state
+D:\Users\TMP\cchO4aQp.s:482    .text.key_clear_state:00000088 $d
+D:\Users\TMP\cchO4aQp.s:488    .text.key_clear_all_state:00000000 $t
+D:\Users\TMP\cchO4aQp.s:495    .text.key_clear_all_state:00000000 key_clear_all_state
+D:\Users\TMP\cchO4aQp.s:598    .text.key_clear_all_state:0000009c $d
+D:\Users\TMP\cchO4aQp.s:604    .text.key_init:00000000 $t
+D:\Users\TMP\cchO4aQp.s:611    .text.key_init:00000000 key_init
+D:\Users\TMP\cchO4aQp.s:704    .text.key_init:00000090 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.33.6d362bbaa8a8ff23e6f5c0a30bf7361f
+                           .group:00000000 wm4.zf_common_fifo.h.33.e14e643902e26e4e65437b5b20e82793
+                           .group:00000000 wm4.zf_common_function.h.33.02bbfb055e8ee322bc4f8b14ea195da2
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.saradc.h.25.e5a70aef9ec4fddf35f2b7cc0c9cf1bc
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_adc.h.64.349fb433626b42172b0e0fee038428ca
+                           .group:00000000 wm4.can.h.25.3cfccb6c630ada4f656cab597e231e58
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.zf_driver_can.h.67.fd10d2fa867eb54a54d4b57027d73a60
+                           .group:00000000 wm4.tim.h.25.6e7ad96569e77a70a68b9b4cc59f54f2
+                           .group:00000000 wm4.zf_driver_timer.h.33.8df253b6990d9861816977209fb11e90
+                           .group:00000000 wm4.zf_driver_encoder.h.57.7e32999f25354fac086ca226b0c630d4
+                           .group:00000000 wm4.exti.h.25.21597c35d9630b0985ce88d2c41f4ea4
+                           .group:00000000 wm4.zf_driver_exti.h.59.1b02b8083e5295ef5baaf83905d59395
+                           .group:00000000 wm4.ssd_types.h.29.b861f4e6d39d333f931bfc05b964cb1c
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.zf_driver_flash.h.59.db93fe574c35ea9e79030063fbb35a13
+                           .group:00000000 wm4.hrtim.h.25.1601aea9d4a0da1de8252dc444355251
+                           .group:00000000 wm4.zf_driver_hrtim.h.64.cd8d2bf3bf1c471ea59d9c61e4a721d7
+                           .group:00000000 wm4.zf_driver_interrupt.h.33.2c3660dcc36cb090bd75b8f180c14f27
+                           .group:00000000 wm4.zf_driver_pit.h.33.834ac720a62e09d5603a9557331e9049
+                           .group:00000000 wm4.zf_driver_pwm.h.33.7d80487064ca712231a453396685a551
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.zf_driver_soft_iic.h.33.9067bd298084134f63c61c075f95fa2b
+                           .group:00000000 wm4.zf_driver_soft_spi.h.33.a938287c023905d97cafe56e4be63674
+                           .group:00000000 wm4.zf_driver_spi.h.62.950b1f52ed365034df2907601137b455
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.zf_driver_uart.h.70.ffcf3694337ad0b4066179f1abd5d668
+                           .group:00000000 wm4.zf_device_key.h.68.82d8b0c7c06a9d7a301d337add99da66
+
+UNDEFINED SYMBOLS
+debug_message_handler
+zf_gpio_get_level
+zf_gpio_init

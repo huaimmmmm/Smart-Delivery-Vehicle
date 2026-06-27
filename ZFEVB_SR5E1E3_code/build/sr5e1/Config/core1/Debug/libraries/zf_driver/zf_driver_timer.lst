@@ -1,0 +1,1530 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_timer.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.rodata.timer_rcc_index_list,"a"
+  19              		.align	2
+  22              	timer_rcc_index_list:
+  23 0000 B500     		.short	181
+  24 0002 C500     		.short	197
+  25 0004 F400     		.short	244
+  26 0006 0501     		.short	261
+  27 0008 0401     		.short	260
+  28 000a F500     		.short	245
+  29 000c 1501     		.short	277
+  30 000e 2501     		.short	293
+  31 0010 1401     		.short	276
+  32 0012 2401     		.short	292
+  33              		.global	timer_obj_list
+  34              		.section	.data.timer_obj_list,"aw"
+  35              		.align	2
+  38              	timer_obj_list:
+  39 0000 002C0042 		.word	1107307520
+  40 0004 00A3E111 		.word	300000000
+  41 0008 00000000 		.word	0
+  42 000c 00000000 		.word	0
+  43 0010 00000000 		.word	0
+  44 0014 00300042 		.word	1107308544
+  45 0018 00A3E111 		.word	300000000
+  46 001c 00000000 		.word	0
+  47 0020 00000000 		.word	0
+  48 0024 00000000 		.word	0
+  49 0028 003C0040 		.word	1073757184
+  50 002c 80D1F008 		.word	150000000
+  51 0030 00000000 		.word	0
+  52 0034 00000000 		.word	0
+  53 0038 00000000 		.word	0
+  54 003c 00400042 		.word	1107312640
+  55 0040 00A3E111 		.word	300000000
+  56 0044 00000000 		.word	0
+  57 0048 00000000 		.word	0
+  58 004c 00000000 		.word	0
+  59 0050 00400040 		.word	1073758208
+  60 0054 80D1F008 		.word	150000000
+  61 0058 00000000 		.word	0
+  62 005c 00000000 		.word	0
+  63 0060 00000000 		.word	0
+  64 0064 003C0042 		.word	1107311616
+  65 0068 00A3E111 		.word	300000000
+  66 006c 00000000 		.word	0
+  67 0070 00000000 		.word	0
+  68 0074 00000000 		.word	0
+  69 0078 00440042 		.word	1107313664
+  70 007c 00A3E111 		.word	300000000
+  71 0080 00000000 		.word	0
+  72 0084 00000000 		.word	0
+  73 0088 00000000 		.word	0
+  74 008c 00480042 		.word	1107314688
+  75 0090 00A3E111 		.word	300000000
+  76 0094 00000000 		.word	0
+  77 0098 00000000 		.word	0
+  78 009c 00000000 		.word	0
+  79 00a0 00440040 		.word	1073759232
+  80 00a4 80D1F008 		.word	150000000
+  81 00a8 00000000 		.word	0
+  82 00ac 00000000 		.word	0
+  83 00b0 00000000 		.word	0
+  84 00b4 00480040 		.word	1073760256
+  85 00b8 80D1F008 		.word	150000000
+  86 00bc 00000000 		.word	0
+  87 00c0 00000000 		.word	0
+  88 00c4 00000000 		.word	0
+  89              		.section	.text.zf_timer_assert_handler,"ax",%progbits
+  90              		.align	1
+  91              		.p2align 4,,15
+  92              		.global	zf_timer_assert_handler
+  93              		.syntax unified
+  94              		.thumb
+  95              		.thumb_func
+  97              	zf_timer_assert_handler:
+  98              	.LFB459:
+  99              		.file 1 "libraries/zf_driver/zf_driver_timer.c"
+   1:libraries/zf_driver/zf_driver_timer.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_timer.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_timer.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_timer.c **** *
+   5:libraries/zf_driver/zf_driver_timer.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_timer.c **** *
+   7:libraries/zf_driver/zf_driver_timer.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_timer.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_timer.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_timer.c **** *
+  11:libraries/zf_driver/zf_driver_timer.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_timer.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_timer.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_timer.c **** *
+  15:libraries/zf_driver/zf_driver_timer.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_timer.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_timer.c **** *
+  18:libraries/zf_driver/zf_driver_timer.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_timer.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_timer.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_timer.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_timer.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_timer.c **** *
+  24:libraries/zf_driver/zf_driver_timer.c **** * 文件名称          zf_driver_timer
+  25:libraries/zf_driver/zf_driver_timer.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_timer.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_timer.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_timer.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_timer.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_timer.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_timer.c **** 
+  32:libraries/zf_driver/zf_driver_timer.c **** // zf_common 层引用
+  33:libraries/zf_driver/zf_driver_timer.c **** #include "zf_common_debug.h"
+  34:libraries/zf_driver/zf_driver_timer.c **** #include "zf_common_memory.h"
+  35:libraries/zf_driver/zf_driver_timer.c **** 
+  36:libraries/zf_driver/zf_driver_timer.c **** // zf_driver 层引用
+  37:libraries/zf_driver/zf_driver_timer.c **** #include "zf_driver_rcc.h"
+  38:libraries/zf_driver/zf_driver_timer.c **** #include "zf_driver_system.h"
+  39:libraries/zf_driver/zf_driver_timer.c **** 
+  40:libraries/zf_driver/zf_driver_timer.c **** // 自身头文件
+  41:libraries/zf_driver/zf_driver_timer.c **** #include "zf_driver_timer.h"
+  42:libraries/zf_driver/zf_driver_timer.c **** 
+  43:libraries/zf_driver/zf_driver_timer.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  44:libraries/zf_driver/zf_driver_timer.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  45:libraries/zf_driver/zf_driver_timer.c **** // 用于固定值或指向的内容 主要是用少量存储占用来减少栈开销
+  46:libraries/zf_driver/zf_driver_timer.c **** static const zf_rcc_index_enum timer_rcc_index_list[TIM_NUM_MAX] =
+  47:libraries/zf_driver/zf_driver_timer.c **** {
+  48:libraries/zf_driver/zf_driver_timer.c ****     RCC_INDEX_TIM1 , RCC_INDEX_TIM8 ,
+  49:libraries/zf_driver/zf_driver_timer.c ****     RCC_INDEX_TIM2 , RCC_INDEX_TIM5 ,
+  50:libraries/zf_driver/zf_driver_timer.c ****     RCC_INDEX_TIM3 , RCC_INDEX_TIM4 ,
+  51:libraries/zf_driver/zf_driver_timer.c ****     RCC_INDEX_TIM15, RCC_INDEX_TIM16,
+  52:libraries/zf_driver/zf_driver_timer.c ****     RCC_INDEX_TIM6 , RCC_INDEX_TIM7 ,
+  53:libraries/zf_driver/zf_driver_timer.c **** };
+  54:libraries/zf_driver/zf_driver_timer.c **** 
+  55:libraries/zf_driver/zf_driver_timer.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  56:libraries/zf_driver/zf_driver_timer.c **** AT_ZF_LIB_SECTION_START
+  57:libraries/zf_driver/zf_driver_timer.c **** AT_ZF_LIB_SECTION zf_timer_obj_struct timer_obj_list[TIM_NUM_MAX] =
+  58:libraries/zf_driver/zf_driver_timer.c **** {
+  59:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM1 , .clock_input = 300000000, .div = 0, .period = 0, .config_info = 0},
+  60:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM8 , .clock_input = 300000000, .div = 0, .period = 0, .config_info = 0},
+  61:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM2 , .clock_input = 150000000, .div = 0, .period = 0, .config_info = 0},
+  62:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM5 , .clock_input = 300000000, .div = 0, .period = 0, .config_info = 0},
+  63:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM3 , .clock_input = 150000000, .div = 0, .period = 0, .config_info = 0},
+  64:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM4 , .clock_input = 300000000, .div = 0, .period = 0, .config_info = 0},
+  65:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM15, .clock_input = 300000000, .div = 0, .period = 0, .config_info = 0},
+  66:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM16, .clock_input = 300000000, .div = 0, .period = 0, .config_info = 0},
+  67:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM6 , .clock_input = 150000000, .div = 0, .period = 0, .config_info = 0},
+  68:libraries/zf_driver/zf_driver_timer.c ****     {.tim_ptr = TIM7 , .clock_input = 150000000, .div = 0, .period = 0, .config_info = 0}
+  69:libraries/zf_driver/zf_driver_timer.c **** };
+  70:libraries/zf_driver/zf_driver_timer.c **** AT_ZF_LIB_SECTION_END
+  71:libraries/zf_driver/zf_driver_timer.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  72:libraries/zf_driver/zf_driver_timer.c **** 
+  73:libraries/zf_driver/zf_driver_timer.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  74:libraries/zf_driver/zf_driver_timer.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  75:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+  76:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 断言处理
+  77:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     *file               文件路径
+  78:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     line                报错行
+  79:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     *tips               输出信息
+  80:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / GPIO_OPERATION_DONE - 完成 其
+  81:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_assert_handler(file, line, tips);
+  82:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+  83:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+  84:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_assert_handler (char *file, int line, char *tips)
+  85:libraries/zf_driver/zf_driver_timer.c **** {
+ 100              		.loc 1 85 1
+ 101              		.cfi_startproc
+ 102              		@ args = 0, pretend = 0, frame = 16
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104 0000 00B5     		push	{lr}
+ 105              		.cfi_def_cfa_offset 4
+ 106              		.cfi_offset 14, -4
+ 107 0002 87B0     		sub	sp, sp, #28
+ 108              		.cfi_def_cfa_offset 32
+ 109 0004 0590     		str	r0, [sp, #20]
+ 110 0006 0491     		str	r1, [sp, #16]
+ 111 0008 0392     		str	r2, [sp, #12]
+  86:libraries/zf_driver/zf_driver_timer.c ****     debug_message_handler(DEBUG_OUTPUT_LEVEL_ASSERT, ZF_FALSE, tips, file, line);
+ 112              		.loc 1 86 5
+ 113 000a 049B     		ldr	r3, [sp, #16]
+ 114 000c 0093     		str	r3, [sp]
+ 115 000e 059B     		ldr	r3, [sp, #20]
+ 116 0010 039A     		ldr	r2, [sp, #12]
+ 117 0012 0021     		movs	r1, #0
+ 118 0014 0220     		movs	r0, #2
+ 119 0016 FFF7FEFF 		bl	debug_message_handler
+ 120              	.L2:
+  87:libraries/zf_driver/zf_driver_timer.c ****     while(1);
+ 121              		.loc 1 87 10 discriminator 1
+ 122 001a FEE7     		b	.L2
+ 123              		.cfi_endproc
+ 124              	.LFE459:
+ 126              		.section	.text.zf_timer_funciton_check,"ax",%progbits
+ 127              		.align	1
+ 128              		.p2align 4,,15
+ 129              		.global	zf_timer_funciton_check
+ 130              		.syntax unified
+ 131              		.thumb
+ 132              		.thumb_func
+ 134              	zf_timer_funciton_check:
+ 135              	.LFB460:
+  88:libraries/zf_driver/zf_driver_timer.c ****     return ZF_ERROR;
+  89:libraries/zf_driver/zf_driver_timer.c **** }
+  90:libraries/zf_driver/zf_driver_timer.c **** 
+  91:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+  92:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 外设确认功能状态 库内部调用
+  93:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+  94:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     mode                功能模块        (详见 zf_driver_timer.h 内 zf_timer_
+  95:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / TIM_OPERATION_DONE - 完成 其�
+  96:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_funciton_check(index, mode);
+  97:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     本函数是提供给其他基于 TIM 模块实现的功能模块进行互斥�
+  98:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+  99:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_funciton_check (zf_timer_index_enum timer_index, zf_timer_function_enum mode)
+ 100:libraries/zf_driver/zf_driver_timer.c **** {
+ 136              		.loc 1 100 1
+ 137              		.cfi_startproc
+ 138              		@ args = 0, pretend = 0, frame = 16
+ 139              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140              		@ link register save eliminated.
+ 141 0000 84B0     		sub	sp, sp, #16
+ 142              		.cfi_def_cfa_offset 16
+ 143 0002 0346     		mov	r3, r0
+ 144 0004 0A46     		mov	r2, r1
+ 145 0006 8DF80730 		strb	r3, [sp, #7]
+ 146 000a 1346     		mov	r3, r2
+ 147 000c 8DF80630 		strb	r3, [sp, #6]
+ 101:libraries/zf_driver/zf_driver_timer.c ****     zf_timer_operation_state_enum return_state = TIM_ERROR_UNKNOW;
+ 148              		.loc 1 101 35
+ 149 0010 0123     		movs	r3, #1
+ 150 0012 8DF80F30 		strb	r3, [sp, #15]
+ 102:libraries/zf_driver/zf_driver_timer.c **** 
+ 103:libraries/zf_driver/zf_driver_timer.c ****     if(TIMER_FUNCTION_INIT == timer_obj_list[timer_index].function)
+ 151              		.loc 1 103 58
+ 152 0016 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 153 001a 2149     		ldr	r1, .L8
+ 154 001c 1346     		mov	r3, r2
+ 155 001e 9B00     		lsls	r3, r3, #2
+ 156 0020 1344     		add	r3, r3, r2
+ 157 0022 9B00     		lsls	r3, r3, #2
+ 158 0024 0B44     		add	r3, r3, r1
+ 159 0026 1033     		adds	r3, r3, #16
+ 160 0028 1B78     		ldrb	r3, [r3]
+ 161 002a C3F30303 		ubfx	r3, r3, #0, #4
+ 162 002e DBB2     		uxtb	r3, r3
+ 163              		.loc 1 103 7
+ 164 0030 002B     		cmp	r3, #0
+ 165 0032 16D1     		bne	.L4
+ 104:libraries/zf_driver/zf_driver_timer.c ****     {
+ 105:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].function = mode;
+ 166              		.loc 1 105 36
+ 167 0034 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 168              		.loc 1 105 46
+ 169 0038 9DF80630 		ldrb	r3, [sp, #6]
+ 170 003c 03F00F03 		and	r3, r3, #15
+ 171 0040 D9B2     		uxtb	r1, r3
+ 172 0042 1748     		ldr	r0, .L8
+ 173 0044 1346     		mov	r3, r2
+ 174 0046 9B00     		lsls	r3, r3, #2
+ 175 0048 1344     		add	r3, r3, r2
+ 176 004a 9B00     		lsls	r3, r3, #2
+ 177 004c 0344     		add	r3, r3, r0
+ 178 004e 03F11002 		add	r2, r3, #16
+ 179 0052 1378     		ldrb	r3, [r2]
+ 180 0054 61F30303 		bfi	r3, r1, #0, #4
+ 181 0058 1370     		strb	r3, [r2]
+ 106:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 182              		.loc 1 106 22
+ 183 005a 0023     		movs	r3, #0
+ 184 005c 8DF80F30 		strb	r3, [sp, #15]
+ 185 0060 18E0     		b	.L5
+ 186              	.L4:
+ 107:libraries/zf_driver/zf_driver_timer.c ****     }
+ 108:libraries/zf_driver/zf_driver_timer.c ****     else if(timer_obj_list[timer_index].function == mode)
+ 187              		.loc 1 108 40
+ 188 0062 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 189 0066 0E49     		ldr	r1, .L8
+ 190 0068 1346     		mov	r3, r2
+ 191 006a 9B00     		lsls	r3, r3, #2
+ 192 006c 1344     		add	r3, r3, r2
+ 193 006e 9B00     		lsls	r3, r3, #2
+ 194 0070 0B44     		add	r3, r3, r1
+ 195 0072 1033     		adds	r3, r3, #16
+ 196 0074 1B78     		ldrb	r3, [r3]
+ 197 0076 C3F30303 		ubfx	r3, r3, #0, #4
+ 198 007a DBB2     		uxtb	r3, r3
+ 199 007c 1A46     		mov	r2, r3
+ 200              		.loc 1 108 50
+ 201 007e 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 202              		.loc 1 108 12
+ 203 0082 9A42     		cmp	r2, r3
+ 204 0084 03D1     		bne	.L6
+ 109:libraries/zf_driver/zf_driver_timer.c ****     {
+ 110:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 205              		.loc 1 110 22
+ 206 0086 0023     		movs	r3, #0
+ 207 0088 8DF80F30 		strb	r3, [sp, #15]
+ 208 008c 02E0     		b	.L5
+ 209              	.L6:
+ 111:libraries/zf_driver/zf_driver_timer.c ****     }
+ 112:libraries/zf_driver/zf_driver_timer.c ****     else
+ 113:libraries/zf_driver/zf_driver_timer.c ****     {
+ 114:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_ERROR_MODULE_OCCUPIED;
+ 210              		.loc 1 114 22
+ 211 008e 2023     		movs	r3, #32
+ 212 0090 8DF80F30 		strb	r3, [sp, #15]
+ 213              	.L5:
+ 115:libraries/zf_driver/zf_driver_timer.c ****     }
+ 116:libraries/zf_driver/zf_driver_timer.c **** 
+ 117:libraries/zf_driver/zf_driver_timer.c ****     return return_state;
+ 214              		.loc 1 117 12
+ 215 0094 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 118:libraries/zf_driver/zf_driver_timer.c **** }
+ 216              		.loc 1 118 1
+ 217 0098 1846     		mov	r0, r3
+ 218 009a 04B0     		add	sp, sp, #16
+ 219              		.cfi_def_cfa_offset 0
+ 220              		@ sp needed
+ 221 009c 7047     		bx	lr
+ 222              	.L9:
+ 223 009e 00BF     		.align	2
+ 224              	.L8:
+ 225 00a0 00000000 		.word	timer_obj_list
+ 226              		.cfi_endproc
+ 227              	.LFE460:
+ 229              		.section	.text.zf_timer_clock_enable,"ax",%progbits
+ 230              		.align	1
+ 231              		.p2align 4,,15
+ 232              		.global	zf_timer_clock_enable
+ 233              		.syntax unified
+ 234              		.thumb
+ 235              		.thumb_func
+ 237              	zf_timer_clock_enable:
+ 238              	.LFB461:
+ 119:libraries/zf_driver/zf_driver_timer.c **** 
+ 120:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 121:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 时钟使能 库内部调用
+ 122:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+ 123:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     void
+ 124:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_clock_enable(timer_index);
+ 125:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+ 126:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 127:libraries/zf_driver/zf_driver_timer.c **** void zf_timer_clock_enable (zf_timer_index_enum timer_index)
+ 128:libraries/zf_driver/zf_driver_timer.c **** {
+ 239              		.loc 1 128 1
+ 240              		.cfi_startproc
+ 241              		@ args = 0, pretend = 0, frame = 8
+ 242              		@ frame_needed = 0, uses_anonymous_args = 0
+ 243 0000 00B5     		push	{lr}
+ 244              		.cfi_def_cfa_offset 4
+ 245              		.cfi_offset 14, -4
+ 246 0002 83B0     		sub	sp, sp, #12
+ 247              		.cfi_def_cfa_offset 16
+ 248 0004 0346     		mov	r3, r0
+ 249 0006 8DF80730 		strb	r3, [sp, #7]
+ 129:libraries/zf_driver/zf_driver_timer.c ****     zf_rcc_clock_enable(timer_rcc_index_list[timer_index]);
+ 250              		.loc 1 129 5
+ 251 000a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 252 000e 054A     		ldr	r2, .L11
+ 253 0010 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 254 0014 1846     		mov	r0, r3
+ 255 0016 FFF7FEFF 		bl	zf_rcc_clock_enable
+ 130:libraries/zf_driver/zf_driver_timer.c **** }
+ 256              		.loc 1 130 1
+ 257 001a 00BF     		nop
+ 258 001c 03B0     		add	sp, sp, #12
+ 259              		.cfi_def_cfa_offset 4
+ 260              		@ sp needed
+ 261 001e 5DF804FB 		ldr	pc, [sp], #4
+ 262              	.L12:
+ 263 0022 00BF     		.align	2
+ 264              	.L11:
+ 265 0024 00000000 		.word	timer_rcc_index_list
+ 266              		.cfi_endproc
+ 267              	.LFE461:
+ 269              		.section	.rodata
+ 270              		.align	2
+ 271              	.LC0:
+ 272 0000 6C696272 		.ascii	"libraries/zf_driver/zf_driver_timer.c\000"
+ 272      61726965 
+ 272      732F7A66 
+ 272      5F647269 
+ 272      7665722F 
+ 273              		.section	.text.zf_timer_enable,"ax",%progbits
+ 274              		.align	1
+ 275              		.p2align 4,,15
+ 276              		.global	zf_timer_enable
+ 277              		.syntax unified
+ 278              		.thumb
+ 279              		.thumb_func
+ 281              	zf_timer_enable:
+ 282              	.LFB462:
+ 131:libraries/zf_driver/zf_driver_timer.c **** 
+ 132:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 133:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 开始计时
+ 134:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+ 135:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / TIM_OPERATION_DONE - 完成 其�
+ 136:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_enable(timer_index);
+ 137:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+ 138:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 139:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_enable (zf_timer_index_enum timer_index)
+ 140:libraries/zf_driver/zf_driver_timer.c **** {
+ 283              		.loc 1 140 1
+ 284              		.cfi_startproc
+ 285              		@ args = 0, pretend = 0, frame = 16
+ 286              		@ frame_needed = 0, uses_anonymous_args = 0
+ 287 0000 00B5     		push	{lr}
+ 288              		.cfi_def_cfa_offset 4
+ 289              		.cfi_offset 14, -4
+ 290 0002 85B0     		sub	sp, sp, #20
+ 291              		.cfi_def_cfa_offset 24
+ 292 0004 0346     		mov	r3, r0
+ 293 0006 8DF80730 		strb	r3, [sp, #7]
+ 141:libraries/zf_driver/zf_driver_timer.c ****     zf_timer_operation_state_enum return_state = TIM_ERROR_UNKNOW;
+ 294              		.loc 1 141 35
+ 295 000a 0123     		movs	r3, #1
+ 296 000c 8DF80F30 		strb	r3, [sp, #15]
+ 142:libraries/zf_driver/zf_driver_timer.c **** 
+ 143:libraries/zf_driver/zf_driver_timer.c ****     do
+ 144:libraries/zf_driver/zf_driver_timer.c ****     {
+ 145:libraries/zf_driver/zf_driver_timer.c ****         if(zf_timer_assert(timer_obj_list[timer_index].period))
+ 297              		.loc 1 145 12
+ 298 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 299 0014 1A49     		ldr	r1, .L17
+ 300 0016 1346     		mov	r3, r2
+ 301 0018 9B00     		lsls	r3, r3, #2
+ 302 001a 1344     		add	r3, r3, r2
+ 303 001c 9B00     		lsls	r3, r3, #2
+ 304 001e 0B44     		add	r3, r3, r1
+ 305 0020 0C33     		adds	r3, r3, #12
+ 306 0022 1B68     		ldr	r3, [r3]
+ 307              		.loc 1 145 11
+ 308 0024 002B     		cmp	r3, #0
+ 309 0026 0BD1     		bne	.L14
+ 310              		.loc 1 145 12 discriminator 1
+ 311 0028 0022     		movs	r2, #0
+ 312 002a 9121     		movs	r1, #145
+ 313 002c 1548     		ldr	r0, .L17+4
+ 314 002e FFF7FEFF 		bl	zf_timer_assert_handler
+ 315 0032 0346     		mov	r3, r0
+ 316 0034 002B     		cmp	r3, #0
+ 317 0036 03D0     		beq	.L14
+ 146:libraries/zf_driver/zf_driver_timer.c ****         {
+ 147:libraries/zf_driver/zf_driver_timer.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 148:libraries/zf_driver/zf_driver_timer.c ****             return_state = TIM_ERROR_MODULE_NOT_INIT;
+ 318              		.loc 1 148 26
+ 319 0038 2123     		movs	r3, #33
+ 320 003a 8DF80F30 		strb	r3, [sp, #15]
+ 149:libraries/zf_driver/zf_driver_timer.c ****             break;
+ 321              		.loc 1 149 13
+ 322 003e 18E0     		b	.L15
+ 323              	.L14:
+ 150:libraries/zf_driver/zf_driver_timer.c ****         }
+ 151:libraries/zf_driver/zf_driver_timer.c **** 
+ 152:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].tim_ptr->CR1  |=  TIM_CR1_CEN;
+ 324              		.loc 1 152 36
+ 325 0040 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 326 0044 0E49     		ldr	r1, .L17
+ 327 0046 1346     		mov	r3, r2
+ 328 0048 9B00     		lsls	r3, r3, #2
+ 329 004a 1344     		add	r3, r3, r2
+ 330 004c 9B00     		lsls	r3, r3, #2
+ 331 004e 0B44     		add	r3, r3, r1
+ 332 0050 1B68     		ldr	r3, [r3]
+ 333              		.loc 1 152 51
+ 334 0052 1968     		ldr	r1, [r3]
+ 335              		.loc 1 152 36
+ 336 0054 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 337 0058 0948     		ldr	r0, .L17
+ 338 005a 1346     		mov	r3, r2
+ 339 005c 9B00     		lsls	r3, r3, #2
+ 340 005e 1344     		add	r3, r3, r2
+ 341 0060 9B00     		lsls	r3, r3, #2
+ 342 0062 0344     		add	r3, r3, r0
+ 343 0064 1B68     		ldr	r3, [r3]
+ 344              		.loc 1 152 51
+ 345 0066 41F00102 		orr	r2, r1, #1
+ 346 006a 1A60     		str	r2, [r3]
+ 153:libraries/zf_driver/zf_driver_timer.c **** 
+ 154:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 347              		.loc 1 154 22
+ 348 006c 0023     		movs	r3, #0
+ 349 006e 8DF80F30 		strb	r3, [sp, #15]
+ 350              	.L15:
+ 155:libraries/zf_driver/zf_driver_timer.c ****     }while(0);
+ 156:libraries/zf_driver/zf_driver_timer.c **** 
+ 157:libraries/zf_driver/zf_driver_timer.c ****     return return_state;
+ 351              		.loc 1 157 12
+ 352 0072 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 158:libraries/zf_driver/zf_driver_timer.c **** }
+ 353              		.loc 1 158 1
+ 354 0076 1846     		mov	r0, r3
+ 355 0078 05B0     		add	sp, sp, #20
+ 356              		.cfi_def_cfa_offset 4
+ 357              		@ sp needed
+ 358 007a 5DF804FB 		ldr	pc, [sp], #4
+ 359              	.L18:
+ 360 007e 00BF     		.align	2
+ 361              	.L17:
+ 362 0080 00000000 		.word	timer_obj_list
+ 363 0084 00000000 		.word	.LC0
+ 364              		.cfi_endproc
+ 365              	.LFE462:
+ 367              		.section	.text.zf_timer_disable,"ax",%progbits
+ 368              		.align	1
+ 369              		.p2align 4,,15
+ 370              		.global	zf_timer_disable
+ 371              		.syntax unified
+ 372              		.thumb
+ 373              		.thumb_func
+ 375              	zf_timer_disable:
+ 376              	.LFB463:
+ 159:libraries/zf_driver/zf_driver_timer.c **** 
+ 160:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 161:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 停止计时
+ 162:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+ 163:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / TIM_OPERATION_DONE - 完成 其�
+ 164:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_disable(timer_index);
+ 165:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+ 166:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 167:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_disable (zf_timer_index_enum timer_index)
+ 168:libraries/zf_driver/zf_driver_timer.c **** {
+ 377              		.loc 1 168 1
+ 378              		.cfi_startproc
+ 379              		@ args = 0, pretend = 0, frame = 16
+ 380              		@ frame_needed = 0, uses_anonymous_args = 0
+ 381 0000 00B5     		push	{lr}
+ 382              		.cfi_def_cfa_offset 4
+ 383              		.cfi_offset 14, -4
+ 384 0002 85B0     		sub	sp, sp, #20
+ 385              		.cfi_def_cfa_offset 24
+ 386 0004 0346     		mov	r3, r0
+ 387 0006 8DF80730 		strb	r3, [sp, #7]
+ 169:libraries/zf_driver/zf_driver_timer.c ****     zf_timer_operation_state_enum return_state = TIM_ERROR_UNKNOW;
+ 388              		.loc 1 169 35
+ 389 000a 0123     		movs	r3, #1
+ 390 000c 8DF80F30 		strb	r3, [sp, #15]
+ 170:libraries/zf_driver/zf_driver_timer.c **** 
+ 171:libraries/zf_driver/zf_driver_timer.c ****     do
+ 172:libraries/zf_driver/zf_driver_timer.c ****     {
+ 173:libraries/zf_driver/zf_driver_timer.c ****         if(zf_timer_assert(timer_obj_list[timer_index].period))
+ 391              		.loc 1 173 12
+ 392 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 393 0014 1A49     		ldr	r1, .L23
+ 394 0016 1346     		mov	r3, r2
+ 395 0018 9B00     		lsls	r3, r3, #2
+ 396 001a 1344     		add	r3, r3, r2
+ 397 001c 9B00     		lsls	r3, r3, #2
+ 398 001e 0B44     		add	r3, r3, r1
+ 399 0020 0C33     		adds	r3, r3, #12
+ 400 0022 1B68     		ldr	r3, [r3]
+ 401              		.loc 1 173 11
+ 402 0024 002B     		cmp	r3, #0
+ 403 0026 0BD1     		bne	.L20
+ 404              		.loc 1 173 12 discriminator 1
+ 405 0028 0022     		movs	r2, #0
+ 406 002a AD21     		movs	r1, #173
+ 407 002c 1548     		ldr	r0, .L23+4
+ 408 002e FFF7FEFF 		bl	zf_timer_assert_handler
+ 409 0032 0346     		mov	r3, r0
+ 410 0034 002B     		cmp	r3, #0
+ 411 0036 03D0     		beq	.L20
+ 174:libraries/zf_driver/zf_driver_timer.c ****         {
+ 175:libraries/zf_driver/zf_driver_timer.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 176:libraries/zf_driver/zf_driver_timer.c ****             return_state = TIM_ERROR_MODULE_NOT_INIT;
+ 412              		.loc 1 176 26
+ 413 0038 2123     		movs	r3, #33
+ 414 003a 8DF80F30 		strb	r3, [sp, #15]
+ 177:libraries/zf_driver/zf_driver_timer.c ****             break;
+ 415              		.loc 1 177 13
+ 416 003e 18E0     		b	.L21
+ 417              	.L20:
+ 178:libraries/zf_driver/zf_driver_timer.c ****         }
+ 179:libraries/zf_driver/zf_driver_timer.c **** 
+ 180:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].tim_ptr->CR1  &= ~TIM_CR1_CEN;
+ 418              		.loc 1 180 36
+ 419 0040 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 420 0044 0E49     		ldr	r1, .L23
+ 421 0046 1346     		mov	r3, r2
+ 422 0048 9B00     		lsls	r3, r3, #2
+ 423 004a 1344     		add	r3, r3, r2
+ 424 004c 9B00     		lsls	r3, r3, #2
+ 425 004e 0B44     		add	r3, r3, r1
+ 426 0050 1B68     		ldr	r3, [r3]
+ 427              		.loc 1 180 51
+ 428 0052 1968     		ldr	r1, [r3]
+ 429              		.loc 1 180 36
+ 430 0054 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 431 0058 0948     		ldr	r0, .L23
+ 432 005a 1346     		mov	r3, r2
+ 433 005c 9B00     		lsls	r3, r3, #2
+ 434 005e 1344     		add	r3, r3, r2
+ 435 0060 9B00     		lsls	r3, r3, #2
+ 436 0062 0344     		add	r3, r3, r0
+ 437 0064 1B68     		ldr	r3, [r3]
+ 438              		.loc 1 180 51
+ 439 0066 21F00102 		bic	r2, r1, #1
+ 440 006a 1A60     		str	r2, [r3]
+ 181:libraries/zf_driver/zf_driver_timer.c **** 
+ 182:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 441              		.loc 1 182 22
+ 442 006c 0023     		movs	r3, #0
+ 443 006e 8DF80F30 		strb	r3, [sp, #15]
+ 444              	.L21:
+ 183:libraries/zf_driver/zf_driver_timer.c ****     }while(0);
+ 184:libraries/zf_driver/zf_driver_timer.c **** 
+ 185:libraries/zf_driver/zf_driver_timer.c ****     return return_state;
+ 445              		.loc 1 185 12
+ 446 0072 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 186:libraries/zf_driver/zf_driver_timer.c **** }
+ 447              		.loc 1 186 1
+ 448 0076 1846     		mov	r0, r3
+ 449 0078 05B0     		add	sp, sp, #20
+ 450              		.cfi_def_cfa_offset 4
+ 451              		@ sp needed
+ 452 007a 5DF804FB 		ldr	pc, [sp], #4
+ 453              	.L24:
+ 454 007e 00BF     		.align	2
+ 455              	.L23:
+ 456 0080 00000000 		.word	timer_obj_list
+ 457 0084 00000000 		.word	.LC0
+ 458              		.cfi_endproc
+ 459              	.LFE463:
+ 461              		.section	.text.zf_timer_get,"ax",%progbits
+ 462              		.align	1
+ 463              		.p2align 4,,15
+ 464              		.global	zf_timer_get
+ 465              		.syntax unified
+ 466              		.thumb
+ 467              		.thumb_func
+ 469              	zf_timer_get:
+ 470              	.LFB464:
+ 187:libraries/zf_driver/zf_driver_timer.c **** 
+ 188:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 189:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 获取计时器计数
+ 190:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+ 191:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     *data               数据存放缓冲区
+ 192:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint16              计数值
+ 193:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_get(timer_index, data);
+ 194:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+ 195:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 196:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_get (zf_timer_index_enum timer_index, uint16 *data)
+ 197:libraries/zf_driver/zf_driver_timer.c **** {
+ 471              		.loc 1 197 1
+ 472              		.cfi_startproc
+ 473              		@ args = 0, pretend = 0, frame = 16
+ 474              		@ frame_needed = 0, uses_anonymous_args = 0
+ 475 0000 00B5     		push	{lr}
+ 476              		.cfi_def_cfa_offset 4
+ 477              		.cfi_offset 14, -4
+ 478 0002 85B0     		sub	sp, sp, #20
+ 479              		.cfi_def_cfa_offset 24
+ 480 0004 0346     		mov	r3, r0
+ 481 0006 0091     		str	r1, [sp]
+ 482 0008 8DF80730 		strb	r3, [sp, #7]
+ 198:libraries/zf_driver/zf_driver_timer.c ****     zf_timer_operation_state_enum return_state = TIM_ERROR_UNKNOW;
+ 483              		.loc 1 198 35
+ 484 000c 0123     		movs	r3, #1
+ 485 000e 8DF80F30 		strb	r3, [sp, #15]
+ 486              	.LBB2:
+ 199:libraries/zf_driver/zf_driver_timer.c **** 
+ 200:libraries/zf_driver/zf_driver_timer.c ****     do
+ 201:libraries/zf_driver/zf_driver_timer.c ****     {
+ 202:libraries/zf_driver/zf_driver_timer.c ****         if(zf_timer_assert(timer_obj_list[timer_index].period))
+ 487              		.loc 1 202 12
+ 488 0012 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 489 0016 2A49     		ldr	r1, .L31
+ 490 0018 1346     		mov	r3, r2
+ 491 001a 9B00     		lsls	r3, r3, #2
+ 492 001c 1344     		add	r3, r3, r2
+ 493 001e 9B00     		lsls	r3, r3, #2
+ 494 0020 0B44     		add	r3, r3, r1
+ 495 0022 0C33     		adds	r3, r3, #12
+ 496 0024 1B68     		ldr	r3, [r3]
+ 497              		.loc 1 202 11
+ 498 0026 002B     		cmp	r3, #0
+ 499 0028 0BD1     		bne	.L26
+ 500              		.loc 1 202 12 discriminator 1
+ 501 002a 0022     		movs	r2, #0
+ 502 002c CA21     		movs	r1, #202
+ 503 002e 2548     		ldr	r0, .L31+4
+ 504 0030 FFF7FEFF 		bl	zf_timer_assert_handler
+ 505 0034 0346     		mov	r3, r0
+ 506 0036 002B     		cmp	r3, #0
+ 507 0038 03D0     		beq	.L26
+ 203:libraries/zf_driver/zf_driver_timer.c ****         {
+ 204:libraries/zf_driver/zf_driver_timer.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 205:libraries/zf_driver/zf_driver_timer.c ****             return_state = TIM_ERROR_MODULE_NOT_INIT;
+ 508              		.loc 1 205 26
+ 509 003a 2123     		movs	r3, #33
+ 510 003c 8DF80F30 		strb	r3, [sp, #15]
+ 206:libraries/zf_driver/zf_driver_timer.c ****             break;
+ 511              		.loc 1 206 13
+ 512 0040 38E0     		b	.L27
+ 513              	.L26:
+ 207:libraries/zf_driver/zf_driver_timer.c ****         }
+ 208:libraries/zf_driver/zf_driver_timer.c ****         if(zf_timer_assert(NULL != data))
+ 514              		.loc 1 208 11
+ 515 0042 009B     		ldr	r3, [sp]
+ 516 0044 002B     		cmp	r3, #0
+ 517 0046 0BD1     		bne	.L28
+ 518              		.loc 1 208 12 discriminator 1
+ 519 0048 0022     		movs	r2, #0
+ 520 004a D021     		movs	r1, #208
+ 521 004c 1D48     		ldr	r0, .L31+4
+ 522 004e FFF7FEFF 		bl	zf_timer_assert_handler
+ 523 0052 0346     		mov	r3, r0
+ 524 0054 002B     		cmp	r3, #0
+ 525 0056 03D0     		beq	.L28
+ 209:libraries/zf_driver/zf_driver_timer.c ****         {
+ 210:libraries/zf_driver/zf_driver_timer.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 211:libraries/zf_driver/zf_driver_timer.c ****             // 不可以对空指针进行操作
+ 212:libraries/zf_driver/zf_driver_timer.c ****             return_state = TIM_ERROR_DATA_BUFFER_NULL;
+ 526              		.loc 1 212 26
+ 527 0058 2223     		movs	r3, #34
+ 528 005a 8DF80F30 		strb	r3, [sp, #15]
+ 213:libraries/zf_driver/zf_driver_timer.c ****             break;
+ 529              		.loc 1 213 13
+ 530 005e 29E0     		b	.L27
+ 531              	.L28:
+ 214:libraries/zf_driver/zf_driver_timer.c ****         }
+ 215:libraries/zf_driver/zf_driver_timer.c **** 
+ 216:libraries/zf_driver/zf_driver_timer.c ****         uint16 return_value = timer_obj_list[timer_index].tim_ptr->CNT;
+ 532              		.loc 1 216 58
+ 533 0060 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 534 0064 1649     		ldr	r1, .L31
+ 535 0066 1346     		mov	r3, r2
+ 536 0068 9B00     		lsls	r3, r3, #2
+ 537 006a 1344     		add	r3, r3, r2
+ 538 006c 9B00     		lsls	r3, r3, #2
+ 539 006e 0B44     		add	r3, r3, r1
+ 540 0070 1B68     		ldr	r3, [r3]
+ 541              		.loc 1 216 66
+ 542 0072 5B6A     		ldr	r3, [r3, #36]
+ 543              		.loc 1 216 16
+ 544 0074 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 217:libraries/zf_driver/zf_driver_timer.c ****         if(TIMER_MS == timer_obj_list[timer_index].mode)
+ 545              		.loc 1 217 51
+ 546 0078 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 547 007c 1049     		ldr	r1, .L31
+ 548 007e 1346     		mov	r3, r2
+ 549 0080 9B00     		lsls	r3, r3, #2
+ 550 0082 1344     		add	r3, r3, r2
+ 551 0084 9B00     		lsls	r3, r3, #2
+ 552 0086 0B44     		add	r3, r3, r1
+ 553 0088 1033     		adds	r3, r3, #16
+ 554 008a 1B78     		ldrb	r3, [r3]
+ 555 008c C3F30113 		ubfx	r3, r3, #4, #2
+ 556 0090 DBB2     		uxtb	r3, r3
+ 557              		.loc 1 217 11
+ 558 0092 022B     		cmp	r3, #2
+ 559 0094 07D1     		bne	.L29
+ 218:libraries/zf_driver/zf_driver_timer.c ****         {
+ 219:libraries/zf_driver/zf_driver_timer.c ****             return_value = return_value / 10;
+ 560              		.loc 1 219 26
+ 561 0096 BDF80C30 		ldrh	r3, [sp, #12]
+ 562 009a 0B4A     		ldr	r2, .L31+8
+ 563 009c A2FB0323 		umull	r2, r3, r2, r3
+ 564 00a0 DB08     		lsrs	r3, r3, #3
+ 565 00a2 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 566              	.L29:
+ 220:libraries/zf_driver/zf_driver_timer.c ****         }
+ 221:libraries/zf_driver/zf_driver_timer.c ****         *data = return_value;
+ 567              		.loc 1 221 15
+ 568 00a6 009B     		ldr	r3, [sp]
+ 569 00a8 BDF80C20 		ldrh	r2, [sp, #12]	@ movhi
+ 570 00ac 1A80     		strh	r2, [r3]	@ movhi
+ 222:libraries/zf_driver/zf_driver_timer.c **** 
+ 223:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 571              		.loc 1 223 22
+ 572 00ae 0023     		movs	r3, #0
+ 573 00b0 8DF80F30 		strb	r3, [sp, #15]
+ 574              	.L27:
+ 575              	.LBE2:
+ 224:libraries/zf_driver/zf_driver_timer.c ****     }while(0);
+ 225:libraries/zf_driver/zf_driver_timer.c **** 
+ 226:libraries/zf_driver/zf_driver_timer.c ****     return return_state;
+ 576              		.loc 1 226 12
+ 577 00b4 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 227:libraries/zf_driver/zf_driver_timer.c **** }
+ 578              		.loc 1 227 1
+ 579 00b8 1846     		mov	r0, r3
+ 580 00ba 05B0     		add	sp, sp, #20
+ 581              		.cfi_def_cfa_offset 4
+ 582              		@ sp needed
+ 583 00bc 5DF804FB 		ldr	pc, [sp], #4
+ 584              	.L32:
+ 585              		.align	2
+ 586              	.L31:
+ 587 00c0 00000000 		.word	timer_obj_list
+ 588 00c4 00000000 		.word	.LC0
+ 589 00c8 CDCCCCCC 		.word	-858993459
+ 590              		.cfi_endproc
+ 591              	.LFE464:
+ 593              		.section	.text.zf_timer_clear,"ax",%progbits
+ 594              		.align	1
+ 595              		.p2align 4,,15
+ 596              		.global	zf_timer_clear
+ 597              		.syntax unified
+ 598              		.thumb
+ 599              		.thumb_func
+ 601              	zf_timer_clear:
+ 602              	.LFB465:
+ 228:libraries/zf_driver/zf_driver_timer.c **** 
+ 229:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 230:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 清除计时器计数
+ 231:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+ 232:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / TIM_OPERATION_DONE - 完成 其�
+ 233:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_clear(timer_index);
+ 234:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+ 235:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 236:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_clear (zf_timer_index_enum timer_index)
+ 237:libraries/zf_driver/zf_driver_timer.c **** {
+ 603              		.loc 1 237 1
+ 604              		.cfi_startproc
+ 605              		@ args = 0, pretend = 0, frame = 16
+ 606              		@ frame_needed = 0, uses_anonymous_args = 0
+ 607 0000 00B5     		push	{lr}
+ 608              		.cfi_def_cfa_offset 4
+ 609              		.cfi_offset 14, -4
+ 610 0002 85B0     		sub	sp, sp, #20
+ 611              		.cfi_def_cfa_offset 24
+ 612 0004 0346     		mov	r3, r0
+ 613 0006 8DF80730 		strb	r3, [sp, #7]
+ 238:libraries/zf_driver/zf_driver_timer.c ****     zf_timer_operation_state_enum return_state = TIM_ERROR_UNKNOW;
+ 614              		.loc 1 238 35
+ 615 000a 0123     		movs	r3, #1
+ 616 000c 8DF80F30 		strb	r3, [sp, #15]
+ 239:libraries/zf_driver/zf_driver_timer.c **** 
+ 240:libraries/zf_driver/zf_driver_timer.c ****     do
+ 241:libraries/zf_driver/zf_driver_timer.c ****     {
+ 242:libraries/zf_driver/zf_driver_timer.c ****         if(zf_timer_assert(timer_obj_list[timer_index].period))
+ 617              		.loc 1 242 12
+ 618 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 619 0014 1449     		ldr	r1, .L37
+ 620 0016 1346     		mov	r3, r2
+ 621 0018 9B00     		lsls	r3, r3, #2
+ 622 001a 1344     		add	r3, r3, r2
+ 623 001c 9B00     		lsls	r3, r3, #2
+ 624 001e 0B44     		add	r3, r3, r1
+ 625 0020 0C33     		adds	r3, r3, #12
+ 626 0022 1B68     		ldr	r3, [r3]
+ 627              		.loc 1 242 11
+ 628 0024 002B     		cmp	r3, #0
+ 629 0026 0BD1     		bne	.L34
+ 630              		.loc 1 242 12 discriminator 1
+ 631 0028 0022     		movs	r2, #0
+ 632 002a F221     		movs	r1, #242
+ 633 002c 0F48     		ldr	r0, .L37+4
+ 634 002e FFF7FEFF 		bl	zf_timer_assert_handler
+ 635 0032 0346     		mov	r3, r0
+ 636 0034 002B     		cmp	r3, #0
+ 637 0036 03D0     		beq	.L34
+ 243:libraries/zf_driver/zf_driver_timer.c ****         {
+ 244:libraries/zf_driver/zf_driver_timer.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 245:libraries/zf_driver/zf_driver_timer.c ****             return_state = TIM_ERROR_MODULE_NOT_INIT;
+ 638              		.loc 1 245 26
+ 639 0038 2123     		movs	r3, #33
+ 640 003a 8DF80F30 		strb	r3, [sp, #15]
+ 246:libraries/zf_driver/zf_driver_timer.c ****             break;
+ 641              		.loc 1 246 13
+ 642 003e 0DE0     		b	.L35
+ 643              	.L34:
+ 247:libraries/zf_driver/zf_driver_timer.c ****         }
+ 248:libraries/zf_driver/zf_driver_timer.c **** 
+ 249:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].tim_ptr->CNT = 0;
+ 644              		.loc 1 249 36
+ 645 0040 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 646 0044 0849     		ldr	r1, .L37
+ 647 0046 1346     		mov	r3, r2
+ 648 0048 9B00     		lsls	r3, r3, #2
+ 649 004a 1344     		add	r3, r3, r2
+ 650 004c 9B00     		lsls	r3, r3, #2
+ 651 004e 0B44     		add	r3, r3, r1
+ 652 0050 1B68     		ldr	r3, [r3]
+ 653              		.loc 1 249 50
+ 654 0052 0022     		movs	r2, #0
+ 655 0054 5A62     		str	r2, [r3, #36]
+ 250:libraries/zf_driver/zf_driver_timer.c **** 
+ 251:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 656              		.loc 1 251 22
+ 657 0056 0023     		movs	r3, #0
+ 658 0058 8DF80F30 		strb	r3, [sp, #15]
+ 659              	.L35:
+ 252:libraries/zf_driver/zf_driver_timer.c ****     }while(0);
+ 253:libraries/zf_driver/zf_driver_timer.c **** 
+ 254:libraries/zf_driver/zf_driver_timer.c ****     return return_state;
+ 660              		.loc 1 254 12
+ 661 005c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 255:libraries/zf_driver/zf_driver_timer.c **** }
+ 662              		.loc 1 255 1
+ 663 0060 1846     		mov	r0, r3
+ 664 0062 05B0     		add	sp, sp, #20
+ 665              		.cfi_def_cfa_offset 4
+ 666              		@ sp needed
+ 667 0064 5DF804FB 		ldr	pc, [sp], #4
+ 668              	.L38:
+ 669              		.align	2
+ 670              	.L37:
+ 671 0068 00000000 		.word	timer_obj_list
+ 672 006c 00000000 		.word	.LC0
+ 673              		.cfi_endproc
+ 674              	.LFE465:
+ 676              		.section	.text.zf_timer_deinit,"ax",%progbits
+ 677              		.align	1
+ 678              		.p2align 4,,15
+ 679              		.global	zf_timer_deinit
+ 680              		.syntax unified
+ 681              		.thumb
+ 682              		.thumb_func
+ 684              	zf_timer_deinit:
+ 685              	.LFB466:
+ 256:libraries/zf_driver/zf_driver_timer.c **** 
+ 257:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 258:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 注销初始化
+ 259:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+ 260:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / TIM_OPERATION_DONE - 完成 其�
+ 261:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_deinit(timer_index);
+ 262:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+ 263:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 264:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_deinit (zf_timer_index_enum timer_index)
+ 265:libraries/zf_driver/zf_driver_timer.c **** {
+ 686              		.loc 1 265 1
+ 687              		.cfi_startproc
+ 688              		@ args = 0, pretend = 0, frame = 16
+ 689              		@ frame_needed = 0, uses_anonymous_args = 0
+ 690 0000 00B5     		push	{lr}
+ 691              		.cfi_def_cfa_offset 4
+ 692              		.cfi_offset 14, -4
+ 693 0002 85B0     		sub	sp, sp, #20
+ 694              		.cfi_def_cfa_offset 24
+ 695 0004 0346     		mov	r3, r0
+ 696 0006 8DF80730 		strb	r3, [sp, #7]
+ 266:libraries/zf_driver/zf_driver_timer.c ****     zf_timer_operation_state_enum return_state = TIM_ERROR_UNKNOW;
+ 697              		.loc 1 266 35
+ 698 000a 0123     		movs	r3, #1
+ 699 000c 8DF80F30 		strb	r3, [sp, #15]
+ 267:libraries/zf_driver/zf_driver_timer.c **** 
+ 268:libraries/zf_driver/zf_driver_timer.c ****     do
+ 269:libraries/zf_driver/zf_driver_timer.c ****     {
+ 270:libraries/zf_driver/zf_driver_timer.c ****         if(zf_timer_assert(timer_obj_list[timer_index].period))
+ 700              		.loc 1 270 12
+ 701 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 702 0014 2849     		ldr	r1, .L43
+ 703 0016 1346     		mov	r3, r2
+ 704 0018 9B00     		lsls	r3, r3, #2
+ 705 001a 1344     		add	r3, r3, r2
+ 706 001c 9B00     		lsls	r3, r3, #2
+ 707 001e 0B44     		add	r3, r3, r1
+ 708 0020 0C33     		adds	r3, r3, #12
+ 709 0022 1B68     		ldr	r3, [r3]
+ 710              		.loc 1 270 11
+ 711 0024 002B     		cmp	r3, #0
+ 712 0026 0CD1     		bne	.L40
+ 713              		.loc 1 270 12 discriminator 1
+ 714 0028 0022     		movs	r2, #0
+ 715 002a 4FF48771 		mov	r1, #270
+ 716 002e 2348     		ldr	r0, .L43+4
+ 717 0030 FFF7FEFF 		bl	zf_timer_assert_handler
+ 718 0034 0346     		mov	r3, r0
+ 719 0036 002B     		cmp	r3, #0
+ 720 0038 03D0     		beq	.L40
+ 271:libraries/zf_driver/zf_driver_timer.c ****         {
+ 272:libraries/zf_driver/zf_driver_timer.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 273:libraries/zf_driver/zf_driver_timer.c ****             return_state = TIM_ERROR_MODULE_NOT_INIT;
+ 721              		.loc 1 273 26
+ 722 003a 2123     		movs	r3, #33
+ 723 003c 8DF80F30 		strb	r3, [sp, #15]
+ 274:libraries/zf_driver/zf_driver_timer.c ****             break;
+ 724              		.loc 1 274 13
+ 725 0040 33E0     		b	.L41
+ 726              	.L40:
+ 275:libraries/zf_driver/zf_driver_timer.c ****         }
+ 276:libraries/zf_driver/zf_driver_timer.c **** 
+ 277:libraries/zf_driver/zf_driver_timer.c ****         zf_rcc_peripheral_reset(timer_rcc_index_list[timer_index]);
+ 727              		.loc 1 277 9
+ 728 0042 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 729 0046 1E4A     		ldr	r2, .L43+8
+ 730 0048 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 731 004c 1846     		mov	r0, r3
+ 732 004e FFF7FEFF 		bl	zf_rcc_peripheral_reset
+ 278:libraries/zf_driver/zf_driver_timer.c ****         zf_rcc_clock_disable(timer_rcc_index_list[timer_index]);
+ 733              		.loc 1 278 9
+ 734 0052 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 735 0056 1A4A     		ldr	r2, .L43+8
+ 736 0058 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 737 005c 1846     		mov	r0, r3
+ 738 005e FFF7FEFF 		bl	zf_rcc_clock_disable
+ 279:libraries/zf_driver/zf_driver_timer.c **** 
+ 280:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].config_info = 0;
+ 739              		.loc 1 280 36
+ 740 0062 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 741              		.loc 1 280 49
+ 742 0066 1449     		ldr	r1, .L43
+ 743 0068 1346     		mov	r3, r2
+ 744 006a 9B00     		lsls	r3, r3, #2
+ 745 006c 1344     		add	r3, r3, r2
+ 746 006e 9B00     		lsls	r3, r3, #2
+ 747 0070 0B44     		add	r3, r3, r1
+ 748 0072 1033     		adds	r3, r3, #16
+ 749 0074 0022     		movs	r2, #0
+ 750 0076 1A60     		str	r2, [r3]
+ 281:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].div         = 0;
+ 751              		.loc 1 281 36
+ 752 0078 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 753              		.loc 1 281 49
+ 754 007c 0E49     		ldr	r1, .L43
+ 755 007e 1346     		mov	r3, r2
+ 756 0080 9B00     		lsls	r3, r3, #2
+ 757 0082 1344     		add	r3, r3, r2
+ 758 0084 9B00     		lsls	r3, r3, #2
+ 759 0086 0B44     		add	r3, r3, r1
+ 760 0088 0833     		adds	r3, r3, #8
+ 761 008a 0022     		movs	r2, #0
+ 762 008c 1A60     		str	r2, [r3]
+ 282:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].period      = 0;
+ 763              		.loc 1 282 36
+ 764 008e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 765              		.loc 1 282 49
+ 766 0092 0949     		ldr	r1, .L43
+ 767 0094 1346     		mov	r3, r2
+ 768 0096 9B00     		lsls	r3, r3, #2
+ 769 0098 1344     		add	r3, r3, r2
+ 770 009a 9B00     		lsls	r3, r3, #2
+ 771 009c 0B44     		add	r3, r3, r1
+ 772 009e 0C33     		adds	r3, r3, #12
+ 773 00a0 0022     		movs	r2, #0
+ 774 00a2 1A60     		str	r2, [r3]
+ 283:libraries/zf_driver/zf_driver_timer.c **** 
+ 284:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 775              		.loc 1 284 22
+ 776 00a4 0023     		movs	r3, #0
+ 777 00a6 8DF80F30 		strb	r3, [sp, #15]
+ 778              	.L41:
+ 285:libraries/zf_driver/zf_driver_timer.c ****     }while(0);
+ 286:libraries/zf_driver/zf_driver_timer.c **** 
+ 287:libraries/zf_driver/zf_driver_timer.c ****     return return_state;
+ 779              		.loc 1 287 12
+ 780 00aa 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 288:libraries/zf_driver/zf_driver_timer.c **** }
+ 781              		.loc 1 288 1
+ 782 00ae 1846     		mov	r0, r3
+ 783 00b0 05B0     		add	sp, sp, #20
+ 784              		.cfi_def_cfa_offset 4
+ 785              		@ sp needed
+ 786 00b2 5DF804FB 		ldr	pc, [sp], #4
+ 787              	.L44:
+ 788 00b6 00BF     		.align	2
+ 789              	.L43:
+ 790 00b8 00000000 		.word	timer_obj_list
+ 791 00bc 00000000 		.word	.LC0
+ 792 00c0 00000000 		.word	timer_rcc_index_list
+ 793              		.cfi_endproc
+ 794              	.LFE466:
+ 796              		.section	.text.zf_timer_init,"ax",%progbits
+ 797              		.align	1
+ 798              		.p2align 4,,15
+ 799              		.global	zf_timer_init
+ 800              		.syntax unified
+ 801              		.thumb
+ 802              		.thumb_func
+ 804              	zf_timer_init:
+ 805              	.LFB467:
+ 289:libraries/zf_driver/zf_driver_timer.c **** 
+ 290:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 291:libraries/zf_driver/zf_driver_timer.c **** // 函数简介     TIMER 计时器初始化
+ 292:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     timer_index         TIMER 模块号    (详见 zf_driver_timer.h 内 zf_timer_i
+ 293:libraries/zf_driver/zf_driver_timer.c **** // 参数说明     mode                计时方式        (详见 zf_driver_timer.h 内 zf_timer_
+ 294:libraries/zf_driver/zf_driver_timer.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / TIM_OPERATION_DONE - 完成 其�
+ 295:libraries/zf_driver/zf_driver_timer.c **** // 使用示例     zf_timer_init(timer_index, mode);
+ 296:libraries/zf_driver/zf_driver_timer.c **** // 备注信息     
+ 297:libraries/zf_driver/zf_driver_timer.c **** //-------------------------------------------------------------------------------------------------
+ 298:libraries/zf_driver/zf_driver_timer.c **** uint8 zf_timer_init (zf_timer_index_enum timer_index, zf_timer_mode_enum mode)
+ 299:libraries/zf_driver/zf_driver_timer.c **** {
+ 806              		.loc 1 299 1
+ 807              		.cfi_startproc
+ 808              		@ args = 0, pretend = 0, frame = 16
+ 809              		@ frame_needed = 0, uses_anonymous_args = 0
+ 810 0000 00B5     		push	{lr}
+ 811              		.cfi_def_cfa_offset 4
+ 812              		.cfi_offset 14, -4
+ 813 0002 85B0     		sub	sp, sp, #20
+ 814              		.cfi_def_cfa_offset 24
+ 815 0004 0346     		mov	r3, r0
+ 816 0006 0A46     		mov	r2, r1
+ 817 0008 8DF80730 		strb	r3, [sp, #7]
+ 818 000c 1346     		mov	r3, r2
+ 819 000e 8DF80630 		strb	r3, [sp, #6]
+ 300:libraries/zf_driver/zf_driver_timer.c ****     zf_timer_operation_state_enum return_state = TIM_ERROR_UNKNOW;
+ 820              		.loc 1 300 35
+ 821 0012 0123     		movs	r3, #1
+ 822 0014 8DF80F30 		strb	r3, [sp, #15]
+ 823              	.LBB3:
+ 301:libraries/zf_driver/zf_driver_timer.c **** 
+ 302:libraries/zf_driver/zf_driver_timer.c ****     do
+ 303:libraries/zf_driver/zf_driver_timer.c ****     {
+ 304:libraries/zf_driver/zf_driver_timer.c ****         if(zf_timer_assert(!zf_timer_funciton_check(timer_index, TIMER_FUNCTION_TIMER)))
+ 824              		.loc 1 304 12
+ 825 0018 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 826 001c 0121     		movs	r1, #1
+ 827 001e 1846     		mov	r0, r3
+ 828 0020 FFF7FEFF 		bl	zf_timer_funciton_check
+ 829 0024 0346     		mov	r3, r0
+ 830              		.loc 1 304 11
+ 831 0026 002B     		cmp	r3, #0
+ 832 0028 0CD0     		beq	.L46
+ 833              		.loc 1 304 12 discriminator 1
+ 834 002a 0022     		movs	r2, #0
+ 835 002c 4FF49871 		mov	r1, #304
+ 836 0030 6348     		ldr	r0, .L56
+ 837 0032 FFF7FEFF 		bl	zf_timer_assert_handler
+ 838 0036 0346     		mov	r3, r0
+ 839 0038 002B     		cmp	r3, #0
+ 840 003a 03D0     		beq	.L46
+ 305:libraries/zf_driver/zf_driver_timer.c ****         {
+ 306:libraries/zf_driver/zf_driver_timer.c ****             // 如果程序输出了断言信息 并且提示出错位置在这里
+ 307:libraries/zf_driver/zf_driver_timer.c ****             // 就去查看你在什么地方调用这个函数 检查你的传入参数
+ 308:libraries/zf_driver/zf_driver_timer.c ****             // 这里是检查是否有重复使用定时器
+ 309:libraries/zf_driver/zf_driver_timer.c ****             // 比如初始化了 TIM1_PWM 然后又初始化成 TIM_1 这种用法是不允许的
+ 310:libraries/zf_driver/zf_driver_timer.c ****             return_state = TIM_ERROR_MODULE_OCCUPIED;
+ 841              		.loc 1 310 26
+ 842 003c 2023     		movs	r3, #32
+ 843 003e 8DF80F30 		strb	r3, [sp, #15]
+ 311:libraries/zf_driver/zf_driver_timer.c ****             break;
+ 844              		.loc 1 311 13
+ 845 0042 B6E0     		b	.L47
+ 846              	.L46:
+ 312:libraries/zf_driver/zf_driver_timer.c ****         }
+ 313:libraries/zf_driver/zf_driver_timer.c ****         zf_timer_clock_enable(timer_index);                                     // 使能时钟
+ 847              		.loc 1 313 9
+ 848 0044 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 849 0048 1846     		mov	r0, r3
+ 850 004a FFF7FEFF 		bl	zf_timer_clock_enable
+ 314:libraries/zf_driver/zf_driver_timer.c **** 
+ 315:libraries/zf_driver/zf_driver_timer.c ****         uint8 clock_div = (RCC_INDEX_APB1L_BUS_INDEX == (timer_rcc_index_list[timer_index] & RCC_BU
+ 851              		.loc 1 315 78
+ 852 004e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 853 0052 5C4A     		ldr	r2, .L56+4
+ 854 0054 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 855              		.loc 1 315 92
+ 856 0058 03F00F03 		and	r3, r3, #15
+ 857              		.loc 1 315 15
+ 858 005c 042B     		cmp	r3, #4
+ 859 005e 01D1     		bne	.L48
+ 860              		.loc 1 315 15 is_stmt 0 discriminator 1
+ 861 0060 0223     		movs	r3, #2
+ 862 0062 00E0     		b	.L49
+ 863              	.L48:
+ 864              		.loc 1 315 15 discriminator 2
+ 865 0064 0123     		movs	r3, #1
+ 866              	.L49:
+ 867              		.loc 1 315 15 discriminator 4
+ 868 0066 8DF80E30 		strb	r3, [sp, #14]
+ 316:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].clock_input = zf_system_clock / clock_div;
+ 869              		.loc 1 316 67 is_stmt 1 discriminator 4
+ 870 006a 574B     		ldr	r3, .L56+8
+ 871 006c 1968     		ldr	r1, [r3]
+ 872 006e 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 873              		.loc 1 316 36 discriminator 4
+ 874 0072 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 875              		.loc 1 316 67 discriminator 4
+ 876 0076 B1FBF3F1 		udiv	r1, r1, r3
+ 877              		.loc 1 316 49 discriminator 4
+ 878 007a 5448     		ldr	r0, .L56+12
+ 879 007c 1346     		mov	r3, r2
+ 880 007e 9B00     		lsls	r3, r3, #2
+ 881 0080 1344     		add	r3, r3, r2
+ 882 0082 9B00     		lsls	r3, r3, #2
+ 883 0084 0344     		add	r3, r3, r0
+ 884 0086 0433     		adds	r3, r3, #4
+ 885 0088 1960     		str	r1, [r3]
+ 317:libraries/zf_driver/zf_driver_timer.c ****         switch(mode)
+ 886              		.loc 1 317 9 discriminator 4
+ 887 008a 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 888 008e 012B     		cmp	r3, #1
+ 889 0090 02D0     		beq	.L50
+ 890              		.loc 1 317 9 is_stmt 0
+ 891 0092 022B     		cmp	r3, #2
+ 892 0094 1AD0     		beq	.L51
+ 893 0096 33E0     		b	.L55
+ 894              	.L50:
+ 318:libraries/zf_driver/zf_driver_timer.c ****         {
+ 319:libraries/zf_driver/zf_driver_timer.c ****             case TIMER_US:  timer_obj_list[timer_index].tim_ptr->PSC = timer_obj_list[timer_index].
+ 895              		.loc 1 319 99 is_stmt 1
+ 896 0098 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 897 009c 4B49     		ldr	r1, .L56+12
+ 898 009e 1346     		mov	r3, r2
+ 899 00a0 9B00     		lsls	r3, r3, #2
+ 900 00a2 1344     		add	r3, r3, r2
+ 901 00a4 9B00     		lsls	r3, r3, #2
+ 902 00a6 0B44     		add	r3, r3, r1
+ 903 00a8 0433     		adds	r3, r3, #4
+ 904 00aa 1B68     		ldr	r3, [r3]
+ 905              		.loc 1 319 112
+ 906 00ac 484A     		ldr	r2, .L56+16
+ 907 00ae A2FB0323 		umull	r2, r3, r2, r3
+ 908 00b2 990C     		lsrs	r1, r3, #18
+ 909              		.loc 1 319 56
+ 910 00b4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 911 00b8 4448     		ldr	r0, .L56+12
+ 912 00ba 1346     		mov	r3, r2
+ 913 00bc 9B00     		lsls	r3, r3, #2
+ 914 00be 1344     		add	r3, r3, r2
+ 915 00c0 9B00     		lsls	r3, r3, #2
+ 916 00c2 0344     		add	r3, r3, r0
+ 917 00c4 1B68     		ldr	r3, [r3]
+ 918              		.loc 1 319 122
+ 919 00c6 4A1E     		subs	r2, r1, #1
+ 920              		.loc 1 319 70
+ 921 00c8 9A62     		str	r2, [r3, #40]
+ 922              		.loc 1 319 13
+ 923 00ca 25E0     		b	.L53
+ 924              	.L51:
+ 320:libraries/zf_driver/zf_driver_timer.c ****             case TIMER_MS:  timer_obj_list[timer_index].tim_ptr->PSC = timer_obj_list[timer_index].
+ 925              		.loc 1 320 99
+ 926 00cc 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 927 00d0 3E49     		ldr	r1, .L56+12
+ 928 00d2 1346     		mov	r3, r2
+ 929 00d4 9B00     		lsls	r3, r3, #2
+ 930 00d6 1344     		add	r3, r3, r2
+ 931 00d8 9B00     		lsls	r3, r3, #2
+ 932 00da 0B44     		add	r3, r3, r1
+ 933 00dc 0433     		adds	r3, r3, #4
+ 934 00de 1B68     		ldr	r3, [r3]
+ 935              		.loc 1 320 112
+ 936 00e0 3C4A     		ldr	r2, .L56+20
+ 937 00e2 A2FB0323 		umull	r2, r3, r2, r3
+ 938 00e6 590B     		lsrs	r1, r3, #13
+ 939              		.loc 1 320 56
+ 940 00e8 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 941 00ec 3748     		ldr	r0, .L56+12
+ 942 00ee 1346     		mov	r3, r2
+ 943 00f0 9B00     		lsls	r3, r3, #2
+ 944 00f2 1344     		add	r3, r3, r2
+ 945 00f4 9B00     		lsls	r3, r3, #2
+ 946 00f6 0344     		add	r3, r3, r0
+ 947 00f8 1B68     		ldr	r3, [r3]
+ 948              		.loc 1 320 120
+ 949 00fa 4A1E     		subs	r2, r1, #1
+ 950              		.loc 1 320 70
+ 951 00fc 9A62     		str	r2, [r3, #40]
+ 952              		.loc 1 320 13
+ 953 00fe 0BE0     		b	.L53
+ 954              	.L55:
+ 321:libraries/zf_driver/zf_driver_timer.c ****             default:        timer_obj_list[timer_index].tim_ptr->PSC = 0;                          
+ 955              		.loc 1 321 56
+ 956 0100 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 957 0104 3149     		ldr	r1, .L56+12
+ 958 0106 1346     		mov	r3, r2
+ 959 0108 9B00     		lsls	r3, r3, #2
+ 960 010a 1344     		add	r3, r3, r2
+ 961 010c 9B00     		lsls	r3, r3, #2
+ 962 010e 0B44     		add	r3, r3, r1
+ 963 0110 1B68     		ldr	r3, [r3]
+ 964              		.loc 1 321 70
+ 965 0112 0022     		movs	r2, #0
+ 966 0114 9A62     		str	r2, [r3, #40]
+ 967              		.loc 1 321 13
+ 968 0116 00BF     		nop
+ 969              	.L53:
+ 322:libraries/zf_driver/zf_driver_timer.c ****         }
+ 323:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].tim_ptr->ARR = 0xFFFF;
+ 970              		.loc 1 323 36
+ 971 0118 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 972 011c 2B49     		ldr	r1, .L56+12
+ 973 011e 1346     		mov	r3, r2
+ 974 0120 9B00     		lsls	r3, r3, #2
+ 975 0122 1344     		add	r3, r3, r2
+ 976 0124 9B00     		lsls	r3, r3, #2
+ 977 0126 0B44     		add	r3, r3, r1
+ 978 0128 1B68     		ldr	r3, [r3]
+ 979              		.loc 1 323 50
+ 980 012a 4FF6FF72 		movw	r2, #65535
+ 981 012e DA62     		str	r2, [r3, #44]
+ 324:libraries/zf_driver/zf_driver_timer.c **** 
+ 325:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].div     = (timer_obj_list[timer_index].tim_ptr->PSC + 1);
+ 982              		.loc 1 325 75
+ 983 0130 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 984 0134 2549     		ldr	r1, .L56+12
+ 985 0136 1346     		mov	r3, r2
+ 986 0138 9B00     		lsls	r3, r3, #2
+ 987 013a 1344     		add	r3, r3, r2
+ 988 013c 9B00     		lsls	r3, r3, #2
+ 989 013e 0B44     		add	r3, r3, r1
+ 990 0140 1B68     		ldr	r3, [r3]
+ 991              		.loc 1 325 83
+ 992 0142 9B6A     		ldr	r3, [r3, #40]
+ 993              		.loc 1 325 36
+ 994 0144 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 995              		.loc 1 325 89
+ 996 0148 591C     		adds	r1, r3, #1
+ 997              		.loc 1 325 45
+ 998 014a 2048     		ldr	r0, .L56+12
+ 999 014c 1346     		mov	r3, r2
+ 1000 014e 9B00     		lsls	r3, r3, #2
+ 1001 0150 1344     		add	r3, r3, r2
+ 1002 0152 9B00     		lsls	r3, r3, #2
+ 1003 0154 0344     		add	r3, r3, r0
+ 1004 0156 0833     		adds	r3, r3, #8
+ 1005 0158 1960     		str	r1, [r3]
+ 326:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].period  = 0xFFFF;
+ 1006              		.loc 1 326 36
+ 1007 015a 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1008              		.loc 1 326 45
+ 1009 015e 1B49     		ldr	r1, .L56+12
+ 1010 0160 1346     		mov	r3, r2
+ 1011 0162 9B00     		lsls	r3, r3, #2
+ 1012 0164 1344     		add	r3, r3, r2
+ 1013 0166 9B00     		lsls	r3, r3, #2
+ 1014 0168 0B44     		add	r3, r3, r1
+ 1015 016a 0C33     		adds	r3, r3, #12
+ 1016 016c 4FF6FF72 		movw	r2, #65535
+ 1017 0170 1A60     		str	r2, [r3]
+ 327:libraries/zf_driver/zf_driver_timer.c ****         timer_obj_list[timer_index].mode    = mode;
+ 1018              		.loc 1 327 36
+ 1019 0172 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1020              		.loc 1 327 45
+ 1021 0176 9DF80630 		ldrb	r3, [sp, #6]
+ 1022 017a 03F00303 		and	r3, r3, #3
+ 1023 017e D9B2     		uxtb	r1, r3
+ 1024 0180 1248     		ldr	r0, .L56+12
+ 1025 0182 1346     		mov	r3, r2
+ 1026 0184 9B00     		lsls	r3, r3, #2
+ 1027 0186 1344     		add	r3, r3, r2
+ 1028 0188 9B00     		lsls	r3, r3, #2
+ 1029 018a 0344     		add	r3, r3, r0
+ 1030 018c 03F11002 		add	r2, r3, #16
+ 1031 0190 1378     		ldrb	r3, [r2]
+ 1032 0192 61F30513 		bfi	r3, r1, #4, #2
+ 1033 0196 1370     		strb	r3, [r2]
+ 328:libraries/zf_driver/zf_driver_timer.c **** 
+ 329:libraries/zf_driver/zf_driver_timer.c ****         zf_timer_disable(timer_index);
+ 1034              		.loc 1 329 9
+ 1035 0198 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1036 019c 1846     		mov	r0, r3
+ 1037 019e FFF7FEFF 		bl	zf_timer_disable
+ 330:libraries/zf_driver/zf_driver_timer.c ****         zf_timer_clear(timer_index);
+ 1038              		.loc 1 330 9
+ 1039 01a2 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1040 01a6 1846     		mov	r0, r3
+ 1041 01a8 FFF7FEFF 		bl	zf_timer_clear
+ 331:libraries/zf_driver/zf_driver_timer.c **** 
+ 332:libraries/zf_driver/zf_driver_timer.c ****         return_state = TIM_OPERATION_DONE;
+ 1042              		.loc 1 332 22
+ 1043 01ac 0023     		movs	r3, #0
+ 1044 01ae 8DF80F30 		strb	r3, [sp, #15]
+ 1045              	.L47:
+ 1046              	.LBE3:
+ 333:libraries/zf_driver/zf_driver_timer.c ****     }while(0);
+ 334:libraries/zf_driver/zf_driver_timer.c **** 
+ 335:libraries/zf_driver/zf_driver_timer.c ****     return return_state;
+ 1047              		.loc 1 335 12
+ 1048 01b2 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 336:libraries/zf_driver/zf_driver_timer.c **** }
+ 1049              		.loc 1 336 1
+ 1050 01b6 1846     		mov	r0, r3
+ 1051 01b8 05B0     		add	sp, sp, #20
+ 1052              		.cfi_def_cfa_offset 4
+ 1053              		@ sp needed
+ 1054 01ba 5DF804FB 		ldr	pc, [sp], #4
+ 1055              	.L57:
+ 1056 01be 00BF     		.align	2
+ 1057              	.L56:
+ 1058 01c0 00000000 		.word	.LC0
+ 1059 01c4 00000000 		.word	timer_rcc_index_list
+ 1060 01c8 00000000 		.word	zf_system_clock
+ 1061 01cc 00000000 		.word	timer_obj_list
+ 1062 01d0 83DE1B43 		.word	1125899907
+ 1063 01d4 5917B7D1 		.word	-776530087
+ 1064              		.cfi_endproc
+ 1065              	.LFE467:
+ 1067              		.text
+ 1068              	.Letext0:
+ 1069              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1070              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1071              		.file 4 "libraries/zf_common/zf_common_typedef.h"
+ 1072              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_TIM.
+ 1073              		.file 6 "libraries/zf_driver/zf_driver_rcc.h"
+ 1074              		.file 7 "libraries/zf_driver/zf_driver_timer.h"
+ 1075              		.file 8 "libraries/zf_driver/zf_driver_system.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_timer.c
+D:\Users\TMP\ccB5ItsD.s:19     .rodata.timer_rcc_index_list:00000000 $d
+D:\Users\TMP\ccB5ItsD.s:22     .rodata.timer_rcc_index_list:00000000 timer_rcc_index_list
+D:\Users\TMP\ccB5ItsD.s:38     .data.timer_obj_list:00000000 timer_obj_list
+D:\Users\TMP\ccB5ItsD.s:35     .data.timer_obj_list:00000000 $d
+D:\Users\TMP\ccB5ItsD.s:90     .text.zf_timer_assert_handler:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:97     .text.zf_timer_assert_handler:00000000 zf_timer_assert_handler
+D:\Users\TMP\ccB5ItsD.s:127    .text.zf_timer_funciton_check:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:134    .text.zf_timer_funciton_check:00000000 zf_timer_funciton_check
+D:\Users\TMP\ccB5ItsD.s:225    .text.zf_timer_funciton_check:000000a0 $d
+D:\Users\TMP\ccB5ItsD.s:230    .text.zf_timer_clock_enable:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:237    .text.zf_timer_clock_enable:00000000 zf_timer_clock_enable
+D:\Users\TMP\ccB5ItsD.s:265    .text.zf_timer_clock_enable:00000024 $d
+D:\Users\TMP\ccB5ItsD.s:270    .rodata:00000000 $d
+D:\Users\TMP\ccB5ItsD.s:274    .text.zf_timer_enable:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:281    .text.zf_timer_enable:00000000 zf_timer_enable
+D:\Users\TMP\ccB5ItsD.s:362    .text.zf_timer_enable:00000080 $d
+D:\Users\TMP\ccB5ItsD.s:368    .text.zf_timer_disable:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:375    .text.zf_timer_disable:00000000 zf_timer_disable
+D:\Users\TMP\ccB5ItsD.s:456    .text.zf_timer_disable:00000080 $d
+D:\Users\TMP\ccB5ItsD.s:462    .text.zf_timer_get:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:469    .text.zf_timer_get:00000000 zf_timer_get
+D:\Users\TMP\ccB5ItsD.s:587    .text.zf_timer_get:000000c0 $d
+D:\Users\TMP\ccB5ItsD.s:594    .text.zf_timer_clear:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:601    .text.zf_timer_clear:00000000 zf_timer_clear
+D:\Users\TMP\ccB5ItsD.s:671    .text.zf_timer_clear:00000068 $d
+D:\Users\TMP\ccB5ItsD.s:677    .text.zf_timer_deinit:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:684    .text.zf_timer_deinit:00000000 zf_timer_deinit
+D:\Users\TMP\ccB5ItsD.s:790    .text.zf_timer_deinit:000000b8 $d
+D:\Users\TMP\ccB5ItsD.s:797    .text.zf_timer_init:00000000 $t
+D:\Users\TMP\ccB5ItsD.s:804    .text.zf_timer_init:00000000 zf_timer_init
+D:\Users\TMP\ccB5ItsD.s:1058   .text.zf_timer_init:000001c0 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.zf_driver_rcc.h.54.1c46b1ebd7a3725ba2c571e38d76604b
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.tim.h.38.17cf4faae34c60f6b8dea94a5275cf03
+                           .group:00000000 wm4.zf_driver_timer.h.59.d861fde21e7d07feec367d6d46a25671
+
+UNDEFINED SYMBOLS
+debug_message_handler
+zf_rcc_clock_enable
+zf_rcc_peripheral_reset
+zf_rcc_clock_disable
+zf_system_clock

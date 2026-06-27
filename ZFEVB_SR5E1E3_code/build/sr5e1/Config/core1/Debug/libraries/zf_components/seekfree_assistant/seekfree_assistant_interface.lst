@@ -1,0 +1,423 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"seekfree_assistant_interface.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.seekfree_assistant_transfer,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.weak	seekfree_assistant_transfer
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	seekfree_assistant_transfer:
+  27              	.LFB482:
+  28              		.file 1 "libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c"
+   1:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** /**************************************************************************************************
+   2:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** *
+   5:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** *
+   7:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** *
+  11:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 更多细节请参见 GPL
+  14:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** *
+  15:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** *
+  18:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 额外注明：
+  19:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** *
+  24:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 文件名称          seekfree_assistant_interface
+  25:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** ***************************************************************************************************
+  31:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  32:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // zf_common 层引用
+  33:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** #include "zf_common_debug.h"
+  34:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** #include "zf_common_fifo.h"
+  35:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  36:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // zf_device 层引用
+  37:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** #include "zf_device_bluetooth_ch9141.h"
+  38:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** #include "zf_device_wireless_uart.h"
+  39:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  40:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 自身头文件
+  41:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** #include "seekfree_assistant.h"
+  42:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** #include "seekfree_assistant_interface.h"
+  43:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  44:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** extern seekfree_assistant_transfer_callback_function   seekfree_assistant_transfer_callback;    // 
+  45:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** extern seekfree_assistant_receive_callback_function    seekfree_assistant_receive_callback;     // 
+  46:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  47:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  48:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** //-------------------------------------------------------------------------------------------------
+  49:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 函数简介     逐飞助手发送函数
+  50:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 参数说明     *buff               数据地址
+  51:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 参数说明     *length             长度
+  52:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR - 完成 其余值为异常
+  53:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 使用示例
+  54:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** //-------------------------------------------------------------------------------------------------
+  55:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** ZF_WEAK uint8 seekfree_assistant_transfer (const uint8 *buff, uint32 *length)
+  56:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** {
+  29              		.loc 1 56 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 82B0     		sub	sp, sp, #8
+  35              		.cfi_def_cfa_offset 8
+  36 0002 0190     		str	r0, [sp, #4]
+  37 0004 0091     		str	r1, [sp]
+  57:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     (void)buff;
+  58:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     (void)length;
+  59:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     // 当选择自定义通讯方式时 需要自行完成数据发送功能
+  60:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     return ZF_NO_ERROR;
+  38              		.loc 1 60 12
+  39 0006 0023     		movs	r3, #0
+  61:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** }
+  40              		.loc 1 61 1
+  41 0008 1846     		mov	r0, r3
+  42 000a 02B0     		add	sp, sp, #8
+  43              		.cfi_def_cfa_offset 0
+  44              		@ sp needed
+  45 000c 7047     		bx	lr
+  46              		.cfi_endproc
+  47              	.LFE482:
+  49 000e 00BF     		.section	.text.seekfree_assistant_receive,"ax",%progbits
+  50              		.align	1
+  51              		.p2align 4,,15
+  52              		.weak	seekfree_assistant_receive
+  53              		.syntax unified
+  54              		.thumb
+  55              		.thumb_func
+  57              	seekfree_assistant_receive:
+  58              	.LFB483:
+  62:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  63:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** //-------------------------------------------------------------------------------------------------
+  64:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 函数简介     逐飞助手接收数据函数
+  65:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 参数说明     *buff               数据地址
+  66:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 参数说明     *length             长度
+  67:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR - 完成 其余值为异常
+  68:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 使用示例
+  69:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** //-------------------------------------------------------------------------------------------------
+  70:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** ZF_WEAK uint8 seekfree_assistant_receive (uint8 *buff, uint32 *length)
+  71:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** {
+  59              		.loc 1 71 1
+  60              		.cfi_startproc
+  61              		@ args = 0, pretend = 0, frame = 8
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63              		@ link register save eliminated.
+  64 0000 82B0     		sub	sp, sp, #8
+  65              		.cfi_def_cfa_offset 8
+  66 0002 0190     		str	r0, [sp, #4]
+  67 0004 0091     		str	r1, [sp]
+  72:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     (void)buff;
+  73:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     (void)length;
+  74:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     // 当选择自定义通讯方式时 需要自行完成数据接收功能
+  75:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     return ZF_NO_ERROR;
+  68              		.loc 1 75 12
+  69 0006 0023     		movs	r3, #0
+  76:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** }
+  70              		.loc 1 76 1
+  71 0008 1846     		mov	r0, r3
+  72 000a 02B0     		add	sp, sp, #8
+  73              		.cfi_def_cfa_offset 0
+  74              		@ sp needed
+  75 000c 7047     		bx	lr
+  76              		.cfi_endproc
+  77              	.LFE483:
+  79 000e 00BF     		.section	.text.seekfree_assistant_interface_init,"ax",%progbits
+  80              		.align	1
+  81              		.p2align 4,,15
+  82              		.weak	seekfree_assistant_interface_init
+  83              		.syntax unified
+  84              		.thumb
+  85              		.thumb_func
+  87              	seekfree_assistant_interface_init:
+  88              	.LFB484:
+  77:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  78:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** //-------------------------------------------------------------------------------------------------
+  79:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 函数简介     逐飞助手接口 初始化
+  80:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 参数说明
+  81:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 返回参数     void
+  82:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 使用示例     seekfree_assistant_interface_init(SEEKFREE_ASSISTANT_WIFI_SPI); 使用高速WIF
+  83:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** // 备注         需要自行调用设备的初始化，例如使用无线转串口进行数据的
+  84:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** //-------------------------------------------------------------------------------------------------
+  85:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** ZF_WEAK void seekfree_assistant_interface_init (seekfree_assistant_transfer_device_enum transfer_de
+  86:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** {
+  89              		.loc 1 86 1
+  90              		.cfi_startproc
+  91              		@ args = 0, pretend = 0, frame = 8
+  92              		@ frame_needed = 0, uses_anonymous_args = 0
+  93              		@ link register save eliminated.
+  94 0000 82B0     		sub	sp, sp, #8
+  95              		.cfi_def_cfa_offset 8
+  96 0002 0346     		mov	r3, r0
+  97 0004 8DF80730 		strb	r3, [sp, #7]
+  87:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     switch(transfer_device)
+  98              		.loc 1 87 5
+  99 0008 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 100 000c 032B     		cmp	r3, #3
+ 101 000e 21D8     		bhi	.L12
+ 102 0010 01A2     		adr	r2, .L8
+ 103 0012 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 104 0016 00BF     		.p2align 2
+ 105              	.L8:
+ 106 0018 29000000 		.word	.L11+1
+ 107 001c 37000000 		.word	.L10+1
+ 108 0020 45000000 		.word	.L9+1
+ 109 0024 53000000 		.word	.L13+1
+ 110              		.p2align 1
+ 111              	.L11:
+  88:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     {
+  89:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         case SEEKFREE_ASSISTANT_DEBUG_UART:
+  90:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         {
+  91:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****             seekfree_assistant_transfer_callback = debug_uart_write_buffer;
+ 112              		.loc 1 91 50
+ 113 0028 0C4B     		ldr	r3, .L14
+ 114 002a 0D4A     		ldr	r2, .L14+4
+ 115 002c 1A60     		str	r2, [r3]
+  92:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****             seekfree_assistant_receive_callback = debug_uart_read_buffer;
+ 116              		.loc 1 92 49
+ 117 002e 0D4B     		ldr	r3, .L14+8
+ 118 0030 0D4A     		ldr	r2, .L14+12
+ 119 0032 1A60     		str	r2, [r3]
+  93:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         }break;
+ 120              		.loc 1 93 9
+ 121 0034 0EE0     		b	.L6
+ 122              	.L10:
+  94:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+  95:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         case SEEKFREE_ASSISTANT_BLUETOOTH_CH9141:
+  96:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         {
+  97:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****             seekfree_assistant_transfer_callback = bluetooth_ch9141_send_buffer;
+ 123              		.loc 1 97 50
+ 124 0036 094B     		ldr	r3, .L14
+ 125 0038 0C4A     		ldr	r2, .L14+16
+ 126 003a 1A60     		str	r2, [r3]
+  98:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****             seekfree_assistant_receive_callback = bluetooth_ch9141_read_buffer;
+ 127              		.loc 1 98 49
+ 128 003c 094B     		ldr	r3, .L14+8
+ 129 003e 0C4A     		ldr	r2, .L14+20
+ 130 0040 1A60     		str	r2, [r3]
+  99:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         }break;
+ 131              		.loc 1 99 9
+ 132 0042 07E0     		b	.L6
+ 133              	.L9:
+ 100:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+ 101:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         case SEEKFREE_ASSISTANT_WIRELESS_UART:
+ 102:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         {
+ 103:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****             seekfree_assistant_transfer_callback = wireless_uart_send_buffer;
+ 134              		.loc 1 103 50
+ 135 0044 054B     		ldr	r3, .L14
+ 136 0046 0B4A     		ldr	r2, .L14+24
+ 137 0048 1A60     		str	r2, [r3]
+ 104:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****             seekfree_assistant_receive_callback = wireless_uart_read_buffer;
+ 138              		.loc 1 104 49
+ 139 004a 064B     		ldr	r3, .L14+8
+ 140 004c 0A4A     		ldr	r2, .L14+28
+ 141 004e 1A60     		str	r2, [r3]
+ 105:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         }break;
+ 142              		.loc 1 105 9
+ 143 0050 00E0     		b	.L6
+ 144              	.L13:
+ 106:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+ 107:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         case SEEKFREE_ASSISTANT_CUSTOM:
+ 108:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         {
+ 109:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****             // 根据自己的需求 自行实现seekfree_assistant_transfer与seekfree_assistant_r
+ 110:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** 
+ 111:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****         }break;
+ 145              		.loc 1 111 9
+ 146 0052 00BF     		nop
+ 147              	.L6:
+ 148              	.L12:
+ 112:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c ****     }
+ 113:libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.c **** }
+ 149              		.loc 1 113 1
+ 150 0054 00BF     		nop
+ 151 0056 02B0     		add	sp, sp, #8
+ 152              		.cfi_def_cfa_offset 0
+ 153              		@ sp needed
+ 154 0058 7047     		bx	lr
+ 155              	.L15:
+ 156 005a 00BF     		.align	2
+ 157              	.L14:
+ 158 005c 00000000 		.word	seekfree_assistant_transfer_callback
+ 159 0060 00000000 		.word	debug_uart_write_buffer
+ 160 0064 00000000 		.word	seekfree_assistant_receive_callback
+ 161 0068 00000000 		.word	debug_uart_read_buffer
+ 162 006c 00000000 		.word	bluetooth_ch9141_send_buffer
+ 163 0070 00000000 		.word	bluetooth_ch9141_read_buffer
+ 164 0074 00000000 		.word	wireless_uart_send_buffer
+ 165 0078 00000000 		.word	wireless_uart_read_buffer
+ 166              		.cfi_endproc
+ 167              	.LFE484:
+ 169              		.text
+ 170              	.Letext0:
+ 171              		.file 2 "libraries/zf_common/zf_common_typedef.h"
+ 172              		.file 3 "libraries/zf_components/seekfree_assistant/seekfree_assistant.h"
+ 173              		.file 4 "libraries/zf_components/seekfree_assistant/seekfree_assistant_interface.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 seekfree_assistant_interface.c
+D:\Users\TMP\ccXR2rRT.s:19     .text.seekfree_assistant_transfer:00000000 $t
+D:\Users\TMP\ccXR2rRT.s:26     .text.seekfree_assistant_transfer:00000000 seekfree_assistant_transfer
+D:\Users\TMP\ccXR2rRT.s:50     .text.seekfree_assistant_receive:00000000 $t
+D:\Users\TMP\ccXR2rRT.s:57     .text.seekfree_assistant_receive:00000000 seekfree_assistant_receive
+D:\Users\TMP\ccXR2rRT.s:80     .text.seekfree_assistant_interface_init:00000000 $t
+D:\Users\TMP\ccXR2rRT.s:87     .text.seekfree_assistant_interface_init:00000000 seekfree_assistant_interface_init
+D:\Users\TMP\ccXR2rRT.s:106    .text.seekfree_assistant_interface_init:00000018 $d
+D:\Users\TMP\ccXR2rRT.s:110    .text.seekfree_assistant_interface_init:00000028 $t
+D:\Users\TMP\ccXR2rRT.s:158    .text.seekfree_assistant_interface_init:0000005c $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.zf_common_fifo.h.33.e14e643902e26e4e65437b5b20e82793
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.zf_common_function.h.33.02bbfb055e8ee322bc4f8b14ea195da2
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.saradc.h.25.e5a70aef9ec4fddf35f2b7cc0c9cf1bc
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_adc.h.64.349fb433626b42172b0e0fee038428ca
+                           .group:00000000 wm4.can.h.25.3cfccb6c630ada4f656cab597e231e58
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.zf_driver_can.h.67.fd10d2fa867eb54a54d4b57027d73a60
+                           .group:00000000 wm4.tim.h.25.6e7ad96569e77a70a68b9b4cc59f54f2
+                           .group:00000000 wm4.zf_driver_timer.h.33.8df253b6990d9861816977209fb11e90
+                           .group:00000000 wm4.zf_driver_encoder.h.57.7e32999f25354fac086ca226b0c630d4
+                           .group:00000000 wm4.exti.h.25.21597c35d9630b0985ce88d2c41f4ea4
+                           .group:00000000 wm4.zf_driver_exti.h.59.1b02b8083e5295ef5baaf83905d59395
+                           .group:00000000 wm4.ssd_types.h.29.b861f4e6d39d333f931bfc05b964cb1c
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.zf_driver_flash.h.59.db93fe574c35ea9e79030063fbb35a13
+                           .group:00000000 wm4.hrtim.h.25.1601aea9d4a0da1de8252dc444355251
+                           .group:00000000 wm4.zf_driver_hrtim.h.64.cd8d2bf3bf1c471ea59d9c61e4a721d7
+                           .group:00000000 wm4.zf_driver_interrupt.h.33.2c3660dcc36cb090bd75b8f180c14f27
+                           .group:00000000 wm4.zf_driver_pit.h.33.834ac720a62e09d5603a9557331e9049
+                           .group:00000000 wm4.zf_driver_pwm.h.33.7d80487064ca712231a453396685a551
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.zf_driver_soft_iic.h.33.9067bd298084134f63c61c075f95fa2b
+                           .group:00000000 wm4.zf_driver_soft_spi.h.33.a938287c023905d97cafe56e4be63674
+                           .group:00000000 wm4.zf_driver_spi.h.62.950b1f52ed365034df2907601137b455
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.zf_driver_uart.h.70.ffcf3694337ad0b4066179f1abd5d668
+                           .group:00000000 wm4.zf_device_wireless_interface.h.73.ce2fb3b4e3bb5e2ec28e1a82cb7be819
+                           .group:00000000 wm4.seekfree_assistant.h.36.0dfd5f44f215d4bbf9b845814f5189cb
+
+UNDEFINED SYMBOLS
+seekfree_assistant_transfer_callback
+debug_uart_write_buffer
+seekfree_assistant_receive_callback
+debug_uart_read_buffer
+bluetooth_ch9141_send_buffer
+bluetooth_ch9141_read_buffer
+wireless_uart_send_buffer
+wireless_uart_read_buffer

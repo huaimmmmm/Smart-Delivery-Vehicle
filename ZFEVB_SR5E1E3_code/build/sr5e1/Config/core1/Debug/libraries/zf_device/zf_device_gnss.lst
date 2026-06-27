@@ -1,0 +1,3521 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_device_gnss.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	gnss_flag
+  19              		.section	.bss.gnss_flag,"aw",%nobits
+  22              	gnss_flag:
+  23 0000 00       		.space	1
+  24              		.global	gnss_info
+  25              		.section	.bss.gnss_info,"aw",%nobits
+  26              		.align	3
+  29              	gnss_info:
+  30 0000 00000000 		.space	72
+  30      00000000 
+  30      00000000 
+  30      00000000 
+  30      00000000 
+  31              		.section	.bss.gnss_state,"aw",%nobits
+  34              	gnss_state:
+  35 0000 00       		.space	1
+  36              		.section	.bss.gnss_receiver_fifo,"aw",%nobits
+  37              		.align	2
+  40              	gnss_receiver_fifo:
+  41 0000 00000000 		.space	20
+  41      00000000 
+  41      00000000 
+  41      00000000 
+  41      00000000 
+  42              		.section	.bss.gnss_receiver_buffer,"aw",%nobits
+  43              		.align	2
+  46              	gnss_receiver_buffer:
+  47 0000 00000000 		.space	128
+  47      00000000 
+  47      00000000 
+  47      00000000 
+  47      00000000 
+  48              		.section	.bss.gnss_gga_state,"aw",%nobits
+  51              	gnss_gga_state:
+  52 0000 00       		.space	1
+  53              		.section	.bss.gnss_rmc_state,"aw",%nobits
+  56              	gnss_rmc_state:
+  57 0000 00       		.space	1
+  58              		.section	.bss.gnss_ths_state,"aw",%nobits
+  61              	gnss_ths_state:
+  62 0000 00       		.space	1
+  63              		.section	.bss.gnss_gga_buffer,"aw",%nobits
+  64              		.align	2
+  67              	gnss_gga_buffer:
+  68 0000 00000000 		.space	128
+  68      00000000 
+  68      00000000 
+  68      00000000 
+  68      00000000 
+  69              		.section	.bss.gnss_rmc_buffer,"aw",%nobits
+  70              		.align	2
+  73              	gnss_rmc_buffer:
+  74 0000 00000000 		.space	128
+  74      00000000 
+  74      00000000 
+  74      00000000 
+  74      00000000 
+  75              		.section	.bss.gnss_ths_buffer,"aw",%nobits
+  76              		.align	2
+  79              	gnss_ths_buffer:
+  80 0000 00000000 		.space	128
+  80      00000000 
+  80      00000000 
+  80      00000000 
+  80      00000000 
+  81              		.section	.text.get_parameter_index,"ax",%progbits
+  82              		.align	1
+  83              		.p2align 4,,15
+  84              		.syntax unified
+  85              		.thumb
+  86              		.thumb_func
+  88              	get_parameter_index:
+  89              	.LFB482:
+  90              		.file 1 "libraries/zf_device/zf_device_gnss.c"
+   1:libraries/zf_device/zf_device_gnss.c **** /**************************************************************************************************
+   2:libraries/zf_device/zf_device_gnss.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_device/zf_device_gnss.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_device/zf_device_gnss.c **** *
+   5:libraries/zf_device/zf_device_gnss.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_device/zf_device_gnss.c **** *
+   7:libraries/zf_device/zf_device_gnss.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_device/zf_device_gnss.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_device/zf_device_gnss.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_device/zf_device_gnss.c **** *
+  11:libraries/zf_device/zf_device_gnss.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_device/zf_device_gnss.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_device/zf_device_gnss.c **** * 更多细节请参见 GPL
+  14:libraries/zf_device/zf_device_gnss.c **** *
+  15:libraries/zf_device/zf_device_gnss.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_device/zf_device_gnss.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_device/zf_device_gnss.c **** *
+  18:libraries/zf_device/zf_device_gnss.c **** * 额外注明：
+  19:libraries/zf_device/zf_device_gnss.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_device/zf_device_gnss.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_device/zf_device_gnss.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_device/zf_device_gnss.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_device/zf_device_gnss.c **** *
+  24:libraries/zf_device/zf_device_gnss.c **** * 文件名称          zf_device_gnss
+  25:libraries/zf_device/zf_device_gnss.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_device/zf_device_gnss.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_device/zf_device_gnss.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_device/zf_device_gnss.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_device/zf_device_gnss.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_device/zf_device_gnss.c **** ***************************************************************************************************
+  31:libraries/zf_device/zf_device_gnss.c **** 
+  32:libraries/zf_device/zf_device_gnss.c **** /**************************************************************************************************
+  33:libraries/zf_device/zf_device_gnss.c **** * 接线定义：
+  34:libraries/zf_device/zf_device_gnss.c **** *                   ------------------------------------
+  35:libraries/zf_device/zf_device_gnss.c **** *                   模块管脚            单片机管脚
+  36:libraries/zf_device/zf_device_gnss.c **** *                   RX                  查看 zf_device_gnss.h 中 GNSS_RX 宏定义
+  37:libraries/zf_device/zf_device_gnss.c **** *                   TX                  查看 zf_device_gnss.h 中 GNSS_TX 宏定义
+  38:libraries/zf_device/zf_device_gnss.c **** *                   VCC                 3.3V电源
+  39:libraries/zf_device/zf_device_gnss.c **** *                   GND                 电源地
+  40:libraries/zf_device/zf_device_gnss.c **** *                   ------------------------------------
+  41:libraries/zf_device/zf_device_gnss.c **** ***************************************************************************************************
+  42:libraries/zf_device/zf_device_gnss.c **** 
+  43:libraries/zf_device/zf_device_gnss.c **** // 自身头文件
+  44:libraries/zf_device/zf_device_gnss.c **** #include "zf_device_gnss.h"
+  45:libraries/zf_device/zf_device_gnss.c **** 
+  46:libraries/zf_device/zf_device_gnss.c **** // 此处定义 GNSS 相关的接口资源 这里不允许用户修改 这里不允许用户修改 
+  47:libraries/zf_device/zf_device_gnss.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  48:libraries/zf_device/zf_device_gnss.c **** #define GNSS_BUFFER_SIZE    ( 128 )
+  49:libraries/zf_device/zf_device_gnss.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  50:libraries/zf_device/zf_device_gnss.c **** 
+  51:libraries/zf_device/zf_device_gnss.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改 这里不允许
+  52:libraries/zf_device/zf_device_gnss.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  53:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION_START
+  54:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION uint8                         gnss_flag = 0;                          // 1-采集
+  55:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION gnss_info_struct              gnss_info;                              // GNSS 解
+  56:libraries/zf_device/zf_device_gnss.c **** 
+  57:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  uint8                 gnss_state = 0;                         // 1-GNSS �
+  58:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  zf_fifo_obj_struct    gnss_receiver_fifo;                     //
+  59:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  uint8                 gnss_receiver_buffer[GNSS_BUFFER_SIZE]; // 数据�
+  60:libraries/zf_device/zf_device_gnss.c **** 
+  61:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  gnss_state_enum       gnss_gga_state = GNSS_STATE_RECEIVING;  // gga 语�
+  62:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  gnss_state_enum       gnss_rmc_state = GNSS_STATE_RECEIVING;  // rmc 语�
+  63:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  gnss_state_enum       gnss_ths_state = GNSS_STATE_RECEIVING;  // rmc 语�
+  64:libraries/zf_device/zf_device_gnss.c **** 
+  65:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  uint8                 gnss_gga_buffer[GNSS_BUFFER_SIZE];
+  66:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  uint8                 gnss_rmc_buffer[GNSS_BUFFER_SIZE];
+  67:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION static  uint8                 gnss_ths_buffer[GNSS_BUFFER_SIZE];
+  68:libraries/zf_device/zf_device_gnss.c **** AT_ZF_LIB_SECTION_END
+  69:libraries/zf_device/zf_device_gnss.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  70:libraries/zf_device/zf_device_gnss.c **** 
+  71:libraries/zf_device/zf_device_gnss.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  72:libraries/zf_device/zf_device_gnss.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  73:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+  74:libraries/zf_device/zf_device_gnss.c **** // 函数简介     获取指定 ',' 后面的索引
+  75:libraries/zf_device/zf_device_gnss.c **** // 参数说明     num             第几个逗号
+  76:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *str            字符串
+  77:libraries/zf_device/zf_device_gnss.c **** // 返回参数     uint8           返回索引
+  78:libraries/zf_device/zf_device_gnss.c **** // 使用示例     get_parameter_index(num, str);
+  79:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+  80:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+  81:libraries/zf_device/zf_device_gnss.c **** static uint8 get_parameter_index (uint8 num, char *str)
+  82:libraries/zf_device/zf_device_gnss.c **** {
+  91              		.loc 1 82 1
+  92              		.cfi_startproc
+  93              		@ args = 0, pretend = 0, frame = 16
+  94              		@ frame_needed = 0, uses_anonymous_args = 0
+  95 0000 00B5     		push	{lr}
+  96              		.cfi_def_cfa_offset 4
+  97              		.cfi_offset 14, -4
+  98 0002 85B0     		sub	sp, sp, #20
+  99              		.cfi_def_cfa_offset 24
+ 100 0004 0346     		mov	r3, r0
+ 101 0006 0091     		str	r1, [sp]
+ 102 0008 8DF80730 		strb	r3, [sp, #7]
+  83:libraries/zf_device/zf_device_gnss.c ****     uint8   return_value    = 0;
+ 103              		.loc 1 83 13
+ 104 000c 0023     		movs	r3, #0
+ 105 000e 8DF80F30 		strb	r3, [sp, #15]
+  84:libraries/zf_device/zf_device_gnss.c **** 
+  85:libraries/zf_device/zf_device_gnss.c ****     uint8   search_len      = 0;
+ 106              		.loc 1 85 13
+ 107 0012 0023     		movs	r3, #0
+ 108 0014 8DF80E30 		strb	r3, [sp, #14]
+  86:libraries/zf_device/zf_device_gnss.c ****     uint8   temp_value1     = 0;
+ 109              		.loc 1 86 13
+ 110 0018 0023     		movs	r3, #0
+ 111 001a 8DF80D30 		strb	r3, [sp, #13]
+  87:libraries/zf_device/zf_device_gnss.c ****     uint8   temp_value2     = 0;
+ 112              		.loc 1 87 13
+ 113 001e 0023     		movs	r3, #0
+ 114 0020 8DF80C30 		strb	r3, [sp, #12]
+  88:libraries/zf_device/zf_device_gnss.c ****     char    *str_tail       = strchr(str, '\n');
+ 115              		.loc 1 88 31
+ 116 0024 0A21     		movs	r1, #10
+ 117 0026 0098     		ldr	r0, [sp]
+ 118 0028 FFF7FEFF 		bl	strchr
+ 119 002c 0290     		str	r0, [sp, #8]
+  89:libraries/zf_device/zf_device_gnss.c **** 
+  90:libraries/zf_device/zf_device_gnss.c ****     if(NULL != str_tail)
+ 120              		.loc 1 90 7
+ 121 002e 029B     		ldr	r3, [sp, #8]
+ 122 0030 002B     		cmp	r3, #0
+ 123 0032 06D0     		beq	.L2
+  91:libraries/zf_device/zf_device_gnss.c ****     {
+  92:libraries/zf_device/zf_device_gnss.c ****         search_len = (uint8)((uint32)str_tail - (uint32)str + 1);
+ 124              		.loc 1 92 30
+ 125 0034 029A     		ldr	r2, [sp, #8]
+ 126              		.loc 1 92 49
+ 127 0036 009B     		ldr	r3, [sp]
+ 128              		.loc 1 92 47
+ 129 0038 D31A     		subs	r3, r2, r3
+ 130              		.loc 1 92 22
+ 131 003a DBB2     		uxtb	r3, r3
+ 132              		.loc 1 92 20
+ 133 003c 0133     		adds	r3, r3, #1
+ 134 003e 8DF80E30 		strb	r3, [sp, #14]
+ 135              	.L2:
+  93:libraries/zf_device/zf_device_gnss.c ****     }
+  94:libraries/zf_device/zf_device_gnss.c **** 
+  95:libraries/zf_device/zf_device_gnss.c ****     for(temp_value1 = 0; temp_value1 < search_len; temp_value1 ++)
+ 136              		.loc 1 95 21
+ 137 0042 0023     		movs	r3, #0
+ 138 0044 8DF80D30 		strb	r3, [sp, #13]
+ 139              		.loc 1 95 5
+ 140 0048 1DE0     		b	.L3
+ 141              	.L7:
+  96:libraries/zf_device/zf_device_gnss.c ****     {
+  97:libraries/zf_device/zf_device_gnss.c ****         if(',' == str[temp_value1])
+ 142              		.loc 1 97 22
+ 143 004a 9DF80D30 		ldrb	r3, [sp, #13]	@ zero_extendqisi2
+ 144 004e 009A     		ldr	r2, [sp]
+ 145 0050 1344     		add	r3, r3, r2
+ 146 0052 93F90030 		ldrsb	r3, [r3]
+ 147              		.loc 1 97 11
+ 148 0056 2C2B     		cmp	r3, #44
+ 149 0058 04D1     		bne	.L4
+  98:libraries/zf_device/zf_device_gnss.c ****         {
+  99:libraries/zf_device/zf_device_gnss.c ****             temp_value2 ++;
+ 150              		.loc 1 99 25
+ 151 005a 9DF80C30 		ldrb	r3, [sp, #12]	@ zero_extendqisi2
+ 152 005e 0133     		adds	r3, r3, #1
+ 153 0060 8DF80C30 		strb	r3, [sp, #12]
+ 154              	.L4:
+ 100:libraries/zf_device/zf_device_gnss.c ****         }
+ 101:libraries/zf_device/zf_device_gnss.c ****         if(temp_value2 == num)
+ 155              		.loc 1 101 11
+ 156 0064 9DF80C20 		ldrb	r2, [sp, #12]	@ zero_extendqisi2
+ 157 0068 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 158 006c 9A42     		cmp	r2, r3
+ 159 006e 05D1     		bne	.L5
+ 102:libraries/zf_device/zf_device_gnss.c ****         {
+ 103:libraries/zf_device/zf_device_gnss.c ****             return_value =  temp_value1 + 1;
+ 160              		.loc 1 103 26
+ 161 0070 9DF80D30 		ldrb	r3, [sp, #13]
+ 162 0074 0133     		adds	r3, r3, #1
+ 163 0076 8DF80F30 		strb	r3, [sp, #15]
+ 104:libraries/zf_device/zf_device_gnss.c ****             break;
+ 164              		.loc 1 104 13
+ 165 007a 0AE0     		b	.L6
+ 166              	.L5:
+  95:libraries/zf_device/zf_device_gnss.c ****     {
+ 167              		.loc 1 95 64 discriminator 2
+ 168 007c 9DF80D30 		ldrb	r3, [sp, #13]	@ zero_extendqisi2
+ 169 0080 0133     		adds	r3, r3, #1
+ 170 0082 8DF80D30 		strb	r3, [sp, #13]
+ 171              	.L3:
+  95:libraries/zf_device/zf_device_gnss.c ****     {
+ 172              		.loc 1 95 5 discriminator 1
+ 173 0086 9DF80D20 		ldrb	r2, [sp, #13]	@ zero_extendqisi2
+ 174 008a 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 175 008e 9A42     		cmp	r2, r3
+ 176 0090 DBD3     		bcc	.L7
+ 177              	.L6:
+ 105:libraries/zf_device/zf_device_gnss.c ****         }
+ 106:libraries/zf_device/zf_device_gnss.c ****     }
+ 107:libraries/zf_device/zf_device_gnss.c **** 
+ 108:libraries/zf_device/zf_device_gnss.c ****     return return_value;
+ 178              		.loc 1 108 12
+ 179 0092 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 109:libraries/zf_device/zf_device_gnss.c **** }
+ 180              		.loc 1 109 1
+ 181 0096 1846     		mov	r0, r3
+ 182 0098 05B0     		add	sp, sp, #20
+ 183              		.cfi_def_cfa_offset 4
+ 184              		@ sp needed
+ 185 009a 5DF804FB 		ldr	pc, [sp], #4
+ 186              		.cfi_endproc
+ 187              	.LFE482:
+ 189 009e 00BF     		.section	.text.get_int_number,"ax",%progbits
+ 190              		.align	1
+ 191              		.p2align 4,,15
+ 192              		.syntax unified
+ 193              		.thumb
+ 194              		.thumb_func
+ 196              	get_int_number:
+ 197              	.LFB483:
+ 110:libraries/zf_device/zf_device_gnss.c **** 
+ 111:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 112:libraries/zf_device/zf_device_gnss.c **** // 函数简介     给定字符串第一个 ',' 之前的数据转换为int
+ 113:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *str            字符串
+ 114:libraries/zf_device/zf_device_gnss.c **** // 返回参数     float           返回数值
+ 115:libraries/zf_device/zf_device_gnss.c **** // 使用示例     get_int_number(str);
+ 116:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+ 117:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 118:libraries/zf_device/zf_device_gnss.c **** static int get_int_number (char *str)
+ 119:libraries/zf_device/zf_device_gnss.c **** {
+ 198              		.loc 1 119 1
+ 199              		.cfi_startproc
+ 200              		@ args = 0, pretend = 0, frame = 24
+ 201              		@ frame_needed = 0, uses_anonymous_args = 0
+ 202 0000 00B5     		push	{lr}
+ 203              		.cfi_def_cfa_offset 4
+ 204              		.cfi_offset 14, -4
+ 205 0002 87B0     		sub	sp, sp, #28
+ 206              		.cfi_def_cfa_offset 32
+ 207 0004 0190     		str	r0, [sp, #4]
+ 120:libraries/zf_device/zf_device_gnss.c ****     int return_value = 0;
+ 208              		.loc 1 120 9
+ 209 0006 0023     		movs	r3, #0
+ 210 0008 0593     		str	r3, [sp, #20]
+ 121:libraries/zf_device/zf_device_gnss.c **** 
+ 122:libraries/zf_device/zf_device_gnss.c ****     char buf[10];
+ 123:libraries/zf_device/zf_device_gnss.c ****     uint8 temp_value1 = 0;
+ 211              		.loc 1 123 11
+ 212 000a 0023     		movs	r3, #0
+ 213 000c 8DF81330 		strb	r3, [sp, #19]
+ 124:libraries/zf_device/zf_device_gnss.c **** 
+ 125:libraries/zf_device/zf_device_gnss.c ****     temp_value1 = get_parameter_index(1, str);
+ 214              		.loc 1 125 19
+ 215 0010 0199     		ldr	r1, [sp, #4]
+ 216 0012 0120     		movs	r0, #1
+ 217 0014 FFF7FEFF 		bl	get_parameter_index
+ 218 0018 0346     		mov	r3, r0
+ 219 001a 8DF81330 		strb	r3, [sp, #19]
+ 126:libraries/zf_device/zf_device_gnss.c ****     temp_value1 = temp_value1 - 1;
+ 220              		.loc 1 126 17
+ 221 001e 9DF81330 		ldrb	r3, [sp, #19]
+ 222 0022 013B     		subs	r3, r3, #1
+ 223 0024 8DF81330 		strb	r3, [sp, #19]
+ 127:libraries/zf_device/zf_device_gnss.c ****     strncpy(buf, str, temp_value1);
+ 224              		.loc 1 127 5
+ 225 0028 9DF81320 		ldrb	r2, [sp, #19]	@ zero_extendqisi2
+ 226 002c 02AB     		add	r3, sp, #8
+ 227 002e 0199     		ldr	r1, [sp, #4]
+ 228 0030 1846     		mov	r0, r3
+ 229 0032 FFF7FEFF 		bl	strncpy
+ 128:libraries/zf_device/zf_device_gnss.c ****     buf[temp_value1] = 0;
+ 230              		.loc 1 128 8
+ 231 0036 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+ 232              		.loc 1 128 22
+ 233 003a 1833     		adds	r3, r3, #24
+ 234 003c 6B44     		add	r3, sp, r3
+ 235 003e 0022     		movs	r2, #0
+ 236 0040 03F8102C 		strb	r2, [r3, #-16]
+ 129:libraries/zf_device/zf_device_gnss.c ****     return_value = zf_function_str_to_int(buf);
+ 237              		.loc 1 129 20
+ 238 0044 02AB     		add	r3, sp, #8
+ 239 0046 1846     		mov	r0, r3
+ 240 0048 FFF7FEFF 		bl	zf_function_str_to_int
+ 241 004c 0590     		str	r0, [sp, #20]
+ 130:libraries/zf_device/zf_device_gnss.c **** 
+ 131:libraries/zf_device/zf_device_gnss.c ****     return return_value;
+ 242              		.loc 1 131 12
+ 243 004e 059B     		ldr	r3, [sp, #20]
+ 132:libraries/zf_device/zf_device_gnss.c **** }
+ 244              		.loc 1 132 1
+ 245 0050 1846     		mov	r0, r3
+ 246 0052 07B0     		add	sp, sp, #28
+ 247              		.cfi_def_cfa_offset 4
+ 248              		@ sp needed
+ 249 0054 5DF804FB 		ldr	pc, [sp], #4
+ 250              		.cfi_endproc
+ 251              	.LFE483:
+ 253              		.section	.text.get_float_number,"ax",%progbits
+ 254              		.align	1
+ 255              		.p2align 4,,15
+ 256              		.syntax unified
+ 257              		.thumb
+ 258              		.thumb_func
+ 260              	get_float_number:
+ 261              	.LFB484:
+ 133:libraries/zf_device/zf_device_gnss.c **** 
+ 134:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 135:libraries/zf_device/zf_device_gnss.c **** // 函数简介     给定字符串第一个 ',' 之前的数据转换为float
+ 136:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *str            字符串
+ 137:libraries/zf_device/zf_device_gnss.c **** // 返回参数     float           返回数值
+ 138:libraries/zf_device/zf_device_gnss.c **** // 使用示例     get_float_number(str);
+ 139:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+ 140:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 141:libraries/zf_device/zf_device_gnss.c **** static float get_float_number (char *str)
+ 142:libraries/zf_device/zf_device_gnss.c **** {
+ 262              		.loc 1 142 1
+ 263              		.cfi_startproc
+ 264              		@ args = 0, pretend = 0, frame = 32
+ 265              		@ frame_needed = 0, uses_anonymous_args = 0
+ 266 0000 00B5     		push	{lr}
+ 267              		.cfi_def_cfa_offset 4
+ 268              		.cfi_offset 14, -4
+ 269 0002 89B0     		sub	sp, sp, #36
+ 270              		.cfi_def_cfa_offset 40
+ 271 0004 0190     		str	r0, [sp, #4]
+ 143:libraries/zf_device/zf_device_gnss.c ****     float return_value = 0;
+ 272              		.loc 1 143 11
+ 273 0006 4FF00003 		mov	r3, #0
+ 274 000a 0793     		str	r3, [sp, #28]	@ float
+ 144:libraries/zf_device/zf_device_gnss.c **** 
+ 145:libraries/zf_device/zf_device_gnss.c ****     uint8 temp_value1 = 0;
+ 275              		.loc 1 145 11
+ 276 000c 0023     		movs	r3, #0
+ 277 000e 8DF81B30 		strb	r3, [sp, #27]
+ 146:libraries/zf_device/zf_device_gnss.c ****     char buf[15];
+ 147:libraries/zf_device/zf_device_gnss.c **** 
+ 148:libraries/zf_device/zf_device_gnss.c ****     temp_value1 = get_parameter_index(1, str);
+ 278              		.loc 1 148 19
+ 279 0012 0199     		ldr	r1, [sp, #4]
+ 280 0014 0120     		movs	r0, #1
+ 281 0016 FFF7FEFF 		bl	get_parameter_index
+ 282 001a 0346     		mov	r3, r0
+ 283 001c 8DF81B30 		strb	r3, [sp, #27]
+ 149:libraries/zf_device/zf_device_gnss.c ****     temp_value1 = temp_value1 - 1;
+ 284              		.loc 1 149 17
+ 285 0020 9DF81B30 		ldrb	r3, [sp, #27]
+ 286 0024 013B     		subs	r3, r3, #1
+ 287 0026 8DF81B30 		strb	r3, [sp, #27]
+ 150:libraries/zf_device/zf_device_gnss.c ****     strncpy(buf, str, temp_value1);
+ 288              		.loc 1 150 5
+ 289 002a 9DF81B20 		ldrb	r2, [sp, #27]	@ zero_extendqisi2
+ 290 002e 03AB     		add	r3, sp, #12
+ 291 0030 0199     		ldr	r1, [sp, #4]
+ 292 0032 1846     		mov	r0, r3
+ 293 0034 FFF7FEFF 		bl	strncpy
+ 151:libraries/zf_device/zf_device_gnss.c ****     buf[temp_value1] = 0;
+ 294              		.loc 1 151 8
+ 295 0038 9DF81B30 		ldrb	r3, [sp, #27]	@ zero_extendqisi2
+ 296              		.loc 1 151 22
+ 297 003c 2033     		adds	r3, r3, #32
+ 298 003e 6B44     		add	r3, sp, r3
+ 299 0040 0022     		movs	r2, #0
+ 300 0042 03F8142C 		strb	r2, [r3, #-20]
+ 152:libraries/zf_device/zf_device_gnss.c ****     return_value = (float)zf_function_str_to_double(buf);
+ 301              		.loc 1 152 27
+ 302 0046 03AB     		add	r3, sp, #12
+ 303 0048 1846     		mov	r0, r3
+ 304 004a FFF7FEFF 		bl	zf_function_str_to_double
+ 305 004e B0EE407B 		vmov.f64	d7, d0
+ 306              		.loc 1 152 18
+ 307 0052 F7EEC77B 		vcvt.f32.f64	s15, d7
+ 308 0056 CDED077A 		vstr.32	s15, [sp, #28]
+ 153:libraries/zf_device/zf_device_gnss.c **** 
+ 154:libraries/zf_device/zf_device_gnss.c ****     return return_value;
+ 309              		.loc 1 154 12
+ 310 005a 079B     		ldr	r3, [sp, #28]	@ float
+ 311 005c 07EE903A 		vmov	s15, r3
+ 155:libraries/zf_device/zf_device_gnss.c **** }
+ 312              		.loc 1 155 1
+ 313 0060 B0EE670A 		vmov.f32	s0, s15
+ 314 0064 09B0     		add	sp, sp, #36
+ 315              		.cfi_def_cfa_offset 4
+ 316              		@ sp needed
+ 317 0066 5DF804FB 		ldr	pc, [sp], #4
+ 318              		.cfi_endproc
+ 319              	.LFE484:
+ 321 006a 00BF     		.section	.text.get_double_number,"ax",%progbits
+ 322              		.align	1
+ 323              		.p2align 4,,15
+ 324              		.syntax unified
+ 325              		.thumb
+ 326              		.thumb_func
+ 328              	get_double_number:
+ 329              	.LFB485:
+ 156:libraries/zf_device/zf_device_gnss.c **** 
+ 157:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 158:libraries/zf_device/zf_device_gnss.c **** // 函数简介     给定字符串第一个 ',' 之前的数据转换为double
+ 159:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *str            字符串
+ 160:libraries/zf_device/zf_device_gnss.c **** // 返回参数     double          返回数值
+ 161:libraries/zf_device/zf_device_gnss.c **** // 使用示例     get_double_number(str);
+ 162:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+ 163:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 164:libraries/zf_device/zf_device_gnss.c **** static double get_double_number (char *str)
+ 165:libraries/zf_device/zf_device_gnss.c **** {
+ 330              		.loc 1 165 1
+ 331              		.cfi_startproc
+ 332              		@ args = 0, pretend = 0, frame = 32
+ 333              		@ frame_needed = 0, uses_anonymous_args = 0
+ 334 0000 00B5     		push	{lr}
+ 335              		.cfi_def_cfa_offset 4
+ 336              		.cfi_offset 14, -4
+ 337 0002 89B0     		sub	sp, sp, #36
+ 338              		.cfi_def_cfa_offset 40
+ 339 0004 0190     		str	r0, [sp, #4]
+ 166:libraries/zf_device/zf_device_gnss.c ****     double return_value = 0;
+ 340              		.loc 1 166 12
+ 341 0006 4FF00002 		mov	r2, #0
+ 342 000a 4FF00003 		mov	r3, #0
+ 343 000e CDE90623 		strd	r2, [sp, #24]
+ 167:libraries/zf_device/zf_device_gnss.c **** 
+ 168:libraries/zf_device/zf_device_gnss.c ****     uint8 temp_value1 = 0;
+ 344              		.loc 1 168 11
+ 345 0012 0023     		movs	r3, #0
+ 346 0014 8DF81730 		strb	r3, [sp, #23]
+ 169:libraries/zf_device/zf_device_gnss.c ****     char buf[15];
+ 170:libraries/zf_device/zf_device_gnss.c **** 
+ 171:libraries/zf_device/zf_device_gnss.c ****     temp_value1 = get_parameter_index(1, str);
+ 347              		.loc 1 171 19
+ 348 0018 0199     		ldr	r1, [sp, #4]
+ 349 001a 0120     		movs	r0, #1
+ 350 001c FFF7FEFF 		bl	get_parameter_index
+ 351 0020 0346     		mov	r3, r0
+ 352 0022 8DF81730 		strb	r3, [sp, #23]
+ 172:libraries/zf_device/zf_device_gnss.c ****     temp_value1 = temp_value1 - 1;
+ 353              		.loc 1 172 17
+ 354 0026 9DF81730 		ldrb	r3, [sp, #23]
+ 355 002a 013B     		subs	r3, r3, #1
+ 356 002c 8DF81730 		strb	r3, [sp, #23]
+ 173:libraries/zf_device/zf_device_gnss.c ****     strncpy(buf, str, temp_value1);
+ 357              		.loc 1 173 5
+ 358 0030 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 359 0034 02AB     		add	r3, sp, #8
+ 360 0036 0199     		ldr	r1, [sp, #4]
+ 361 0038 1846     		mov	r0, r3
+ 362 003a FFF7FEFF 		bl	strncpy
+ 174:libraries/zf_device/zf_device_gnss.c ****     buf[temp_value1] = 0;
+ 363              		.loc 1 174 8
+ 364 003e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 365              		.loc 1 174 22
+ 366 0042 2033     		adds	r3, r3, #32
+ 367 0044 6B44     		add	r3, sp, r3
+ 368 0046 0022     		movs	r2, #0
+ 369 0048 03F8182C 		strb	r2, [r3, #-24]
+ 175:libraries/zf_device/zf_device_gnss.c ****     return_value = zf_function_str_to_double(buf);
+ 370              		.loc 1 175 20
+ 371 004c 02AB     		add	r3, sp, #8
+ 372 004e 1846     		mov	r0, r3
+ 373 0050 FFF7FEFF 		bl	zf_function_str_to_double
+ 374 0054 8DED060B 		vstr.64	d0, [sp, #24]
+ 176:libraries/zf_device/zf_device_gnss.c **** 
+ 177:libraries/zf_device/zf_device_gnss.c ****     return return_value;
+ 375              		.loc 1 177 12
+ 376 0058 DDE90623 		ldrd	r2, [sp, #24]
+ 377 005c 43EC172B 		vmov	d7, r2, r3
+ 178:libraries/zf_device/zf_device_gnss.c **** }
+ 378              		.loc 1 178 1
+ 379 0060 B0EE470B 		vmov.f64	d0, d7
+ 380 0064 09B0     		add	sp, sp, #36
+ 381              		.cfi_def_cfa_offset 4
+ 382              		@ sp needed
+ 383 0066 5DF804FB 		ldr	pc, [sp], #4
+ 384              		.cfi_endproc
+ 385              	.LFE485:
+ 387 006a 00BF     		.section	.text.utc_to_btc,"ax",%progbits
+ 388              		.align	1
+ 389              		.p2align 4,,15
+ 390              		.syntax unified
+ 391              		.thumb
+ 392              		.thumb_func
+ 394              	utc_to_btc:
+ 395              	.LFB486:
+ 179:libraries/zf_device/zf_device_gnss.c **** 
+ 180:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 181:libraries/zf_device/zf_device_gnss.c **** // 函数简介     世界时间转换为北京时间
+ 182:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *time           保存的时间
+ 183:libraries/zf_device/zf_device_gnss.c **** // 返回参数     void
+ 184:libraries/zf_device/zf_device_gnss.c **** // 使用示例     utc_to_btc(&gnss->time);
+ 185:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+ 186:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 187:libraries/zf_device/zf_device_gnss.c **** static void utc_to_btc (gnss_time_struct *time)
+ 188:libraries/zf_device/zf_device_gnss.c **** {
+ 396              		.loc 1 188 1
+ 397              		.cfi_startproc
+ 398              		@ args = 0, pretend = 0, frame = 16
+ 399              		@ frame_needed = 0, uses_anonymous_args = 0
+ 400              		@ link register save eliminated.
+ 401 0000 84B0     		sub	sp, sp, #16
+ 402              		.cfi_def_cfa_offset 16
+ 403 0002 0190     		str	r0, [sp, #4]
+ 189:libraries/zf_device/zf_device_gnss.c ****     uint8 day_num = 0;
+ 404              		.loc 1 189 11
+ 405 0004 0023     		movs	r3, #0
+ 406 0006 8DF80F30 		strb	r3, [sp, #15]
+ 190:libraries/zf_device/zf_device_gnss.c **** 
+ 191:libraries/zf_device/zf_device_gnss.c ****     time->hour = time->hour + 8;
+ 407              		.loc 1 191 22
+ 408 000a 019B     		ldr	r3, [sp, #4]
+ 409 000c 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 410              		.loc 1 191 29
+ 411 000e 0833     		adds	r3, r3, #8
+ 412 0010 DAB2     		uxtb	r2, r3
+ 413              		.loc 1 191 16
+ 414 0012 019B     		ldr	r3, [sp, #4]
+ 415 0014 1A71     		strb	r2, [r3, #4]
+ 192:libraries/zf_device/zf_device_gnss.c ****     if(23 < time->hour)
+ 416              		.loc 1 192 17
+ 417 0016 019B     		ldr	r3, [sp, #4]
+ 418 0018 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 419              		.loc 1 192 7
+ 420 001a 172B     		cmp	r3, #23
+ 421 001c 6FD9     		bls	.L22
+ 193:libraries/zf_device/zf_device_gnss.c ****     {
+ 194:libraries/zf_device/zf_device_gnss.c ****         time->hour  -= 24;
+ 422              		.loc 1 194 21
+ 423 001e 019B     		ldr	r3, [sp, #4]
+ 424 0020 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 425 0022 183B     		subs	r3, r3, #24
+ 426 0024 DAB2     		uxtb	r2, r3
+ 427 0026 019B     		ldr	r3, [sp, #4]
+ 428 0028 1A71     		strb	r2, [r3, #4]
+ 195:libraries/zf_device/zf_device_gnss.c ****         time->day   += 1;
+ 429              		.loc 1 195 21
+ 430 002a 019B     		ldr	r3, [sp, #4]
+ 431 002c DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 432 002e 0133     		adds	r3, r3, #1
+ 433 0030 DAB2     		uxtb	r2, r3
+ 434 0032 019B     		ldr	r3, [sp, #4]
+ 435 0034 DA70     		strb	r2, [r3, #3]
+ 196:libraries/zf_device/zf_device_gnss.c **** 
+ 197:libraries/zf_device/zf_device_gnss.c ****         if(2 == time->month)
+ 436              		.loc 1 197 21
+ 437 0036 019B     		ldr	r3, [sp, #4]
+ 438 0038 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 439              		.loc 1 197 11
+ 440 003a 022B     		cmp	r3, #2
+ 441 003c 2AD1     		bne	.L17
+ 198:libraries/zf_device/zf_device_gnss.c ****         {
+ 199:libraries/zf_device/zf_device_gnss.c ****             day_num = 28;
+ 442              		.loc 1 199 21
+ 443 003e 1C23     		movs	r3, #28
+ 444 0040 8DF80F30 		strb	r3, [sp, #15]
+ 200:libraries/zf_device/zf_device_gnss.c ****             if(     (   0 == time->year % 4
+ 445              		.loc 1 200 34
+ 446 0044 019B     		ldr	r3, [sp, #4]
+ 447 0046 1B88     		ldrh	r3, [r3]
+ 448              		.loc 1 200 27
+ 449 0048 03F00303 		and	r3, r3, #3
+ 450 004c 9BB2     		uxth	r3, r3
+ 451              		.loc 1 200 15
+ 452 004e 002B     		cmp	r3, #0
+ 453 0050 0CD1     		bne	.L18
+ 201:libraries/zf_device/zf_device_gnss.c ****                     &&  0 != time->year % 100)
+ 454              		.loc 1 201 34
+ 455 0052 019B     		ldr	r3, [sp, #4]
+ 456 0054 1B88     		ldrh	r3, [r3]
+ 457              		.loc 1 201 27
+ 458 0056 2B4A     		ldr	r2, .L23
+ 459 0058 A2FB0312 		umull	r1, r2, r2, r3
+ 460 005c 5209     		lsrs	r2, r2, #5
+ 461 005e 6421     		movs	r1, #100
+ 462 0060 01FB02F2 		mul	r2, r1, r2
+ 463 0064 9B1A     		subs	r3, r3, r2
+ 464 0066 9BB2     		uxth	r3, r3
+ 465              		.loc 1 201 21
+ 466 0068 002B     		cmp	r3, #0
+ 467 006a 0DD1     		bne	.L19
+ 468              	.L18:
+ 202:libraries/zf_device/zf_device_gnss.c ****                 ||  0 == time->year % 400)                                      // 判断是否为�
+ 469              		.loc 1 202 30
+ 470 006c 019B     		ldr	r3, [sp, #4]
+ 471 006e 1B88     		ldrh	r3, [r3]
+ 472              		.loc 1 202 23
+ 473 0070 244A     		ldr	r2, .L23
+ 474 0072 A2FB0312 		umull	r1, r2, r2, r3
+ 475 0076 D209     		lsrs	r2, r2, #7
+ 476 0078 4FF4C871 		mov	r1, #400
+ 477 007c 01FB02F2 		mul	r2, r1, r2
+ 478 0080 9B1A     		subs	r3, r3, r2
+ 479 0082 9BB2     		uxth	r3, r3
+ 480              		.loc 1 202 17
+ 481 0084 002B     		cmp	r3, #0
+ 482 0086 1BD1     		bne	.L20
+ 483              	.L19:
+ 203:libraries/zf_device/zf_device_gnss.c ****             {
+ 204:libraries/zf_device/zf_device_gnss.c ****                 day_num ++;                                                     // 闰月 2月为29
+ 484              		.loc 1 204 25
+ 485 0088 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 486 008c 0133     		adds	r3, r3, #1
+ 487 008e 8DF80F30 		strb	r3, [sp, #15]
+ 488 0092 15E0     		b	.L20
+ 489              	.L17:
+ 205:libraries/zf_device/zf_device_gnss.c ****             }
+ 206:libraries/zf_device/zf_device_gnss.c ****         }
+ 207:libraries/zf_device/zf_device_gnss.c ****         else
+ 208:libraries/zf_device/zf_device_gnss.c ****         {
+ 209:libraries/zf_device/zf_device_gnss.c ****             day_num = 31;                                                       // 1 3 5 7 8 10 12�
+ 490              		.loc 1 209 21
+ 491 0094 1F23     		movs	r3, #31
+ 492 0096 8DF80F30 		strb	r3, [sp, #15]
+ 210:libraries/zf_device/zf_device_gnss.c ****             if(     4  == time->month
+ 493              		.loc 1 210 31
+ 494 009a 019B     		ldr	r3, [sp, #4]
+ 495 009c 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 496              		.loc 1 210 15
+ 497 009e 042B     		cmp	r3, #4
+ 498 00a0 0BD0     		beq	.L21
+ 211:libraries/zf_device/zf_device_gnss.c ****                 ||  6  == time->month
+ 499              		.loc 1 211 31
+ 500 00a2 019B     		ldr	r3, [sp, #4]
+ 501 00a4 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 502              		.loc 1 211 17
+ 503 00a6 062B     		cmp	r3, #6
+ 504 00a8 07D0     		beq	.L21
+ 212:libraries/zf_device/zf_device_gnss.c ****                 ||  9  == time->month
+ 505              		.loc 1 212 31
+ 506 00aa 019B     		ldr	r3, [sp, #4]
+ 507 00ac 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 508              		.loc 1 212 17
+ 509 00ae 092B     		cmp	r3, #9
+ 510 00b0 03D0     		beq	.L21
+ 213:libraries/zf_device/zf_device_gnss.c ****                 ||  11 == time->month )
+ 511              		.loc 1 213 31
+ 512 00b2 019B     		ldr	r3, [sp, #4]
+ 513 00b4 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 514              		.loc 1 213 17
+ 515 00b6 0B2B     		cmp	r3, #11
+ 516 00b8 02D1     		bne	.L20
+ 517              	.L21:
+ 214:libraries/zf_device/zf_device_gnss.c ****             {
+ 215:libraries/zf_device/zf_device_gnss.c ****                 day_num = 30;
+ 518              		.loc 1 215 25
+ 519 00ba 1E23     		movs	r3, #30
+ 520 00bc 8DF80F30 		strb	r3, [sp, #15]
+ 521              	.L20:
+ 216:libraries/zf_device/zf_device_gnss.c ****             }
+ 217:libraries/zf_device/zf_device_gnss.c ****         }
+ 218:libraries/zf_device/zf_device_gnss.c **** 
+ 219:libraries/zf_device/zf_device_gnss.c ****         if(time->day > day_num)
+ 522              		.loc 1 219 16
+ 523 00c0 019B     		ldr	r3, [sp, #4]
+ 524 00c2 DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 525              		.loc 1 219 11
+ 526 00c4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 527 00c8 9A42     		cmp	r2, r3
+ 528 00ca 18D2     		bcs	.L22
+ 220:libraries/zf_device/zf_device_gnss.c ****         {
+ 221:libraries/zf_device/zf_device_gnss.c ****             time->day = 1;
+ 529              		.loc 1 221 23
+ 530 00cc 019B     		ldr	r3, [sp, #4]
+ 531 00ce 0122     		movs	r2, #1
+ 532 00d0 DA70     		strb	r2, [r3, #3]
+ 222:libraries/zf_device/zf_device_gnss.c ****             time->month ++;
+ 533              		.loc 1 222 17
+ 534 00d2 019B     		ldr	r3, [sp, #4]
+ 535 00d4 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 536              		.loc 1 222 25
+ 537 00d6 0133     		adds	r3, r3, #1
+ 538 00d8 DAB2     		uxtb	r2, r3
+ 539 00da 019B     		ldr	r3, [sp, #4]
+ 540 00dc 9A70     		strb	r2, [r3, #2]
+ 223:libraries/zf_device/zf_device_gnss.c ****             if(12 < time->month)
+ 541              		.loc 1 223 25
+ 542 00de 019B     		ldr	r3, [sp, #4]
+ 543 00e0 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 544              		.loc 1 223 15
+ 545 00e2 0C2B     		cmp	r3, #12
+ 546 00e4 0BD9     		bls	.L22
+ 224:libraries/zf_device/zf_device_gnss.c ****             {
+ 225:libraries/zf_device/zf_device_gnss.c ****                 time->month -= 12;
+ 547              		.loc 1 225 29
+ 548 00e6 019B     		ldr	r3, [sp, #4]
+ 549 00e8 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 550 00ea 0C3B     		subs	r3, r3, #12
+ 551 00ec DAB2     		uxtb	r2, r3
+ 552 00ee 019B     		ldr	r3, [sp, #4]
+ 553 00f0 9A70     		strb	r2, [r3, #2]
+ 226:libraries/zf_device/zf_device_gnss.c ****                 time->year ++;
+ 554              		.loc 1 226 21
+ 555 00f2 019B     		ldr	r3, [sp, #4]
+ 556 00f4 1B88     		ldrh	r3, [r3]
+ 557              		.loc 1 226 28
+ 558 00f6 0133     		adds	r3, r3, #1
+ 559 00f8 9AB2     		uxth	r2, r3
+ 560 00fa 019B     		ldr	r3, [sp, #4]
+ 561 00fc 1A80     		strh	r2, [r3]	@ movhi
+ 562              	.L22:
+ 227:libraries/zf_device/zf_device_gnss.c ****             }
+ 228:libraries/zf_device/zf_device_gnss.c ****         }
+ 229:libraries/zf_device/zf_device_gnss.c ****     }
+ 230:libraries/zf_device/zf_device_gnss.c **** }
+ 563              		.loc 1 230 1
+ 564 00fe 00BF     		nop
+ 565 0100 04B0     		add	sp, sp, #16
+ 566              		.cfi_def_cfa_offset 0
+ 567              		@ sp needed
+ 568 0102 7047     		bx	lr
+ 569              	.L24:
+ 570              		.align	2
+ 571              	.L23:
+ 572 0104 1F85EB51 		.word	1374389535
+ 573              		.cfi_endproc
+ 574              	.LFE486:
+ 576              		.section	.text.gnss_gnrmc_parse,"ax",%progbits
+ 577              		.align	1
+ 578              		.p2align 4,,15
+ 579              		.syntax unified
+ 580              		.thumb
+ 581              		.thumb_func
+ 583              	gnss_gnrmc_parse:
+ 584              	.LFB487:
+ 231:libraries/zf_device/zf_device_gnss.c **** 
+ 232:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 233:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS RMC 语句解析
+ 234:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *line           接收到的语句信息
+ 235:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *gnss           保存解析后的数据
+ 236:libraries/zf_device/zf_device_gnss.c **** // 返回参数     uint8           ZF_TRUE-解析成功 ZF_FALSE-数据有问题不能解析
+ 237:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_gnrmc_parse(line, gnss);
+ 238:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+ 239:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 240:libraries/zf_device/zf_device_gnss.c **** static uint8 gnss_gnrmc_parse (char *line, gnss_info_struct *gnss)
+ 241:libraries/zf_device/zf_device_gnss.c **** {
+ 585              		.loc 1 241 1
+ 586              		.cfi_startproc
+ 587              		@ args = 0, pretend = 0, frame = 72
+ 588              		@ frame_needed = 0, uses_anonymous_args = 0
+ 589 0000 00B5     		push	{lr}
+ 590              		.cfi_def_cfa_offset 4
+ 591              		.cfi_offset 14, -4
+ 592 0002 93B0     		sub	sp, sp, #76
+ 593              		.cfi_def_cfa_offset 80
+ 594 0004 0190     		str	r0, [sp, #4]
+ 595 0006 0091     		str	r1, [sp]
+ 242:libraries/zf_device/zf_device_gnss.c ****     uint8 return_state = ZF_FALSE;
+ 596              		.loc 1 242 11
+ 597 0008 0023     		movs	r3, #0
+ 598 000a 8DF84730 		strb	r3, [sp, #71]
+ 243:libraries/zf_device/zf_device_gnss.c **** 
+ 244:libraries/zf_device/zf_device_gnss.c ****     uint8 state = 0, temp = 0;
+ 599              		.loc 1 244 11
+ 600 000e 0023     		movs	r3, #0
+ 601 0010 8DF84630 		strb	r3, [sp, #70]
+ 602              		.loc 1 244 22
+ 603 0014 0023     		movs	r3, #0
+ 604 0016 8DF84530 		strb	r3, [sp, #69]
+ 245:libraries/zf_device/zf_device_gnss.c **** 
+ 246:libraries/zf_device/zf_device_gnss.c ****     double  latitude = 0;                                                       // 纬度
+ 605              		.loc 1 246 13
+ 606 001a 4FF00002 		mov	r2, #0
+ 607 001e 4FF00003 		mov	r3, #0
+ 608 0022 CDE90E23 		strd	r2, [sp, #56]
+ 247:libraries/zf_device/zf_device_gnss.c ****     double  longitude = 0;                                                      // 经度
+ 609              		.loc 1 247 13
+ 610 0026 4FF00002 		mov	r2, #0
+ 611 002a 4FF00003 		mov	r3, #0
+ 612 002e CDE90C23 		strd	r2, [sp, #48]
+ 248:libraries/zf_device/zf_device_gnss.c **** 
+ 249:libraries/zf_device/zf_device_gnss.c ****     double lati_cent_tmp = 0, lati_second_tmp = 0;
+ 613              		.loc 1 249 12
+ 614 0032 4FF00002 		mov	r2, #0
+ 615 0036 4FF00003 		mov	r3, #0
+ 616 003a CDE90A23 		strd	r2, [sp, #40]
+ 617              		.loc 1 249 31
+ 618 003e 4FF00002 		mov	r2, #0
+ 619 0042 4FF00003 		mov	r3, #0
+ 620 0046 CDE90823 		strd	r2, [sp, #32]
+ 250:libraries/zf_device/zf_device_gnss.c ****     double long_cent_tmp = 0, long_second_tmp = 0;
+ 621              		.loc 1 250 12
+ 622 004a 4FF00002 		mov	r2, #0
+ 623 004e 4FF00003 		mov	r3, #0
+ 624 0052 CDE90623 		strd	r2, [sp, #24]
+ 625              		.loc 1 250 31
+ 626 0056 4FF00002 		mov	r2, #0
+ 627 005a 4FF00003 		mov	r3, #0
+ 628 005e CDE90423 		strd	r2, [sp, #16]
+ 251:libraries/zf_device/zf_device_gnss.c ****     float speed_tmp = 0;
+ 629              		.loc 1 251 11
+ 630 0062 4FF00003 		mov	r3, #0
+ 631 0066 0393     		str	r3, [sp, #12]	@ float
+ 252:libraries/zf_device/zf_device_gnss.c ****     char *buf = line;
+ 632              		.loc 1 252 11
+ 633 0068 019B     		ldr	r3, [sp, #4]
+ 634 006a 0293     		str	r3, [sp, #8]
+ 253:libraries/zf_device/zf_device_gnss.c **** 
+ 254:libraries/zf_device/zf_device_gnss.c ****     state = buf[get_parameter_index(2, buf)];
+ 635              		.loc 1 254 17
+ 636 006c 0299     		ldr	r1, [sp, #8]
+ 637 006e 0220     		movs	r0, #2
+ 638 0070 FFF7FEFF 		bl	get_parameter_index
+ 639 0074 0346     		mov	r3, r0
+ 640 0076 1A46     		mov	r2, r3
+ 641              		.loc 1 254 16
+ 642 0078 029B     		ldr	r3, [sp, #8]
+ 643 007a 1344     		add	r3, r3, r2
+ 644 007c 93F90030 		ldrsb	r3, [r3]
+ 645              		.loc 1 254 11
+ 646 0080 8DF84630 		strb	r3, [sp, #70]
+ 255:libraries/zf_device/zf_device_gnss.c **** 
+ 256:libraries/zf_device/zf_device_gnss.c ****     if(('A' == state) || ('D' == state))                                        // 如果数据有�
+ 647              		.loc 1 256 7
+ 648 0084 9DF84630 		ldrb	r3, [sp, #70]	@ zero_extendqisi2
+ 649 0088 412B     		cmp	r3, #65
+ 650 008a 04D0     		beq	.L26
+ 651              		.loc 1 256 23 discriminator 1
+ 652 008c 9DF84630 		ldrb	r3, [sp, #70]	@ zero_extendqisi2
+ 653 0090 442B     		cmp	r3, #68
+ 654 0092 40F00581 		bne	.L27
+ 655              	.L26:
+ 257:libraries/zf_device/zf_device_gnss.c ****     {
+ 258:libraries/zf_device/zf_device_gnss.c ****         return_state = ZF_TRUE;
+ 656              		.loc 1 258 22
+ 657 0096 0123     		movs	r3, #1
+ 658 0098 8DF84730 		strb	r3, [sp, #71]
+ 259:libraries/zf_device/zf_device_gnss.c ****         gnss->state = 1;
+ 659              		.loc 1 259 21
+ 660 009c 009B     		ldr	r3, [sp]
+ 661 009e 0122     		movs	r2, #1
+ 662 00a0 1A72     		strb	r2, [r3, #8]
+ 260:libraries/zf_device/zf_device_gnss.c ****         gnss -> ns              = buf[get_parameter_index(4, buf)];
+ 663              		.loc 1 260 39
+ 664 00a2 0299     		ldr	r1, [sp, #8]
+ 665 00a4 0420     		movs	r0, #4
+ 666 00a6 FFF7FEFF 		bl	get_parameter_index
+ 667 00aa 0346     		mov	r3, r0
+ 668 00ac 1A46     		mov	r2, r3
+ 669              		.loc 1 260 38
+ 670 00ae 029B     		ldr	r3, [sp, #8]
+ 671 00b0 1344     		add	r3, r3, r2
+ 672 00b2 93F90020 		ldrsb	r2, [r3]
+ 673              		.loc 1 260 33
+ 674 00b6 009B     		ldr	r3, [sp]
+ 675 00b8 83F82820 		strb	r2, [r3, #40]
+ 261:libraries/zf_device/zf_device_gnss.c ****         gnss -> ew              = buf[get_parameter_index(6, buf)];
+ 676              		.loc 1 261 39
+ 677 00bc 0299     		ldr	r1, [sp, #8]
+ 678 00be 0620     		movs	r0, #6
+ 679 00c0 FFF7FEFF 		bl	get_parameter_index
+ 680 00c4 0346     		mov	r3, r0
+ 681 00c6 1A46     		mov	r2, r3
+ 682              		.loc 1 261 38
+ 683 00c8 029B     		ldr	r3, [sp, #8]
+ 684 00ca 1344     		add	r3, r3, r2
+ 685 00cc 93F90020 		ldrsb	r2, [r3]
+ 686              		.loc 1 261 33
+ 687 00d0 009B     		ldr	r3, [sp]
+ 688 00d2 83F82920 		strb	r2, [r3, #41]
+ 262:libraries/zf_device/zf_device_gnss.c **** 
+ 263:libraries/zf_device/zf_device_gnss.c ****         latitude                = get_double_number(&buf[get_parameter_index(3, buf)]);
+ 689              		.loc 1 263 58
+ 690 00d6 0299     		ldr	r1, [sp, #8]
+ 691 00d8 0320     		movs	r0, #3
+ 692 00da FFF7FEFF 		bl	get_parameter_index
+ 693 00de 0346     		mov	r3, r0
+ 694 00e0 1A46     		mov	r2, r3
+ 695              		.loc 1 263 35
+ 696 00e2 029B     		ldr	r3, [sp, #8]
+ 697 00e4 1344     		add	r3, r3, r2
+ 698 00e6 1846     		mov	r0, r3
+ 699 00e8 FFF7FEFF 		bl	get_double_number
+ 700 00ec 8DED0E0B 		vstr.64	d0, [sp, #56]
+ 264:libraries/zf_device/zf_device_gnss.c ****         longitude               = get_double_number(&buf[get_parameter_index(5, buf)]);
+ 701              		.loc 1 264 58
+ 702 00f0 0299     		ldr	r1, [sp, #8]
+ 703 00f2 0520     		movs	r0, #5
+ 704 00f4 FFF7FEFF 		bl	get_parameter_index
+ 705 00f8 0346     		mov	r3, r0
+ 706 00fa 1A46     		mov	r2, r3
+ 707              		.loc 1 264 35
+ 708 00fc 029B     		ldr	r3, [sp, #8]
+ 709 00fe 1344     		add	r3, r3, r2
+ 710 0100 1846     		mov	r0, r3
+ 711 0102 FFF7FEFF 		bl	get_double_number
+ 712 0106 8DED0C0B 		vstr.64	d0, [sp, #48]
+ 265:libraries/zf_device/zf_device_gnss.c **** 
+ 266:libraries/zf_device/zf_device_gnss.c ****         gnss->latitude_degree   = (int)latitude / 100;                          // 纬度转换为�
+ 713              		.loc 1 266 35
+ 714 010a 9DED0E7B 		vldr.64	d7, [sp, #56]
+ 715 010e FDEEC77B 		vcvt.s32.f64	s15, d7
+ 716 0112 17EE901A 		vmov	r1, s15	@ int
+ 717              		.loc 1 266 49
+ 718 0116 BC4B     		ldr	r3, .L30+16
+ 719 0118 83FB0123 		smull	r2, r3, r3, r1
+ 720 011c 5A11     		asrs	r2, r3, #5
+ 721 011e CB17     		asrs	r3, r1, #31
+ 722 0120 D31A     		subs	r3, r2, r3
+ 723              		.loc 1 266 33
+ 724 0122 9AB2     		uxth	r2, r3
+ 725 0124 009B     		ldr	r3, [sp]
+ 726 0126 5A81     		strh	r2, [r3, #10]	@ movhi
+ 267:libraries/zf_device/zf_device_gnss.c ****         lati_cent_tmp           = (latitude - gnss->latitude_degree * 100);
+ 727              		.loc 1 267 51
+ 728 0128 009B     		ldr	r3, [sp]
+ 729 012a 5B89     		ldrh	r3, [r3, #10]
+ 730 012c 1A46     		mov	r2, r3
+ 731              		.loc 1 267 69
+ 732 012e 6423     		movs	r3, #100
+ 733 0130 02FB03F3 		mul	r3, r2, r3
+ 734              		.loc 1 267 45
+ 735 0134 07EE903A 		vmov	s15, r3	@ int
+ 736 0138 B8EEE77B 		vcvt.f64.s32	d7, s15
+ 737              		.loc 1 267 33
+ 738 013c 9DED0E6B 		vldr.64	d6, [sp, #56]
+ 739 0140 36EE477B 		vsub.f64	d7, d6, d7
+ 740 0144 8DED0A7B 		vstr.64	d7, [sp, #40]
+ 268:libraries/zf_device/zf_device_gnss.c ****         gnss->latitude_cent     = (int)lati_cent_tmp;
+ 741              		.loc 1 268 35
+ 742 0148 9DED0A7B 		vldr.64	d7, [sp, #40]
+ 743 014c FDEEC77B 		vcvt.s32.f64	s15, d7
+ 744              		.loc 1 268 33
+ 745 0150 17EE903A 		vmov	r3, s15	@ int
+ 746 0154 9AB2     		uxth	r2, r3
+ 747 0156 009B     		ldr	r3, [sp]
+ 748 0158 9A81     		strh	r2, [r3, #12]	@ movhi
+ 269:libraries/zf_device/zf_device_gnss.c ****         lati_second_tmp         = (lati_cent_tmp - gnss->latitude_cent) * 6000;
+ 749              		.loc 1 269 56
+ 750 015a 009B     		ldr	r3, [sp]
+ 751 015c 9B89     		ldrh	r3, [r3, #12]
+ 752 015e 07EE903A 		vmov	s15, r3	@ int
+ 753              		.loc 1 269 50
+ 754 0162 B8EEE77B 		vcvt.f64.s32	d7, s15
+ 755 0166 9DED0A6B 		vldr.64	d6, [sp, #40]
+ 756 016a 36EE477B 		vsub.f64	d7, d6, d7
+ 757              		.loc 1 269 33
+ 758 016e 9FEDA26B 		vldr.64	d6, .L30
+ 759 0172 27EE067B 		vmul.f64	d7, d7, d6
+ 760 0176 8DED087B 		vstr.64	d7, [sp, #32]
+ 270:libraries/zf_device/zf_device_gnss.c ****         gnss->latitude_second   = (int)lati_second_tmp;
+ 761              		.loc 1 270 35
+ 762 017a 9DED087B 		vldr.64	d7, [sp, #32]
+ 763 017e FDEEC77B 		vcvt.s32.f64	s15, d7
+ 764              		.loc 1 270 33
+ 765 0182 17EE903A 		vmov	r3, s15	@ int
+ 766 0186 9AB2     		uxth	r2, r3
+ 767 0188 009B     		ldr	r3, [sp]
+ 768 018a DA81     		strh	r2, [r3, #14]	@ movhi
+ 271:libraries/zf_device/zf_device_gnss.c **** 
+ 272:libraries/zf_device/zf_device_gnss.c ****         gnss->longitude_degree  = (int)longitude / 100;                         // 经度转换为�
+ 769              		.loc 1 272 35
+ 770 018c 9DED0C7B 		vldr.64	d7, [sp, #48]
+ 771 0190 FDEEC77B 		vcvt.s32.f64	s15, d7
+ 772 0194 17EE901A 		vmov	r1, s15	@ int
+ 773              		.loc 1 272 50
+ 774 0198 9B4B     		ldr	r3, .L30+16
+ 775 019a 83FB0123 		smull	r2, r3, r3, r1
+ 776 019e 5A11     		asrs	r2, r3, #5
+ 777 01a0 CB17     		asrs	r3, r1, #31
+ 778 01a2 D31A     		subs	r3, r2, r3
+ 779              		.loc 1 272 33
+ 780 01a4 9AB2     		uxth	r2, r3
+ 781 01a6 009B     		ldr	r3, [sp]
+ 782 01a8 1A82     		strh	r2, [r3, #16]	@ movhi
+ 273:libraries/zf_device/zf_device_gnss.c ****         long_cent_tmp           = (longitude - gnss->longitude_degree * 100);
+ 783              		.loc 1 273 52
+ 784 01aa 009B     		ldr	r3, [sp]
+ 785 01ac 1B8A     		ldrh	r3, [r3, #16]
+ 786 01ae 1A46     		mov	r2, r3
+ 787              		.loc 1 273 71
+ 788 01b0 6423     		movs	r3, #100
+ 789 01b2 02FB03F3 		mul	r3, r2, r3
+ 790              		.loc 1 273 46
+ 791 01b6 07EE903A 		vmov	s15, r3	@ int
+ 792 01ba B8EEE77B 		vcvt.f64.s32	d7, s15
+ 793              		.loc 1 273 33
+ 794 01be 9DED0C6B 		vldr.64	d6, [sp, #48]
+ 795 01c2 36EE477B 		vsub.f64	d7, d6, d7
+ 796 01c6 8DED067B 		vstr.64	d7, [sp, #24]
+ 274:libraries/zf_device/zf_device_gnss.c ****         gnss->longitude_cent    = (int)long_cent_tmp;
+ 797              		.loc 1 274 35
+ 798 01ca 9DED067B 		vldr.64	d7, [sp, #24]
+ 799 01ce FDEEC77B 		vcvt.s32.f64	s15, d7
+ 800              		.loc 1 274 33
+ 801 01d2 17EE903A 		vmov	r3, s15	@ int
+ 802 01d6 9AB2     		uxth	r2, r3
+ 803 01d8 009B     		ldr	r3, [sp]
+ 804 01da 5A82     		strh	r2, [r3, #18]	@ movhi
+ 275:libraries/zf_device/zf_device_gnss.c ****         long_second_tmp         = (long_cent_tmp - gnss->longitude_cent) * 6000;
+ 805              		.loc 1 275 56
+ 806 01dc 009B     		ldr	r3, [sp]
+ 807 01de 5B8A     		ldrh	r3, [r3, #18]
+ 808 01e0 07EE903A 		vmov	s15, r3	@ int
+ 809              		.loc 1 275 50
+ 810 01e4 B8EEE77B 		vcvt.f64.s32	d7, s15
+ 811 01e8 9DED066B 		vldr.64	d6, [sp, #24]
+ 812 01ec 36EE477B 		vsub.f64	d7, d6, d7
+ 813              		.loc 1 275 33
+ 814 01f0 9FED816B 		vldr.64	d6, .L30
+ 815 01f4 27EE067B 		vmul.f64	d7, d7, d6
+ 816 01f8 8DED047B 		vstr.64	d7, [sp, #16]
+ 276:libraries/zf_device/zf_device_gnss.c ****         gnss->longitude_second  = (int)long_second_tmp;
+ 817              		.loc 1 276 35
+ 818 01fc 9DED047B 		vldr.64	d7, [sp, #16]
+ 819 0200 FDEEC77B 		vcvt.s32.f64	s15, d7
+ 820              		.loc 1 276 33
+ 821 0204 17EE903A 		vmov	r3, s15	@ int
+ 822 0208 9AB2     		uxth	r2, r3
+ 823 020a 009B     		ldr	r3, [sp]
+ 824 020c 9A82     		strh	r2, [r3, #20]	@ movhi
+ 277:libraries/zf_device/zf_device_gnss.c **** 
+ 278:libraries/zf_device/zf_device_gnss.c ****         gnss->latitude  = gnss->latitude_degree + lati_cent_tmp / 60;
+ 825              		.loc 1 278 31
+ 826 020e 009B     		ldr	r3, [sp]
+ 827 0210 5B89     		ldrh	r3, [r3, #10]
+ 828 0212 07EE903A 		vmov	s15, r3	@ int
+ 829              		.loc 1 278 49
+ 830 0216 B8EEE76B 		vcvt.f64.s32	d6, s15
+ 831              		.loc 1 278 65
+ 832 021a 9DED0A5B 		vldr.64	d5, [sp, #40]
+ 833 021e 9FED784B 		vldr.64	d4, .L30+8
+ 834 0222 85EE047B 		vdiv.f64	d7, d5, d4
+ 835              		.loc 1 278 49
+ 836 0226 36EE077B 		vadd.f64	d7, d6, d7
+ 837              		.loc 1 278 25
+ 838 022a 009B     		ldr	r3, [sp]
+ 839 022c 83ED067B 		vstr.64	d7, [r3, #24]
+ 279:libraries/zf_device/zf_device_gnss.c ****         gnss->longitude = gnss->longitude_degree + long_cent_tmp / 60;
+ 840              		.loc 1 279 31
+ 841 0230 009B     		ldr	r3, [sp]
+ 842 0232 1B8A     		ldrh	r3, [r3, #16]
+ 843 0234 07EE903A 		vmov	s15, r3	@ int
+ 844              		.loc 1 279 50
+ 845 0238 B8EEE76B 		vcvt.f64.s32	d6, s15
+ 846              		.loc 1 279 66
+ 847 023c 9DED065B 		vldr.64	d5, [sp, #24]
+ 848 0240 9FED6F4B 		vldr.64	d4, .L30+8
+ 849 0244 85EE047B 		vdiv.f64	d7, d5, d4
+ 850              		.loc 1 279 50
+ 851 0248 36EE077B 		vadd.f64	d7, d6, d7
+ 852              		.loc 1 279 25
+ 853 024c 009B     		ldr	r3, [sp]
+ 854 024e 83ED087B 		vstr.64	d7, [r3, #32]
+ 280:libraries/zf_device/zf_device_gnss.c **** 
+ 281:libraries/zf_device/zf_device_gnss.c ****         speed_tmp       = get_float_number(&buf[get_parameter_index(7, buf)]);  // 速度(海里/�
+ 855              		.loc 1 281 49
+ 856 0252 0299     		ldr	r1, [sp, #8]
+ 857 0254 0720     		movs	r0, #7
+ 858 0256 FFF7FEFF 		bl	get_parameter_index
+ 859 025a 0346     		mov	r3, r0
+ 860 025c 1A46     		mov	r2, r3
+ 861              		.loc 1 281 27
+ 862 025e 029B     		ldr	r3, [sp, #8]
+ 863 0260 1344     		add	r3, r3, r2
+ 864 0262 1846     		mov	r0, r3
+ 865 0264 FFF7FEFF 		bl	get_float_number
+ 866 0268 8DED030A 		vstr.32	s0, [sp, #12]
+ 282:libraries/zf_device/zf_device_gnss.c ****         gnss->speed     = speed_tmp * 1.85f;                                    // 转换为公里/
+ 867              		.loc 1 282 37
+ 868 026c DDED037A 		vldr.32	s15, [sp, #12]
+ 869 0270 9FED667A 		vldr.32	s14, .L30+20
+ 870 0274 67EE877A 		vmul.f32	s15, s15, s14
+ 871              		.loc 1 282 25
+ 872 0278 009B     		ldr	r3, [sp]
+ 873 027a C3ED0B7A 		vstr.32	s15, [r3, #44]
+ 283:libraries/zf_device/zf_device_gnss.c ****         gnss->direction = get_float_number(&buf[get_parameter_index(8, buf)]);  // 角度
+ 874              		.loc 1 283 49
+ 875 027e 0299     		ldr	r1, [sp, #8]
+ 876 0280 0820     		movs	r0, #8
+ 877 0282 FFF7FEFF 		bl	get_parameter_index
+ 878 0286 0346     		mov	r3, r0
+ 879 0288 1A46     		mov	r2, r3
+ 880              		.loc 1 283 27
+ 881 028a 029B     		ldr	r3, [sp, #8]
+ 882 028c 1344     		add	r3, r3, r2
+ 883 028e 1846     		mov	r0, r3
+ 884 0290 FFF7FEFF 		bl	get_float_number
+ 885 0294 F0EE407A 		vmov.f32	s15, s0
+ 886              		.loc 1 283 25
+ 887 0298 009B     		ldr	r3, [sp]
+ 888 029a C3ED0C7A 		vstr.32	s15, [r3, #48]
+ 889 029e 02E0     		b	.L28
+ 890              	.L27:
+ 284:libraries/zf_device/zf_device_gnss.c ****     }
+ 285:libraries/zf_device/zf_device_gnss.c ****     else
+ 286:libraries/zf_device/zf_device_gnss.c ****     {
+ 287:libraries/zf_device/zf_device_gnss.c ****         gnss->state = 0;
+ 891              		.loc 1 287 21
+ 892 02a0 009B     		ldr	r3, [sp]
+ 893 02a2 0022     		movs	r2, #0
+ 894 02a4 1A72     		strb	r2, [r3, #8]
+ 895              	.L28:
+ 288:libraries/zf_device/zf_device_gnss.c ****     }
+ 289:libraries/zf_device/zf_device_gnss.c **** 
+ 290:libraries/zf_device/zf_device_gnss.c ****     // 在定位没有生效前也是有时间数据的，可以直接解析
+ 291:libraries/zf_device/zf_device_gnss.c ****     gnss->time.hour    = (buf[7 ] - '0') * 10 + (buf[8 ] - '0');                // 时间
+ 896              		.loc 1 291 30
+ 897 02a6 029B     		ldr	r3, [sp, #8]
+ 898 02a8 0733     		adds	r3, r3, #7
+ 899 02aa 93F90030 		ldrsb	r3, [r3]
+ 900              		.loc 1 291 35
+ 901 02ae 303B     		subs	r3, r3, #48
+ 902              		.loc 1 291 47
+ 903 02b0 DBB2     		uxtb	r3, r3
+ 904 02b2 1A46     		mov	r2, r3
+ 905 02b4 9200     		lsls	r2, r2, #2
+ 906 02b6 1344     		add	r3, r3, r2
+ 907 02b8 5B00     		lsls	r3, r3, #1
+ 908 02ba DAB2     		uxtb	r2, r3
+ 909              		.loc 1 291 53
+ 910 02bc 029B     		ldr	r3, [sp, #8]
+ 911 02be 0833     		adds	r3, r3, #8
+ 912 02c0 93F90030 		ldrsb	r3, [r3]
+ 913 02c4 DBB2     		uxtb	r3, r3
+ 914              		.loc 1 291 47
+ 915 02c6 1344     		add	r3, r3, r2
+ 916 02c8 DBB2     		uxtb	r3, r3
+ 917 02ca 303B     		subs	r3, r3, #48
+ 918 02cc DAB2     		uxtb	r2, r3
+ 919              		.loc 1 291 24
+ 920 02ce 009B     		ldr	r3, [sp]
+ 921 02d0 1A71     		strb	r2, [r3, #4]
+ 292:libraries/zf_device/zf_device_gnss.c ****     gnss->time.minute  = (buf[9 ] - '0') * 10 + (buf[10] - '0');
+ 922              		.loc 1 292 30
+ 923 02d2 029B     		ldr	r3, [sp, #8]
+ 924 02d4 0933     		adds	r3, r3, #9
+ 925 02d6 93F90030 		ldrsb	r3, [r3]
+ 926              		.loc 1 292 35
+ 927 02da 303B     		subs	r3, r3, #48
+ 928              		.loc 1 292 47
+ 929 02dc DBB2     		uxtb	r3, r3
+ 930 02de 1A46     		mov	r2, r3
+ 931 02e0 9200     		lsls	r2, r2, #2
+ 932 02e2 1344     		add	r3, r3, r2
+ 933 02e4 5B00     		lsls	r3, r3, #1
+ 934 02e6 DAB2     		uxtb	r2, r3
+ 935              		.loc 1 292 53
+ 936 02e8 029B     		ldr	r3, [sp, #8]
+ 937 02ea 0A33     		adds	r3, r3, #10
+ 938 02ec 93F90030 		ldrsb	r3, [r3]
+ 939 02f0 DBB2     		uxtb	r3, r3
+ 940              		.loc 1 292 47
+ 941 02f2 1344     		add	r3, r3, r2
+ 942 02f4 DBB2     		uxtb	r3, r3
+ 943 02f6 303B     		subs	r3, r3, #48
+ 944 02f8 DAB2     		uxtb	r2, r3
+ 945              		.loc 1 292 24
+ 946 02fa 009B     		ldr	r3, [sp]
+ 947 02fc 5A71     		strb	r2, [r3, #5]
+ 293:libraries/zf_device/zf_device_gnss.c ****     gnss->time.second  = (buf[11] - '0') * 10 + (buf[12] - '0');
+ 948              		.loc 1 293 30
+ 949 02fe 029B     		ldr	r3, [sp, #8]
+ 950 0300 0B33     		adds	r3, r3, #11
+ 951 0302 93F90030 		ldrsb	r3, [r3]
+ 952              		.loc 1 293 35
+ 953 0306 303B     		subs	r3, r3, #48
+ 954              		.loc 1 293 47
+ 955 0308 DBB2     		uxtb	r3, r3
+ 956 030a 1A46     		mov	r2, r3
+ 957 030c 9200     		lsls	r2, r2, #2
+ 958 030e 1344     		add	r3, r3, r2
+ 959 0310 5B00     		lsls	r3, r3, #1
+ 960 0312 DAB2     		uxtb	r2, r3
+ 961              		.loc 1 293 53
+ 962 0314 029B     		ldr	r3, [sp, #8]
+ 963 0316 0C33     		adds	r3, r3, #12
+ 964 0318 93F90030 		ldrsb	r3, [r3]
+ 965 031c DBB2     		uxtb	r3, r3
+ 966              		.loc 1 293 47
+ 967 031e 1344     		add	r3, r3, r2
+ 968 0320 DBB2     		uxtb	r3, r3
+ 969 0322 303B     		subs	r3, r3, #48
+ 970 0324 DAB2     		uxtb	r2, r3
+ 971              		.loc 1 293 24
+ 972 0326 009B     		ldr	r3, [sp]
+ 973 0328 9A71     		strb	r2, [r3, #6]
+ 294:libraries/zf_device/zf_device_gnss.c ****     temp = get_parameter_index(9, buf);
+ 974              		.loc 1 294 12
+ 975 032a 0299     		ldr	r1, [sp, #8]
+ 976 032c 0920     		movs	r0, #9
+ 977 032e FFF7FEFF 		bl	get_parameter_index
+ 978 0332 0346     		mov	r3, r0
+ 979 0334 8DF84530 		strb	r3, [sp, #69]
+ 295:libraries/zf_device/zf_device_gnss.c ****     gnss->time.day     = (buf[temp + 0] - '0') * 10 + (buf[temp + 1] - '0');    // 日期
+ 980              		.loc 1 295 30
+ 981 0338 9DF84530 		ldrb	r3, [sp, #69]	@ zero_extendqisi2
+ 982 033c 029A     		ldr	r2, [sp, #8]
+ 983 033e 1344     		add	r3, r3, r2
+ 984 0340 93F90030 		ldrsb	r3, [r3]
+ 985              		.loc 1 295 41
+ 986 0344 303B     		subs	r3, r3, #48
+ 987              		.loc 1 295 53
+ 988 0346 DBB2     		uxtb	r3, r3
+ 989 0348 1A46     		mov	r2, r3
+ 990 034a 9200     		lsls	r2, r2, #2
+ 991 034c 1344     		add	r3, r3, r2
+ 992 034e 5B00     		lsls	r3, r3, #1
+ 993 0350 DAB2     		uxtb	r2, r3
+ 994              		.loc 1 295 59
+ 995 0352 9DF84530 		ldrb	r3, [sp, #69]	@ zero_extendqisi2
+ 996 0356 0133     		adds	r3, r3, #1
+ 997 0358 0299     		ldr	r1, [sp, #8]
+ 998 035a 0B44     		add	r3, r3, r1
+ 999 035c 93F90030 		ldrsb	r3, [r3]
+ 1000 0360 DBB2     		uxtb	r3, r3
+ 1001              		.loc 1 295 53
+ 1002 0362 1344     		add	r3, r3, r2
+ 1003 0364 DBB2     		uxtb	r3, r3
+ 1004 0366 303B     		subs	r3, r3, #48
+ 1005 0368 DAB2     		uxtb	r2, r3
+ 1006              		.loc 1 295 24
+ 1007 036a 009B     		ldr	r3, [sp]
+ 1008 036c DA70     		strb	r2, [r3, #3]
+ 296:libraries/zf_device/zf_device_gnss.c ****     gnss->time.month   = (buf[temp + 2] - '0') * 10 + (buf[temp + 3] - '0');
+ 1009              		.loc 1 296 30
+ 1010 036e 9DF84530 		ldrb	r3, [sp, #69]	@ zero_extendqisi2
+ 1011 0372 0233     		adds	r3, r3, #2
+ 1012 0374 029A     		ldr	r2, [sp, #8]
+ 1013 0376 1344     		add	r3, r3, r2
+ 1014 0378 93F90030 		ldrsb	r3, [r3]
+ 1015              		.loc 1 296 41
+ 1016 037c 303B     		subs	r3, r3, #48
+ 1017              		.loc 1 296 53
+ 1018 037e DBB2     		uxtb	r3, r3
+ 1019 0380 1A46     		mov	r2, r3
+ 1020 0382 9200     		lsls	r2, r2, #2
+ 1021 0384 1344     		add	r3, r3, r2
+ 1022 0386 5B00     		lsls	r3, r3, #1
+ 1023 0388 DAB2     		uxtb	r2, r3
+ 1024              		.loc 1 296 59
+ 1025 038a 9DF84530 		ldrb	r3, [sp, #69]	@ zero_extendqisi2
+ 1026 038e 0333     		adds	r3, r3, #3
+ 1027 0390 0299     		ldr	r1, [sp, #8]
+ 1028 0392 0B44     		add	r3, r3, r1
+ 1029 0394 93F90030 		ldrsb	r3, [r3]
+ 1030 0398 DBB2     		uxtb	r3, r3
+ 1031              		.loc 1 296 53
+ 1032 039a 1344     		add	r3, r3, r2
+ 1033 039c DBB2     		uxtb	r3, r3
+ 1034 039e 303B     		subs	r3, r3, #48
+ 1035 03a0 DAB2     		uxtb	r2, r3
+ 1036              		.loc 1 296 24
+ 1037 03a2 009B     		ldr	r3, [sp]
+ 1038 03a4 9A70     		strb	r2, [r3, #2]
+ 297:libraries/zf_device/zf_device_gnss.c ****     gnss->time.year    = (buf[temp + 4] - '0') * 10 + (buf[temp + 5] - '0') + 2000;
+ 1039              		.loc 1 297 30
+ 1040 03a6 9DF84530 		ldrb	r3, [sp, #69]	@ zero_extendqisi2
+ 1041 03aa 0433     		adds	r3, r3, #4
+ 1042 03ac 029A     		ldr	r2, [sp, #8]
+ 1043 03ae 1344     		add	r3, r3, r2
+ 1044 03b0 93F90030 		ldrsb	r3, [r3]
+ 1045              		.loc 1 297 41
+ 1046 03b4 303B     		subs	r3, r3, #48
+ 1047              		.loc 1 297 53
+ 1048 03b6 9BB2     		uxth	r3, r3
+ 1049 03b8 1A46     		mov	r2, r3	@ movhi
+ 1050 03ba 9200     		lsls	r2, r2, #2
+ 1051 03bc 1344     		add	r3, r3, r2
+ 1052 03be 5B00     		lsls	r3, r3, #1
+ 1053 03c0 9AB2     		uxth	r2, r3
+ 1054              		.loc 1 297 59
+ 1055 03c2 9DF84530 		ldrb	r3, [sp, #69]	@ zero_extendqisi2
+ 1056 03c6 0533     		adds	r3, r3, #5
+ 1057 03c8 0299     		ldr	r1, [sp, #8]
+ 1058 03ca 0B44     		add	r3, r3, r1
+ 1059 03cc 93F90030 		ldrsb	r3, [r3]
+ 1060 03d0 9BB2     		uxth	r3, r3
+ 1061              		.loc 1 297 53
+ 1062 03d2 1344     		add	r3, r3, r2
+ 1063 03d4 9BB2     		uxth	r3, r3
+ 1064              		.loc 1 297 77
+ 1065 03d6 03F5F463 		add	r3, r3, #1952
+ 1066 03da 9AB2     		uxth	r2, r3
+ 1067              		.loc 1 297 24
+ 1068 03dc 009B     		ldr	r3, [sp]
+ 1069 03de 1A80     		strh	r2, [r3]	@ movhi
+ 298:libraries/zf_device/zf_device_gnss.c **** 
+ 299:libraries/zf_device/zf_device_gnss.c ****     utc_to_btc(&gnss->time);
+ 1070              		.loc 1 299 5
+ 1071 03e0 009B     		ldr	r3, [sp]
+ 1072 03e2 1846     		mov	r0, r3
+ 1073 03e4 FFF7FEFF 		bl	utc_to_btc
+ 300:libraries/zf_device/zf_device_gnss.c **** 
+ 301:libraries/zf_device/zf_device_gnss.c ****     return return_state;
+ 1074              		.loc 1 301 12
+ 1075 03e8 9DF84730 		ldrb	r3, [sp, #71]	@ zero_extendqisi2
+ 302:libraries/zf_device/zf_device_gnss.c **** }
+ 1076              		.loc 1 302 1
+ 1077 03ec 1846     		mov	r0, r3
+ 1078 03ee 13B0     		add	sp, sp, #76
+ 1079              		.cfi_def_cfa_offset 4
+ 1080              		@ sp needed
+ 1081 03f0 5DF804FB 		ldr	pc, [sp], #4
+ 1082              	.L31:
+ 1083 03f4 AFF30080 		.align	3
+ 1084              	.L30:
+ 1085 03f8 00000000 		.word	0
+ 1086 03fc 0070B740 		.word	1085763584
+ 1087 0400 00000000 		.word	0
+ 1088 0404 00004E40 		.word	1078853632
+ 1089 0408 1F85EB51 		.word	1374389535
+ 1090 040c CDCCEC3F 		.word	1072483533
+ 1091              		.cfi_endproc
+ 1092              	.LFE487:
+ 1094              		.section	.text.gnss_gngga_parse,"ax",%progbits
+ 1095              		.align	1
+ 1096              		.p2align 4,,15
+ 1097              		.syntax unified
+ 1098              		.thumb
+ 1099              		.thumb_func
+ 1101              	gnss_gngga_parse:
+ 1102              	.LFB488:
+ 303:libraries/zf_device/zf_device_gnss.c **** 
+ 304:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 305:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS GGA 语句解析
+ 306:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *line           接收到的语句信息
+ 307:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *gnss           保存解析后的数据
+ 308:libraries/zf_device/zf_device_gnss.c **** // 返回参数     uint8           ZF_TRUE-解析成功 ZF_FALSE-数据有问题不能解析
+ 309:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_gngga_parse(line, gnss);
+ 310:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+ 311:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 312:libraries/zf_device/zf_device_gnss.c **** static uint8 gnss_gngga_parse (char *line, gnss_info_struct *gnss)
+ 313:libraries/zf_device/zf_device_gnss.c **** {
+ 1103              		.loc 1 313 1
+ 1104              		.cfi_startproc
+ 1105              		@ args = 0, pretend = 0, frame = 16
+ 1106              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1107 0000 00B5     		push	{lr}
+ 1108              		.cfi_def_cfa_offset 4
+ 1109              		.cfi_offset 14, -4
+ 1110 0002 2DED028B 		vpush.64	{d8}
+ 1111              		.cfi_def_cfa_offset 12
+ 1112              		.cfi_offset 80, -12
+ 1113              		.cfi_offset 81, -8
+ 1114 0006 85B0     		sub	sp, sp, #20
+ 1115              		.cfi_def_cfa_offset 32
+ 1116 0008 0190     		str	r0, [sp, #4]
+ 1117 000a 0091     		str	r1, [sp]
+ 314:libraries/zf_device/zf_device_gnss.c ****     uint8 return_state = ZF_FALSE;
+ 1118              		.loc 1 314 11
+ 1119 000c 0023     		movs	r3, #0
+ 1120 000e 8DF80F30 		strb	r3, [sp, #15]
+ 315:libraries/zf_device/zf_device_gnss.c **** 
+ 316:libraries/zf_device/zf_device_gnss.c ****     uint8 state = 0;
+ 1121              		.loc 1 316 11
+ 1122 0012 0023     		movs	r3, #0
+ 1123 0014 8DF80E30 		strb	r3, [sp, #14]
+ 317:libraries/zf_device/zf_device_gnss.c ****     char *buf = line;
+ 1124              		.loc 1 317 11
+ 1125 0018 019B     		ldr	r3, [sp, #4]
+ 1126 001a 0293     		str	r3, [sp, #8]
+ 318:libraries/zf_device/zf_device_gnss.c **** 
+ 319:libraries/zf_device/zf_device_gnss.c ****     state = buf[get_parameter_index(2, buf)];
+ 1127              		.loc 1 319 17
+ 1128 001c 0299     		ldr	r1, [sp, #8]
+ 1129 001e 0220     		movs	r0, #2
+ 1130 0020 FFF7FEFF 		bl	get_parameter_index
+ 1131 0024 0346     		mov	r3, r0
+ 1132 0026 1A46     		mov	r2, r3
+ 1133              		.loc 1 319 16
+ 1134 0028 029B     		ldr	r3, [sp, #8]
+ 1135 002a 1344     		add	r3, r3, r2
+ 1136 002c 93F90030 		ldrsb	r3, [r3]
+ 1137              		.loc 1 319 11
+ 1138 0030 8DF80E30 		strb	r3, [sp, #14]
+ 320:libraries/zf_device/zf_device_gnss.c **** 
+ 321:libraries/zf_device/zf_device_gnss.c ****     if(',' != state)
+ 1139              		.loc 1 321 7
+ 1140 0034 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 1141 0038 2C2B     		cmp	r3, #44
+ 1142 003a 31D0     		beq	.L33
+ 322:libraries/zf_device/zf_device_gnss.c ****     {
+ 323:libraries/zf_device/zf_device_gnss.c ****         gnss->satellite_used = (uint8)get_int_number(&buf[get_parameter_index(7 , buf)]);
+ 1143              		.loc 1 323 59
+ 1144 003c 0299     		ldr	r1, [sp, #8]
+ 1145 003e 0720     		movs	r0, #7
+ 1146 0040 FFF7FEFF 		bl	get_parameter_index
+ 1147 0044 0346     		mov	r3, r0
+ 1148 0046 1A46     		mov	r2, r3
+ 1149              		.loc 1 323 39
+ 1150 0048 029B     		ldr	r3, [sp, #8]
+ 1151 004a 1344     		add	r3, r3, r2
+ 1152 004c 1846     		mov	r0, r3
+ 1153 004e FFF7FEFF 		bl	get_int_number
+ 1154 0052 0346     		mov	r3, r0
+ 1155              		.loc 1 323 32
+ 1156 0054 DAB2     		uxtb	r2, r3
+ 1157              		.loc 1 323 30
+ 1158 0056 009B     		ldr	r3, [sp]
+ 1159 0058 83F83C20 		strb	r2, [r3, #60]
+ 324:libraries/zf_device/zf_device_gnss.c ****         // 高度 = 海拔高度 + 地球椭球面相对大地水准面的高度
+ 325:libraries/zf_device/zf_device_gnss.c ****         gnss->height    =   get_float_number(&buf[get_parameter_index(9 , buf)])
+ 1160              		.loc 1 325 51
+ 1161 005c 0299     		ldr	r1, [sp, #8]
+ 1162 005e 0920     		movs	r0, #9
+ 1163 0060 FFF7FEFF 		bl	get_parameter_index
+ 1164 0064 0346     		mov	r3, r0
+ 1165 0066 1A46     		mov	r2, r3
+ 1166              		.loc 1 325 29
+ 1167 0068 029B     		ldr	r3, [sp, #8]
+ 1168 006a 1344     		add	r3, r3, r2
+ 1169 006c 1846     		mov	r0, r3
+ 1170 006e FFF7FEFF 		bl	get_float_number
+ 1171 0072 B0EE408A 		vmov.f32	s16, s0
+ 326:libraries/zf_device/zf_device_gnss.c ****                         +   get_float_number(&buf[get_parameter_index(11, buf)]);
+ 1172              		.loc 1 326 51
+ 1173 0076 0299     		ldr	r1, [sp, #8]
+ 1174 0078 0B20     		movs	r0, #11
+ 1175 007a FFF7FEFF 		bl	get_parameter_index
+ 1176 007e 0346     		mov	r3, r0
+ 1177 0080 1A46     		mov	r2, r3
+ 1178              		.loc 1 326 29
+ 1179 0082 029B     		ldr	r3, [sp, #8]
+ 1180 0084 1344     		add	r3, r3, r2
+ 1181 0086 1846     		mov	r0, r3
+ 1182 0088 FFF7FEFF 		bl	get_float_number
+ 1183 008c F0EE407A 		vmov.f32	s15, s0
+ 1184              		.loc 1 326 25
+ 1185 0090 78EE277A 		vadd.f32	s15, s16, s15
+ 325:libraries/zf_device/zf_device_gnss.c ****                         +   get_float_number(&buf[get_parameter_index(11, buf)]);
+ 1186              		.loc 1 325 25
+ 1187 0094 009B     		ldr	r3, [sp]
+ 1188 0096 C3ED107A 		vstr.32	s15, [r3, #64]
+ 327:libraries/zf_device/zf_device_gnss.c ****         return_state = ZF_TRUE;
+ 1189              		.loc 1 327 22
+ 1190 009a 0123     		movs	r3, #1
+ 1191 009c 8DF80F30 		strb	r3, [sp, #15]
+ 1192              	.L33:
+ 328:libraries/zf_device/zf_device_gnss.c ****     }
+ 329:libraries/zf_device/zf_device_gnss.c **** 
+ 330:libraries/zf_device/zf_device_gnss.c ****     return return_state;
+ 1193              		.loc 1 330 12
+ 1194 00a0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 331:libraries/zf_device/zf_device_gnss.c **** }
+ 1195              		.loc 1 331 1
+ 1196 00a4 1846     		mov	r0, r3
+ 1197 00a6 05B0     		add	sp, sp, #20
+ 1198              		.cfi_def_cfa_offset 12
+ 1199              		@ sp needed
+ 1200 00a8 BDEC028B 		vldm	sp!, {d8}
+ 1201              		.cfi_restore 80
+ 1202              		.cfi_restore 81
+ 1203              		.cfi_def_cfa_offset 4
+ 1204 00ac 5DF804FB 		ldr	pc, [sp], #4
+ 1205              		.cfi_endproc
+ 1206              	.LFE488:
+ 1208              		.section	.text.gnss_gnths_parse,"ax",%progbits
+ 1209              		.align	1
+ 1210              		.p2align 4,,15
+ 1211              		.syntax unified
+ 1212              		.thumb
+ 1213              		.thumb_func
+ 1215              	gnss_gnths_parse:
+ 1216              	.LFB489:
+ 332:libraries/zf_device/zf_device_gnss.c **** 
+ 333:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 334:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS THS 语句解析
+ 335:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *line           接收到的语句信息
+ 336:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *gnss           保存解析后的数据
+ 337:libraries/zf_device/zf_device_gnss.c **** // 返回参数     uint8           ZF_TRUE-解析成功 ZF_FALSE-数据有问题不能解析
+ 338:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_gnths_parse(line, gnss);
+ 339:libraries/zf_device/zf_device_gnss.c **** // 备注信息     内部使用
+ 340:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 341:libraries/zf_device/zf_device_gnss.c **** static uint8 gnss_gnths_parse (char *line, gnss_info_struct *gnss)
+ 342:libraries/zf_device/zf_device_gnss.c **** {
+ 1217              		.loc 1 342 1
+ 1218              		.cfi_startproc
+ 1219              		@ args = 0, pretend = 0, frame = 16
+ 1220              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1221 0000 00B5     		push	{lr}
+ 1222              		.cfi_def_cfa_offset 4
+ 1223              		.cfi_offset 14, -4
+ 1224 0002 85B0     		sub	sp, sp, #20
+ 1225              		.cfi_def_cfa_offset 24
+ 1226 0004 0190     		str	r0, [sp, #4]
+ 1227 0006 0091     		str	r1, [sp]
+ 343:libraries/zf_device/zf_device_gnss.c ****     uint8 return_state = ZF_FALSE;
+ 1228              		.loc 1 343 11
+ 1229 0008 0023     		movs	r3, #0
+ 1230 000a 8DF80F30 		strb	r3, [sp, #15]
+ 344:libraries/zf_device/zf_device_gnss.c **** 
+ 345:libraries/zf_device/zf_device_gnss.c ****     uint8 state = 0;
+ 1231              		.loc 1 345 11
+ 1232 000e 0023     		movs	r3, #0
+ 1233 0010 8DF80E30 		strb	r3, [sp, #14]
+ 346:libraries/zf_device/zf_device_gnss.c ****     char *buf = line;
+ 1234              		.loc 1 346 11
+ 1235 0014 019B     		ldr	r3, [sp, #4]
+ 1236 0016 0293     		str	r3, [sp, #8]
+ 347:libraries/zf_device/zf_device_gnss.c **** 
+ 348:libraries/zf_device/zf_device_gnss.c ****     state = buf[get_parameter_index(2, buf)];
+ 1237              		.loc 1 348 17
+ 1238 0018 0299     		ldr	r1, [sp, #8]
+ 1239 001a 0220     		movs	r0, #2
+ 1240 001c FFF7FEFF 		bl	get_parameter_index
+ 1241 0020 0346     		mov	r3, r0
+ 1242 0022 1A46     		mov	r2, r3
+ 1243              		.loc 1 348 16
+ 1244 0024 029B     		ldr	r3, [sp, #8]
+ 1245 0026 1344     		add	r3, r3, r2
+ 1246 0028 93F90030 		ldrsb	r3, [r3]
+ 1247              		.loc 1 348 11
+ 1248 002c 8DF80E30 		strb	r3, [sp, #14]
+ 349:libraries/zf_device/zf_device_gnss.c **** 
+ 350:libraries/zf_device/zf_device_gnss.c ****     if('A' == state)
+ 1249              		.loc 1 350 7
+ 1250 0030 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 1251 0034 412B     		cmp	r3, #65
+ 1252 0036 17D1     		bne	.L36
+ 351:libraries/zf_device/zf_device_gnss.c ****     {
+ 352:libraries/zf_device/zf_device_gnss.c ****         gnss->antenna_direction_state = 1;
+ 1253              		.loc 1 352 39
+ 1254 0038 009B     		ldr	r3, [sp]
+ 1255 003a 0122     		movs	r2, #1
+ 1256 003c 83F83420 		strb	r2, [r3, #52]
+ 353:libraries/zf_device/zf_device_gnss.c ****         gnss->antenna_direction = get_float_number(&buf[get_parameter_index(1, buf)]);
+ 1257              		.loc 1 353 57
+ 1258 0040 0299     		ldr	r1, [sp, #8]
+ 1259 0042 0120     		movs	r0, #1
+ 1260 0044 FFF7FEFF 		bl	get_parameter_index
+ 1261 0048 0346     		mov	r3, r0
+ 1262 004a 1A46     		mov	r2, r3
+ 1263              		.loc 1 353 35
+ 1264 004c 029B     		ldr	r3, [sp, #8]
+ 1265 004e 1344     		add	r3, r3, r2
+ 1266 0050 1846     		mov	r0, r3
+ 1267 0052 FFF7FEFF 		bl	get_float_number
+ 1268 0056 F0EE407A 		vmov.f32	s15, s0
+ 1269              		.loc 1 353 33
+ 1270 005a 009B     		ldr	r3, [sp]
+ 1271 005c C3ED0E7A 		vstr.32	s15, [r3, #56]
+ 354:libraries/zf_device/zf_device_gnss.c ****         return_state = ZF_TRUE;
+ 1272              		.loc 1 354 22
+ 1273 0060 0123     		movs	r3, #1
+ 1274 0062 8DF80F30 		strb	r3, [sp, #15]
+ 1275 0066 03E0     		b	.L37
+ 1276              	.L36:
+ 355:libraries/zf_device/zf_device_gnss.c ****     }
+ 356:libraries/zf_device/zf_device_gnss.c ****     else
+ 357:libraries/zf_device/zf_device_gnss.c ****     {
+ 358:libraries/zf_device/zf_device_gnss.c ****         gnss->antenna_direction_state = 0;
+ 1277              		.loc 1 358 39
+ 1278 0068 009B     		ldr	r3, [sp]
+ 1279 006a 0022     		movs	r2, #0
+ 1280 006c 83F83420 		strb	r2, [r3, #52]
+ 1281              	.L37:
+ 359:libraries/zf_device/zf_device_gnss.c ****     }
+ 360:libraries/zf_device/zf_device_gnss.c **** 
+ 361:libraries/zf_device/zf_device_gnss.c ****     return return_state;
+ 1282              		.loc 1 361 12
+ 1283 0070 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 362:libraries/zf_device/zf_device_gnss.c **** }
+ 1284              		.loc 1 362 1
+ 1285 0074 1846     		mov	r0, r3
+ 1286 0076 05B0     		add	sp, sp, #20
+ 1287              		.cfi_def_cfa_offset 4
+ 1288              		@ sp needed
+ 1289 0078 5DF804FB 		ldr	pc, [sp], #4
+ 1290              		.cfi_endproc
+ 1291              	.LFE489:
+ 1293              		.section	.rodata
+ 1294              		.align	2
+ 1295              	.LC0:
+ 1296 0000 524D4300 		.ascii	"RMC\000"
+ 1297              		.align	2
+ 1298              	.LC1:
+ 1299 0004 47474100 		.ascii	"GGA\000"
+ 1300              		.align	2
+ 1301              	.LC2:
+ 1302 0008 54485300 		.ascii	"THS\000"
+ 1303              		.section	.text.gnss_uart_callback,"ax",%progbits
+ 1304              		.align	1
+ 1305              		.p2align 4,,15
+ 1306              		.syntax unified
+ 1307              		.thumb
+ 1308              		.thumb_func
+ 1310              	gnss_uart_callback:
+ 1311              	.LFB490:
+ 363:libraries/zf_device/zf_device_gnss.c **** 
+ 364:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 365:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS 断言处理
+ 366:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *file               文件路径
+ 367:libraries/zf_device/zf_device_gnss.c **** // 参数说明     line                报错行
+ 368:libraries/zf_device/zf_device_gnss.c **** // 参数说明     *tips               输出信息
+ 369:libraries/zf_device/zf_device_gnss.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+ 370:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_assert_handler(file, line, tips);
+ 371:libraries/zf_device/zf_device_gnss.c **** // 备注信息
+ 372:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 373:libraries/zf_device/zf_device_gnss.c **** #if GNSS_INTERFACE_USE_ZF_COMMON_DEBUG
+ 374:libraries/zf_device/zf_device_gnss.c **** #define gnss_assert(pass)       zf_assert(pass)
+ 375:libraries/zf_device/zf_device_gnss.c **** #define gnss_log(pass, tips)    zf_log(pass, tips)
+ 376:libraries/zf_device/zf_device_gnss.c **** #else
+ 377:libraries/zf_device/zf_device_gnss.c **** static uint8 gnss_assert_handler (char *file, int line, char *tips)
+ 378:libraries/zf_device/zf_device_gnss.c **** {
+ 379:libraries/zf_device/zf_device_gnss.c ****     printf("\r\n GNSS OPERATION ASSERT!\r\n");
+ 380:libraries/zf_device/zf_device_gnss.c ****     printf("\r\n file: %s.\r\n", file);
+ 381:libraries/zf_device/zf_device_gnss.c ****     printf("\r\n line: %d.\r\n", line);
+ 382:libraries/zf_device/zf_device_gnss.c ****     if(NULL != tips)
+ 383:libraries/zf_device/zf_device_gnss.c ****     {
+ 384:libraries/zf_device/zf_device_gnss.c ****         printf("\r\n tips: %s.\r\n", tips);
+ 385:libraries/zf_device/zf_device_gnss.c ****     }
+ 386:libraries/zf_device/zf_device_gnss.c ****     while(1);
+ 387:libraries/zf_device/zf_device_gnss.c ****     return ZF_ERROR;
+ 388:libraries/zf_device/zf_device_gnss.c **** }
+ 389:libraries/zf_device/zf_device_gnss.c **** #define gnss_assert(pass)       ((pass) ? (0) : gnss_assert_handler(__FILE__, __LINE__, NULL))
+ 390:libraries/zf_device/zf_device_gnss.c **** #define gnss_log(pass, tips)    ((pass) ? (0) : gnss_assert_handler(__FILE__, __LINE__, (tips)))
+ 391:libraries/zf_device/zf_device_gnss.c **** #endif
+ 392:libraries/zf_device/zf_device_gnss.c **** 
+ 393:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 394:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS 延时
+ 395:libraries/zf_device/zf_device_gnss.c **** // 参数说明     ms                  毫秒数
+ 396:libraries/zf_device/zf_device_gnss.c **** // 返回参数     void
+ 397:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_delay_ms(ms);
+ 398:libraries/zf_device/zf_device_gnss.c **** // 备注信息
+ 399:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 400:libraries/zf_device/zf_device_gnss.c **** #if GNSS_INTERFACE_USE_ZF_DIRVER_DELAY
+ 401:libraries/zf_device/zf_device_gnss.c **** #define gnss_delay_ms(ms)        zf_delay_ms(ms)
+ 402:libraries/zf_device/zf_device_gnss.c **** #else
+ 403:libraries/zf_device/zf_device_gnss.c **** static void gnss_delay_ms (uint32 ms)
+ 404:libraries/zf_device/zf_device_gnss.c **** {
+ 405:libraries/zf_device/zf_device_gnss.c ****     for(uint32 loop_count1 = ms    ; loop_count1 --; )
+ 406:libraries/zf_device/zf_device_gnss.c ****     for(uint32 loop_count2 = 0xFFFF; loop_count2 --; );
+ 407:libraries/zf_device/zf_device_gnss.c **** }
+ 408:libraries/zf_device/zf_device_gnss.c **** #endif
+ 409:libraries/zf_device/zf_device_gnss.c **** 
+ 410:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 411:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS 串口回调函数
+ 412:libraries/zf_device/zf_device_gnss.c **** // 参数说明     void
+ 413:libraries/zf_device/zf_device_gnss.c **** // 返回参数     void
+ 414:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_uart_callback();
+ 415:libraries/zf_device/zf_device_gnss.c **** // 备注信息     此函数需要在串口接收中断内进行调用
+ 416:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 417:libraries/zf_device/zf_device_gnss.c **** static void gnss_uart_callback (uint32 event, void *ptr)
+ 418:libraries/zf_device/zf_device_gnss.c **** {
+ 1312              		.loc 1 418 1
+ 1313              		.cfi_startproc
+ 1314              		@ args = 0, pretend = 0, frame = 24
+ 1315              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1316 0000 00B5     		push	{lr}
+ 1317              		.cfi_def_cfa_offset 4
+ 1318              		.cfi_offset 14, -4
+ 1319 0002 87B0     		sub	sp, sp, #28
+ 1320              		.cfi_def_cfa_offset 32
+ 1321 0004 0190     		str	r0, [sp, #4]
+ 1322 0006 0091     		str	r1, [sp]
+ 419:libraries/zf_device/zf_device_gnss.c ****     (void)event;
+ 420:libraries/zf_device/zf_device_gnss.c ****     (void)ptr;
+ 421:libraries/zf_device/zf_device_gnss.c **** 
+ 422:libraries/zf_device/zf_device_gnss.c ****     uint8 temp_gnss[6];
+ 423:libraries/zf_device/zf_device_gnss.c ****     uint32 temp_length = 0;
+ 1323              		.loc 1 423 12
+ 1324 0008 0023     		movs	r3, #0
+ 1325 000a 0393     		str	r3, [sp, #12]
+ 424:libraries/zf_device/zf_device_gnss.c **** 
+ 425:libraries/zf_device/zf_device_gnss.c ****     if(gnss_state)
+ 1326              		.loc 1 425 8
+ 1327 000c 414B     		ldr	r3, .L48
+ 1328 000e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1329              		.loc 1 425 7
+ 1330 0010 002B     		cmp	r3, #0
+ 1331 0012 7AD0     		beq	.L47
+ 1332              	.LBB2:
+ 426:libraries/zf_device/zf_device_gnss.c ****     {
+ 427:libraries/zf_device/zf_device_gnss.c ****         uint8 dat;
+ 428:libraries/zf_device/zf_device_gnss.c ****         while(!zf_uart_query_byte(GNSS_UART_INDEX, &dat))
+ 1333              		.loc 1 428 14
+ 1334 0014 08E0     		b	.L41
+ 1335              	.L42:
+ 429:libraries/zf_device/zf_device_gnss.c ****         {
+ 430:libraries/zf_device/zf_device_gnss.c ****             temp_length = 1;
+ 1336              		.loc 1 430 25
+ 1337 0016 0123     		movs	r3, #1
+ 1338 0018 0393     		str	r3, [sp, #12]
+ 431:libraries/zf_device/zf_device_gnss.c ****             zf_fifo_write_buffer(&gnss_receiver_fifo, &dat, &temp_length);
+ 1339              		.loc 1 431 13
+ 1340 001a 03AA     		add	r2, sp, #12
+ 1341 001c 0DF10B03 		add	r3, sp, #11
+ 1342 0020 1946     		mov	r1, r3
+ 1343 0022 3D48     		ldr	r0, .L48+4
+ 1344 0024 FFF7FEFF 		bl	zf_fifo_write_buffer
+ 1345              	.L41:
+ 428:libraries/zf_device/zf_device_gnss.c ****         {
+ 1346              		.loc 1 428 16
+ 1347 0028 0DF10B03 		add	r3, sp, #11
+ 1348 002c 1946     		mov	r1, r3
+ 1349 002e 0020     		movs	r0, #0
+ 1350 0030 FFF7FEFF 		bl	zf_uart_query_byte
+ 1351 0034 0346     		mov	r3, r0
+ 428:libraries/zf_device/zf_device_gnss.c ****         {
+ 1352              		.loc 1 428 14
+ 1353 0036 002B     		cmp	r3, #0
+ 1354 0038 EDD0     		beq	.L42
+ 432:libraries/zf_device/zf_device_gnss.c ****         }
+ 433:libraries/zf_device/zf_device_gnss.c **** 
+ 434:libraries/zf_device/zf_device_gnss.c ****         if('\n' == dat)
+ 1355              		.loc 1 434 17
+ 1356 003a 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 1357              		.loc 1 434 11
+ 1358 003e 0A2B     		cmp	r3, #10
+ 1359 0040 63D1     		bne	.L47
+ 435:libraries/zf_device/zf_device_gnss.c ****         {
+ 436:libraries/zf_device/zf_device_gnss.c ****             // 读取前6个数据 用于判断语句类型
+ 437:libraries/zf_device/zf_device_gnss.c ****             temp_length = 6;
+ 1360              		.loc 1 437 25
+ 1361 0042 0623     		movs	r3, #6
+ 1362 0044 0393     		str	r3, [sp, #12]
+ 438:libraries/zf_device/zf_device_gnss.c ****             zf_fifo_read_buffer(&gnss_receiver_fifo, temp_gnss, &temp_length, FIFO_READ_WITHOUT_CLE
+ 1363              		.loc 1 438 13
+ 1364 0046 03AA     		add	r2, sp, #12
+ 1365 0048 04A9     		add	r1, sp, #16
+ 1366 004a 0023     		movs	r3, #0
+ 1367 004c 3248     		ldr	r0, .L48+4
+ 1368 004e FFF7FEFF 		bl	zf_fifo_read_buffer
+ 439:libraries/zf_device/zf_device_gnss.c **** 
+ 440:libraries/zf_device/zf_device_gnss.c ****             // 根据不同类型将数据拷贝到不同的缓冲区
+ 441:libraries/zf_device/zf_device_gnss.c ****             if(0 == strncmp((char *)&temp_gnss[3], "RMC", 3))
+ 1369              		.loc 1 441 21
+ 1370 0052 04AB     		add	r3, sp, #16
+ 1371 0054 0333     		adds	r3, r3, #3
+ 1372 0056 0322     		movs	r2, #3
+ 1373 0058 3049     		ldr	r1, .L48+8
+ 1374 005a 1846     		mov	r0, r3
+ 1375 005c FFF7FEFF 		bl	strncmp
+ 1376 0060 0346     		mov	r3, r0
+ 1377              		.loc 1 441 15
+ 1378 0062 002B     		cmp	r3, #0
+ 1379 0064 12D1     		bne	.L44
+ 442:libraries/zf_device/zf_device_gnss.c ****             {
+ 443:libraries/zf_device/zf_device_gnss.c ****                 // 如果没有在解析数据则更新缓冲区的数据
+ 444:libraries/zf_device/zf_device_gnss.c ****                 if(GNSS_STATE_PARSING != gnss_rmc_state)
+ 1380              		.loc 1 444 39
+ 1381 0066 2E4B     		ldr	r3, .L48+12
+ 1382 0068 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1383              		.loc 1 444 19
+ 1384 006a 022B     		cmp	r3, #2
+ 1385 006c 47D0     		beq	.L45
+ 445:libraries/zf_device/zf_device_gnss.c ****                 {
+ 446:libraries/zf_device/zf_device_gnss.c ****                     gnss_rmc_state = GNSS_STATE_RECEIVED;
+ 1386              		.loc 1 446 36
+ 1387 006e 2C4B     		ldr	r3, .L48+12
+ 1388 0070 0122     		movs	r2, #1
+ 1389 0072 1A70     		strb	r2, [r3]
+ 447:libraries/zf_device/zf_device_gnss.c ****                     temp_length = zf_fifo_used(&gnss_receiver_fifo);
+ 1390              		.loc 1 447 35
+ 1391 0074 2848     		ldr	r0, .L48+4
+ 1392 0076 FFF7FEFF 		bl	zf_fifo_used
+ 1393 007a 0346     		mov	r3, r0
+ 1394              		.loc 1 447 33
+ 1395 007c 0393     		str	r3, [sp, #12]
+ 448:libraries/zf_device/zf_device_gnss.c ****                     zf_fifo_read_buffer(&gnss_receiver_fifo, gnss_rmc_buffer, &temp_length, FIFO_RE
+ 1396              		.loc 1 448 21
+ 1397 007e 03AA     		add	r2, sp, #12
+ 1398 0080 0123     		movs	r3, #1
+ 1399 0082 2849     		ldr	r1, .L48+16
+ 1400 0084 2448     		ldr	r0, .L48+4
+ 1401 0086 FFF7FEFF 		bl	zf_fifo_read_buffer
+ 1402 008a 38E0     		b	.L45
+ 1403              	.L44:
+ 449:libraries/zf_device/zf_device_gnss.c ****                 }
+ 450:libraries/zf_device/zf_device_gnss.c ****             }
+ 451:libraries/zf_device/zf_device_gnss.c ****             else if(0 == strncmp((char *)&temp_gnss[3], "GGA", 3))
+ 1404              		.loc 1 451 26
+ 1405 008c 04AB     		add	r3, sp, #16
+ 1406 008e 0333     		adds	r3, r3, #3
+ 1407 0090 0322     		movs	r2, #3
+ 1408 0092 2549     		ldr	r1, .L48+20
+ 1409 0094 1846     		mov	r0, r3
+ 1410 0096 FFF7FEFF 		bl	strncmp
+ 1411 009a 0346     		mov	r3, r0
+ 1412              		.loc 1 451 20
+ 1413 009c 002B     		cmp	r3, #0
+ 1414 009e 12D1     		bne	.L46
+ 452:libraries/zf_device/zf_device_gnss.c ****             {
+ 453:libraries/zf_device/zf_device_gnss.c ****                 // 如果没有在解析数据则更新缓冲区的数据
+ 454:libraries/zf_device/zf_device_gnss.c ****                 if(GNSS_STATE_PARSING != gnss_gga_state)
+ 1415              		.loc 1 454 39
+ 1416 00a0 224B     		ldr	r3, .L48+24
+ 1417 00a2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1418              		.loc 1 454 19
+ 1419 00a4 022B     		cmp	r3, #2
+ 1420 00a6 2AD0     		beq	.L45
+ 455:libraries/zf_device/zf_device_gnss.c ****                 {
+ 456:libraries/zf_device/zf_device_gnss.c ****                     gnss_gga_state = GNSS_STATE_RECEIVED;
+ 1421              		.loc 1 456 36
+ 1422 00a8 204B     		ldr	r3, .L48+24
+ 1423 00aa 0122     		movs	r2, #1
+ 1424 00ac 1A70     		strb	r2, [r3]
+ 457:libraries/zf_device/zf_device_gnss.c ****                     temp_length = zf_fifo_used(&gnss_receiver_fifo);
+ 1425              		.loc 1 457 35
+ 1426 00ae 1A48     		ldr	r0, .L48+4
+ 1427 00b0 FFF7FEFF 		bl	zf_fifo_used
+ 1428 00b4 0346     		mov	r3, r0
+ 1429              		.loc 1 457 33
+ 1430 00b6 0393     		str	r3, [sp, #12]
+ 458:libraries/zf_device/zf_device_gnss.c ****                     zf_fifo_read_buffer(&gnss_receiver_fifo, gnss_gga_buffer, &temp_length, FIFO_RE
+ 1431              		.loc 1 458 21
+ 1432 00b8 03AA     		add	r2, sp, #12
+ 1433 00ba 0123     		movs	r3, #1
+ 1434 00bc 1C49     		ldr	r1, .L48+28
+ 1435 00be 1648     		ldr	r0, .L48+4
+ 1436 00c0 FFF7FEFF 		bl	zf_fifo_read_buffer
+ 1437 00c4 1BE0     		b	.L45
+ 1438              	.L46:
+ 459:libraries/zf_device/zf_device_gnss.c ****                 }
+ 460:libraries/zf_device/zf_device_gnss.c ****             }
+ 461:libraries/zf_device/zf_device_gnss.c ****             else if(0 == strncmp((char *)&temp_gnss[3], "THS", 3))
+ 1439              		.loc 1 461 26
+ 1440 00c6 04AB     		add	r3, sp, #16
+ 1441 00c8 0333     		adds	r3, r3, #3
+ 1442 00ca 0322     		movs	r2, #3
+ 1443 00cc 1949     		ldr	r1, .L48+32
+ 1444 00ce 1846     		mov	r0, r3
+ 1445 00d0 FFF7FEFF 		bl	strncmp
+ 1446 00d4 0346     		mov	r3, r0
+ 1447              		.loc 1 461 20
+ 1448 00d6 002B     		cmp	r3, #0
+ 1449 00d8 11D1     		bne	.L45
+ 462:libraries/zf_device/zf_device_gnss.c ****             {
+ 463:libraries/zf_device/zf_device_gnss.c ****                 // 如果没有在解析数据则更新缓冲区的数据
+ 464:libraries/zf_device/zf_device_gnss.c ****                 if(GNSS_STATE_PARSING != gnss_ths_state)
+ 1450              		.loc 1 464 39
+ 1451 00da 174B     		ldr	r3, .L48+36
+ 1452 00dc 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1453              		.loc 1 464 19
+ 1454 00de 022B     		cmp	r3, #2
+ 1455 00e0 0DD0     		beq	.L45
+ 465:libraries/zf_device/zf_device_gnss.c ****                 {
+ 466:libraries/zf_device/zf_device_gnss.c ****                     gnss_ths_state = GNSS_STATE_RECEIVED;
+ 1456              		.loc 1 466 36
+ 1457 00e2 154B     		ldr	r3, .L48+36
+ 1458 00e4 0122     		movs	r2, #1
+ 1459 00e6 1A70     		strb	r2, [r3]
+ 467:libraries/zf_device/zf_device_gnss.c ****                     temp_length = zf_fifo_used(&gnss_receiver_fifo);
+ 1460              		.loc 1 467 35
+ 1461 00e8 0B48     		ldr	r0, .L48+4
+ 1462 00ea FFF7FEFF 		bl	zf_fifo_used
+ 1463 00ee 0346     		mov	r3, r0
+ 1464              		.loc 1 467 33
+ 1465 00f0 0393     		str	r3, [sp, #12]
+ 468:libraries/zf_device/zf_device_gnss.c ****                     zf_fifo_read_buffer(&gnss_receiver_fifo, gnss_ths_buffer, &temp_length, FIFO_RE
+ 1466              		.loc 1 468 21
+ 1467 00f2 03AA     		add	r2, sp, #12
+ 1468 00f4 0123     		movs	r3, #1
+ 1469 00f6 1149     		ldr	r1, .L48+40
+ 1470 00f8 0748     		ldr	r0, .L48+4
+ 1471 00fa FFF7FEFF 		bl	zf_fifo_read_buffer
+ 1472              	.L45:
+ 469:libraries/zf_device/zf_device_gnss.c ****                 }
+ 470:libraries/zf_device/zf_device_gnss.c ****             }
+ 471:libraries/zf_device/zf_device_gnss.c **** 
+ 472:libraries/zf_device/zf_device_gnss.c ****             // 统一将FIFO清空
+ 473:libraries/zf_device/zf_device_gnss.c ****             zf_fifo_clear(&gnss_receiver_fifo);
+ 1473              		.loc 1 473 13
+ 1474 00fe 0648     		ldr	r0, .L48+4
+ 1475 0100 FFF7FEFF 		bl	zf_fifo_clear
+ 474:libraries/zf_device/zf_device_gnss.c **** 
+ 475:libraries/zf_device/zf_device_gnss.c ****             gnss_flag = 1;
+ 1476              		.loc 1 475 23
+ 1477 0104 0E4B     		ldr	r3, .L48+44
+ 1478 0106 0122     		movs	r2, #1
+ 1479 0108 1A70     		strb	r2, [r3]
+ 1480              	.L47:
+ 1481              	.LBE2:
+ 476:libraries/zf_device/zf_device_gnss.c ****         }
+ 477:libraries/zf_device/zf_device_gnss.c ****     }
+ 478:libraries/zf_device/zf_device_gnss.c **** }
+ 1482              		.loc 1 478 1
+ 1483 010a 00BF     		nop
+ 1484 010c 07B0     		add	sp, sp, #28
+ 1485              		.cfi_def_cfa_offset 4
+ 1486              		@ sp needed
+ 1487 010e 5DF804FB 		ldr	pc, [sp], #4
+ 1488              	.L49:
+ 1489 0112 00BF     		.align	2
+ 1490              	.L48:
+ 1491 0114 00000000 		.word	gnss_state
+ 1492 0118 00000000 		.word	gnss_receiver_fifo
+ 1493 011c 00000000 		.word	.LC0
+ 1494 0120 00000000 		.word	gnss_rmc_state
+ 1495 0124 00000000 		.word	gnss_rmc_buffer
+ 1496 0128 04000000 		.word	.LC1
+ 1497 012c 00000000 		.word	gnss_gga_state
+ 1498 0130 00000000 		.word	gnss_gga_buffer
+ 1499 0134 08000000 		.word	.LC2
+ 1500 0138 00000000 		.word	gnss_ths_state
+ 1501 013c 00000000 		.word	gnss_ths_buffer
+ 1502 0140 00000000 		.word	gnss_flag
+ 1503              		.cfi_endproc
+ 1504              	.LFE490:
+ 1506              		.section	.text.gnss_get_two_points_distance,"ax",%progbits
+ 1507              		.align	1
+ 1508              		.p2align 4,,15
+ 1509              		.global	gnss_get_two_points_distance
+ 1510              		.syntax unified
+ 1511              		.thumb
+ 1512              		.thumb_func
+ 1514              	gnss_get_two_points_distance:
+ 1515              	.LFB491:
+ 479:libraries/zf_device/zf_device_gnss.c **** 
+ 480:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 481:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS 计算从第一个点到第二个点的距离
+ 482:libraries/zf_device/zf_device_gnss.c **** // 参数说明     latitude1       第一个点的纬度
+ 483:libraries/zf_device/zf_device_gnss.c **** // 参数说明     longitude1      第一个点的经度
+ 484:libraries/zf_device/zf_device_gnss.c **** // 参数说明     latitude2       第二个点的纬度
+ 485:libraries/zf_device/zf_device_gnss.c **** // 参数说明     longitude2      第二个点的经度
+ 486:libraries/zf_device/zf_device_gnss.c **** // 返回参数     double          返回两点距离
+ 487:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_get_two_points_distance(latitude1_1, longitude1, latitude2, longitude2);
+ 488:libraries/zf_device/zf_device_gnss.c **** // 备注信息
+ 489:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 490:libraries/zf_device/zf_device_gnss.c **** double gnss_get_two_points_distance (double latitude1, double longitude1, double latitude2, double 
+ 491:libraries/zf_device/zf_device_gnss.c **** {
+ 1516              		.loc 1 491 1
+ 1517              		.cfi_startproc
+ 1518              		@ args = 0, pretend = 0, frame = 96
+ 1519              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1520 0000 00B5     		push	{lr}
+ 1521              		.cfi_def_cfa_offset 4
+ 1522              		.cfi_offset 14, -4
+ 1523 0002 2DED048B 		vpush.64	{d8, d9}
+ 1524              		.cfi_def_cfa_offset 20
+ 1525              		.cfi_offset 80, -20
+ 1526              		.cfi_offset 81, -16
+ 1527              		.cfi_offset 82, -12
+ 1528              		.cfi_offset 83, -8
+ 1529 0006 99B0     		sub	sp, sp, #100
+ 1530              		.cfi_def_cfa_offset 120
+ 1531 0008 8DED060B 		vstr.64	d0, [sp, #24]
+ 1532 000c 8DED041B 		vstr.64	d1, [sp, #16]
+ 1533 0010 8DED022B 		vstr.64	d2, [sp, #8]
+ 1534 0014 8DED003B 		vstr.64	d3, [sp]
+ 492:libraries/zf_device/zf_device_gnss.c ****     const double EARTH_RADIUS = 6378137;                                        // 地球半径(单
+ 1535              		.loc 1 492 18
+ 1536 0018 69A3     		adr	r3, .L52+16
+ 1537 001a D3E90023 		ldrd	r2, [r3]
+ 1538 001e CDE91623 		strd	r2, [sp, #88]
+ 493:libraries/zf_device/zf_device_gnss.c ****     double rad_latitude1 = 0;
+ 1539              		.loc 1 493 12
+ 1540 0022 4FF00002 		mov	r2, #0
+ 1541 0026 4FF00003 		mov	r3, #0
+ 1542 002a CDE91423 		strd	r2, [sp, #80]
+ 494:libraries/zf_device/zf_device_gnss.c ****     double rad_latitude2 = 0;
+ 1543              		.loc 1 494 12
+ 1544 002e 4FF00002 		mov	r2, #0
+ 1545 0032 4FF00003 		mov	r3, #0
+ 1546 0036 CDE91223 		strd	r2, [sp, #72]
+ 495:libraries/zf_device/zf_device_gnss.c ****     double rad_longitude1 = 0;
+ 1547              		.loc 1 495 12
+ 1548 003a 4FF00002 		mov	r2, #0
+ 1549 003e 4FF00003 		mov	r3, #0
+ 1550 0042 CDE91023 		strd	r2, [sp, #64]
+ 496:libraries/zf_device/zf_device_gnss.c ****     double rad_longitude2 = 0;
+ 1551              		.loc 1 496 12
+ 1552 0046 4FF00002 		mov	r2, #0
+ 1553 004a 4FF00003 		mov	r3, #0
+ 1554 004e CDE90E23 		strd	r2, [sp, #56]
+ 497:libraries/zf_device/zf_device_gnss.c ****     double distance = 0;
+ 1555              		.loc 1 497 12
+ 1556 0052 4FF00002 		mov	r2, #0
+ 1557 0056 4FF00003 		mov	r3, #0
+ 1558 005a CDE90C23 		strd	r2, [sp, #48]
+ 498:libraries/zf_device/zf_device_gnss.c ****     double a = 0;
+ 1559              		.loc 1 498 12
+ 1560 005e 4FF00002 		mov	r2, #0
+ 1561 0062 4FF00003 		mov	r3, #0
+ 1562 0066 CDE90A23 		strd	r2, [sp, #40]
+ 499:libraries/zf_device/zf_device_gnss.c ****     double b = 0;
+ 1563              		.loc 1 499 12
+ 1564 006a 4FF00002 		mov	r2, #0
+ 1565 006e 4FF00003 		mov	r3, #0
+ 1566 0072 CDE90823 		strd	r2, [sp, #32]
+ 500:libraries/zf_device/zf_device_gnss.c **** 
+ 501:libraries/zf_device/zf_device_gnss.c ****     rad_latitude1   = ANGLE_TO_RAD(latitude1);                                  // 根据角度计�
+ 1567              		.loc 1 501 23
+ 1568 0076 9DED067B 		vldr.64	d7, [sp, #24]
+ 1569 007a 9FED4D6B 		vldr.64	d6, .L52
+ 1570 007e 27EE066B 		vmul.f64	d6, d7, d6
+ 1571              		.loc 1 501 21
+ 1572 0082 9FED4D5B 		vldr.64	d5, .L52+8
+ 1573 0086 86EE057B 		vdiv.f64	d7, d6, d5
+ 1574 008a 8DED147B 		vstr.64	d7, [sp, #80]
+ 502:libraries/zf_device/zf_device_gnss.c ****     rad_latitude2   = ANGLE_TO_RAD(latitude2);
+ 1575              		.loc 1 502 23
+ 1576 008e 9DED027B 		vldr.64	d7, [sp, #8]
+ 1577 0092 9FED476B 		vldr.64	d6, .L52
+ 1578 0096 27EE066B 		vmul.f64	d6, d7, d6
+ 1579              		.loc 1 502 21
+ 1580 009a 9FED475B 		vldr.64	d5, .L52+8
+ 1581 009e 86EE057B 		vdiv.f64	d7, d6, d5
+ 1582 00a2 8DED127B 		vstr.64	d7, [sp, #72]
+ 503:libraries/zf_device/zf_device_gnss.c ****     rad_longitude1  = ANGLE_TO_RAD(longitude1);
+ 1583              		.loc 1 503 23
+ 1584 00a6 9DED047B 		vldr.64	d7, [sp, #16]
+ 1585 00aa 9FED416B 		vldr.64	d6, .L52
+ 1586 00ae 27EE066B 		vmul.f64	d6, d7, d6
+ 1587              		.loc 1 503 21
+ 1588 00b2 9FED415B 		vldr.64	d5, .L52+8
+ 1589 00b6 86EE057B 		vdiv.f64	d7, d6, d5
+ 1590 00ba 8DED107B 		vstr.64	d7, [sp, #64]
+ 504:libraries/zf_device/zf_device_gnss.c ****     rad_longitude2  = ANGLE_TO_RAD(longitude2);
+ 1591              		.loc 1 504 23
+ 1592 00be 9DED007B 		vldr.64	d7, [sp]
+ 1593 00c2 9FED3B6B 		vldr.64	d6, .L52
+ 1594 00c6 27EE066B 		vmul.f64	d6, d7, d6
+ 1595              		.loc 1 504 21
+ 1596 00ca 9FED3B5B 		vldr.64	d5, .L52+8
+ 1597 00ce 86EE057B 		vdiv.f64	d7, d6, d5
+ 1598 00d2 8DED0E7B 		vstr.64	d7, [sp, #56]
+ 505:libraries/zf_device/zf_device_gnss.c **** 
+ 506:libraries/zf_device/zf_device_gnss.c ****     a = rad_latitude1 - rad_latitude2;
+ 1599              		.loc 1 506 7
+ 1600 00d6 9DED146B 		vldr.64	d6, [sp, #80]
+ 1601 00da 9DED127B 		vldr.64	d7, [sp, #72]
+ 1602 00de 36EE477B 		vsub.f64	d7, d6, d7
+ 1603 00e2 8DED0A7B 		vstr.64	d7, [sp, #40]
+ 507:libraries/zf_device/zf_device_gnss.c ****     b = rad_longitude1 - rad_longitude2;
+ 1604              		.loc 1 507 7
+ 1605 00e6 9DED106B 		vldr.64	d6, [sp, #64]
+ 1606 00ea 9DED0E7B 		vldr.64	d7, [sp, #56]
+ 1607 00ee 36EE477B 		vsub.f64	d7, d6, d7
+ 1608 00f2 8DED087B 		vstr.64	d7, [sp, #32]
+ 508:libraries/zf_device/zf_device_gnss.c **** 
+ 509:libraries/zf_device/zf_device_gnss.c ****     distance = 2 * asin(sqrt(pow(sin(a / 2), 2) + cos(rad_latitude1) * cos(rad_latitude2) * pow(sin
+ 1609              		.loc 1 509 30
+ 1610 00f6 9DED0A7B 		vldr.64	d7, [sp, #40]
+ 1611 00fa B0EE005B 		vmov.f64	d5, #2.0e+0
+ 1612 00fe 87EE056B 		vdiv.f64	d6, d7, d5
+ 1613 0102 B0EE460B 		vmov.f64	d0, d6
+ 1614 0106 FFF7FEFF 		bl	sin
+ 1615 010a B0EE407B 		vmov.f64	d7, d0
+ 1616 010e B0EE001B 		vmov.f64	d1, #2.0e+0
+ 1617 0112 B0EE470B 		vmov.f64	d0, d7
+ 1618 0116 FFF7FEFF 		bl	pow
+ 1619 011a B0EE409B 		vmov.f64	d9, d0
+ 1620              		.loc 1 509 51
+ 1621 011e 9DED140B 		vldr.64	d0, [sp, #80]
+ 1622 0122 FFF7FEFF 		bl	cos
+ 1623 0126 B0EE408B 		vmov.f64	d8, d0
+ 1624              		.loc 1 509 72
+ 1625 012a 9DED120B 		vldr.64	d0, [sp, #72]
+ 1626 012e FFF7FEFF 		bl	cos
+ 1627 0132 B0EE407B 		vmov.f64	d7, d0
+ 1628              		.loc 1 509 70
+ 1629 0136 28EE078B 		vmul.f64	d8, d8, d7
+ 1630              		.loc 1 509 93
+ 1631 013a 9DED087B 		vldr.64	d7, [sp, #32]
+ 1632 013e B0EE005B 		vmov.f64	d5, #2.0e+0
+ 1633 0142 87EE056B 		vdiv.f64	d6, d7, d5
+ 1634 0146 B0EE460B 		vmov.f64	d0, d6
+ 1635 014a FFF7FEFF 		bl	sin
+ 1636 014e B0EE407B 		vmov.f64	d7, d0
+ 1637 0152 B0EE001B 		vmov.f64	d1, #2.0e+0
+ 1638 0156 B0EE470B 		vmov.f64	d0, d7
+ 1639 015a FFF7FEFF 		bl	pow
+ 1640 015e B0EE407B 		vmov.f64	d7, d0
+ 1641              		.loc 1 509 91
+ 1642 0162 28EE077B 		vmul.f64	d7, d8, d7
+ 1643              		.loc 1 509 20
+ 1644 0166 39EE077B 		vadd.f64	d7, d9, d7
+ 1645 016a B0EE470B 		vmov.f64	d0, d7
+ 1646 016e FFF7FEFF 		bl	sqrt
+ 1647 0172 B0EE407B 		vmov.f64	d7, d0
+ 1648 0176 B0EE470B 		vmov.f64	d0, d7
+ 1649 017a FFF7FEFF 		bl	asin
+ 1650 017e B0EE407B 		vmov.f64	d7, d0
+ 1651              		.loc 1 509 14
+ 1652 0182 37EE077B 		vadd.f64	d7, d7, d7
+ 1653 0186 8DED0C7B 		vstr.64	d7, [sp, #48]
+ 510:libraries/zf_device/zf_device_gnss.c ****     distance = distance * EARTH_RADIUS;
+ 1654              		.loc 1 510 14
+ 1655 018a 9DED0C6B 		vldr.64	d6, [sp, #48]
+ 1656 018e 9DED167B 		vldr.64	d7, [sp, #88]
+ 1657 0192 26EE077B 		vmul.f64	d7, d6, d7
+ 1658 0196 8DED0C7B 		vstr.64	d7, [sp, #48]
+ 511:libraries/zf_device/zf_device_gnss.c **** 
+ 512:libraries/zf_device/zf_device_gnss.c ****     return distance;
+ 1659              		.loc 1 512 12
+ 1660 019a DDE90C23 		ldrd	r2, [sp, #48]
+ 1661 019e 43EC172B 		vmov	d7, r2, r3
+ 513:libraries/zf_device/zf_device_gnss.c **** }
+ 1662              		.loc 1 513 1
+ 1663 01a2 B0EE470B 		vmov.f64	d0, d7
+ 1664 01a6 19B0     		add	sp, sp, #100
+ 1665              		.cfi_def_cfa_offset 20
+ 1666              		@ sp needed
+ 1667 01a8 BDEC048B 		vldm	sp!, {d8-d9}
+ 1668              		.cfi_restore 82
+ 1669              		.cfi_restore 83
+ 1670              		.cfi_restore 80
+ 1671              		.cfi_restore 81
+ 1672              		.cfi_def_cfa_offset 4
+ 1673 01ac 5DF804FB 		ldr	pc, [sp], #4
+ 1674              	.L53:
+ 1675              		.align	3
+ 1676              	.L52:
+ 1677 01b0 282D4454 		.word	1413754152
+ 1678 01b4 FB210940 		.word	1074340347
+ 1679 01b8 00000000 		.word	0
+ 1680 01bc 00806640 		.word	1080459264
+ 1681 01c0 00000040 		.word	1073741824
+ 1682 01c4 A6545841 		.word	1096307878
+ 1683              		.cfi_endproc
+ 1684              	.LFE491:
+ 1686              		.section	.text.gnss_get_two_points_azimuth,"ax",%progbits
+ 1687              		.align	1
+ 1688              		.p2align 4,,15
+ 1689              		.global	gnss_get_two_points_azimuth
+ 1690              		.syntax unified
+ 1691              		.thumb
+ 1692              		.thumb_func
+ 1694              	gnss_get_two_points_azimuth:
+ 1695              	.LFB492:
+ 514:libraries/zf_device/zf_device_gnss.c **** 
+ 515:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 516:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS 计算从第一个点到第二个点的方位角
+ 517:libraries/zf_device/zf_device_gnss.c **** // 参数说明     latitude1       第一个点的纬度
+ 518:libraries/zf_device/zf_device_gnss.c **** // 参数说明     longitude1      第一个点的经度
+ 519:libraries/zf_device/zf_device_gnss.c **** // 参数说明     latitude2       第二个点的纬度
+ 520:libraries/zf_device/zf_device_gnss.c **** // 参数说明     longitude2      第二个点的经度
+ 521:libraries/zf_device/zf_device_gnss.c **** // 返回参数     double          返回方位角（0至360）
+ 522:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_get_two_points_azimuth(latitude1_1, longitude1, latitude2, longitude2);
+ 523:libraries/zf_device/zf_device_gnss.c **** // 备注信息
+ 524:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 525:libraries/zf_device/zf_device_gnss.c **** double gnss_get_two_points_azimuth (double latitude1, double longitude1, double latitude2, double l
+ 526:libraries/zf_device/zf_device_gnss.c **** {
+ 1696              		.loc 1 526 1
+ 1697              		.cfi_startproc
+ 1698              		@ args = 0, pretend = 0, frame = 56
+ 1699              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1700 0000 00B5     		push	{lr}
+ 1701              		.cfi_def_cfa_offset 4
+ 1702              		.cfi_offset 14, -4
+ 1703 0002 2DED048B 		vpush.64	{d8, d9}
+ 1704              		.cfi_def_cfa_offset 20
+ 1705              		.cfi_offset 80, -20
+ 1706              		.cfi_offset 81, -16
+ 1707              		.cfi_offset 82, -12
+ 1708              		.cfi_offset 83, -8
+ 1709 0006 8FB0     		sub	sp, sp, #60
+ 1710              		.cfi_def_cfa_offset 80
+ 1711 0008 8DED060B 		vstr.64	d0, [sp, #24]
+ 1712 000c 8DED041B 		vstr.64	d1, [sp, #16]
+ 1713 0010 8DED022B 		vstr.64	d2, [sp, #8]
+ 1714 0014 8DED003B 		vstr.64	d3, [sp]
+ 527:libraries/zf_device/zf_device_gnss.c ****     latitude1   = ANGLE_TO_RAD(latitude1);
+ 1715              		.loc 1 527 19
+ 1716 0018 9DED067B 		vldr.64	d7, [sp, #24]
+ 1717 001c 9FED4E6B 		vldr.64	d6, .L61
+ 1718 0020 27EE066B 		vmul.f64	d6, d7, d6
+ 1719              		.loc 1 527 17
+ 1720 0024 9FED4E5B 		vldr.64	d5, .L61+8
+ 1721 0028 86EE057B 		vdiv.f64	d7, d6, d5
+ 1722 002c 8DED067B 		vstr.64	d7, [sp, #24]
+ 528:libraries/zf_device/zf_device_gnss.c ****     latitude2   = ANGLE_TO_RAD(latitude2);
+ 1723              		.loc 1 528 19
+ 1724 0030 9DED027B 		vldr.64	d7, [sp, #8]
+ 1725 0034 9FED486B 		vldr.64	d6, .L61
+ 1726 0038 27EE066B 		vmul.f64	d6, d7, d6
+ 1727              		.loc 1 528 17
+ 1728 003c 9FED485B 		vldr.64	d5, .L61+8
+ 1729 0040 86EE057B 		vdiv.f64	d7, d6, d5
+ 1730 0044 8DED027B 		vstr.64	d7, [sp, #8]
+ 529:libraries/zf_device/zf_device_gnss.c ****     longitude1  = ANGLE_TO_RAD(longitude1);
+ 1731              		.loc 1 529 19
+ 1732 0048 9DED047B 		vldr.64	d7, [sp, #16]
+ 1733 004c 9FED426B 		vldr.64	d6, .L61
+ 1734 0050 27EE066B 		vmul.f64	d6, d7, d6
+ 1735              		.loc 1 529 17
+ 1736 0054 9FED425B 		vldr.64	d5, .L61+8
+ 1737 0058 86EE057B 		vdiv.f64	d7, d6, d5
+ 1738 005c 8DED047B 		vstr.64	d7, [sp, #16]
+ 530:libraries/zf_device/zf_device_gnss.c ****     longitude2  = ANGLE_TO_RAD(longitude2);
+ 1739              		.loc 1 530 19
+ 1740 0060 9DED007B 		vldr.64	d7, [sp]
+ 1741 0064 9FED3C6B 		vldr.64	d6, .L61
+ 1742 0068 27EE066B 		vmul.f64	d6, d7, d6
+ 1743              		.loc 1 530 17
+ 1744 006c 9FED3C5B 		vldr.64	d5, .L61+8
+ 1745 0070 86EE057B 		vdiv.f64	d7, d6, d5
+ 1746 0074 8DED007B 		vstr.64	d7, [sp]
+ 531:libraries/zf_device/zf_device_gnss.c **** 
+ 532:libraries/zf_device/zf_device_gnss.c ****     double x = sin(longitude2 - longitude1) * cos(latitude2);
+ 1747              		.loc 1 532 16
+ 1748 0078 9DED006B 		vldr.64	d6, [sp]
+ 1749 007c 9DED047B 		vldr.64	d7, [sp, #16]
+ 1750 0080 36EE477B 		vsub.f64	d7, d6, d7
+ 1751 0084 B0EE470B 		vmov.f64	d0, d7
+ 1752 0088 FFF7FEFF 		bl	sin
+ 1753 008c B0EE408B 		vmov.f64	d8, d0
+ 1754              		.loc 1 532 47
+ 1755 0090 9DED020B 		vldr.64	d0, [sp, #8]
+ 1756 0094 FFF7FEFF 		bl	cos
+ 1757 0098 B0EE407B 		vmov.f64	d7, d0
+ 1758              		.loc 1 532 12
+ 1759 009c 28EE077B 		vmul.f64	d7, d8, d7
+ 1760 00a0 8DED0C7B 		vstr.64	d7, [sp, #48]
+ 533:libraries/zf_device/zf_device_gnss.c ****     double y = cos(latitude1) * sin(latitude2) - sin(latitude1) * cos(latitude2) * cos(longitude2 -
+ 1761              		.loc 1 533 16
+ 1762 00a4 9DED060B 		vldr.64	d0, [sp, #24]
+ 1763 00a8 FFF7FEFF 		bl	cos
+ 1764 00ac B0EE408B 		vmov.f64	d8, d0
+ 1765              		.loc 1 533 33
+ 1766 00b0 9DED020B 		vldr.64	d0, [sp, #8]
+ 1767 00b4 FFF7FEFF 		bl	sin
+ 1768 00b8 B0EE407B 		vmov.f64	d7, d0
+ 1769              		.loc 1 533 31
+ 1770 00bc 28EE078B 		vmul.f64	d8, d8, d7
+ 1771              		.loc 1 533 50
+ 1772 00c0 9DED060B 		vldr.64	d0, [sp, #24]
+ 1773 00c4 FFF7FEFF 		bl	sin
+ 1774 00c8 B0EE409B 		vmov.f64	d9, d0
+ 1775              		.loc 1 533 67
+ 1776 00cc 9DED020B 		vldr.64	d0, [sp, #8]
+ 1777 00d0 FFF7FEFF 		bl	cos
+ 1778 00d4 B0EE407B 		vmov.f64	d7, d0
+ 1779              		.loc 1 533 65
+ 1780 00d8 29EE079B 		vmul.f64	d9, d9, d7
+ 1781              		.loc 1 533 84
+ 1782 00dc 9DED006B 		vldr.64	d6, [sp]
+ 1783 00e0 9DED047B 		vldr.64	d7, [sp, #16]
+ 1784 00e4 36EE477B 		vsub.f64	d7, d6, d7
+ 1785 00e8 B0EE470B 		vmov.f64	d0, d7
+ 1786 00ec FFF7FEFF 		bl	cos
+ 1787 00f0 B0EE407B 		vmov.f64	d7, d0
+ 1788              		.loc 1 533 82
+ 1789 00f4 29EE077B 		vmul.f64	d7, d9, d7
+ 1790              		.loc 1 533 12
+ 1791 00f8 38EE477B 		vsub.f64	d7, d8, d7
+ 1792 00fc 8DED0A7B 		vstr.64	d7, [sp, #40]
+ 534:libraries/zf_device/zf_device_gnss.c ****     double angle = RAD_TO_ANGLE(atan2(x, y));
+ 1793              		.loc 1 534 20
+ 1794 0100 9DED0A1B 		vldr.64	d1, [sp, #40]
+ 1795 0104 9DED0C0B 		vldr.64	d0, [sp, #48]
+ 1796 0108 FFF7FEFF 		bl	atan2
+ 1797 010c B0EE407B 		vmov.f64	d7, d0
+ 1798 0110 9FED136B 		vldr.64	d6, .L61+8
+ 1799 0114 27EE066B 		vmul.f64	d6, d7, d6
+ 1800              		.loc 1 534 12
+ 1801 0118 9FED0F5B 		vldr.64	d5, .L61
+ 1802 011c 86EE057B 		vdiv.f64	d7, d6, d5
+ 1803 0120 8DED087B 		vstr.64	d7, [sp, #32]
+ 535:libraries/zf_device/zf_device_gnss.c **** 
+ 536:libraries/zf_device/zf_device_gnss.c ****     return ((0 < angle) ? angle : (angle + 360));
+ 1804              		.loc 1 536 33
+ 1805 0124 9DED087B 		vldr.64	d7, [sp, #32]
+ 1806 0128 B5EEC07B 		vcmpe.f64	d7, #0
+ 1807 012c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 1808 0130 02DD     		ble	.L60
+ 1809              		.loc 1 536 33 is_stmt 0 discriminator 1
+ 1810 0132 9DED087B 		vldr.64	d7, [sp, #32]
+ 1811 0136 05E0     		b	.L58
+ 1812              	.L60:
+ 1813              		.loc 1 536 33 discriminator 2
+ 1814 0138 9DED087B 		vldr.64	d7, [sp, #32]
+ 1815 013c 9FED0A6B 		vldr.64	d6, .L61+16
+ 1816 0140 37EE067B 		vadd.f64	d7, d7, d6
+ 1817              	.L58:
+ 537:libraries/zf_device/zf_device_gnss.c **** }
+ 1818              		.loc 1 537 1 is_stmt 1 discriminator 5
+ 1819 0144 B0EE470B 		vmov.f64	d0, d7
+ 1820 0148 0FB0     		add	sp, sp, #60
+ 1821              		.cfi_def_cfa_offset 20
+ 1822              		@ sp needed
+ 1823 014a BDEC048B 		vldm	sp!, {d8-d9}
+ 1824              		.cfi_restore 82
+ 1825              		.cfi_restore 83
+ 1826              		.cfi_restore 80
+ 1827              		.cfi_restore 81
+ 1828              		.cfi_def_cfa_offset 4
+ 1829 014e 5DF804FB 		ldr	pc, [sp], #4
+ 1830              	.L62:
+ 1831 0152 00BFAFF3 		.align	3
+ 1831      0080
+ 1832              	.L61:
+ 1833 0158 282D4454 		.word	1413754152
+ 1834 015c FB210940 		.word	1074340347
+ 1835 0160 00000000 		.word	0
+ 1836 0164 00806640 		.word	1080459264
+ 1837 0168 00000000 		.word	0
+ 1838 016c 00807640 		.word	1081507840
+ 1839              		.cfi_endproc
+ 1840              	.LFE492:
+ 1842              		.section	.rodata
+ 1843              		.align	2
+ 1844              	.LC3:
+ 1845 000c 30780000 		.ascii	"0x\000\000\000"
+ 1845      00
+ 1846              		.section	.text.gnss_data_parse,"ax",%progbits
+ 1847              		.align	1
+ 1848              		.p2align 4,,15
+ 1849              		.global	gnss_data_parse
+ 1850              		.syntax unified
+ 1851              		.thumb
+ 1852              		.thumb_func
+ 1854              	gnss_data_parse:
+ 1855              	.LFB493:
+ 538:libraries/zf_device/zf_device_gnss.c **** 
+ 539:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 540:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS 解析数据
+ 541:libraries/zf_device/zf_device_gnss.c **** // 参数说明     void
+ 542:libraries/zf_device/zf_device_gnss.c **** // 返回参数     uint8           ZF_TRUE-解析成功 ZF_FALSE-数据有问题不能解析
+ 543:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_data_parse();
+ 544:libraries/zf_device/zf_device_gnss.c **** // 备注信息
+ 545:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 546:libraries/zf_device/zf_device_gnss.c **** uint8 gnss_data_parse (void)
+ 547:libraries/zf_device/zf_device_gnss.c **** {
+ 1856              		.loc 1 547 1
+ 1857              		.cfi_startproc
+ 1858              		@ args = 0, pretend = 0, frame = 16
+ 1859              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1860 0000 00B5     		push	{lr}
+ 1861              		.cfi_def_cfa_offset 4
+ 1862              		.cfi_offset 14, -4
+ 1863 0002 85B0     		sub	sp, sp, #20
+ 1864              		.cfi_def_cfa_offset 24
+ 548:libraries/zf_device/zf_device_gnss.c ****     uint8 return_state = ZF_NO_ERROR;
+ 1865              		.loc 1 548 11
+ 1866 0004 0023     		movs	r3, #0
+ 1867 0006 8DF80F30 		strb	r3, [sp, #15]
+ 549:libraries/zf_device/zf_device_gnss.c **** 
+ 550:libraries/zf_device/zf_device_gnss.c ****     uint8 check_buffer[5] = {'0', 'x', 0x00, 0x00, 0x00};
+ 1868              		.loc 1 550 11
+ 1869 000a 704A     		ldr	r2, .L78
+ 1870 000c 6B46     		mov	r3, sp
+ 1871 000e 92E80300 		ldm	r2, {r0, r1}
+ 1872 0012 1860     		str	r0, [r3]
+ 1873 0014 0433     		adds	r3, r3, #4
+ 1874 0016 1970     		strb	r1, [r3]
+ 551:libraries/zf_device/zf_device_gnss.c ****     uint8 bbc_xor_origin = 0;
+ 1875              		.loc 1 551 11
+ 1876 0018 0023     		movs	r3, #0
+ 1877 001a 8DF80730 		strb	r3, [sp, #7]
+ 552:libraries/zf_device/zf_device_gnss.c ****     uint8 bbc_xor_calculation = 0;
+ 1878              		.loc 1 552 11
+ 1879 001e 0023     		movs	r3, #0
+ 1880 0020 8DF80E30 		strb	r3, [sp, #14]
+ 553:libraries/zf_device/zf_device_gnss.c ****     uint32 data_len = 0;
+ 1881              		.loc 1 553 12
+ 1882 0024 0023     		movs	r3, #0
+ 1883 0026 0293     		str	r3, [sp, #8]
+ 554:libraries/zf_device/zf_device_gnss.c **** 
+ 555:libraries/zf_device/zf_device_gnss.c ****     do
+ 556:libraries/zf_device/zf_device_gnss.c ****     {
+ 557:libraries/zf_device/zf_device_gnss.c ****         if(GNSS_STATE_RECEIVED == gnss_rmc_state)
+ 1884              		.loc 1 557 32
+ 1885 0028 694B     		ldr	r3, .L78+4
+ 1886 002a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1887              		.loc 1 557 11
+ 1888 002c 012B     		cmp	r3, #1
+ 1889 002e 3CD1     		bne	.L64
+ 558:libraries/zf_device/zf_device_gnss.c ****         {
+ 559:libraries/zf_device/zf_device_gnss.c ****             gnss_rmc_state = GNSS_STATE_PARSING;
+ 1890              		.loc 1 559 28
+ 1891 0030 674B     		ldr	r3, .L78+4
+ 1892 0032 0222     		movs	r2, #2
+ 1893 0034 1A70     		strb	r2, [r3]
+ 560:libraries/zf_device/zf_device_gnss.c ****             strncpy((char *)&check_buffer[2], strchr((const char *)gnss_rmc_buffer, '*') + 1, 2);
+ 1894              		.loc 1 560 47
+ 1895 0036 2A21     		movs	r1, #42
+ 1896 0038 6648     		ldr	r0, .L78+8
+ 1897 003a FFF7FEFF 		bl	strchr
+ 1898 003e 0346     		mov	r3, r0
+ 1899              		.loc 1 560 90
+ 1900 0040 591C     		adds	r1, r3, #1
+ 1901              		.loc 1 560 13
+ 1902 0042 6B46     		mov	r3, sp
+ 1903 0044 0233     		adds	r3, r3, #2
+ 1904 0046 0222     		movs	r2, #2
+ 1905 0048 1846     		mov	r0, r3
+ 1906 004a FFF7FEFF 		bl	strncpy
+ 561:libraries/zf_device/zf_device_gnss.c ****             bbc_xor_origin = (uint8)zf_function_str_to_hex((char *)check_buffer);
+ 1907              		.loc 1 561 37
+ 1908 004e 6B46     		mov	r3, sp
+ 1909 0050 1846     		mov	r0, r3
+ 1910 0052 FFF7FEFF 		bl	zf_function_str_to_hex
+ 1911 0056 0346     		mov	r3, r0
+ 1912              		.loc 1 561 28
+ 1913 0058 8DF80730 		strb	r3, [sp, #7]
+ 562:libraries/zf_device/zf_device_gnss.c ****             for(bbc_xor_calculation = gnss_rmc_buffer[1], data_len = 2; '*' != gnss_rmc_buffer[data
+ 1914              		.loc 1 562 37
+ 1915 005c 5D4B     		ldr	r3, .L78+8
+ 1916 005e 5B78     		ldrb	r3, [r3, #1]
+ 1917 0060 8DF80E30 		strb	r3, [sp, #14]
+ 1918              		.loc 1 562 68
+ 1919 0064 0223     		movs	r3, #2
+ 1920 0066 0293     		str	r3, [sp, #8]
+ 1921              		.loc 1 562 13
+ 1922 0068 0BE0     		b	.L65
+ 1923              	.L66:
+ 563:libraries/zf_device/zf_device_gnss.c ****             {
+ 564:libraries/zf_device/zf_device_gnss.c ****                 bbc_xor_calculation ^= gnss_rmc_buffer[data_len];
+ 1924              		.loc 1 564 55 discriminator 3
+ 1925 006a 5A4A     		ldr	r2, .L78+8
+ 1926 006c 029B     		ldr	r3, [sp, #8]
+ 1927 006e 1344     		add	r3, r3, r2
+ 1928 0070 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 1929              		.loc 1 564 37 discriminator 3
+ 1930 0072 9DF80E30 		ldrb	r3, [sp, #14]
+ 1931 0076 5340     		eors	r3, r3, r2
+ 1932 0078 8DF80E30 		strb	r3, [sp, #14]
+ 562:libraries/zf_device/zf_device_gnss.c ****             for(bbc_xor_calculation = gnss_rmc_buffer[1], data_len = 2; '*' != gnss_rmc_buffer[data
+ 1933              		.loc 1 562 116 discriminator 3
+ 1934 007c 029B     		ldr	r3, [sp, #8]
+ 1935 007e 0133     		adds	r3, r3, #1
+ 1936 0080 0293     		str	r3, [sp, #8]
+ 1937              	.L65:
+ 562:libraries/zf_device/zf_device_gnss.c ****             for(bbc_xor_calculation = gnss_rmc_buffer[1], data_len = 2; '*' != gnss_rmc_buffer[data
+ 1938              		.loc 1 562 95 discriminator 1
+ 1939 0082 544A     		ldr	r2, .L78+8
+ 1940 0084 029B     		ldr	r3, [sp, #8]
+ 1941 0086 1344     		add	r3, r3, r2
+ 1942 0088 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 562:libraries/zf_device/zf_device_gnss.c ****             for(bbc_xor_calculation = gnss_rmc_buffer[1], data_len = 2; '*' != gnss_rmc_buffer[data
+ 1943              		.loc 1 562 13 discriminator 1
+ 1944 008a 2A2B     		cmp	r3, #42
+ 1945 008c EDD1     		bne	.L66
+ 565:libraries/zf_device/zf_device_gnss.c ****             }
+ 566:libraries/zf_device/zf_device_gnss.c ****             if(bbc_xor_calculation != bbc_xor_origin)
+ 1946              		.loc 1 566 15
+ 1947 008e 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1948 0092 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1949 0096 9A42     		cmp	r2, r3
+ 1950 0098 03D0     		beq	.L67
+ 567:libraries/zf_device/zf_device_gnss.c ****             {
+ 568:libraries/zf_device/zf_device_gnss.c ****                 // 数据校验失败
+ 569:libraries/zf_device/zf_device_gnss.c ****                 return_state = ZF_ERROR;
+ 1951              		.loc 1 569 30
+ 1952 009a 0123     		movs	r3, #1
+ 1953 009c 8DF80F30 		strb	r3, [sp, #15]
+ 570:libraries/zf_device/zf_device_gnss.c ****                 break;
+ 1954              		.loc 1 570 17
+ 1955 00a0 8EE0     		b	.L68
+ 1956              	.L67:
+ 571:libraries/zf_device/zf_device_gnss.c ****             }
+ 572:libraries/zf_device/zf_device_gnss.c **** 
+ 573:libraries/zf_device/zf_device_gnss.c ****             gnss_gnrmc_parse((char *)gnss_rmc_buffer, &gnss_info);
+ 1957              		.loc 1 573 13
+ 1958 00a2 4D49     		ldr	r1, .L78+12
+ 1959 00a4 4B48     		ldr	r0, .L78+8
+ 1960 00a6 FFF7FEFF 		bl	gnss_gnrmc_parse
+ 1961              	.L64:
+ 574:libraries/zf_device/zf_device_gnss.c ****         }
+ 575:libraries/zf_device/zf_device_gnss.c ****         gnss_rmc_state = GNSS_STATE_RECEIVING;
+ 1962              		.loc 1 575 24
+ 1963 00aa 494B     		ldr	r3, .L78+4
+ 1964 00ac 0022     		movs	r2, #0
+ 1965 00ae 1A70     		strb	r2, [r3]
+ 576:libraries/zf_device/zf_device_gnss.c **** 
+ 577:libraries/zf_device/zf_device_gnss.c ****         if(GNSS_STATE_RECEIVED == gnss_gga_state)
+ 1966              		.loc 1 577 32
+ 1967 00b0 4A4B     		ldr	r3, .L78+16
+ 1968 00b2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1969              		.loc 1 577 11
+ 1970 00b4 012B     		cmp	r3, #1
+ 1971 00b6 3CD1     		bne	.L69
+ 578:libraries/zf_device/zf_device_gnss.c ****         {
+ 579:libraries/zf_device/zf_device_gnss.c ****             gnss_gga_state = GNSS_STATE_PARSING;
+ 1972              		.loc 1 579 28
+ 1973 00b8 484B     		ldr	r3, .L78+16
+ 1974 00ba 0222     		movs	r2, #2
+ 1975 00bc 1A70     		strb	r2, [r3]
+ 580:libraries/zf_device/zf_device_gnss.c ****             strncpy((char *)&check_buffer[2], strchr((const char *)gnss_gga_buffer, '*') + 1, 2);
+ 1976              		.loc 1 580 47
+ 1977 00be 2A21     		movs	r1, #42
+ 1978 00c0 4748     		ldr	r0, .L78+20
+ 1979 00c2 FFF7FEFF 		bl	strchr
+ 1980 00c6 0346     		mov	r3, r0
+ 1981              		.loc 1 580 90
+ 1982 00c8 591C     		adds	r1, r3, #1
+ 1983              		.loc 1 580 13
+ 1984 00ca 6B46     		mov	r3, sp
+ 1985 00cc 0233     		adds	r3, r3, #2
+ 1986 00ce 0222     		movs	r2, #2
+ 1987 00d0 1846     		mov	r0, r3
+ 1988 00d2 FFF7FEFF 		bl	strncpy
+ 581:libraries/zf_device/zf_device_gnss.c ****             bbc_xor_origin = (uint8)zf_function_str_to_hex((char *)check_buffer);
+ 1989              		.loc 1 581 37
+ 1990 00d6 6B46     		mov	r3, sp
+ 1991 00d8 1846     		mov	r0, r3
+ 1992 00da FFF7FEFF 		bl	zf_function_str_to_hex
+ 1993 00de 0346     		mov	r3, r0
+ 1994              		.loc 1 581 28
+ 1995 00e0 8DF80730 		strb	r3, [sp, #7]
+ 582:libraries/zf_device/zf_device_gnss.c **** 
+ 583:libraries/zf_device/zf_device_gnss.c ****             for(bbc_xor_calculation = gnss_gga_buffer[1], data_len = 2; '*' != gnss_gga_buffer[data
+ 1996              		.loc 1 583 37
+ 1997 00e4 3E4B     		ldr	r3, .L78+20
+ 1998 00e6 5B78     		ldrb	r3, [r3, #1]
+ 1999 00e8 8DF80E30 		strb	r3, [sp, #14]
+ 2000              		.loc 1 583 68
+ 2001 00ec 0223     		movs	r3, #2
+ 2002 00ee 0293     		str	r3, [sp, #8]
+ 2003              		.loc 1 583 13
+ 2004 00f0 0BE0     		b	.L70
+ 2005              	.L71:
+ 584:libraries/zf_device/zf_device_gnss.c ****             {
+ 585:libraries/zf_device/zf_device_gnss.c ****                 bbc_xor_calculation ^= gnss_gga_buffer[data_len];
+ 2006              		.loc 1 585 55 discriminator 3
+ 2007 00f2 3B4A     		ldr	r2, .L78+20
+ 2008 00f4 029B     		ldr	r3, [sp, #8]
+ 2009 00f6 1344     		add	r3, r3, r2
+ 2010 00f8 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 2011              		.loc 1 585 37 discriminator 3
+ 2012 00fa 9DF80E30 		ldrb	r3, [sp, #14]
+ 2013 00fe 5340     		eors	r3, r3, r2
+ 2014 0100 8DF80E30 		strb	r3, [sp, #14]
+ 583:libraries/zf_device/zf_device_gnss.c ****             {
+ 2015              		.loc 1 583 116 discriminator 3
+ 2016 0104 029B     		ldr	r3, [sp, #8]
+ 2017 0106 0133     		adds	r3, r3, #1
+ 2018 0108 0293     		str	r3, [sp, #8]
+ 2019              	.L70:
+ 583:libraries/zf_device/zf_device_gnss.c ****             {
+ 2020              		.loc 1 583 95 discriminator 1
+ 2021 010a 354A     		ldr	r2, .L78+20
+ 2022 010c 029B     		ldr	r3, [sp, #8]
+ 2023 010e 1344     		add	r3, r3, r2
+ 2024 0110 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 583:libraries/zf_device/zf_device_gnss.c ****             {
+ 2025              		.loc 1 583 13 discriminator 1
+ 2026 0112 2A2B     		cmp	r3, #42
+ 2027 0114 EDD1     		bne	.L71
+ 586:libraries/zf_device/zf_device_gnss.c ****             }
+ 587:libraries/zf_device/zf_device_gnss.c ****             if(bbc_xor_calculation != bbc_xor_origin)
+ 2028              		.loc 1 587 15
+ 2029 0116 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 2030 011a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2031 011e 9A42     		cmp	r2, r3
+ 2032 0120 03D0     		beq	.L72
+ 588:libraries/zf_device/zf_device_gnss.c ****             {
+ 589:libraries/zf_device/zf_device_gnss.c ****                 // 数据校验失败
+ 590:libraries/zf_device/zf_device_gnss.c ****                 return_state = ZF_ERROR;
+ 2033              		.loc 1 590 30
+ 2034 0122 0123     		movs	r3, #1
+ 2035 0124 8DF80F30 		strb	r3, [sp, #15]
+ 591:libraries/zf_device/zf_device_gnss.c ****                 break;
+ 2036              		.loc 1 591 17
+ 2037 0128 4AE0     		b	.L68
+ 2038              	.L72:
+ 592:libraries/zf_device/zf_device_gnss.c ****             }
+ 593:libraries/zf_device/zf_device_gnss.c **** 
+ 594:libraries/zf_device/zf_device_gnss.c ****             gnss_gngga_parse((char *)gnss_gga_buffer, &gnss_info);
+ 2039              		.loc 1 594 13
+ 2040 012a 2B49     		ldr	r1, .L78+12
+ 2041 012c 2C48     		ldr	r0, .L78+20
+ 2042 012e FFF7FEFF 		bl	gnss_gngga_parse
+ 2043              	.L69:
+ 595:libraries/zf_device/zf_device_gnss.c ****         }
+ 596:libraries/zf_device/zf_device_gnss.c ****         gnss_gga_state = GNSS_STATE_RECEIVING;
+ 2044              		.loc 1 596 24
+ 2045 0132 2A4B     		ldr	r3, .L78+16
+ 2046 0134 0022     		movs	r2, #0
+ 2047 0136 1A70     		strb	r2, [r3]
+ 597:libraries/zf_device/zf_device_gnss.c **** 
+ 598:libraries/zf_device/zf_device_gnss.c ****         if(GNSS_STATE_RECEIVED == gnss_ths_state)
+ 2048              		.loc 1 598 32
+ 2049 0138 2A4B     		ldr	r3, .L78+24
+ 2050 013a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 2051              		.loc 1 598 11
+ 2052 013c 012B     		cmp	r3, #1
+ 2053 013e 3CD1     		bne	.L73
+ 599:libraries/zf_device/zf_device_gnss.c ****         {
+ 600:libraries/zf_device/zf_device_gnss.c ****             gnss_ths_state = GNSS_STATE_PARSING;
+ 2054              		.loc 1 600 28
+ 2055 0140 284B     		ldr	r3, .L78+24
+ 2056 0142 0222     		movs	r2, #2
+ 2057 0144 1A70     		strb	r2, [r3]
+ 601:libraries/zf_device/zf_device_gnss.c ****             strncpy((char *)&check_buffer[2], strchr((const char *)gnss_ths_buffer, '*') + 1, 2);
+ 2058              		.loc 1 601 47
+ 2059 0146 2A21     		movs	r1, #42
+ 2060 0148 2748     		ldr	r0, .L78+28
+ 2061 014a FFF7FEFF 		bl	strchr
+ 2062 014e 0346     		mov	r3, r0
+ 2063              		.loc 1 601 90
+ 2064 0150 591C     		adds	r1, r3, #1
+ 2065              		.loc 1 601 13
+ 2066 0152 6B46     		mov	r3, sp
+ 2067 0154 0233     		adds	r3, r3, #2
+ 2068 0156 0222     		movs	r2, #2
+ 2069 0158 1846     		mov	r0, r3
+ 2070 015a FFF7FEFF 		bl	strncpy
+ 602:libraries/zf_device/zf_device_gnss.c ****             bbc_xor_origin = (uint8)zf_function_str_to_hex((char *)check_buffer);
+ 2071              		.loc 1 602 37
+ 2072 015e 6B46     		mov	r3, sp
+ 2073 0160 1846     		mov	r0, r3
+ 2074 0162 FFF7FEFF 		bl	zf_function_str_to_hex
+ 2075 0166 0346     		mov	r3, r0
+ 2076              		.loc 1 602 28
+ 2077 0168 8DF80730 		strb	r3, [sp, #7]
+ 603:libraries/zf_device/zf_device_gnss.c **** 
+ 604:libraries/zf_device/zf_device_gnss.c ****             for(bbc_xor_calculation = gnss_ths_buffer[1], data_len = 2; '*' != gnss_ths_buffer[data
+ 2078              		.loc 1 604 37
+ 2079 016c 1E4B     		ldr	r3, .L78+28
+ 2080 016e 5B78     		ldrb	r3, [r3, #1]
+ 2081 0170 8DF80E30 		strb	r3, [sp, #14]
+ 2082              		.loc 1 604 68
+ 2083 0174 0223     		movs	r3, #2
+ 2084 0176 0293     		str	r3, [sp, #8]
+ 2085              		.loc 1 604 13
+ 2086 0178 0BE0     		b	.L74
+ 2087              	.L75:
+ 605:libraries/zf_device/zf_device_gnss.c ****             {
+ 606:libraries/zf_device/zf_device_gnss.c ****                 bbc_xor_calculation ^= gnss_ths_buffer[data_len];
+ 2088              		.loc 1 606 55 discriminator 3
+ 2089 017a 1B4A     		ldr	r2, .L78+28
+ 2090 017c 029B     		ldr	r3, [sp, #8]
+ 2091 017e 1344     		add	r3, r3, r2
+ 2092 0180 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 2093              		.loc 1 606 37 discriminator 3
+ 2094 0182 9DF80E30 		ldrb	r3, [sp, #14]
+ 2095 0186 5340     		eors	r3, r3, r2
+ 2096 0188 8DF80E30 		strb	r3, [sp, #14]
+ 604:libraries/zf_device/zf_device_gnss.c ****             {
+ 2097              		.loc 1 604 116 discriminator 3
+ 2098 018c 029B     		ldr	r3, [sp, #8]
+ 2099 018e 0133     		adds	r3, r3, #1
+ 2100 0190 0293     		str	r3, [sp, #8]
+ 2101              	.L74:
+ 604:libraries/zf_device/zf_device_gnss.c ****             {
+ 2102              		.loc 1 604 95 discriminator 1
+ 2103 0192 154A     		ldr	r2, .L78+28
+ 2104 0194 029B     		ldr	r3, [sp, #8]
+ 2105 0196 1344     		add	r3, r3, r2
+ 2106 0198 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 604:libraries/zf_device/zf_device_gnss.c ****             {
+ 2107              		.loc 1 604 13 discriminator 1
+ 2108 019a 2A2B     		cmp	r3, #42
+ 2109 019c EDD1     		bne	.L75
+ 607:libraries/zf_device/zf_device_gnss.c ****             }
+ 608:libraries/zf_device/zf_device_gnss.c ****             if(bbc_xor_calculation != bbc_xor_origin)
+ 2110              		.loc 1 608 15
+ 2111 019e 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 2112 01a2 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2113 01a6 9A42     		cmp	r2, r3
+ 2114 01a8 03D0     		beq	.L76
+ 609:libraries/zf_device/zf_device_gnss.c ****             {
+ 610:libraries/zf_device/zf_device_gnss.c ****                 // 数据校验失败
+ 611:libraries/zf_device/zf_device_gnss.c ****                 return_state = ZF_ERROR;
+ 2115              		.loc 1 611 30
+ 2116 01aa 0123     		movs	r3, #1
+ 2117 01ac 8DF80F30 		strb	r3, [sp, #15]
+ 612:libraries/zf_device/zf_device_gnss.c ****                 break;
+ 2118              		.loc 1 612 17
+ 2119 01b0 06E0     		b	.L68
+ 2120              	.L76:
+ 613:libraries/zf_device/zf_device_gnss.c ****             }
+ 614:libraries/zf_device/zf_device_gnss.c **** 
+ 615:libraries/zf_device/zf_device_gnss.c ****             gnss_gnths_parse((char *)gnss_ths_buffer, &gnss_info);
+ 2121              		.loc 1 615 13
+ 2122 01b2 0949     		ldr	r1, .L78+12
+ 2123 01b4 0C48     		ldr	r0, .L78+28
+ 2124 01b6 FFF7FEFF 		bl	gnss_gnths_parse
+ 2125              	.L73:
+ 616:libraries/zf_device/zf_device_gnss.c ****         }
+ 617:libraries/zf_device/zf_device_gnss.c ****         gnss_ths_state = GNSS_STATE_RECEIVING;
+ 2126              		.loc 1 617 24
+ 2127 01ba 0A4B     		ldr	r3, .L78+24
+ 2128 01bc 0022     		movs	r2, #0
+ 2129 01be 1A70     		strb	r2, [r3]
+ 2130              	.L68:
+ 618:libraries/zf_device/zf_device_gnss.c **** 
+ 619:libraries/zf_device/zf_device_gnss.c ****     }while(0);
+ 620:libraries/zf_device/zf_device_gnss.c **** 
+ 621:libraries/zf_device/zf_device_gnss.c ****     return return_state;
+ 2131              		.loc 1 621 12
+ 2132 01c0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 622:libraries/zf_device/zf_device_gnss.c **** }
+ 2133              		.loc 1 622 1
+ 2134 01c4 1846     		mov	r0, r3
+ 2135 01c6 05B0     		add	sp, sp, #20
+ 2136              		.cfi_def_cfa_offset 4
+ 2137              		@ sp needed
+ 2138 01c8 5DF804FB 		ldr	pc, [sp], #4
+ 2139              	.L79:
+ 2140              		.align	2
+ 2141              	.L78:
+ 2142 01cc 0C000000 		.word	.LC3
+ 2143 01d0 00000000 		.word	gnss_rmc_state
+ 2144 01d4 00000000 		.word	gnss_rmc_buffer
+ 2145 01d8 00000000 		.word	gnss_info
+ 2146 01dc 00000000 		.word	gnss_gga_state
+ 2147 01e0 00000000 		.word	gnss_gga_buffer
+ 2148 01e4 00000000 		.word	gnss_ths_state
+ 2149 01e8 00000000 		.word	gnss_ths_buffer
+ 2150              		.cfi_endproc
+ 2151              	.LFE493:
+ 2153              		.section	.rodata
+ 2154 0011 000000   		.align	2
+ 2155              	.LC4:
+ 2156 0014 F1D90642 		.ascii	"\361\331\006B\024\000\000\012\005\000d\000\000\000`"
+ 2156      1400000A 
+ 2156      05006400 
+ 2156      000060
+ 2157 0023 EA0000D0 		.ascii	"\352\000\000\320\007\000\000\310\000\000\000\270\355"
+ 2157      070000C8 
+ 2157      000000B8 
+ 2157      ED
+ 2158              		.align	2
+ 2159              	.LC5:
+ 2160 0030 F1D90601 		.ascii	"\361\331\006\001\003\000\360\000\001\373\020"
+ 2160      0300F000 
+ 2160      01FB10
+ 2161 003b 00       		.align	2
+ 2162              	.LC6:
+ 2163 003c F1D90601 		.ascii	"\361\331\006\001\003\000\360\005\001\000\032"
+ 2163      0300F005 
+ 2163      01001A
+ 2164 0047 00       		.align	2
+ 2165              	.LC7:
+ 2166 0048 F1D90601 		.ascii	"\361\331\006\001\003\000\360\001\000\373\021"
+ 2166      0300F001 
+ 2166      00FB11
+ 2167 0053 00       		.align	2
+ 2168              	.LC8:
+ 2169 0054 F1D90601 		.ascii	"\361\331\006\001\003\000\360\002\000\374\023"
+ 2169      0300F002 
+ 2169      00FC13
+ 2170 005f 00       		.align	2
+ 2171              	.LC9:
+ 2172 0060 F1D90601 		.ascii	"\361\331\006\001\003\000\360\003\000\375\025"
+ 2172      0300F003 
+ 2172      00FD15
+ 2173 006b 00       		.align	2
+ 2174              	.LC10:
+ 2175 006c F1D90601 		.ascii	"\361\331\006\001\003\000\360\004\000\376\027"
+ 2175      0300F004 
+ 2175      00FE17
+ 2176 0077 00       		.align	2
+ 2177              	.LC11:
+ 2178 0078 F1D90601 		.ascii	"\361\331\006\001\003\000\360\006\000\000\033"
+ 2178      0300F006 
+ 2178      00001B
+ 2179 0083 00       		.align	2
+ 2180              	.LC12:
+ 2181 0084 F1D90601 		.ascii	"\361\331\006\001\003\000\360\007\000\001\035"
+ 2181      0300F007 
+ 2181      00011D
+ 2182 008f 00       		.align	2
+ 2183              	.LC13:
+ 2184 0090 F1D90601 		.ascii	"\361\331\006\001\003\000\360\010\000\002\037"
+ 2184      0300F008 
+ 2184      00021F
+ 2185 009b 00       		.align	2
+ 2186              	.LC14:
+ 2187 009c F1D90601 		.ascii	"\361\331\006\001\003\000\360@\000:\217"
+ 2187      0300F040 
+ 2187      003A8F
+ 2188 00a7 00       		.align	2
+ 2189              	.LC15:
+ 2190 00a8 F1D90601 		.ascii	"\361\331\006\001\003\000\360 \000\032O"
+ 2190      0300F020 
+ 2190      001A4F
+ 2191              		.section	.text.gnss_init,"ax",%progbits
+ 2192              		.align	1
+ 2193              		.p2align 4,,15
+ 2194              		.global	gnss_init
+ 2195              		.syntax unified
+ 2196              		.thumb
+ 2197              		.thumb_func
+ 2199              	gnss_init:
+ 2200              	.LFB494:
+ 623:libraries/zf_device/zf_device_gnss.c **** 
+ 624:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 625:libraries/zf_device/zf_device_gnss.c **** // 函数简介     GNSS 初始化
+ 626:libraries/zf_device/zf_device_gnss.c **** // 参数说明     void
+ 627:libraries/zf_device/zf_device_gnss.c **** // 返回参数     uint8           操作状态 ZF_NO_ERROR - 完成 其余值为异常
+ 628:libraries/zf_device/zf_device_gnss.c **** // 使用示例     gnss_init();
+ 629:libraries/zf_device/zf_device_gnss.c **** // 备注信息
+ 630:libraries/zf_device/zf_device_gnss.c **** //-------------------------------------------------------------------------------------------------
+ 631:libraries/zf_device/zf_device_gnss.c **** uint8 gnss_init (gnss_type_enum gnss_type)
+ 632:libraries/zf_device/zf_device_gnss.c **** {
+ 2201              		.loc 1 632 1
+ 2202              		.cfi_startproc
+ 2203              		@ args = 0, pretend = 0, frame = 176
+ 2204              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2205 0000 30B5     		push	{r4, r5, lr}
+ 2206              		.cfi_def_cfa_offset 12
+ 2207              		.cfi_offset 4, -12
+ 2208              		.cfi_offset 5, -8
+ 2209              		.cfi_offset 14, -4
+ 2210 0002 ADB0     		sub	sp, sp, #180
+ 2211              		.cfi_def_cfa_offset 192
+ 2212 0004 0346     		mov	r3, r0
+ 2213 0006 8DF80730 		strb	r3, [sp, #7]
+ 633:libraries/zf_device/zf_device_gnss.c ****     uint8 return_state = ZF_ERROR;
+ 2214              		.loc 1 633 11
+ 2215 000a 0123     		movs	r3, #1
+ 2216 000c 8DF8AF30 		strb	r3, [sp, #175]
+ 634:libraries/zf_device/zf_device_gnss.c **** 
+ 635:libraries/zf_device/zf_device_gnss.c ****     const uint8 set_rate[]      = {0xF1, 0xD9, 0x06, 0x42, 0x14, 0x00, 0x00, 0x0A, 0x05, 0x00, 0x64
+ 2217              		.loc 1 635 17
+ 2218 0010 8D4B     		ldr	r3, .L86
+ 2219 0012 24AC     		add	r4, sp, #144
+ 2220 0014 1D46     		mov	r5, r3
+ 2221 0016 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 2222 0018 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 2223 001a 95E80700 		ldm	r5, {r0, r1, r2}
+ 2224 001e 84E80700 		stm	r4, {r0, r1, r2}
+ 636:libraries/zf_device/zf_device_gnss.c ****     const uint8 open_gga[]      = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x00, 0x01, 0xFB, 0x10
+ 2225              		.loc 1 636 17
+ 2226 0022 8A4A     		ldr	r2, .L86+4
+ 2227 0024 21AB     		add	r3, sp, #132
+ 2228 0026 07CA     		ldm	r2, {r0, r1, r2}
+ 2229 0028 03C3     		stmia	r3!, {r0, r1}
+ 2230 002a 1A80     		strh	r2, [r3]	@ movhi
+ 2231 002c 0233     		adds	r3, r3, #2
+ 2232 002e 120C     		lsrs	r2, r2, #16
+ 2233 0030 1A70     		strb	r2, [r3]
+ 637:libraries/zf_device/zf_device_gnss.c ****     const uint8 open_rmc[]      = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x05, 0x01, 0x00, 0x1A
+ 2234              		.loc 1 637 17
+ 2235 0032 874A     		ldr	r2, .L86+8
+ 2236 0034 1EAB     		add	r3, sp, #120
+ 2237 0036 07CA     		ldm	r2, {r0, r1, r2}
+ 2238 0038 03C3     		stmia	r3!, {r0, r1}
+ 2239 003a 1A80     		strh	r2, [r3]	@ movhi
+ 2240 003c 0233     		adds	r3, r3, #2
+ 2241 003e 120C     		lsrs	r2, r2, #16
+ 2242 0040 1A70     		strb	r2, [r3]
+ 638:libraries/zf_device/zf_device_gnss.c **** 
+ 639:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_gll[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x01, 0x00, 0xFB, 0x11
+ 2243              		.loc 1 639 17
+ 2244 0042 844A     		ldr	r2, .L86+12
+ 2245 0044 1BAB     		add	r3, sp, #108
+ 2246 0046 07CA     		ldm	r2, {r0, r1, r2}
+ 2247 0048 03C3     		stmia	r3!, {r0, r1}
+ 2248 004a 1A80     		strh	r2, [r3]	@ movhi
+ 2249 004c 0233     		adds	r3, r3, #2
+ 2250 004e 120C     		lsrs	r2, r2, #16
+ 2251 0050 1A70     		strb	r2, [r3]
+ 640:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_gsa[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x02, 0x00, 0xFC, 0x13
+ 2252              		.loc 1 640 17
+ 2253 0052 814A     		ldr	r2, .L86+16
+ 2254 0054 18AB     		add	r3, sp, #96
+ 2255 0056 07CA     		ldm	r2, {r0, r1, r2}
+ 2256 0058 03C3     		stmia	r3!, {r0, r1}
+ 2257 005a 1A80     		strh	r2, [r3]	@ movhi
+ 2258 005c 0233     		adds	r3, r3, #2
+ 2259 005e 120C     		lsrs	r2, r2, #16
+ 2260 0060 1A70     		strb	r2, [r3]
+ 641:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_grs[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x03, 0x00, 0xFD, 0x15
+ 2261              		.loc 1 641 17
+ 2262 0062 7E4A     		ldr	r2, .L86+20
+ 2263 0064 15AB     		add	r3, sp, #84
+ 2264 0066 07CA     		ldm	r2, {r0, r1, r2}
+ 2265 0068 03C3     		stmia	r3!, {r0, r1}
+ 2266 006a 1A80     		strh	r2, [r3]	@ movhi
+ 2267 006c 0233     		adds	r3, r3, #2
+ 2268 006e 120C     		lsrs	r2, r2, #16
+ 2269 0070 1A70     		strb	r2, [r3]
+ 642:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_gsv[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x04, 0x00, 0xFE, 0x17
+ 2270              		.loc 1 642 17
+ 2271 0072 7B4A     		ldr	r2, .L86+24
+ 2272 0074 12AB     		add	r3, sp, #72
+ 2273 0076 07CA     		ldm	r2, {r0, r1, r2}
+ 2274 0078 03C3     		stmia	r3!, {r0, r1}
+ 2275 007a 1A80     		strh	r2, [r3]	@ movhi
+ 2276 007c 0233     		adds	r3, r3, #2
+ 2277 007e 120C     		lsrs	r2, r2, #16
+ 2278 0080 1A70     		strb	r2, [r3]
+ 643:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_vtg[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x06, 0x00, 0x00, 0x1B
+ 2279              		.loc 1 643 17
+ 2280 0082 784A     		ldr	r2, .L86+28
+ 2281 0084 0FAB     		add	r3, sp, #60
+ 2282 0086 07CA     		ldm	r2, {r0, r1, r2}
+ 2283 0088 03C3     		stmia	r3!, {r0, r1}
+ 2284 008a 1A80     		strh	r2, [r3]	@ movhi
+ 2285 008c 0233     		adds	r3, r3, #2
+ 2286 008e 120C     		lsrs	r2, r2, #16
+ 2287 0090 1A70     		strb	r2, [r3]
+ 644:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_zda[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x07, 0x00, 0x01, 0x1D
+ 2288              		.loc 1 644 17
+ 2289 0092 754A     		ldr	r2, .L86+32
+ 2290 0094 0CAB     		add	r3, sp, #48
+ 2291 0096 07CA     		ldm	r2, {r0, r1, r2}
+ 2292 0098 03C3     		stmia	r3!, {r0, r1}
+ 2293 009a 1A80     		strh	r2, [r3]	@ movhi
+ 2294 009c 0233     		adds	r3, r3, #2
+ 2295 009e 120C     		lsrs	r2, r2, #16
+ 2296 00a0 1A70     		strb	r2, [r3]
+ 645:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_gst[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x08, 0x00, 0x02, 0x1F
+ 2297              		.loc 1 645 17
+ 2298 00a2 724A     		ldr	r2, .L86+36
+ 2299 00a4 09AB     		add	r3, sp, #36
+ 2300 00a6 07CA     		ldm	r2, {r0, r1, r2}
+ 2301 00a8 03C3     		stmia	r3!, {r0, r1}
+ 2302 00aa 1A80     		strh	r2, [r3]	@ movhi
+ 2303 00ac 0233     		adds	r3, r3, #2
+ 2304 00ae 120C     		lsrs	r2, r2, #16
+ 2305 00b0 1A70     		strb	r2, [r3]
+ 646:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_txt[]     = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x40, 0x00, 0x3A, 0x8F
+ 2306              		.loc 1 646 17
+ 2307 00b2 6F4A     		ldr	r2, .L86+40
+ 2308 00b4 06AB     		add	r3, sp, #24
+ 2309 00b6 07CA     		ldm	r2, {r0, r1, r2}
+ 2310 00b8 03C3     		stmia	r3!, {r0, r1}
+ 2311 00ba 1A80     		strh	r2, [r3]	@ movhi
+ 2312 00bc 0233     		adds	r3, r3, #2
+ 2313 00be 120C     		lsrs	r2, r2, #16
+ 2314 00c0 1A70     		strb	r2, [r3]
+ 647:libraries/zf_device/zf_device_gnss.c ****     const uint8 close_txt_ant[] = {0xF1, 0xD9, 0x06, 0x01, 0x03, 0x00, 0xF0, 0x20, 0x00, 0x1A, 0x4F
+ 2315              		.loc 1 647 17
+ 2316 00c2 6C4A     		ldr	r2, .L86+44
+ 2317 00c4 03AB     		add	r3, sp, #12
+ 2318 00c6 07CA     		ldm	r2, {r0, r1, r2}
+ 2319 00c8 03C3     		stmia	r3!, {r0, r1}
+ 2320 00ca 1A80     		strh	r2, [r3]	@ movhi
+ 2321 00cc 0233     		adds	r3, r3, #2
+ 2322 00ce 120C     		lsrs	r2, r2, #16
+ 2323 00d0 1A70     		strb	r2, [r3]
+ 648:libraries/zf_device/zf_device_gnss.c **** 
+ 649:libraries/zf_device/zf_device_gnss.c ****     switch(gnss_type)
+ 2324              		.loc 1 649 5
+ 2325 00d2 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2326 00d6 012B     		cmp	r3, #1
+ 2327 00d8 03D0     		beq	.L81
+ 2328 00da 022B     		cmp	r3, #2
+ 2329 00dc 00F09080 		beq	.L82
+ 650:libraries/zf_device/zf_device_gnss.c ****     {
+ 651:libraries/zf_device/zf_device_gnss.c ****         case GNSS_TYPE_TAU1201:
+ 652:libraries/zf_device/zf_device_gnss.c ****         {
+ 653:libraries/zf_device/zf_device_gnss.c ****             zf_fifo_init(&gnss_receiver_fifo, FIFO_DATA_8BIT, gnss_receiver_buffer, GNSS_BUFFER_SIZ
+ 654:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(500);                                                 // 等待GNSS启动
+ 655:libraries/zf_device/zf_device_gnss.c ****             zf_uart_init(GNSS_UART_INDEX, 115200, GNSS_RX_PIN, GNSS_TX_PIN);
+ 656:libraries/zf_device/zf_device_gnss.c **** 
+ 657:libraries/zf_device/zf_device_gnss.c ****             // 设置GNSS更新速率为10hz 如果不调用此语句则默认为1hz
+ 658:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)set_rate, sizeof(set_rate));
+ 659:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(200);
+ 660:libraries/zf_device/zf_device_gnss.c **** 
+ 661:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)open_rmc, sizeof(open_rmc));
+ 662:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 663:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)open_gga, sizeof(open_gga));
+ 664:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 665:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gll, sizeof(close_gll));
+ 666:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 667:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gsa, sizeof(close_gsa));
+ 668:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 669:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_grs, sizeof(close_grs));
+ 670:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 671:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gsv, sizeof(close_gsv));
+ 672:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 673:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_vtg, sizeof(close_vtg));
+ 674:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 675:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_zda, sizeof(close_zda));
+ 676:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 677:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gst, sizeof(close_gst));
+ 678:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 679:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_txt, sizeof(close_txt));
+ 680:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 681:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_txt_ant, sizeof(close_txt_ant));
+ 682:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 683:libraries/zf_device/zf_device_gnss.c **** 
+ 684:libraries/zf_device/zf_device_gnss.c ****             gnss_state = 1;
+ 685:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_callback(GNSS_UART_INDEX, gnss_uart_callback, NULL);
+ 686:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_config(GNSS_UART_INDEX, UART_INTERRUPT_CONFIG_RX_ENABLE);
+ 687:libraries/zf_device/zf_device_gnss.c **** 
+ 688:libraries/zf_device/zf_device_gnss.c ****             return_state = ZF_NO_ERROR;
+ 689:libraries/zf_device/zf_device_gnss.c ****         }break;
+ 690:libraries/zf_device/zf_device_gnss.c ****         case GNSS_TYPE_GN43RFA:
+ 691:libraries/zf_device/zf_device_gnss.c ****         {
+ 692:libraries/zf_device/zf_device_gnss.c ****             // GN43RFA RTK模块不需要进行参数设置，如果需要修改参数应该使用�
+ 693:libraries/zf_device/zf_device_gnss.c ****             zf_fifo_init(&gnss_receiver_fifo, FIFO_DATA_8BIT, gnss_receiver_buffer, GNSS_BUFFER_SIZ
+ 694:libraries/zf_device/zf_device_gnss.c ****             zf_uart_init(GNSS_UART_INDEX, 115200, GNSS_RX_PIN, GNSS_TX_PIN);
+ 695:libraries/zf_device/zf_device_gnss.c **** 
+ 696:libraries/zf_device/zf_device_gnss.c ****             gnss_state = 1;
+ 697:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_callback(GNSS_UART_INDEX, gnss_uart_callback, NULL);
+ 698:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_config(GNSS_UART_INDEX, UART_INTERRUPT_CONFIG_RX_ENABLE);
+ 699:libraries/zf_device/zf_device_gnss.c **** 
+ 700:libraries/zf_device/zf_device_gnss.c ****             return_state = ZF_NO_ERROR;
+ 701:libraries/zf_device/zf_device_gnss.c ****         }break;
+ 702:libraries/zf_device/zf_device_gnss.c ****         default:
+ 703:libraries/zf_device/zf_device_gnss.c ****         {
+ 704:libraries/zf_device/zf_device_gnss.c ****         }break;
+ 2330              		.loc 1 704 9
+ 2331 00e0 ADE0     		b	.L84
+ 2332              	.L81:
+ 653:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(500);                                                 // 等待GNSS启动
+ 2333              		.loc 1 653 13
+ 2334 00e2 8023     		movs	r3, #128
+ 2335 00e4 644A     		ldr	r2, .L86+48
+ 2336 00e6 0121     		movs	r1, #1
+ 2337 00e8 6448     		ldr	r0, .L86+52
+ 2338 00ea FFF7FEFF 		bl	zf_fifo_init
+ 654:libraries/zf_device/zf_device_gnss.c ****             zf_uart_init(GNSS_UART_INDEX, 115200, GNSS_RX_PIN, GNSS_TX_PIN);
+ 2339              		.loc 1 654 13
+ 2340 00ee 4FF4FA70 		mov	r0, #500
+ 2341 00f2 FFF7FEFF 		bl	zf_delay_ms
+ 655:libraries/zf_device/zf_device_gnss.c **** 
+ 2342              		.loc 1 655 13
+ 2343 00f6 47F2A203 		movw	r3, #28834
+ 2344 00fa 47F2A302 		movw	r2, #28835
+ 2345 00fe 4FF4E131 		mov	r1, #115200
+ 2346 0102 0020     		movs	r0, #0
+ 2347 0104 FFF7FEFF 		bl	zf_uart_init
+ 658:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(200);
+ 2348              		.loc 1 658 13
+ 2349 0108 24AB     		add	r3, sp, #144
+ 2350 010a 1C22     		movs	r2, #28
+ 2351 010c 1946     		mov	r1, r3
+ 2352 010e 0020     		movs	r0, #0
+ 2353 0110 FFF7FEFF 		bl	zf_uart_write_buffer
+ 659:libraries/zf_device/zf_device_gnss.c **** 
+ 2354              		.loc 1 659 13
+ 2355 0114 C820     		movs	r0, #200
+ 2356 0116 FFF7FEFF 		bl	zf_delay_ms
+ 661:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2357              		.loc 1 661 13
+ 2358 011a 1EAB     		add	r3, sp, #120
+ 2359 011c 0B22     		movs	r2, #11
+ 2360 011e 1946     		mov	r1, r3
+ 2361 0120 0020     		movs	r0, #0
+ 2362 0122 FFF7FEFF 		bl	zf_uart_write_buffer
+ 662:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)open_gga, sizeof(open_gga));
+ 2363              		.loc 1 662 13
+ 2364 0126 3220     		movs	r0, #50
+ 2365 0128 FFF7FEFF 		bl	zf_delay_ms
+ 663:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2366              		.loc 1 663 13
+ 2367 012c 21AB     		add	r3, sp, #132
+ 2368 012e 0B22     		movs	r2, #11
+ 2369 0130 1946     		mov	r1, r3
+ 2370 0132 0020     		movs	r0, #0
+ 2371 0134 FFF7FEFF 		bl	zf_uart_write_buffer
+ 664:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gll, sizeof(close_gll));
+ 2372              		.loc 1 664 13
+ 2373 0138 3220     		movs	r0, #50
+ 2374 013a FFF7FEFF 		bl	zf_delay_ms
+ 665:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2375              		.loc 1 665 13
+ 2376 013e 1BAB     		add	r3, sp, #108
+ 2377 0140 0B22     		movs	r2, #11
+ 2378 0142 1946     		mov	r1, r3
+ 2379 0144 0020     		movs	r0, #0
+ 2380 0146 FFF7FEFF 		bl	zf_uart_write_buffer
+ 666:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gsa, sizeof(close_gsa));
+ 2381              		.loc 1 666 13
+ 2382 014a 3220     		movs	r0, #50
+ 2383 014c FFF7FEFF 		bl	zf_delay_ms
+ 667:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2384              		.loc 1 667 13
+ 2385 0150 18AB     		add	r3, sp, #96
+ 2386 0152 0B22     		movs	r2, #11
+ 2387 0154 1946     		mov	r1, r3
+ 2388 0156 0020     		movs	r0, #0
+ 2389 0158 FFF7FEFF 		bl	zf_uart_write_buffer
+ 668:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_grs, sizeof(close_grs));
+ 2390              		.loc 1 668 13
+ 2391 015c 3220     		movs	r0, #50
+ 2392 015e FFF7FEFF 		bl	zf_delay_ms
+ 669:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2393              		.loc 1 669 13
+ 2394 0162 15AB     		add	r3, sp, #84
+ 2395 0164 0B22     		movs	r2, #11
+ 2396 0166 1946     		mov	r1, r3
+ 2397 0168 0020     		movs	r0, #0
+ 2398 016a FFF7FEFF 		bl	zf_uart_write_buffer
+ 670:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gsv, sizeof(close_gsv));
+ 2399              		.loc 1 670 13
+ 2400 016e 3220     		movs	r0, #50
+ 2401 0170 FFF7FEFF 		bl	zf_delay_ms
+ 671:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2402              		.loc 1 671 13
+ 2403 0174 12AB     		add	r3, sp, #72
+ 2404 0176 0B22     		movs	r2, #11
+ 2405 0178 1946     		mov	r1, r3
+ 2406 017a 0020     		movs	r0, #0
+ 2407 017c FFF7FEFF 		bl	zf_uart_write_buffer
+ 672:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_vtg, sizeof(close_vtg));
+ 2408              		.loc 1 672 13
+ 2409 0180 3220     		movs	r0, #50
+ 2410 0182 FFF7FEFF 		bl	zf_delay_ms
+ 673:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2411              		.loc 1 673 13
+ 2412 0186 0FAB     		add	r3, sp, #60
+ 2413 0188 0B22     		movs	r2, #11
+ 2414 018a 1946     		mov	r1, r3
+ 2415 018c 0020     		movs	r0, #0
+ 2416 018e FFF7FEFF 		bl	zf_uart_write_buffer
+ 674:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_zda, sizeof(close_zda));
+ 2417              		.loc 1 674 13
+ 2418 0192 3220     		movs	r0, #50
+ 2419 0194 FFF7FEFF 		bl	zf_delay_ms
+ 675:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2420              		.loc 1 675 13
+ 2421 0198 0CAB     		add	r3, sp, #48
+ 2422 019a 0B22     		movs	r2, #11
+ 2423 019c 1946     		mov	r1, r3
+ 2424 019e 0020     		movs	r0, #0
+ 2425 01a0 FFF7FEFF 		bl	zf_uart_write_buffer
+ 676:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_gst, sizeof(close_gst));
+ 2426              		.loc 1 676 13
+ 2427 01a4 3220     		movs	r0, #50
+ 2428 01a6 FFF7FEFF 		bl	zf_delay_ms
+ 677:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2429              		.loc 1 677 13
+ 2430 01aa 09AB     		add	r3, sp, #36
+ 2431 01ac 0B22     		movs	r2, #11
+ 2432 01ae 1946     		mov	r1, r3
+ 2433 01b0 0020     		movs	r0, #0
+ 2434 01b2 FFF7FEFF 		bl	zf_uart_write_buffer
+ 678:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_txt, sizeof(close_txt));
+ 2435              		.loc 1 678 13
+ 2436 01b6 3220     		movs	r0, #50
+ 2437 01b8 FFF7FEFF 		bl	zf_delay_ms
+ 679:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2438              		.loc 1 679 13
+ 2439 01bc 06AB     		add	r3, sp, #24
+ 2440 01be 0B22     		movs	r2, #11
+ 2441 01c0 1946     		mov	r1, r3
+ 2442 01c2 0020     		movs	r0, #0
+ 2443 01c4 FFF7FEFF 		bl	zf_uart_write_buffer
+ 680:libraries/zf_device/zf_device_gnss.c ****             zf_uart_write_buffer(GNSS_UART_INDEX, (uint8 *)close_txt_ant, sizeof(close_txt_ant));
+ 2444              		.loc 1 680 13
+ 2445 01c8 3220     		movs	r0, #50
+ 2446 01ca FFF7FEFF 		bl	zf_delay_ms
+ 681:libraries/zf_device/zf_device_gnss.c ****             gnss_delay_ms(50);
+ 2447              		.loc 1 681 13
+ 2448 01ce 03AB     		add	r3, sp, #12
+ 2449 01d0 0B22     		movs	r2, #11
+ 2450 01d2 1946     		mov	r1, r3
+ 2451 01d4 0020     		movs	r0, #0
+ 2452 01d6 FFF7FEFF 		bl	zf_uart_write_buffer
+ 682:libraries/zf_device/zf_device_gnss.c **** 
+ 2453              		.loc 1 682 13
+ 2454 01da 3220     		movs	r0, #50
+ 2455 01dc FFF7FEFF 		bl	zf_delay_ms
+ 684:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_callback(GNSS_UART_INDEX, gnss_uart_callback, NULL);
+ 2456              		.loc 1 684 24
+ 2457 01e0 274B     		ldr	r3, .L86+56
+ 2458 01e2 0122     		movs	r2, #1
+ 2459 01e4 1A70     		strb	r2, [r3]
+ 685:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_config(GNSS_UART_INDEX, UART_INTERRUPT_CONFIG_RX_ENABLE);
+ 2460              		.loc 1 685 13
+ 2461 01e6 0022     		movs	r2, #0
+ 2462 01e8 2649     		ldr	r1, .L86+60
+ 2463 01ea 0020     		movs	r0, #0
+ 2464 01ec FFF7FEFF 		bl	zf_uart_set_interrupt_callback
+ 686:libraries/zf_device/zf_device_gnss.c **** 
+ 2465              		.loc 1 686 13
+ 2466 01f0 0421     		movs	r1, #4
+ 2467 01f2 0020     		movs	r0, #0
+ 2468 01f4 FFF7FEFF 		bl	zf_uart_set_interrupt_config
+ 688:libraries/zf_device/zf_device_gnss.c ****         }break;
+ 2469              		.loc 1 688 26
+ 2470 01f8 0023     		movs	r3, #0
+ 2471 01fa 8DF8AF30 		strb	r3, [sp, #175]
+ 689:libraries/zf_device/zf_device_gnss.c ****         case GNSS_TYPE_GN43RFA:
+ 2472              		.loc 1 689 9
+ 2473 01fe 1EE0     		b	.L84
+ 2474              	.L82:
+ 693:libraries/zf_device/zf_device_gnss.c ****             zf_uart_init(GNSS_UART_INDEX, 115200, GNSS_RX_PIN, GNSS_TX_PIN);
+ 2475              		.loc 1 693 13
+ 2476 0200 8023     		movs	r3, #128
+ 2477 0202 1D4A     		ldr	r2, .L86+48
+ 2478 0204 0121     		movs	r1, #1
+ 2479 0206 1D48     		ldr	r0, .L86+52
+ 2480 0208 FFF7FEFF 		bl	zf_fifo_init
+ 694:libraries/zf_device/zf_device_gnss.c **** 
+ 2481              		.loc 1 694 13
+ 2482 020c 47F2A203 		movw	r3, #28834
+ 2483 0210 47F2A302 		movw	r2, #28835
+ 2484 0214 4FF4E131 		mov	r1, #115200
+ 2485 0218 0020     		movs	r0, #0
+ 2486 021a FFF7FEFF 		bl	zf_uart_init
+ 696:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_callback(GNSS_UART_INDEX, gnss_uart_callback, NULL);
+ 2487              		.loc 1 696 24
+ 2488 021e 184B     		ldr	r3, .L86+56
+ 2489 0220 0122     		movs	r2, #1
+ 2490 0222 1A70     		strb	r2, [r3]
+ 697:libraries/zf_device/zf_device_gnss.c ****             zf_uart_set_interrupt_config(GNSS_UART_INDEX, UART_INTERRUPT_CONFIG_RX_ENABLE);
+ 2491              		.loc 1 697 13
+ 2492 0224 0022     		movs	r2, #0
+ 2493 0226 1749     		ldr	r1, .L86+60
+ 2494 0228 0020     		movs	r0, #0
+ 2495 022a FFF7FEFF 		bl	zf_uart_set_interrupt_callback
+ 698:libraries/zf_device/zf_device_gnss.c **** 
+ 2496              		.loc 1 698 13
+ 2497 022e 0421     		movs	r1, #4
+ 2498 0230 0020     		movs	r0, #0
+ 2499 0232 FFF7FEFF 		bl	zf_uart_set_interrupt_config
+ 700:libraries/zf_device/zf_device_gnss.c ****         }break;
+ 2500              		.loc 1 700 26
+ 2501 0236 0023     		movs	r3, #0
+ 2502 0238 8DF8AF30 		strb	r3, [sp, #175]
+ 701:libraries/zf_device/zf_device_gnss.c ****         default:
+ 2503              		.loc 1 701 9
+ 2504 023c 00BF     		nop
+ 2505              	.L84:
+ 705:libraries/zf_device/zf_device_gnss.c ****     }
+ 706:libraries/zf_device/zf_device_gnss.c **** 
+ 707:libraries/zf_device/zf_device_gnss.c ****     return return_state;
+ 2506              		.loc 1 707 12
+ 2507 023e 9DF8AF30 		ldrb	r3, [sp, #175]	@ zero_extendqisi2
+ 708:libraries/zf_device/zf_device_gnss.c **** }
+ 2508              		.loc 1 708 1
+ 2509 0242 1846     		mov	r0, r3
+ 2510 0244 2DB0     		add	sp, sp, #180
+ 2511              		.cfi_def_cfa_offset 12
+ 2512              		@ sp needed
+ 2513 0246 30BD     		pop	{r4, r5, pc}
+ 2514              	.L87:
+ 2515              		.align	2
+ 2516              	.L86:
+ 2517 0248 14000000 		.word	.LC4
+ 2518 024c 30000000 		.word	.LC5
+ 2519 0250 3C000000 		.word	.LC6
+ 2520 0254 48000000 		.word	.LC7
+ 2521 0258 54000000 		.word	.LC8
+ 2522 025c 60000000 		.word	.LC9
+ 2523 0260 6C000000 		.word	.LC10
+ 2524 0264 78000000 		.word	.LC11
+ 2525 0268 84000000 		.word	.LC12
+ 2526 026c 90000000 		.word	.LC13
+ 2527 0270 9C000000 		.word	.LC14
+ 2528 0274 A8000000 		.word	.LC15
+ 2529 0278 00000000 		.word	gnss_receiver_buffer
+ 2530 027c 00000000 		.word	gnss_receiver_fifo
+ 2531 0280 00000000 		.word	gnss_state
+ 2532 0284 00000000 		.word	gnss_uart_callback
+ 2533              		.cfi_endproc
+ 2534              	.LFE494:
+ 2536              		.text
+ 2537              	.Letext0:
+ 2538              		.file 2 "libraries/zf_common/zf_common_typedef.h"
+ 2539              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 2540              		.file 4 "libraries/zf_common/zf_common_fifo.h"
+ 2541              		.file 5 "libraries/zf_driver/zf_driver_gpio.h"
+ 2542              		.file 6 "libraries/zf_driver/zf_driver_adc.h"
+ 2543              		.file 7 "libraries/zf_driver/zf_driver_can.h"
+ 2544              		.file 8 "libraries/zf_driver/zf_driver_encoder.h"
+ 2545              		.file 9 "libraries/zf_driver/zf_driver_exti.h"
+ 2546              		.file 10 "libraries/zf_driver/zf_driver_hrtim.h"
+ 2547              		.file 11 "libraries/zf_driver/zf_driver_pwm.h"
+ 2548              		.file 12 "libraries/zf_driver/zf_driver_spi.h"
+ 2549              		.file 13 "libraries/zf_driver/zf_driver_uart.h"
+ 2550              		.file 14 "libraries/zf_device/zf_device_gnss.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_device_gnss.c
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:22     .bss.gnss_flag:00000000 gnss_flag
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:23     .bss.gnss_flag:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:29     .bss.gnss_info:00000000 gnss_info
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:26     .bss.gnss_info:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:34     .bss.gnss_state:00000000 gnss_state
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:35     .bss.gnss_state:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:37     .bss.gnss_receiver_fifo:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:40     .bss.gnss_receiver_fifo:00000000 gnss_receiver_fifo
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:43     .bss.gnss_receiver_buffer:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:46     .bss.gnss_receiver_buffer:00000000 gnss_receiver_buffer
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:51     .bss.gnss_gga_state:00000000 gnss_gga_state
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:52     .bss.gnss_gga_state:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:56     .bss.gnss_rmc_state:00000000 gnss_rmc_state
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:57     .bss.gnss_rmc_state:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:61     .bss.gnss_ths_state:00000000 gnss_ths_state
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:62     .bss.gnss_ths_state:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:64     .bss.gnss_gga_buffer:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:67     .bss.gnss_gga_buffer:00000000 gnss_gga_buffer
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:70     .bss.gnss_rmc_buffer:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:73     .bss.gnss_rmc_buffer:00000000 gnss_rmc_buffer
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:76     .bss.gnss_ths_buffer:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:79     .bss.gnss_ths_buffer:00000000 gnss_ths_buffer
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:82     .text.get_parameter_index:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:88     .text.get_parameter_index:00000000 get_parameter_index
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:190    .text.get_int_number:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:196    .text.get_int_number:00000000 get_int_number
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:254    .text.get_float_number:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:260    .text.get_float_number:00000000 get_float_number
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:322    .text.get_double_number:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:328    .text.get_double_number:00000000 get_double_number
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:388    .text.utc_to_btc:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:394    .text.utc_to_btc:00000000 utc_to_btc
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:572    .text.utc_to_btc:00000104 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:577    .text.gnss_gnrmc_parse:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:583    .text.gnss_gnrmc_parse:00000000 gnss_gnrmc_parse
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1085   .text.gnss_gnrmc_parse:000003f8 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1095   .text.gnss_gngga_parse:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1101   .text.gnss_gngga_parse:00000000 gnss_gngga_parse
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1209   .text.gnss_gnths_parse:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1215   .text.gnss_gnths_parse:00000000 gnss_gnths_parse
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1294   .rodata:00000000 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1304   .text.gnss_uart_callback:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1310   .text.gnss_uart_callback:00000000 gnss_uart_callback
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1491   .text.gnss_uart_callback:00000114 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1507   .text.gnss_get_two_points_distance:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1514   .text.gnss_get_two_points_distance:00000000 gnss_get_two_points_distance
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1677   .text.gnss_get_two_points_distance:000001b0 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1687   .text.gnss_get_two_points_azimuth:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1694   .text.gnss_get_two_points_azimuth:00000000 gnss_get_two_points_azimuth
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1833   .text.gnss_get_two_points_azimuth:00000158 $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1847   .text.gnss_data_parse:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:1854   .text.gnss_data_parse:00000000 gnss_data_parse
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:2142   .text.gnss_data_parse:000001cc $d
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:2192   .text.gnss_init:00000000 $t
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:2199   .text.gnss_init:00000000 gnss_init
+C:\user\default\AppData\Local\Temp\cctoxaXY.s:2517   .text.gnss_init:00000248 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stddef.h.39.27677723d43e5b5a7afdf8d798429f1d
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.math.h.13.b6595ad277a643a6127e1a4515a98f91
+                           .group:00000000 wm4.stdio.h.27.3fc80220048df77954e38daec3bb9670
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.33.6d362bbaa8a8ff23e6f5c0a30bf7361f
+                           .group:00000000 wm4.zf_common_fifo.h.33.e14e643902e26e4e65437b5b20e82793
+                           .group:00000000 wm4.zf_common_function.h.33.02bbfb055e8ee322bc4f8b14ea195da2
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.saradc.h.25.e5a70aef9ec4fddf35f2b7cc0c9cf1bc
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_adc.h.64.349fb433626b42172b0e0fee038428ca
+                           .group:00000000 wm4.can.h.25.3cfccb6c630ada4f656cab597e231e58
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.zf_driver_can.h.67.fd10d2fa867eb54a54d4b57027d73a60
+                           .group:00000000 wm4.tim.h.25.6e7ad96569e77a70a68b9b4cc59f54f2
+                           .group:00000000 wm4.zf_driver_timer.h.33.8df253b6990d9861816977209fb11e90
+                           .group:00000000 wm4.zf_driver_encoder.h.57.7e32999f25354fac086ca226b0c630d4
+                           .group:00000000 wm4.exti.h.25.21597c35d9630b0985ce88d2c41f4ea4
+                           .group:00000000 wm4.zf_driver_exti.h.59.1b02b8083e5295ef5baaf83905d59395
+                           .group:00000000 wm4.ssd_types.h.29.b861f4e6d39d333f931bfc05b964cb1c
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.zf_driver_flash.h.59.db93fe574c35ea9e79030063fbb35a13
+                           .group:00000000 wm4.hrtim.h.25.1601aea9d4a0da1de8252dc444355251
+                           .group:00000000 wm4.zf_driver_hrtim.h.64.cd8d2bf3bf1c471ea59d9c61e4a721d7
+                           .group:00000000 wm4.zf_driver_interrupt.h.33.2c3660dcc36cb090bd75b8f180c14f27
+                           .group:00000000 wm4.zf_driver_pit.h.33.834ac720a62e09d5603a9557331e9049
+                           .group:00000000 wm4.zf_driver_pwm.h.33.7d80487064ca712231a453396685a551
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.zf_driver_soft_iic.h.33.9067bd298084134f63c61c075f95fa2b
+                           .group:00000000 wm4.zf_driver_soft_spi.h.33.a938287c023905d97cafe56e4be63674
+                           .group:00000000 wm4.zf_driver_spi.h.62.950b1f52ed365034df2907601137b455
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.zf_driver_uart.h.70.ffcf3694337ad0b4066179f1abd5d668
+                           .group:00000000 wm4.zf_device_gnss.h.66.39fe53860d2d190725612db126de8287
+
+UNDEFINED SYMBOLS
+strchr
+strncpy
+zf_function_str_to_int
+zf_function_str_to_double
+zf_fifo_write_buffer
+zf_uart_query_byte
+zf_fifo_read_buffer
+strncmp
+zf_fifo_used
+zf_fifo_clear
+sin
+pow
+cos
+sqrt
+asin
+atan2
+zf_function_str_to_hex
+zf_fifo_init
+zf_delay_ms
+zf_uart_init
+zf_uart_write_buffer
+zf_uart_set_interrupt_callback
+zf_uart_set_interrupt_config

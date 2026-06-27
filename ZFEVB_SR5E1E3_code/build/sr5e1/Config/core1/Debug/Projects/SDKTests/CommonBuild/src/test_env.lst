@@ -1,0 +1,351 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"test_env.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.Config_init,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	Config_init:
+  26              	.LFB469:
+  27              		.file 1 "src-gen/Config.h"
+   1:src-gen/Config.h **** /****************************************************************************
+   2:src-gen/Config.h **** *
+   3:src-gen/Config.h **** * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:src-gen/Config.h **** *
+   5:src-gen/Config.h **** * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:src-gen/Config.h **** * terms SLA0098 at www.st.com.
+   7:src-gen/Config.h **** *
+   8:src-gen/Config.h **** * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:src-gen/Config.h **** * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:src-gen/Config.h **** *
+  11:src-gen/Config.h **** * PLEASE NOTE THAT THIS FILE IS GENERATED FROM A CONFIGURATION FILE,
+  12:src-gen/Config.h **** * USING com.st.stellar.pinmap.gpiocfg, Version 2.1.0.202410151503
+  13:src-gen/Config.h **** * MODIFYING IT IMPLIES POTENTIAL LOSS OF YOUR MODIFICATIONS.
+  14:src-gen/Config.h **** *
+  15:src-gen/Config.h **** *****************************************************************************/
+  16:src-gen/Config.h **** /**
+  17:src-gen/Config.h ****  * @file    Config.h
+  18:src-gen/Config.h ****  * @brief   SR5E1-ZFEVB_SR5E1E3_EMPTY_PORJECT board header file.
+  19:src-gen/Config.h ****  *
+  20:src-gen/Config.h ****  * @addtogroup PLATFORM
+  21:src-gen/Config.h ****  * @addtogroup BOARD
+  22:src-gen/Config.h ****  * @ingroup PLATFORM
+  23:src-gen/Config.h ****  * @addtogroup CONFIG
+  24:src-gen/Config.h ****  * @ingroup BOARD
+  25:src-gen/Config.h ****  * @{
+  26:src-gen/Config.h ****  */
+  27:src-gen/Config.h **** 
+  28:src-gen/Config.h **** #ifndef _CONFIG_H_
+  29:src-gen/Config.h **** #define _CONFIG_H_
+  30:src-gen/Config.h **** 
+  31:src-gen/Config.h **** #include <gpio.h>
+  32:src-gen/Config.h **** #include <platform.h>
+  33:src-gen/Config.h **** #include <typedefs.h>
+  34:src-gen/Config.h **** 
+  35:src-gen/Config.h **** 
+  36:src-gen/Config.h **** /*===========================================================================*/
+  37:src-gen/Config.h **** /* Module constants.                                                         */
+  38:src-gen/Config.h **** /*===========================================================================*/
+  39:src-gen/Config.h **** 
+  40:src-gen/Config.h **** #define ZFEVB_SR5E1E3_EMPTY_PORJECT	1
+  41:src-gen/Config.h **** 
+  42:src-gen/Config.h **** 
+  43:src-gen/Config.h **** /*===========================================================================*/
+  44:src-gen/Config.h **** /* Module pre-compile time settings.                                         */
+  45:src-gen/Config.h **** /*===========================================================================*/
+  46:src-gen/Config.h **** 
+  47:src-gen/Config.h **** /*===========================================================================*/
+  48:src-gen/Config.h **** /* Derived constants and error checks.                                       */
+  49:src-gen/Config.h **** /*===========================================================================*/
+  50:src-gen/Config.h **** 
+  51:src-gen/Config.h **** /*===========================================================================*/
+  52:src-gen/Config.h **** /* Module data structures and types.                                         */
+  53:src-gen/Config.h **** /*===========================================================================*/
+  54:src-gen/Config.h **** 
+  55:src-gen/Config.h **** /*===========================================================================*/
+  56:src-gen/Config.h **** /* Module macros.                                                            */
+  57:src-gen/Config.h **** /*===========================================================================*/
+  58:src-gen/Config.h **** 
+  59:src-gen/Config.h **** /*===========================================================================*/
+  60:src-gen/Config.h **** /* External declarations.                                                    */
+  61:src-gen/Config.h **** /*===========================================================================*/
+  62:src-gen/Config.h **** 
+  63:src-gen/Config.h **** #if !defined(_FROM_ASM_)
+  64:src-gen/Config.h **** #ifdef __cplusplus
+  65:src-gen/Config.h **** extern "C" {
+  66:src-gen/Config.h **** #endif
+  67:src-gen/Config.h **** 
+  68:src-gen/Config.h **** #ifdef __cplusplus
+  69:src-gen/Config.h **** }
+  70:src-gen/Config.h **** #endif
+  71:src-gen/Config.h **** #endif /* _FROM_ASM_ */
+  72:src-gen/Config.h **** 
+  73:src-gen/Config.h **** /*===========================================================================*/
+  74:src-gen/Config.h **** /* Module inline functions.                                                  */
+  75:src-gen/Config.h **** /*===========================================================================*/
+  76:src-gen/Config.h **** 
+  77:src-gen/Config.h **** 
+  78:src-gen/Config.h **** __STATIC_INLINE void Config_init(void) {
+  28              		.loc 1 78 40
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  79:src-gen/Config.h **** 	
+  80:src-gen/Config.h **** }
+  33              		.loc 1 80 1
+  34 0000 00BF     		nop
+  35 0002 7047     		bx	lr
+  36              		.cfi_endproc
+  37              	.LFE469:
+  39              		.section	.text.test_env_init,"ax",%progbits
+  40              		.align	1
+  41              		.p2align 4,,15
+  42              		.global	test_env_init
+  43              		.syntax unified
+  44              		.thumb
+  45              		.thumb_func
+  47              	test_env_init:
+  48              	.LFB470:
+  49              		.file 2 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src/test_env.c"
+   1:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /****************************************************************************
+   2:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  *
+   3:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  *
+   5:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * terms SLA0098 at www.st.com.
+   7:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  *
+   8:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  *
+  11:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  *****************************************************************************/
+  12:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /**
+  13:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @file    test_env.c
+  14:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @brief   Common test environment code.
+  15:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  *
+  16:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @addtogroup PROJECTS
+  17:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @addtogroup SDKTESTS
+  18:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @ingroup PROJECTS
+  19:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @addtogroup COMMON
+  20:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @ingroup SDKTESTS
+  21:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @{
+  22:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  */
+  23:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  24:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #include <test_env.h>
+  25:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  26:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  27:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver configuration.                                                     */
+  28:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  29:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  30:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  31:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver forward declarations.                                              */
+  32:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  33:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  34:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  35:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver defines.                                                           */
+  36:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  37:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  38:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  39:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver local variables and types.                                         */
+  40:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  41:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  42:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  43:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver exported variables.                                                */
+  44:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  45:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  46:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  47:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver local functions.                                                   */
+  48:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  49:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  50:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  51:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver interrupt handlers.                                                */
+  52:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  53:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  54:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  55:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Driver exported functions.                                                */
+  56:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /*===========================================================================*/
+  57:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  58:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /**
+  59:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @brief   Initializes test environment
+  60:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  *
+  61:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @init
+  62:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @par Description
+  63:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @details Initializes the test environment.
+  64:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @param   test_init   Bit-mask of modules to be initialized
+  65:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @sa gst_start
+  66:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  * @sa gst_stop
+  67:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****  */
+  68:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** void test_env_init(TestInit_t test_init)
+  69:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** {
+  50              		.loc 2 69 1
+  51              		.cfi_startproc
+  52              		@ args = 0, pretend = 0, frame = 8
+  53              		@ frame_needed = 0, uses_anonymous_args = 0
+  54 0000 00B5     		push	{lr}
+  55              		.cfi_def_cfa_offset 4
+  56              		.cfi_offset 14, -4
+  57 0002 83B0     		sub	sp, sp, #12
+  58              		.cfi_def_cfa_offset 16
+  59 0004 0346     		mov	r3, r0
+  60 0006 ADF80630 		strh	r3, [sp, #6]	@ movhi
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #if defined(BUILD_PLATFORM_CLOCK)
+  71:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     if ((test_init & TEST_INIT_CLOCK) != 0u) {
+  61              		.loc 2 71 20
+  62 000a BDF80630 		ldrh	r3, [sp, #6]
+  63 000e 03F00103 		and	r3, r3, #1
+  64              		.loc 2 71 8
+  65 0012 002B     		cmp	r3, #0
+  66 0014 01D0     		beq	.L3
+  72:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****         clock_init();
+  67              		.loc 2 72 9
+  68 0016 FFF7FEFF 		bl	clock_init
+  69              	.L3:
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     }
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #endif
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  76:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** /* Since board initialization uses the GPIO driver, the GPIO initialization
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****    must be done before the board initialization.*/
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #if defined(BUILD_DRIVERS_GPIO)
+  79:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     if ((test_init & TEST_INIT_GPIO) != 0u) {
+  70              		.loc 2 79 20
+  71 001a BDF80630 		ldrh	r3, [sp, #6]
+  72 001e 03F00203 		and	r3, r3, #2
+  73              		.loc 2 79 8
+  74 0022 002B     		cmp	r3, #0
+  75 0024 01D0     		beq	.L4
+  80:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****         gpio_init();
+  76              		.loc 2 80 9
+  77 0026 FFF7FEFF 		bl	gpio_init
+  78              	.L4:
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     }
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #endif
+  83:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  84:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #if defined(BUILD_PLATFORM_BOARD)
+  85:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     if ((test_init & TEST_INIT_BOARD) != 0u) {
+  79              		.loc 2 85 20
+  80 002a BDF80630 		ldrh	r3, [sp, #6]
+  81 002e 03F00403 		and	r3, r3, #4
+  82              		.loc 2 85 8
+  83 0032 002B     		cmp	r3, #0
+  84 0034 01D0     		beq	.L5
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****         BOARD_INIT_FUNC(BOARD_NAME);
+  85              		.loc 2 86 9
+  86 0036 FFF7FEFF 		bl	Config_init
+  87              	.L5:
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     }
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #endif
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** 
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #if defined(BUILD_OS_OSAL)
+  91:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     if ((test_init & TEST_INIT_OSAL) != 0u) {
+  88              		.loc 2 91 20
+  89 003a BDF80630 		ldrh	r3, [sp, #6]
+  90 003e 03F01003 		and	r3, r3, #16
+  91              		.loc 2 91 8
+  92 0042 002B     		cmp	r3, #0
+  93 0044 01D0     		beq	.L7
+  92:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****         osal_init();
+  94              		.loc 2 92 9
+  95 0046 FFF7FEFF 		bl	osal_init
+  96              	.L7:
+  93:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c ****     }
+  94:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** #endif
+  95:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/src\test_env.c **** }
+  97              		.loc 2 95 1
+  98 004a 00BF     		nop
+  99 004c 03B0     		add	sp, sp, #12
+ 100              		.cfi_def_cfa_offset 4
+ 101              		@ sp needed
+ 102 004e 5DF804FB 		ldr	pc, [sp], #4
+ 103              		.cfi_endproc
+ 104              	.LFE470:
+ 106              		.text
+ 107              	.Letext0:
+ 108              		.file 3 "../../SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/include/test_env.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 test_env.c
+D:\Users\TMP\ccT0vSyp.s:19     .text.Config_init:00000000 $t
+D:\Users\TMP\ccT0vSyp.s:25     .text.Config_init:00000000 Config_init
+D:\Users\TMP\ccT0vSyp.s:40     .text.test_env_init:00000000 $t
+D:\Users\TMP\ccT0vSyp.s:47     .text.test_env_init:00000000 test_env_init
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stddef.h.39.27677723d43e5b5a7afdf8d798429f1d
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.features.h.33.5bd1eea2d80518b50f7af0b5ce6750e0
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.osal.h.23.3c8c063d5d712ffba7d9086068a59ae1
+                           .group:00000000 wm4.test_env.h.57.690797a2e7b6aa0f01d5a7ba687211c6
+                           .group:00000000 wm4.Config.h.29.490ac862f1b0f873ec89fdcd6ceef99f
+
+UNDEFINED SYMBOLS
+clock_init
+gpio_init
+osal_init

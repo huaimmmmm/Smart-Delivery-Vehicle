@@ -1,0 +1,3454 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_spi.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.rodata.spi_rcc_index_list,"a"
+  19              		.align	2
+  22              	spi_rcc_index_list:
+  23 0000 7501     		.short	373
+  24 0002 7401     		.short	372
+  25 0004 8401     		.short	388
+  26 0006 8501     		.short	389
+  27              		.global	spi_obj_list
+  28              		.section	.data.spi_obj_list,"aw"
+  29              		.align	2
+  32              	spi_obj_list:
+  33 0000 005C0042 		.word	1107319808
+  34 0004 80D1F008 		.word	150000000
+  35 0008 FF0F     		.short	4095
+  36 000a FF0F     		.short	4095
+  37 000c FF0F     		.short	4095
+  38 000e FF0F     		.short	4095
+  39 0010 00000000 		.word	0
+  40 0014 00000000 		.word	0
+  41 0018 005C0040 		.word	1073765376
+  42 001c C0687804 		.word	75000000
+  43 0020 FF0F     		.short	4095
+  44 0022 FF0F     		.short	4095
+  45 0024 FF0F     		.short	4095
+  46 0026 FF0F     		.short	4095
+  47 0028 00000000 		.word	0
+  48 002c 00000000 		.word	0
+  49 0030 00600040 		.word	1073766400
+  50 0034 C0687804 		.word	75000000
+  51 0038 FF0F     		.short	4095
+  52 003a FF0F     		.short	4095
+  53 003c FF0F     		.short	4095
+  54 003e FF0F     		.short	4095
+  55 0040 00000000 		.word	0
+  56 0044 00000000 		.word	0
+  57 0048 00600042 		.word	1107320832
+  58 004c 80D1F008 		.word	150000000
+  59 0050 FF0F     		.short	4095
+  60 0052 FF0F     		.short	4095
+  61 0054 FF0F     		.short	4095
+  62 0056 FF0F     		.short	4095
+  63 0058 00000000 		.word	0
+  64 005c 00000000 		.word	0
+  65              		.section	.text.zf_spi_assert_handler,"ax",%progbits
+  66              		.align	1
+  67              		.p2align 4,,15
+  68              		.global	zf_spi_assert_handler
+  69              		.syntax unified
+  70              		.thumb
+  71              		.thumb_func
+  73              	zf_spi_assert_handler:
+  74              	.LFB180:
+  75              		.file 1 "libraries/zf_driver/zf_driver_spi.c"
+   1:libraries/zf_driver/zf_driver_spi.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_spi.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_spi.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_spi.c **** *
+   5:libraries/zf_driver/zf_driver_spi.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_spi.c **** *
+   7:libraries/zf_driver/zf_driver_spi.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_spi.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_spi.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_spi.c **** *
+  11:libraries/zf_driver/zf_driver_spi.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_spi.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_spi.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_spi.c **** *
+  15:libraries/zf_driver/zf_driver_spi.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_spi.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_spi.c **** *
+  18:libraries/zf_driver/zf_driver_spi.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_spi.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_spi.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_spi.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_spi.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_spi.c **** *
+  24:libraries/zf_driver/zf_driver_spi.c **** * 文件名称          zf_driver_spi
+  25:libraries/zf_driver/zf_driver_spi.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_spi.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_spi.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_spi.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_spi.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_spi.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_spi.c **** 
+  32:libraries/zf_driver/zf_driver_spi.c **** // zf_common 层引用
+  33:libraries/zf_driver/zf_driver_spi.c **** #include "zf_common_debug.h"
+  34:libraries/zf_driver/zf_driver_spi.c **** #include "zf_common_memory.h"
+  35:libraries/zf_driver/zf_driver_spi.c **** 
+  36:libraries/zf_driver/zf_driver_spi.c **** // zf_driver 层引用
+  37:libraries/zf_driver/zf_driver_spi.c **** #include "zf_driver_interrupt.h"
+  38:libraries/zf_driver/zf_driver_spi.c **** #include "zf_driver_rcc.h"
+  39:libraries/zf_driver/zf_driver_spi.c **** #include "zf_driver_system.h"
+  40:libraries/zf_driver/zf_driver_spi.c **** 
+  41:libraries/zf_driver/zf_driver_spi.c **** // 自身头文件
+  42:libraries/zf_driver/zf_driver_spi.c **** #include "zf_driver_spi.h"
+  43:libraries/zf_driver/zf_driver_spi.c **** 
+  44:libraries/zf_driver/zf_driver_spi.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  45:libraries/zf_driver/zf_driver_spi.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  46:libraries/zf_driver/zf_driver_spi.c **** // 用于固定值或指向的内容 主要是用少量存储占用来减少栈开销
+  47:libraries/zf_driver/zf_driver_spi.c **** static const zf_rcc_index_enum spi_rcc_index_list[SPI_NUM_MAX] =
+  48:libraries/zf_driver/zf_driver_spi.c **** {
+  49:libraries/zf_driver/zf_driver_spi.c ****     RCC_INDEX_SPI1, RCC_INDEX_SPI2, RCC_INDEX_SPI3, RCC_INDEX_SPI4
+  50:libraries/zf_driver/zf_driver_spi.c **** };
+  51:libraries/zf_driver/zf_driver_spi.c **** 
+  52:libraries/zf_driver/zf_driver_spi.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  53:libraries/zf_driver/zf_driver_spi.c **** AT_ZF_LIB_SECTION_START
+  54:libraries/zf_driver/zf_driver_spi.c **** AT_ZF_LIB_SECTION zf_spi_obj_struct spi_obj_list[SPI_NUM_MAX] =
+  55:libraries/zf_driver/zf_driver_spi.c **** {
+  56:libraries/zf_driver/zf_driver_spi.c ****     {.spi_ptr = SPI1, .clock_input = 150000000, .sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pi
+  57:libraries/zf_driver/zf_driver_spi.c ****     {.spi_ptr = SPI2, .clock_input =  75000000, .sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pi
+  58:libraries/zf_driver/zf_driver_spi.c ****     {.spi_ptr = SPI3, .clock_input =  75000000, .sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pi
+  59:libraries/zf_driver/zf_driver_spi.c ****     {.spi_ptr = SPI4, .clock_input = 150000000, .sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pi
+  60:libraries/zf_driver/zf_driver_spi.c **** };
+  61:libraries/zf_driver/zf_driver_spi.c **** AT_ZF_LIB_SECTION_END
+  62:libraries/zf_driver/zf_driver_spi.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  63:libraries/zf_driver/zf_driver_spi.c **** 
+  64:libraries/zf_driver/zf_driver_spi.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  65:libraries/zf_driver/zf_driver_spi.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  66:libraries/zf_driver/zf_driver_spi.c **** #define SPI_CTRL_CS(x, e)           ;
+  67:libraries/zf_driver/zf_driver_spi.c **** // #define SPI_CTRL_CS(x, e)           ((e) ? (spi_obj_list[spi_index].spi_ptr->CR1 |= SPI_CR1_SPE)
+  68:libraries/zf_driver/zf_driver_spi.c **** #define SPI_CTRL_RX(x, e)           ;
+  69:libraries/zf_driver/zf_driver_spi.c **** 
+  70:libraries/zf_driver/zf_driver_spi.c **** #define SPI_DATA_8BIT_RX(x)         (*(__IO uint8_t *)&spi_obj_list[x].spi_ptr->DR)                
+  71:libraries/zf_driver/zf_driver_spi.c **** #define SPI_DATA_8BIT_TX(x, data)   (*(__IO uint8_t *)&spi_obj_list[x].spi_ptr->DR = (data))       
+  72:libraries/zf_driver/zf_driver_spi.c **** 
+  73:libraries/zf_driver/zf_driver_spi.c **** #define SPI_DATA_16BIT_RX(x)        (*(__IO uint16_t *)&spi_obj_list[x].spi_ptr->DR)               
+  74:libraries/zf_driver/zf_driver_spi.c **** #define SPI_DATA_16BIT_TX(x, data)  (*(__IO uint16_t *)&spi_obj_list[x].spi_ptr->DR = (data))      
+  75:libraries/zf_driver/zf_driver_spi.c **** 
+  76:libraries/zf_driver/zf_driver_spi.c **** #define SPI_STATE_BUY(x)            (spi_obj_list[x].spi_ptr->SR & SPI_SR_BSY)                     
+  77:libraries/zf_driver/zf_driver_spi.c **** #define SPI_STATE_TX_FIFO_FULL(x)   ((spi_obj_list[x].spi_ptr->SR & SPI_SR_FTLVL) == SPI_SR_FTLVL) 
+  78:libraries/zf_driver/zf_driver_spi.c **** #define SPI_STATE_RX_AVAILABLE(x)   (spi_obj_list[x].spi_ptr->SR & SPI_SR_RXNE)                    
+  79:libraries/zf_driver/zf_driver_spi.c **** #define SPI_STATE_TX_EMPTY(x)       (spi_obj_list[x].spi_ptr->SR & SPI_SR_TXE)                     
+  80:libraries/zf_driver/zf_driver_spi.c **** 
+  81:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+  82:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 断言处理
+  83:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     *file               文件路径
+  84:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     line                报错行
+  85:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     *tips               输出信息
+  86:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / GPIO_OPERATION_DONE - 完成 其
+  87:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_assert_handler(file, line, tips);
+  88:libraries/zf_driver/zf_driver_spi.c **** // 备注信息
+  89:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+  90:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_assert_handler (char *file, int line, char *tips)
+  91:libraries/zf_driver/zf_driver_spi.c **** {
+  76              		.loc 1 91 1
+  77              		.cfi_startproc
+  78              		@ args = 0, pretend = 0, frame = 16
+  79              		@ frame_needed = 0, uses_anonymous_args = 0
+  80 0000 00B5     		push	{lr}
+  81              		.cfi_def_cfa_offset 4
+  82              		.cfi_offset 14, -4
+  83 0002 87B0     		sub	sp, sp, #28
+  84              		.cfi_def_cfa_offset 32
+  85 0004 0590     		str	r0, [sp, #20]
+  86 0006 0491     		str	r1, [sp, #16]
+  87 0008 0392     		str	r2, [sp, #12]
+  92:libraries/zf_driver/zf_driver_spi.c ****     debug_message_handler(DEBUG_OUTPUT_LEVEL_ASSERT, ZF_FALSE, tips, file, line);
+  88              		.loc 1 92 5
+  89 000a 049B     		ldr	r3, [sp, #16]
+  90 000c 0093     		str	r3, [sp]
+  91 000e 059B     		ldr	r3, [sp, #20]
+  92 0010 039A     		ldr	r2, [sp, #12]
+  93 0012 0021     		movs	r1, #0
+  94 0014 0220     		movs	r0, #2
+  95 0016 FFF7FEFF 		bl	debug_message_handler
+  96              	.L2:
+  93:libraries/zf_driver/zf_driver_spi.c ****     while(1);
+  97              		.loc 1 93 10 discriminator 1
+  98 001a FEE7     		b	.L2
+  99              		.cfi_endproc
+ 100              	.LFE180:
+ 102              		.section	.rodata
+ 103              		.align	2
+ 104              	.LC0:
+ 105 0000 6C696272 		.ascii	"libraries/zf_driver/zf_driver_spi.c\000"
+ 105      61726965 
+ 105      732F7A66 
+ 105      5F647269 
+ 105      7665722F 
+ 106              		.section	.text.zf_spi_transfer_8bit_array,"ax",%progbits
+ 107              		.align	1
+ 108              		.p2align 4,,15
+ 109              		.global	zf_spi_transfer_8bit_array
+ 110              		.syntax unified
+ 111              		.thumb
+ 112              		.thumb_func
+ 114              	zf_spi_transfer_8bit_array:
+ 115              	.LFB181:
+  94:libraries/zf_driver/zf_driver_spi.c ****     return ZF_ERROR;
+  95:libraries/zf_driver/zf_driver_spi.c **** }
+  96:libraries/zf_driver/zf_driver_spi.c **** 
+  97:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+  98:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 8bit 数据传输 发送与接收数据是同时进行的
+  99:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 100:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     *write_buffer       发送数据存放缓冲区
+ 101:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     *read_buffer        读取数据存放缓冲区
+ 102:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     len                 发送的字节数
+ 103:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 104:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_transfer_8bit_array(spi_index, write_buffer, read_buffer, len);
+ 105:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 106:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 107:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_transfer_8bit_array (zf_spi_index_enum spi_index, const uint8 *write_buffer, uint8 *re
+ 108:libraries/zf_driver/zf_driver_spi.c **** {
+ 116              		.loc 1 108 1
+ 117              		.cfi_startproc
+ 118              		@ args = 0, pretend = 0, frame = 24
+ 119              		@ frame_needed = 0, uses_anonymous_args = 0
+ 120 0000 00B5     		push	{lr}
+ 121              		.cfi_def_cfa_offset 4
+ 122              		.cfi_offset 14, -4
+ 123 0002 87B0     		sub	sp, sp, #28
+ 124              		.cfi_def_cfa_offset 32
+ 125 0004 0291     		str	r1, [sp, #8]
+ 126 0006 0192     		str	r2, [sp, #4]
+ 127 0008 0093     		str	r3, [sp]
+ 128 000a 0346     		mov	r3, r0
+ 129 000c 8DF80F30 		strb	r3, [sp, #15]
+ 109:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 130              		.loc 1 109 36
+ 131 0010 0123     		movs	r3, #1
+ 132 0012 8DF81730 		strb	r3, [sp, #23]
+ 110:libraries/zf_driver/zf_driver_spi.c **** 
+ 111:libraries/zf_driver/zf_driver_spi.c ****     do
+ 112:libraries/zf_driver/zf_driver_spi.c ****     {
+ 113:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_obj_list[spi_index].baudrate))
+ 133              		.loc 1 113 12
+ 134 0016 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 135 001a 4E49     		ldr	r1, .L16
+ 136 001c 1346     		mov	r3, r2
+ 137 001e 5B00     		lsls	r3, r3, #1
+ 138 0020 1344     		add	r3, r3, r2
+ 139 0022 DB00     		lsls	r3, r3, #3
+ 140 0024 0B44     		add	r3, r3, r1
+ 141 0026 1033     		adds	r3, r3, #16
+ 142 0028 1B68     		ldr	r3, [r3]
+ 143              		.loc 1 113 11
+ 144 002a 002B     		cmp	r3, #0
+ 145 002c 0BD1     		bne	.L4
+ 146              		.loc 1 113 12 discriminator 1
+ 147 002e 0022     		movs	r2, #0
+ 148 0030 7121     		movs	r1, #113
+ 149 0032 4948     		ldr	r0, .L16+4
+ 150 0034 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 151 0038 0346     		mov	r3, r0
+ 152 003a 002B     		cmp	r3, #0
+ 153 003c 03D0     		beq	.L4
+ 114:libraries/zf_driver/zf_driver_spi.c ****         {
+ 115:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 116:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_NOT_INIT;                           // SPI 模块未初
+ 154              		.loc 1 116 26
+ 155 003e 2123     		movs	r3, #33
+ 156 0040 8DF81730 		strb	r3, [sp, #23]
+ 117:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 157              		.loc 1 117 13
+ 158 0044 7FE0     		b	.L5
+ 159              	.L4:
+ 118:libraries/zf_driver/zf_driver_spi.c ****         }
+ 119:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert((NULL != write_buffer) || (NULL != read_buffer)))
+ 160              		.loc 1 119 11
+ 161 0046 029B     		ldr	r3, [sp, #8]
+ 162 0048 002B     		cmp	r3, #0
+ 163 004a 0ED1     		bne	.L6
+ 164              		.loc 1 119 12 discriminator 1
+ 165 004c 019B     		ldr	r3, [sp, #4]
+ 166 004e 002B     		cmp	r3, #0
+ 167 0050 0BD1     		bne	.L6
+ 168              		.loc 1 119 12 is_stmt 0 discriminator 2
+ 169 0052 0022     		movs	r2, #0
+ 170 0054 7721     		movs	r1, #119
+ 171 0056 4048     		ldr	r0, .L16+4
+ 172 0058 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 173 005c 0346     		mov	r3, r0
+ 174 005e 002B     		cmp	r3, #0
+ 175 0060 03D0     		beq	.L6
+ 120:libraries/zf_driver/zf_driver_spi.c ****         {
+ 121:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 122:libraries/zf_driver/zf_driver_spi.c ****             // 不可以对空指针进行操作
+ 123:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_DATA_BUFFER_NULL;                          // IIC 数据指针
+ 176              		.loc 1 123 26 is_stmt 1
+ 177 0062 2723     		movs	r3, #39
+ 178 0064 8DF81730 		strb	r3, [sp, #23]
+ 124:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 179              		.loc 1 124 13
+ 180 0068 6DE0     		b	.L5
+ 181              	.L6:
+ 125:libraries/zf_driver/zf_driver_spi.c ****         }
+ 126:libraries/zf_driver/zf_driver_spi.c ****         if(!spi_obj_list[spi_index].enable)
+ 182              		.loc 1 126 36
+ 183 006a 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 184 006e 3949     		ldr	r1, .L16
+ 185 0070 1346     		mov	r3, r2
+ 186 0072 5B00     		lsls	r3, r3, #1
+ 187 0074 1344     		add	r3, r3, r2
+ 188 0076 DB00     		lsls	r3, r3, #3
+ 189 0078 0B44     		add	r3, r3, r1
+ 190 007a 1033     		adds	r3, r3, #16
+ 191 007c 1B79     		ldrb	r3, [r3, #4]
+ 192 007e C3F30313 		ubfx	r3, r3, #4, #4
+ 193 0082 DBB2     		uxtb	r3, r3
+ 194              		.loc 1 126 11
+ 195 0084 002B     		cmp	r3, #0
+ 196 0086 47D1     		bne	.L8
+ 127:libraries/zf_driver/zf_driver_spi.c ****         {
+ 128:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_WARNING_MODULE_DISABLE;                          // SPI 模块失能
+ 197              		.loc 1 128 26
+ 198 0088 1023     		movs	r3, #16
+ 199 008a 8DF81730 		strb	r3, [sp, #23]
+ 129:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 200              		.loc 1 129 13
+ 201 008e 5AE0     		b	.L5
+ 202              	.L13:
+ 130:libraries/zf_driver/zf_driver_spi.c ****         }
+ 131:libraries/zf_driver/zf_driver_spi.c **** 
+ 132:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_RX(spi_index, ZF_ENABLE);
+ 133:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_CS(spi_index, ZF_ENABLE);
+ 134:libraries/zf_driver/zf_driver_spi.c **** 
+ 135:libraries/zf_driver/zf_driver_spi.c ****         while(len --)                                                           // 判断长度
+ 136:libraries/zf_driver/zf_driver_spi.c ****         {
+ 137:libraries/zf_driver/zf_driver_spi.c ****             SPI_DATA_8BIT_TX(spi_index, (NULL != write_buffer) ? (*write_buffer ++) : 0xFF);
+ 203              		.loc 1 137 13
+ 204 0090 029B     		ldr	r3, [sp, #8]
+ 205 0092 002B     		cmp	r3, #0
+ 206 0094 04D0     		beq	.L9
+ 207              		.loc 1 137 13 is_stmt 0 discriminator 1
+ 208 0096 029B     		ldr	r3, [sp, #8]
+ 209 0098 5A1C     		adds	r2, r3, #1
+ 210 009a 0292     		str	r2, [sp, #8]
+ 211 009c 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 212 009e 00E0     		b	.L10
+ 213              	.L9:
+ 214              		.loc 1 137 13 discriminator 2
+ 215 00a0 FF21     		movs	r1, #255
+ 216              	.L10:
+ 217              		.loc 1 137 13 discriminator 4
+ 218 00a2 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 219 00a6 2B48     		ldr	r0, .L16
+ 220 00a8 1346     		mov	r3, r2
+ 221 00aa 5B00     		lsls	r3, r3, #1
+ 222 00ac 1344     		add	r3, r3, r2
+ 223 00ae DB00     		lsls	r3, r3, #3
+ 224 00b0 0344     		add	r3, r3, r0
+ 225 00b2 1B68     		ldr	r3, [r3]
+ 226 00b4 0C33     		adds	r3, r3, #12
+ 227 00b6 0A46     		mov	r2, r1
+ 228 00b8 1A70     		strb	r2, [r3]
+ 138:libraries/zf_driver/zf_driver_spi.c ****             while(!SPI_STATE_RX_AVAILABLE(spi_index));                          // 接收到有效�
+ 229              		.loc 1 138 18 is_stmt 1 discriminator 4
+ 230 00ba 00BF     		nop
+ 231              	.L11:
+ 232              		.loc 1 138 20 discriminator 1
+ 233 00bc 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 234 00c0 2449     		ldr	r1, .L16
+ 235 00c2 1346     		mov	r3, r2
+ 236 00c4 5B00     		lsls	r3, r3, #1
+ 237 00c6 1344     		add	r3, r3, r2
+ 238 00c8 DB00     		lsls	r3, r3, #3
+ 239 00ca 0B44     		add	r3, r3, r1
+ 240 00cc 1B68     		ldr	r3, [r3]
+ 241 00ce 9B68     		ldr	r3, [r3, #8]
+ 242 00d0 03F00103 		and	r3, r3, #1
+ 243              		.loc 1 138 18 discriminator 1
+ 244 00d4 002B     		cmp	r3, #0
+ 245 00d6 F1D0     		beq	.L11
+ 139:libraries/zf_driver/zf_driver_spi.c ****             if(NULL != read_buffer)                                             // 接收有效
+ 246              		.loc 1 139 15
+ 247 00d8 019B     		ldr	r3, [sp, #4]
+ 248 00da 002B     		cmp	r3, #0
+ 249 00dc 11D0     		beq	.L12
+ 140:libraries/zf_driver/zf_driver_spi.c ****             {
+ 141:libraries/zf_driver/zf_driver_spi.c ****                 *read_buffer ++ = SPI_DATA_8BIT_RX(spi_index);                  // 读取数据
+ 250              		.loc 1 141 35
+ 251 00de 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 252 00e2 1C49     		ldr	r1, .L16
+ 253 00e4 1346     		mov	r3, r2
+ 254 00e6 5B00     		lsls	r3, r3, #1
+ 255 00e8 1344     		add	r3, r3, r2
+ 256 00ea DB00     		lsls	r3, r3, #3
+ 257 00ec 0B44     		add	r3, r3, r1
+ 258 00ee 1B68     		ldr	r3, [r3]
+ 259 00f0 03F10C02 		add	r2, r3, #12
+ 260              		.loc 1 141 30
+ 261 00f4 019B     		ldr	r3, [sp, #4]
+ 262 00f6 591C     		adds	r1, r3, #1
+ 263 00f8 0191     		str	r1, [sp, #4]
+ 264              		.loc 1 141 35
+ 265 00fa 1278     		ldrb	r2, [r2]
+ 266 00fc D2B2     		uxtb	r2, r2
+ 267              		.loc 1 141 33
+ 268 00fe 1A70     		strb	r2, [r3]
+ 269 0100 0AE0     		b	.L8
+ 270              	.L12:
+ 142:libraries/zf_driver/zf_driver_spi.c ****             }
+ 143:libraries/zf_driver/zf_driver_spi.c ****             else
+ 144:libraries/zf_driver/zf_driver_spi.c ****             {
+ 145:libraries/zf_driver/zf_driver_spi.c ****                 (void)SPI_DATA_8BIT_RX(spi_index);
+ 271              		.loc 1 145 23
+ 272 0102 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 273 0106 1349     		ldr	r1, .L16
+ 274 0108 1346     		mov	r3, r2
+ 275 010a 5B00     		lsls	r3, r3, #1
+ 276 010c 1344     		add	r3, r3, r2
+ 277 010e DB00     		lsls	r3, r3, #3
+ 278 0110 0B44     		add	r3, r3, r1
+ 279 0112 1B68     		ldr	r3, [r3]
+ 280 0114 0C33     		adds	r3, r3, #12
+ 281              		.loc 1 145 17
+ 282 0116 1B78     		ldrb	r3, [r3]
+ 283              	.L8:
+ 135:libraries/zf_driver/zf_driver_spi.c ****         {
+ 284              		.loc 1 135 19
+ 285 0118 009B     		ldr	r3, [sp]
+ 286 011a 5A1E     		subs	r2, r3, #1
+ 287 011c 0092     		str	r2, [sp]
+ 135:libraries/zf_driver/zf_driver_spi.c ****         {
+ 288              		.loc 1 135 14
+ 289 011e 002B     		cmp	r3, #0
+ 290 0120 B6D1     		bne	.L13
+ 146:libraries/zf_driver/zf_driver_spi.c ****             }
+ 147:libraries/zf_driver/zf_driver_spi.c ****         }
+ 148:libraries/zf_driver/zf_driver_spi.c **** 
+ 149:libraries/zf_driver/zf_driver_spi.c ****         while(SPI_STATE_BUY(spi_index));                                        // 等待传输完�
+ 291              		.loc 1 149 14
+ 292 0122 00BF     		nop
+ 293              	.L14:
+ 294              		.loc 1 149 15 discriminator 1
+ 295 0124 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 296 0128 0A49     		ldr	r1, .L16
+ 297 012a 1346     		mov	r3, r2
+ 298 012c 5B00     		lsls	r3, r3, #1
+ 299 012e 1344     		add	r3, r3, r2
+ 300 0130 DB00     		lsls	r3, r3, #3
+ 301 0132 0B44     		add	r3, r3, r1
+ 302 0134 1B68     		ldr	r3, [r3]
+ 303 0136 9B68     		ldr	r3, [r3, #8]
+ 304 0138 03F08003 		and	r3, r3, #128
+ 305              		.loc 1 149 14 discriminator 1
+ 306 013c 002B     		cmp	r3, #0
+ 307 013e F1D1     		bne	.L14
+ 150:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_CS(spi_index, ZF_DISABLE);
+ 151:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_RX(spi_index, ZF_DISABLE);
+ 152:libraries/zf_driver/zf_driver_spi.c **** 
+ 153:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 308              		.loc 1 153 22
+ 309 0140 0023     		movs	r3, #0
+ 310 0142 8DF81730 		strb	r3, [sp, #23]
+ 311              	.L5:
+ 154:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 155:libraries/zf_driver/zf_driver_spi.c **** 
+ 156:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 312              		.loc 1 156 12
+ 313 0146 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 157:libraries/zf_driver/zf_driver_spi.c **** }
+ 314              		.loc 1 157 1
+ 315 014a 1846     		mov	r0, r3
+ 316 014c 07B0     		add	sp, sp, #28
+ 317              		.cfi_def_cfa_offset 4
+ 318              		@ sp needed
+ 319 014e 5DF804FB 		ldr	pc, [sp], #4
+ 320              	.L17:
+ 321 0152 00BF     		.align	2
+ 322              	.L16:
+ 323 0154 00000000 		.word	spi_obj_list
+ 324 0158 00000000 		.word	.LC0
+ 325              		.cfi_endproc
+ 326              	.LFE181:
+ 328              		.section	.text.zf_spi_transfer_16bit_array,"ax",%progbits
+ 329              		.align	1
+ 330              		.p2align 4,,15
+ 331              		.global	zf_spi_transfer_16bit_array
+ 332              		.syntax unified
+ 333              		.thumb
+ 334              		.thumb_func
+ 336              	zf_spi_transfer_16bit_array:
+ 337              	.LFB182:
+ 158:libraries/zf_driver/zf_driver_spi.c **** 
+ 159:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 160:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 16bit 数据传输 发送与接收数据是同时进行的
+ 161:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 162:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     *write_buffer       发送数据存放缓冲区
+ 163:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     *read_buffer        读取数据存放缓冲区
+ 164:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     len                 发送的字节数
+ 165:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 166:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_transfer_16bit_array(spi_index, write_buffer, read_buffer, len);
+ 167:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 168:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 169:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_transfer_16bit_array (zf_spi_index_enum spi_index, const uint16 *write_buffer, uint16 
+ 170:libraries/zf_driver/zf_driver_spi.c **** {
+ 338              		.loc 1 170 1
+ 339              		.cfi_startproc
+ 340              		@ args = 0, pretend = 0, frame = 24
+ 341              		@ frame_needed = 0, uses_anonymous_args = 0
+ 342 0000 00B5     		push	{lr}
+ 343              		.cfi_def_cfa_offset 4
+ 344              		.cfi_offset 14, -4
+ 345 0002 87B0     		sub	sp, sp, #28
+ 346              		.cfi_def_cfa_offset 32
+ 347 0004 0291     		str	r1, [sp, #8]
+ 348 0006 0192     		str	r2, [sp, #4]
+ 349 0008 0093     		str	r3, [sp]
+ 350 000a 0346     		mov	r3, r0
+ 351 000c 8DF80F30 		strb	r3, [sp, #15]
+ 171:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 352              		.loc 1 171 36
+ 353 0010 0123     		movs	r3, #1
+ 354 0012 8DF81730 		strb	r3, [sp, #23]
+ 172:libraries/zf_driver/zf_driver_spi.c **** 
+ 173:libraries/zf_driver/zf_driver_spi.c ****     do
+ 174:libraries/zf_driver/zf_driver_spi.c ****     {
+ 175:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_obj_list[spi_index].baudrate))
+ 355              		.loc 1 175 12
+ 356 0016 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 357 001a 9249     		ldr	r1, .L42
+ 358 001c 1346     		mov	r3, r2
+ 359 001e 5B00     		lsls	r3, r3, #1
+ 360 0020 1344     		add	r3, r3, r2
+ 361 0022 DB00     		lsls	r3, r3, #3
+ 362 0024 0B44     		add	r3, r3, r1
+ 363 0026 1033     		adds	r3, r3, #16
+ 364 0028 1B68     		ldr	r3, [r3]
+ 365              		.loc 1 175 11
+ 366 002a 002B     		cmp	r3, #0
+ 367 002c 0BD1     		bne	.L19
+ 368              		.loc 1 175 12 discriminator 1
+ 369 002e 0022     		movs	r2, #0
+ 370 0030 AF21     		movs	r1, #175
+ 371 0032 8D48     		ldr	r0, .L42+4
+ 372 0034 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 373 0038 0346     		mov	r3, r0
+ 374 003a 002B     		cmp	r3, #0
+ 375 003c 03D0     		beq	.L19
+ 176:libraries/zf_driver/zf_driver_spi.c ****         {
+ 177:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 178:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_NOT_INIT;                           // SPI 模块未初
+ 376              		.loc 1 178 26
+ 377 003e 2123     		movs	r3, #33
+ 378 0040 8DF81730 		strb	r3, [sp, #23]
+ 179:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 379              		.loc 1 179 13
+ 380 0044 7FE1     		b	.L20
+ 381              	.L19:
+ 180:libraries/zf_driver/zf_driver_spi.c ****         }
+ 181:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert((NULL != write_buffer) || (NULL != read_buffer)))
+ 382              		.loc 1 181 11
+ 383 0046 029B     		ldr	r3, [sp, #8]
+ 384 0048 002B     		cmp	r3, #0
+ 385 004a 0ED1     		bne	.L21
+ 386              		.loc 1 181 12 discriminator 1
+ 387 004c 019B     		ldr	r3, [sp, #4]
+ 388 004e 002B     		cmp	r3, #0
+ 389 0050 0BD1     		bne	.L21
+ 390              		.loc 1 181 12 is_stmt 0 discriminator 2
+ 391 0052 0022     		movs	r2, #0
+ 392 0054 B521     		movs	r1, #181
+ 393 0056 8448     		ldr	r0, .L42+4
+ 394 0058 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 395 005c 0346     		mov	r3, r0
+ 396 005e 002B     		cmp	r3, #0
+ 397 0060 03D0     		beq	.L21
+ 182:libraries/zf_driver/zf_driver_spi.c ****         {
+ 183:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 184:libraries/zf_driver/zf_driver_spi.c ****             // 不可以对空指针进行操作
+ 185:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_DATA_BUFFER_NULL;                          // IIC 数据指针
+ 398              		.loc 1 185 26 is_stmt 1
+ 399 0062 2723     		movs	r3, #39
+ 400 0064 8DF81730 		strb	r3, [sp, #23]
+ 186:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 401              		.loc 1 186 13
+ 402 0068 6DE1     		b	.L20
+ 403              	.L21:
+ 187:libraries/zf_driver/zf_driver_spi.c ****         }
+ 188:libraries/zf_driver/zf_driver_spi.c ****         if(!spi_obj_list[spi_index].enable)
+ 404              		.loc 1 188 36
+ 405 006a 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 406 006e 7D49     		ldr	r1, .L42
+ 407 0070 1346     		mov	r3, r2
+ 408 0072 5B00     		lsls	r3, r3, #1
+ 409 0074 1344     		add	r3, r3, r2
+ 410 0076 DB00     		lsls	r3, r3, #3
+ 411 0078 0B44     		add	r3, r3, r1
+ 412 007a 1033     		adds	r3, r3, #16
+ 413 007c 1B79     		ldrb	r3, [r3, #4]
+ 414 007e C3F30313 		ubfx	r3, r3, #4, #4
+ 415 0082 DBB2     		uxtb	r3, r3
+ 416              		.loc 1 188 11
+ 417 0084 002B     		cmp	r3, #0
+ 418 0086 40F04681 		bne	.L23
+ 189:libraries/zf_driver/zf_driver_spi.c ****         {
+ 190:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_WARNING_MODULE_DISABLE;                          // SPI 模块失能
+ 419              		.loc 1 190 26
+ 420 008a 1023     		movs	r3, #16
+ 421 008c 8DF81730 		strb	r3, [sp, #23]
+ 191:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 422              		.loc 1 191 13
+ 423 0090 59E1     		b	.L20
+ 424              	.L39:
+ 192:libraries/zf_driver/zf_driver_spi.c ****         }
+ 193:libraries/zf_driver/zf_driver_spi.c **** 
+ 194:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_RX(spi_index, ZF_ENABLE);
+ 195:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_CS(spi_index, ZF_ENABLE);
+ 196:libraries/zf_driver/zf_driver_spi.c **** 
+ 197:libraries/zf_driver/zf_driver_spi.c ****         while(len --)                                                           // 判断长度
+ 198:libraries/zf_driver/zf_driver_spi.c ****         {
+ 199:libraries/zf_driver/zf_driver_spi.c ****             if(spi_obj_list[spi_index].width)
+ 425              		.loc 1 199 39
+ 426 0092 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 427 0096 7349     		ldr	r1, .L42
+ 428 0098 1346     		mov	r3, r2
+ 429 009a 5B00     		lsls	r3, r3, #1
+ 430 009c 1344     		add	r3, r3, r2
+ 431 009e DB00     		lsls	r3, r3, #3
+ 432 00a0 0B44     		add	r3, r3, r1
+ 433 00a2 1033     		adds	r3, r3, #16
+ 434 00a4 5B79     		ldrb	r3, [r3, #5]
+ 435 00a6 C3F30303 		ubfx	r3, r3, #0, #4
+ 436 00aa DBB2     		uxtb	r3, r3
+ 437              		.loc 1 199 15
+ 438 00ac 002B     		cmp	r3, #0
+ 439 00ae 62D0     		beq	.L24
+ 200:libraries/zf_driver/zf_driver_spi.c ****             {
+ 201:libraries/zf_driver/zf_driver_spi.c ****                 if(NULL != read_buffer)                                         // 接收有效
+ 440              		.loc 1 201 19
+ 441 00b0 019B     		ldr	r3, [sp, #4]
+ 442 00b2 002B     		cmp	r3, #0
+ 443 00b4 35D0     		beq	.L25
+ 202:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 203:libraries/zf_driver/zf_driver_spi.c ****                     SPI_DATA_16BIT_TX(spi_index, (NULL != write_buffer) ? (*write_buffer ++) : 0xFF
+ 444              		.loc 1 203 21
+ 445 00b6 029B     		ldr	r3, [sp, #8]
+ 446 00b8 002B     		cmp	r3, #0
+ 447 00ba 04D0     		beq	.L26
+ 448              		.loc 1 203 21 is_stmt 0 discriminator 1
+ 449 00bc 029B     		ldr	r3, [sp, #8]
+ 450 00be 9A1C     		adds	r2, r3, #2
+ 451 00c0 0292     		str	r2, [sp, #8]
+ 452 00c2 1988     		ldrh	r1, [r3]
+ 453 00c4 00E0     		b	.L27
+ 454              	.L26:
+ 455              		.loc 1 203 21 discriminator 2
+ 456 00c6 FF21     		movs	r1, #255
+ 457              	.L27:
+ 458              		.loc 1 203 21 discriminator 4
+ 459 00c8 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 460 00cc 6548     		ldr	r0, .L42
+ 461 00ce 1346     		mov	r3, r2
+ 462 00d0 5B00     		lsls	r3, r3, #1
+ 463 00d2 1344     		add	r3, r3, r2
+ 464 00d4 DB00     		lsls	r3, r3, #3
+ 465 00d6 0344     		add	r3, r3, r0
+ 466 00d8 1B68     		ldr	r3, [r3]
+ 467 00da 0C33     		adds	r3, r3, #12
+ 468 00dc 0A46     		mov	r2, r1	@ movhi
+ 469 00de 1A80     		strh	r2, [r3]	@ movhi
+ 204:libraries/zf_driver/zf_driver_spi.c ****                     while(!SPI_STATE_RX_AVAILABLE(spi_index));                  // 接收到有效�
+ 470              		.loc 1 204 26 is_stmt 1 discriminator 4
+ 471 00e0 00BF     		nop
+ 472              	.L28:
+ 473              		.loc 1 204 28 discriminator 1
+ 474 00e2 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 475 00e6 5F49     		ldr	r1, .L42
+ 476 00e8 1346     		mov	r3, r2
+ 477 00ea 5B00     		lsls	r3, r3, #1
+ 478 00ec 1344     		add	r3, r3, r2
+ 479 00ee DB00     		lsls	r3, r3, #3
+ 480 00f0 0B44     		add	r3, r3, r1
+ 481 00f2 1B68     		ldr	r3, [r3]
+ 482 00f4 9B68     		ldr	r3, [r3, #8]
+ 483 00f6 03F00103 		and	r3, r3, #1
+ 484              		.loc 1 204 26 discriminator 1
+ 485 00fa 002B     		cmp	r3, #0
+ 486 00fc F1D0     		beq	.L28
+ 205:libraries/zf_driver/zf_driver_spi.c ****                     *read_buffer ++ = SPI_DATA_16BIT_RX(spi_index);             // 读取数据
+ 487              		.loc 1 205 39
+ 488 00fe 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 489 0102 5849     		ldr	r1, .L42
+ 490 0104 1346     		mov	r3, r2
+ 491 0106 5B00     		lsls	r3, r3, #1
+ 492 0108 1344     		add	r3, r3, r2
+ 493 010a DB00     		lsls	r3, r3, #3
+ 494 010c 0B44     		add	r3, r3, r1
+ 495 010e 1B68     		ldr	r3, [r3]
+ 496 0110 03F10C02 		add	r2, r3, #12
+ 497              		.loc 1 205 34
+ 498 0114 019B     		ldr	r3, [sp, #4]
+ 499 0116 991C     		adds	r1, r3, #2
+ 500 0118 0191     		str	r1, [sp, #4]
+ 501              		.loc 1 205 39
+ 502 011a 1288     		ldrh	r2, [r2]	@ movhi
+ 503 011c 92B2     		uxth	r2, r2
+ 504              		.loc 1 205 37
+ 505 011e 1A80     		strh	r2, [r3]	@ movhi
+ 506 0120 F9E0     		b	.L23
+ 507              	.L25:
+ 206:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 207:libraries/zf_driver/zf_driver_spi.c ****                 else
+ 208:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 209:libraries/zf_driver/zf_driver_spi.c ****                     SPI_DATA_16BIT_TX(spi_index, *write_buffer ++);             // 发送数据
+ 508              		.loc 1 209 21
+ 509 0122 029A     		ldr	r2, [sp, #8]
+ 510 0124 931C     		adds	r3, r2, #2
+ 511 0126 0293     		str	r3, [sp, #8]
+ 512 0128 9DF80F10 		ldrb	r1, [sp, #15]	@ zero_extendqisi2
+ 513 012c 4D48     		ldr	r0, .L42
+ 514 012e 0B46     		mov	r3, r1
+ 515 0130 5B00     		lsls	r3, r3, #1
+ 516 0132 0B44     		add	r3, r3, r1
+ 517 0134 DB00     		lsls	r3, r3, #3
+ 518 0136 0344     		add	r3, r3, r0
+ 519 0138 1B68     		ldr	r3, [r3]
+ 520 013a 0C33     		adds	r3, r3, #12
+ 521 013c 1288     		ldrh	r2, [r2]
+ 522 013e 1A80     		strh	r2, [r3]	@ movhi
+ 210:libraries/zf_driver/zf_driver_spi.c ****                     while(!SPI_STATE_RX_AVAILABLE(spi_index));                  // 接收到有效�
+ 523              		.loc 1 210 26
+ 524 0140 00BF     		nop
+ 525              	.L29:
+ 526              		.loc 1 210 28 discriminator 1
+ 527 0142 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 528 0146 4749     		ldr	r1, .L42
+ 529 0148 1346     		mov	r3, r2
+ 530 014a 5B00     		lsls	r3, r3, #1
+ 531 014c 1344     		add	r3, r3, r2
+ 532 014e DB00     		lsls	r3, r3, #3
+ 533 0150 0B44     		add	r3, r3, r1
+ 534 0152 1B68     		ldr	r3, [r3]
+ 535 0154 9B68     		ldr	r3, [r3, #8]
+ 536 0156 03F00103 		and	r3, r3, #1
+ 537              		.loc 1 210 26 discriminator 1
+ 538 015a 002B     		cmp	r3, #0
+ 539 015c F1D0     		beq	.L29
+ 211:libraries/zf_driver/zf_driver_spi.c ****                     (void)SPI_DATA_16BIT_RX(spi_index);                         // 读空数据
+ 540              		.loc 1 211 27
+ 541 015e 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 542 0162 4049     		ldr	r1, .L42
+ 543 0164 1346     		mov	r3, r2
+ 544 0166 5B00     		lsls	r3, r3, #1
+ 545 0168 1344     		add	r3, r3, r2
+ 546 016a DB00     		lsls	r3, r3, #3
+ 547 016c 0B44     		add	r3, r3, r1
+ 548 016e 1B68     		ldr	r3, [r3]
+ 549 0170 0C33     		adds	r3, r3, #12
+ 550              		.loc 1 211 21
+ 551 0172 1B88     		ldrh	r3, [r3]	@ movhi
+ 552 0174 CFE0     		b	.L23
+ 553              	.L24:
+ 212:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 213:libraries/zf_driver/zf_driver_spi.c ****             }
+ 214:libraries/zf_driver/zf_driver_spi.c ****             else
+ 215:libraries/zf_driver/zf_driver_spi.c ****             {
+ 216:libraries/zf_driver/zf_driver_spi.c ****                 if(NULL != read_buffer)                                         // 接收有效
+ 554              		.loc 1 216 19
+ 555 0176 019B     		ldr	r3, [sp, #4]
+ 556 0178 002B     		cmp	r3, #0
+ 557 017a 77D0     		beq	.L30
+ 217:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 218:libraries/zf_driver/zf_driver_spi.c ****                     SPI_DATA_8BIT_TX(spi_index, (NULL != write_buffer) ? ((*write_buffer & 0xFF00) 
+ 558              		.loc 1 218 21
+ 559 017c 029B     		ldr	r3, [sp, #8]
+ 560 017e 002B     		cmp	r3, #0
+ 561 0180 05D0     		beq	.L31
+ 562              		.loc 1 218 21 is_stmt 0 discriminator 1
+ 563 0182 029B     		ldr	r3, [sp, #8]
+ 564 0184 1B88     		ldrh	r3, [r3]
+ 565 0186 1B0A     		lsrs	r3, r3, #8
+ 566 0188 9BB2     		uxth	r3, r3
+ 567 018a D9B2     		uxtb	r1, r3
+ 568 018c 00E0     		b	.L32
+ 569              	.L31:
+ 570              		.loc 1 218 21 discriminator 2
+ 571 018e FF21     		movs	r1, #255
+ 572              	.L32:
+ 573              		.loc 1 218 21 discriminator 4
+ 574 0190 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 575 0194 3348     		ldr	r0, .L42
+ 576 0196 1346     		mov	r3, r2
+ 577 0198 5B00     		lsls	r3, r3, #1
+ 578 019a 1344     		add	r3, r3, r2
+ 579 019c DB00     		lsls	r3, r3, #3
+ 580 019e 0344     		add	r3, r3, r0
+ 581 01a0 1B68     		ldr	r3, [r3]
+ 582 01a2 0C33     		adds	r3, r3, #12
+ 583 01a4 0A46     		mov	r2, r1
+ 584 01a6 1A70     		strb	r2, [r3]
+ 219:libraries/zf_driver/zf_driver_spi.c ****                     while(!SPI_STATE_RX_AVAILABLE(spi_index));                  // 接收到有效�
+ 585              		.loc 1 219 26 is_stmt 1 discriminator 4
+ 586 01a8 00BF     		nop
+ 587              	.L33:
+ 588              		.loc 1 219 28 discriminator 1
+ 589 01aa 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 590 01ae 2D49     		ldr	r1, .L42
+ 591 01b0 1346     		mov	r3, r2
+ 592 01b2 5B00     		lsls	r3, r3, #1
+ 593 01b4 1344     		add	r3, r3, r2
+ 594 01b6 DB00     		lsls	r3, r3, #3
+ 595 01b8 0B44     		add	r3, r3, r1
+ 596 01ba 1B68     		ldr	r3, [r3]
+ 597 01bc 9B68     		ldr	r3, [r3, #8]
+ 598 01be 03F00103 		and	r3, r3, #1
+ 599              		.loc 1 219 26 discriminator 1
+ 600 01c2 002B     		cmp	r3, #0
+ 601 01c4 F1D0     		beq	.L33
+ 220:libraries/zf_driver/zf_driver_spi.c ****                     *read_buffer = (SPI_DATA_8BIT_RX(spi_index) & 0x00FF);      // 读取数据
+ 602              		.loc 1 220 37
+ 603 01c6 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 604 01ca 2649     		ldr	r1, .L42
+ 605 01cc 1346     		mov	r3, r2
+ 606 01ce 5B00     		lsls	r3, r3, #1
+ 607 01d0 1344     		add	r3, r3, r2
+ 608 01d2 DB00     		lsls	r3, r3, #3
+ 609 01d4 0B44     		add	r3, r3, r1
+ 610 01d6 1B68     		ldr	r3, [r3]
+ 611 01d8 0C33     		adds	r3, r3, #12
+ 612 01da 1B78     		ldrb	r3, [r3]
+ 613 01dc DBB2     		uxtb	r3, r3
+ 614 01de 9AB2     		uxth	r2, r3
+ 615              		.loc 1 220 34
+ 616 01e0 019B     		ldr	r3, [sp, #4]
+ 617 01e2 1A80     		strh	r2, [r3]	@ movhi
+ 221:libraries/zf_driver/zf_driver_spi.c **** 
+ 222:libraries/zf_driver/zf_driver_spi.c ****                     SPI_DATA_8BIT_TX(spi_index, (NULL != write_buffer) ? (*write_buffer & 0x00FF) :
+ 618              		.loc 1 222 21
+ 619 01e4 029B     		ldr	r3, [sp, #8]
+ 620 01e6 002B     		cmp	r3, #0
+ 621 01e8 03D0     		beq	.L34
+ 622              		.loc 1 222 21 is_stmt 0 discriminator 1
+ 623 01ea 029B     		ldr	r3, [sp, #8]
+ 624 01ec 1B88     		ldrh	r3, [r3]
+ 625 01ee D9B2     		uxtb	r1, r3
+ 626 01f0 00E0     		b	.L35
+ 627              	.L34:
+ 628              		.loc 1 222 21 discriminator 2
+ 629 01f2 FF21     		movs	r1, #255
+ 630              	.L35:
+ 631              		.loc 1 222 21 discriminator 4
+ 632 01f4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 633 01f8 1A48     		ldr	r0, .L42
+ 634 01fa 1346     		mov	r3, r2
+ 635 01fc 5B00     		lsls	r3, r3, #1
+ 636 01fe 1344     		add	r3, r3, r2
+ 637 0200 DB00     		lsls	r3, r3, #3
+ 638 0202 0344     		add	r3, r3, r0
+ 639 0204 1B68     		ldr	r3, [r3]
+ 640 0206 0C33     		adds	r3, r3, #12
+ 641 0208 0A46     		mov	r2, r1
+ 642 020a 1A70     		strb	r2, [r3]
+ 223:libraries/zf_driver/zf_driver_spi.c ****                     while(!SPI_STATE_RX_AVAILABLE(spi_index));                  // 接收到有效�
+ 643              		.loc 1 223 26 is_stmt 1 discriminator 4
+ 644 020c 00BF     		nop
+ 645              	.L36:
+ 646              		.loc 1 223 28 discriminator 1
+ 647 020e 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 648 0212 1449     		ldr	r1, .L42
+ 649 0214 1346     		mov	r3, r2
+ 650 0216 5B00     		lsls	r3, r3, #1
+ 651 0218 1344     		add	r3, r3, r2
+ 652 021a DB00     		lsls	r3, r3, #3
+ 653 021c 0B44     		add	r3, r3, r1
+ 654 021e 1B68     		ldr	r3, [r3]
+ 655 0220 9B68     		ldr	r3, [r3, #8]
+ 656 0222 03F00103 		and	r3, r3, #1
+ 657              		.loc 1 223 26 discriminator 1
+ 658 0226 002B     		cmp	r3, #0
+ 659 0228 F1D0     		beq	.L36
+ 224:libraries/zf_driver/zf_driver_spi.c ****                     *read_buffer = (*read_buffer << 8) | (SPI_DATA_8BIT_RX(spi_index)& 0x00FF);  //
+ 660              		.loc 1 224 37
+ 661 022a 019B     		ldr	r3, [sp, #4]
+ 662 022c 1B88     		ldrh	r3, [r3]
+ 663              		.loc 1 224 50
+ 664 022e 1B02     		lsls	r3, r3, #8
+ 665              		.loc 1 224 56
+ 666 0230 19B2     		sxth	r1, r3
+ 667              		.loc 1 224 59
+ 668 0232 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 669 0236 0B48     		ldr	r0, .L42
+ 670 0238 1346     		mov	r3, r2
+ 671 023a 5B00     		lsls	r3, r3, #1
+ 672 023c 1344     		add	r3, r3, r2
+ 673 023e DB00     		lsls	r3, r3, #3
+ 674 0240 0344     		add	r3, r3, r0
+ 675 0242 1B68     		ldr	r3, [r3]
+ 676 0244 0C33     		adds	r3, r3, #12
+ 677 0246 1B78     		ldrb	r3, [r3]
+ 678 0248 DBB2     		uxtb	r3, r3
+ 679 024a 1BB2     		sxth	r3, r3
+ 680              		.loc 1 224 56
+ 681 024c 0B43     		orrs	r3, r3, r1
+ 682 024e 1BB2     		sxth	r3, r3
+ 683 0250 9AB2     		uxth	r2, r3
+ 684              		.loc 1 224 34
+ 685 0252 019B     		ldr	r3, [sp, #4]
+ 686 0254 1A80     		strh	r2, [r3]	@ movhi
+ 225:libraries/zf_driver/zf_driver_spi.c **** 
+ 226:libraries/zf_driver/zf_driver_spi.c ****                     write_buffer ++;
+ 687              		.loc 1 226 34
+ 688 0256 029B     		ldr	r3, [sp, #8]
+ 689 0258 0233     		adds	r3, r3, #2
+ 690 025a 0293     		str	r3, [sp, #8]
+ 227:libraries/zf_driver/zf_driver_spi.c ****                     read_buffer ++;
+ 691              		.loc 1 227 33
+ 692 025c 019B     		ldr	r3, [sp, #4]
+ 693 025e 0233     		adds	r3, r3, #2
+ 694 0260 0193     		str	r3, [sp, #4]
+ 695 0262 58E0     		b	.L23
+ 696              	.L43:
+ 697              		.align	2
+ 698              	.L42:
+ 699 0264 00000000 		.word	spi_obj_list
+ 700 0268 00000000 		.word	.LC0
+ 701              	.L30:
+ 228:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 229:libraries/zf_driver/zf_driver_spi.c ****                 else
+ 230:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 231:libraries/zf_driver/zf_driver_spi.c ****                     SPI_DATA_8BIT_TX(spi_index, (*write_buffer & 0xFF00) >> 8); // 发送数据
+ 702              		.loc 1 231 21
+ 703 026c 029B     		ldr	r3, [sp, #8]
+ 704 026e 1B88     		ldrh	r3, [r3]
+ 705 0270 1B0A     		lsrs	r3, r3, #8
+ 706 0272 98B2     		uxth	r0, r3
+ 707 0274 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 708 0278 3649     		ldr	r1, .L44
+ 709 027a 1346     		mov	r3, r2
+ 710 027c 5B00     		lsls	r3, r3, #1
+ 711 027e 1344     		add	r3, r3, r2
+ 712 0280 DB00     		lsls	r3, r3, #3
+ 713 0282 0B44     		add	r3, r3, r1
+ 714 0284 1B68     		ldr	r3, [r3]
+ 715 0286 0C33     		adds	r3, r3, #12
+ 716 0288 C2B2     		uxtb	r2, r0
+ 717 028a 1A70     		strb	r2, [r3]
+ 232:libraries/zf_driver/zf_driver_spi.c ****                     while(!SPI_STATE_RX_AVAILABLE(spi_index));                  // 接收到有效�
+ 718              		.loc 1 232 26
+ 719 028c 00BF     		nop
+ 720              	.L37:
+ 721              		.loc 1 232 28 discriminator 1
+ 722 028e 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 723 0292 3049     		ldr	r1, .L44
+ 724 0294 1346     		mov	r3, r2
+ 725 0296 5B00     		lsls	r3, r3, #1
+ 726 0298 1344     		add	r3, r3, r2
+ 727 029a DB00     		lsls	r3, r3, #3
+ 728 029c 0B44     		add	r3, r3, r1
+ 729 029e 1B68     		ldr	r3, [r3]
+ 730 02a0 9B68     		ldr	r3, [r3, #8]
+ 731 02a2 03F00103 		and	r3, r3, #1
+ 732              		.loc 1 232 26 discriminator 1
+ 733 02a6 002B     		cmp	r3, #0
+ 734 02a8 F1D0     		beq	.L37
+ 233:libraries/zf_driver/zf_driver_spi.c ****                     (void)SPI_DATA_8BIT_RX(spi_index);                          // 读空数据
+ 735              		.loc 1 233 27
+ 736 02aa 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 737 02ae 2949     		ldr	r1, .L44
+ 738 02b0 1346     		mov	r3, r2
+ 739 02b2 5B00     		lsls	r3, r3, #1
+ 740 02b4 1344     		add	r3, r3, r2
+ 741 02b6 DB00     		lsls	r3, r3, #3
+ 742 02b8 0B44     		add	r3, r3, r1
+ 743 02ba 1B68     		ldr	r3, [r3]
+ 744 02bc 0C33     		adds	r3, r3, #12
+ 745              		.loc 1 233 21
+ 746 02be 1B78     		ldrb	r3, [r3]
+ 234:libraries/zf_driver/zf_driver_spi.c **** 
+ 235:libraries/zf_driver/zf_driver_spi.c ****                     SPI_DATA_8BIT_TX(spi_index, (*write_buffer & 0x00FF));      // 发送数据
+ 747              		.loc 1 235 21
+ 748 02c0 029B     		ldr	r3, [sp, #8]
+ 749 02c2 1888     		ldrh	r0, [r3]
+ 750 02c4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 751 02c8 2249     		ldr	r1, .L44
+ 752 02ca 1346     		mov	r3, r2
+ 753 02cc 5B00     		lsls	r3, r3, #1
+ 754 02ce 1344     		add	r3, r3, r2
+ 755 02d0 DB00     		lsls	r3, r3, #3
+ 756 02d2 0B44     		add	r3, r3, r1
+ 757 02d4 1B68     		ldr	r3, [r3]
+ 758 02d6 0C33     		adds	r3, r3, #12
+ 759 02d8 C2B2     		uxtb	r2, r0
+ 760 02da 1A70     		strb	r2, [r3]
+ 236:libraries/zf_driver/zf_driver_spi.c ****                     while(!SPI_STATE_RX_AVAILABLE(spi_index));                  // 接收到有效�
+ 761              		.loc 1 236 26
+ 762 02dc 00BF     		nop
+ 763              	.L38:
+ 764              		.loc 1 236 28 discriminator 1
+ 765 02de 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 766 02e2 1C49     		ldr	r1, .L44
+ 767 02e4 1346     		mov	r3, r2
+ 768 02e6 5B00     		lsls	r3, r3, #1
+ 769 02e8 1344     		add	r3, r3, r2
+ 770 02ea DB00     		lsls	r3, r3, #3
+ 771 02ec 0B44     		add	r3, r3, r1
+ 772 02ee 1B68     		ldr	r3, [r3]
+ 773 02f0 9B68     		ldr	r3, [r3, #8]
+ 774 02f2 03F00103 		and	r3, r3, #1
+ 775              		.loc 1 236 26 discriminator 1
+ 776 02f6 002B     		cmp	r3, #0
+ 777 02f8 F1D0     		beq	.L38
+ 237:libraries/zf_driver/zf_driver_spi.c ****                     (void)SPI_DATA_8BIT_RX(spi_index);                          // 读空数据
+ 778              		.loc 1 237 27
+ 779 02fa 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 780 02fe 1549     		ldr	r1, .L44
+ 781 0300 1346     		mov	r3, r2
+ 782 0302 5B00     		lsls	r3, r3, #1
+ 783 0304 1344     		add	r3, r3, r2
+ 784 0306 DB00     		lsls	r3, r3, #3
+ 785 0308 0B44     		add	r3, r3, r1
+ 786 030a 1B68     		ldr	r3, [r3]
+ 787 030c 0C33     		adds	r3, r3, #12
+ 788              		.loc 1 237 21
+ 789 030e 1B78     		ldrb	r3, [r3]
+ 238:libraries/zf_driver/zf_driver_spi.c **** 
+ 239:libraries/zf_driver/zf_driver_spi.c ****                     write_buffer ++;
+ 790              		.loc 1 239 34
+ 791 0310 029B     		ldr	r3, [sp, #8]
+ 792 0312 0233     		adds	r3, r3, #2
+ 793 0314 0293     		str	r3, [sp, #8]
+ 794              	.L23:
+ 197:libraries/zf_driver/zf_driver_spi.c ****         {
+ 795              		.loc 1 197 19
+ 796 0316 009B     		ldr	r3, [sp]
+ 797 0318 5A1E     		subs	r2, r3, #1
+ 798 031a 0092     		str	r2, [sp]
+ 197:libraries/zf_driver/zf_driver_spi.c ****         {
+ 799              		.loc 1 197 14
+ 800 031c 002B     		cmp	r3, #0
+ 801 031e 7FF4B8AE 		bne	.L39
+ 240:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 241:libraries/zf_driver/zf_driver_spi.c ****             }
+ 242:libraries/zf_driver/zf_driver_spi.c ****         }
+ 243:libraries/zf_driver/zf_driver_spi.c **** 
+ 244:libraries/zf_driver/zf_driver_spi.c ****         while(SPI_STATE_BUY(spi_index));                                        // 等待传输完�
+ 802              		.loc 1 244 14
+ 803 0322 00BF     		nop
+ 804              	.L40:
+ 805              		.loc 1 244 15 discriminator 1
+ 806 0324 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 807 0328 0A49     		ldr	r1, .L44
+ 808 032a 1346     		mov	r3, r2
+ 809 032c 5B00     		lsls	r3, r3, #1
+ 810 032e 1344     		add	r3, r3, r2
+ 811 0330 DB00     		lsls	r3, r3, #3
+ 812 0332 0B44     		add	r3, r3, r1
+ 813 0334 1B68     		ldr	r3, [r3]
+ 814 0336 9B68     		ldr	r3, [r3, #8]
+ 815 0338 03F08003 		and	r3, r3, #128
+ 816              		.loc 1 244 14 discriminator 1
+ 817 033c 002B     		cmp	r3, #0
+ 818 033e F1D1     		bne	.L40
+ 245:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_CS(spi_index, ZF_DISABLE);
+ 246:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_RX(spi_index, ZF_DISABLE);
+ 247:libraries/zf_driver/zf_driver_spi.c **** 
+ 248:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 819              		.loc 1 248 22
+ 820 0340 0023     		movs	r3, #0
+ 821 0342 8DF81730 		strb	r3, [sp, #23]
+ 822              	.L20:
+ 249:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 250:libraries/zf_driver/zf_driver_spi.c **** 
+ 251:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 823              		.loc 1 251 12
+ 824 0346 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 252:libraries/zf_driver/zf_driver_spi.c **** }
+ 825              		.loc 1 252 1
+ 826 034a 1846     		mov	r0, r3
+ 827 034c 07B0     		add	sp, sp, #28
+ 828              		.cfi_def_cfa_offset 4
+ 829              		@ sp needed
+ 830 034e 5DF804FB 		ldr	pc, [sp], #4
+ 831              	.L45:
+ 832 0352 00BF     		.align	2
+ 833              	.L44:
+ 834 0354 00000000 		.word	spi_obj_list
+ 835              		.cfi_endproc
+ 836              	.LFE182:
+ 838              		.section	.text.zf_spi_set_config,"ax",%progbits
+ 839              		.align	1
+ 840              		.p2align 4,,15
+ 841              		.global	zf_spi_set_config
+ 842              		.syntax unified
+ 843              		.thumb
+ 844              		.thumb_func
+ 846              	zf_spi_set_config:
+ 847              	.LFB183:
+ 253:libraries/zf_driver/zf_driver_spi.c **** 
+ 254:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 255:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 接口 配置设置
+ 256:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 257:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     item                软件 SPI 参照 zf_driver_spi.h 内 zf_spi_config_item_en
+ 258:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 259:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_set_config(spi_index, item);
+ 260:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 261:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 262:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_set_config (zf_spi_index_enum spi_index, zf_spi_config_item_enum item)
+ 263:libraries/zf_driver/zf_driver_spi.c **** {
+ 848              		.loc 1 263 1
+ 849              		.cfi_startproc
+ 850              		@ args = 0, pretend = 0, frame = 16
+ 851              		@ frame_needed = 0, uses_anonymous_args = 0
+ 852 0000 00B5     		push	{lr}
+ 853              		.cfi_def_cfa_offset 4
+ 854              		.cfi_offset 14, -4
+ 855 0002 85B0     		sub	sp, sp, #20
+ 856              		.cfi_def_cfa_offset 24
+ 857 0004 0346     		mov	r3, r0
+ 858 0006 0A46     		mov	r2, r1
+ 859 0008 8DF80730 		strb	r3, [sp, #7]
+ 860 000c 1346     		mov	r3, r2
+ 861 000e 8DF80630 		strb	r3, [sp, #6]
+ 264:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 862              		.loc 1 264 36
+ 863 0012 0123     		movs	r3, #1
+ 864 0014 8DF80F30 		strb	r3, [sp, #15]
+ 865              	.LBB2:
+ 265:libraries/zf_driver/zf_driver_spi.c **** 
+ 266:libraries/zf_driver/zf_driver_spi.c ****     do
+ 267:libraries/zf_driver/zf_driver_spi.c ****     {
+ 268:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_obj_list[spi_index].baudrate))
+ 866              		.loc 1 268 12
+ 867 0018 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 868 001c 5B49     		ldr	r1, .L62
+ 869 001e 1346     		mov	r3, r2
+ 870 0020 5B00     		lsls	r3, r3, #1
+ 871 0022 1344     		add	r3, r3, r2
+ 872 0024 DB00     		lsls	r3, r3, #3
+ 873 0026 0B44     		add	r3, r3, r1
+ 874 0028 1033     		adds	r3, r3, #16
+ 875 002a 1B68     		ldr	r3, [r3]
+ 876              		.loc 1 268 11
+ 877 002c 002B     		cmp	r3, #0
+ 878 002e 0CD1     		bne	.L61
+ 879              		.loc 1 268 12 discriminator 1
+ 880 0030 0022     		movs	r2, #0
+ 881 0032 4FF48671 		mov	r1, #268
+ 882 0036 5648     		ldr	r0, .L62+4
+ 883 0038 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 884 003c 0346     		mov	r3, r0
+ 885 003e 002B     		cmp	r3, #0
+ 886 0040 03D0     		beq	.L61
+ 269:libraries/zf_driver/zf_driver_spi.c ****         {
+ 270:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 271:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_NOT_INIT;                           // SPI 模块未初
+ 887              		.loc 1 271 26
+ 888 0042 2123     		movs	r3, #33
+ 889 0044 8DF80F30 		strb	r3, [sp, #15]
+ 272:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 890              		.loc 1 272 13
+ 891 0048 99E0     		b	.L48
+ 892              	.L61:
+ 273:libraries/zf_driver/zf_driver_spi.c ****         }
+ 274:libraries/zf_driver/zf_driver_spi.c **** 
+ 275:libraries/zf_driver/zf_driver_spi.c ****         while(SPI_STATE_BUY(spi_index));                                        // 等待传输完�
+ 893              		.loc 1 275 14
+ 894 004a 00BF     		nop
+ 895              	.L49:
+ 896              		.loc 1 275 15 discriminator 1
+ 897 004c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 898 0050 4E49     		ldr	r1, .L62
+ 899 0052 1346     		mov	r3, r2
+ 900 0054 5B00     		lsls	r3, r3, #1
+ 901 0056 1344     		add	r3, r3, r2
+ 902 0058 DB00     		lsls	r3, r3, #3
+ 903 005a 0B44     		add	r3, r3, r1
+ 904 005c 1B68     		ldr	r3, [r3]
+ 905 005e 9B68     		ldr	r3, [r3, #8]
+ 906 0060 03F08003 		and	r3, r3, #128
+ 907              		.loc 1 275 14 discriminator 1
+ 908 0064 002B     		cmp	r3, #0
+ 909 0066 F1D1     		bne	.L49
+ 276:libraries/zf_driver/zf_driver_spi.c **** 
+ 277:libraries/zf_driver/zf_driver_spi.c ****         uint32 register_temp = 0;
+ 910              		.loc 1 277 16
+ 911 0068 0023     		movs	r3, #0
+ 912 006a 0293     		str	r3, [sp, #8]
+ 278:libraries/zf_driver/zf_driver_spi.c ****         switch(item & 0xF0)
+ 913              		.loc 1 278 21
+ 914 006c 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 915 0070 03F0F003 		and	r3, r3, #240
+ 916              		.loc 1 278 9
+ 917 0074 002B     		cmp	r3, #0
+ 918 0076 02D0     		beq	.L50
+ 919 0078 102B     		cmp	r3, #16
+ 920 007a 41D0     		beq	.L51
+ 921 007c 7CE0     		b	.L52
+ 922              	.L50:
+ 279:libraries/zf_driver/zf_driver_spi.c ****         {
+ 280:libraries/zf_driver/zf_driver_spi.c ****             case 0x00:
+ 281:libraries/zf_driver/zf_driver_spi.c ****             {
+ 282:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].width = (item & SPI_CONFIG_VALUE_MASK);
+ 923              		.loc 1 282 40
+ 924 007e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 925              		.loc 1 282 55
+ 926 0082 9DF80630 		ldrb	r3, [sp, #6]
+ 927 0086 03F00F03 		and	r3, r3, #15
+ 928 008a D9B2     		uxtb	r1, r3
+ 929              		.loc 1 282 47
+ 930 008c 3F48     		ldr	r0, .L62
+ 931 008e 1346     		mov	r3, r2
+ 932 0090 5B00     		lsls	r3, r3, #1
+ 933 0092 1344     		add	r3, r3, r2
+ 934 0094 DB00     		lsls	r3, r3, #3
+ 935 0096 0344     		add	r3, r3, r0
+ 936 0098 03F11002 		add	r2, r3, #16
+ 937 009c 5379     		ldrb	r3, [r2, #5]
+ 938 009e 61F30303 		bfi	r3, r1, #0, #4
+ 939 00a2 5371     		strb	r3, [r2, #5]
+ 283:libraries/zf_driver/zf_driver_spi.c ****                 register_temp = spi_obj_list[spi_index].spi_ptr->CR2;
+ 940              		.loc 1 283 56
+ 941 00a4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 942 00a8 3849     		ldr	r1, .L62
+ 943 00aa 1346     		mov	r3, r2
+ 944 00ac 5B00     		lsls	r3, r3, #1
+ 945 00ae 1344     		add	r3, r3, r2
+ 946 00b0 DB00     		lsls	r3, r3, #3
+ 947 00b2 0B44     		add	r3, r3, r1
+ 948 00b4 1B68     		ldr	r3, [r3]
+ 949              		.loc 1 283 31
+ 950 00b6 5B68     		ldr	r3, [r3, #4]
+ 951 00b8 0293     		str	r3, [sp, #8]
+ 284:libraries/zf_driver/zf_driver_spi.c ****                 register_temp &= ~SPI_CR2_DS;
+ 952              		.loc 1 284 31
+ 953 00ba 029B     		ldr	r3, [sp, #8]
+ 954 00bc 23F47063 		bic	r3, r3, #3840
+ 955 00c0 0293     		str	r3, [sp, #8]
+ 285:libraries/zf_driver/zf_driver_spi.c ****                 switch(item & SPI_CONFIG_VALUE_MASK)
+ 956              		.loc 1 285 29
+ 957 00c2 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 958 00c6 03F00F03 		and	r3, r3, #15
+ 959 00ca 002B     		cmp	r3, #0
+ 960 00cc 02D0     		beq	.L53
+ 961 00ce 012B     		cmp	r3, #1
+ 962 00d0 05D0     		beq	.L54
+ 963 00d2 09E0     		b	.L55
+ 964              	.L53:
+ 286:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 287:libraries/zf_driver/zf_driver_spi.c ****                     case 0x00:  register_temp |= (0x00000007 << SPI_CR2_DS_Pos);    break;
+ 965              		.loc 1 287 47
+ 966 00d4 029B     		ldr	r3, [sp, #8]
+ 967 00d6 43F4E063 		orr	r3, r3, #1792
+ 968 00da 0293     		str	r3, [sp, #8]
+ 969              		.loc 1 287 21
+ 970 00dc 04E0     		b	.L55
+ 971              	.L54:
+ 288:libraries/zf_driver/zf_driver_spi.c ****                     case 0x01:  register_temp |= (0x0000000F << SPI_CR2_DS_Pos);    break;
+ 972              		.loc 1 288 47
+ 973 00de 029B     		ldr	r3, [sp, #8]
+ 974 00e0 43F47063 		orr	r3, r3, #3840
+ 975 00e4 0293     		str	r3, [sp, #8]
+ 976              		.loc 1 288 21
+ 977 00e6 00BF     		nop
+ 978              	.L55:
+ 289:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 290:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].spi_ptr->CR2 = register_temp;
+ 979              		.loc 1 290 40
+ 980 00e8 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 981 00ec 2749     		ldr	r1, .L62
+ 982 00ee 1346     		mov	r3, r2
+ 983 00f0 5B00     		lsls	r3, r3, #1
+ 984 00f2 1344     		add	r3, r3, r2
+ 985 00f4 DB00     		lsls	r3, r3, #3
+ 986 00f6 0B44     		add	r3, r3, r1
+ 987 00f8 1B68     		ldr	r3, [r3]
+ 988              		.loc 1 290 54
+ 989 00fa 029A     		ldr	r2, [sp, #8]
+ 990 00fc 5A60     		str	r2, [r3, #4]
+ 291:libraries/zf_driver/zf_driver_spi.c ****             }break;
+ 991              		.loc 1 291 13
+ 992 00fe 3BE0     		b	.L52
+ 993              	.L51:
+ 292:libraries/zf_driver/zf_driver_spi.c ****             case 0x10:
+ 293:libraries/zf_driver/zf_driver_spi.c ****             {
+ 294:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].format = (item & SPI_CONFIG_VALUE_MASK);
+ 994              		.loc 1 294 40
+ 995 0100 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 996              		.loc 1 294 56
+ 997 0104 9DF80630 		ldrb	r3, [sp, #6]
+ 998 0108 03F00F03 		and	r3, r3, #15
+ 999 010c D9B2     		uxtb	r1, r3
+ 1000              		.loc 1 294 48
+ 1001 010e 1F48     		ldr	r0, .L62
+ 1002 0110 1346     		mov	r3, r2
+ 1003 0112 5B00     		lsls	r3, r3, #1
+ 1004 0114 1344     		add	r3, r3, r2
+ 1005 0116 DB00     		lsls	r3, r3, #3
+ 1006 0118 0344     		add	r3, r3, r0
+ 1007 011a 03F11002 		add	r2, r3, #16
+ 1008 011e 5379     		ldrb	r3, [r2, #5]
+ 1009 0120 61F30713 		bfi	r3, r1, #4, #4
+ 1010 0124 5371     		strb	r3, [r2, #5]
+ 295:libraries/zf_driver/zf_driver_spi.c ****                 register_temp = spi_obj_list[spi_index].spi_ptr->CR1;
+ 1011              		.loc 1 295 56
+ 1012 0126 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1013 012a 1849     		ldr	r1, .L62
+ 1014 012c 1346     		mov	r3, r2
+ 1015 012e 5B00     		lsls	r3, r3, #1
+ 1016 0130 1344     		add	r3, r3, r2
+ 1017 0132 DB00     		lsls	r3, r3, #3
+ 1018 0134 0B44     		add	r3, r3, r1
+ 1019 0136 1B68     		ldr	r3, [r3]
+ 1020              		.loc 1 295 31
+ 1021 0138 1B68     		ldr	r3, [r3]
+ 1022 013a 0293     		str	r3, [sp, #8]
+ 296:libraries/zf_driver/zf_driver_spi.c ****                 register_temp &= ~0x00000080;
+ 1023              		.loc 1 296 31
+ 1024 013c 029B     		ldr	r3, [sp, #8]
+ 1025 013e 23F08003 		bic	r3, r3, #128
+ 1026 0142 0293     		str	r3, [sp, #8]
+ 297:libraries/zf_driver/zf_driver_spi.c ****                 switch(item & SPI_CONFIG_VALUE_MASK)
+ 1027              		.loc 1 297 29
+ 1028 0144 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 1029 0148 03F00F03 		and	r3, r3, #15
+ 1030 014c 002B     		cmp	r3, #0
+ 1031 014e 06D0     		beq	.L60
+ 1032 0150 012B     		cmp	r3, #1
+ 1033 0152 05D1     		bne	.L58
+ 298:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 299:libraries/zf_driver/zf_driver_spi.c ****                     case 0x00:  register_temp |= 0x00000000;    break;
+ 300:libraries/zf_driver/zf_driver_spi.c ****                     case 0x01:  register_temp |= 0x00000080;    break;
+ 1034              		.loc 1 300 47
+ 1035 0154 029B     		ldr	r3, [sp, #8]
+ 1036 0156 43F08003 		orr	r3, r3, #128
+ 1037 015a 0293     		str	r3, [sp, #8]
+ 1038              		.loc 1 300 21
+ 1039 015c 00E0     		b	.L58
+ 1040              	.L60:
+ 299:libraries/zf_driver/zf_driver_spi.c ****                     case 0x01:  register_temp |= 0x00000080;    break;
+ 1041              		.loc 1 299 21
+ 1042 015e 00BF     		nop
+ 1043              	.L58:
+ 301:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 302:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].spi_ptr->CR1 = register_temp;
+ 1044              		.loc 1 302 40
+ 1045 0160 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1046 0164 0949     		ldr	r1, .L62
+ 1047 0166 1346     		mov	r3, r2
+ 1048 0168 5B00     		lsls	r3, r3, #1
+ 1049 016a 1344     		add	r3, r3, r2
+ 1050 016c DB00     		lsls	r3, r3, #3
+ 1051 016e 0B44     		add	r3, r3, r1
+ 1052 0170 1B68     		ldr	r3, [r3]
+ 1053              		.loc 1 302 54
+ 1054 0172 029A     		ldr	r2, [sp, #8]
+ 1055 0174 1A60     		str	r2, [r3]
+ 303:libraries/zf_driver/zf_driver_spi.c ****             }break;
+ 1056              		.loc 1 303 13
+ 1057 0176 00BF     		nop
+ 1058              	.L52:
+ 304:libraries/zf_driver/zf_driver_spi.c ****         }
+ 305:libraries/zf_driver/zf_driver_spi.c **** 
+ 306:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 1059              		.loc 1 306 22
+ 1060 0178 0023     		movs	r3, #0
+ 1061 017a 8DF80F30 		strb	r3, [sp, #15]
+ 1062              	.L48:
+ 1063              	.LBE2:
+ 307:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 308:libraries/zf_driver/zf_driver_spi.c **** 
+ 309:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 1064              		.loc 1 309 12
+ 1065 017e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 310:libraries/zf_driver/zf_driver_spi.c **** }
+ 1066              		.loc 1 310 1
+ 1067 0182 1846     		mov	r0, r3
+ 1068 0184 05B0     		add	sp, sp, #20
+ 1069              		.cfi_def_cfa_offset 4
+ 1070              		@ sp needed
+ 1071 0186 5DF804FB 		ldr	pc, [sp], #4
+ 1072              	.L63:
+ 1073 018a 00BF     		.align	2
+ 1074              	.L62:
+ 1075 018c 00000000 		.word	spi_obj_list
+ 1076 0190 00000000 		.word	.LC0
+ 1077              		.cfi_endproc
+ 1078              	.LFE183:
+ 1080              		.section	.text.zf_spi_set_speed,"ax",%progbits
+ 1081              		.align	1
+ 1082              		.p2align 4,,15
+ 1083              		.global	zf_spi_set_speed
+ 1084              		.syntax unified
+ 1085              		.thumb
+ 1086              		.thumb_func
+ 1088              	zf_spi_set_speed:
+ 1089              	.LFB184:
+ 311:libraries/zf_driver/zf_driver_spi.c **** 
+ 312:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 313:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 接口 配置速度
+ 314:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 315:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     baudrate            设置 SPI 的波特率 不超过系统时钟的一半 会�
+ 316:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 317:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_set_speed(spi_index, baudrate);
+ 318:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 319:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 320:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_set_speed (zf_spi_index_enum spi_index, uint32 baudrate)
+ 321:libraries/zf_driver/zf_driver_spi.c **** {
+ 1090              		.loc 1 321 1
+ 1091              		.cfi_startproc
+ 1092              		@ args = 0, pretend = 0, frame = 24
+ 1093              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1094 0000 00B5     		push	{lr}
+ 1095              		.cfi_def_cfa_offset 4
+ 1096              		.cfi_offset 14, -4
+ 1097 0002 87B0     		sub	sp, sp, #28
+ 1098              		.cfi_def_cfa_offset 32
+ 1099 0004 0346     		mov	r3, r0
+ 1100 0006 0091     		str	r1, [sp]
+ 1101 0008 8DF80730 		strb	r3, [sp, #7]
+ 322:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 1102              		.loc 1 322 36
+ 1103 000c 0123     		movs	r3, #1
+ 1104 000e 8DF81730 		strb	r3, [sp, #23]
+ 323:libraries/zf_driver/zf_driver_spi.c **** 
+ 324:libraries/zf_driver/zf_driver_spi.c ****     do
+ 325:libraries/zf_driver/zf_driver_spi.c ****     {
+ 326:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_obj_list[spi_index].baudrate))
+ 1105              		.loc 1 326 12
+ 1106 0012 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1107 0016 9049     		ldr	r1, .L78
+ 1108 0018 1346     		mov	r3, r2
+ 1109 001a 5B00     		lsls	r3, r3, #1
+ 1110 001c 1344     		add	r3, r3, r2
+ 1111 001e DB00     		lsls	r3, r3, #3
+ 1112 0020 0B44     		add	r3, r3, r1
+ 1113 0022 1033     		adds	r3, r3, #16
+ 1114 0024 1B68     		ldr	r3, [r3]
+ 1115              		.loc 1 326 11
+ 1116 0026 002B     		cmp	r3, #0
+ 1117 0028 0CD1     		bne	.L65
+ 1118              		.loc 1 326 12 discriminator 1
+ 1119 002a 0022     		movs	r2, #0
+ 1120 002c 4FF4A371 		mov	r1, #326
+ 1121 0030 8A48     		ldr	r0, .L78+4
+ 1122 0032 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1123 0036 0346     		mov	r3, r0
+ 1124 0038 002B     		cmp	r3, #0
+ 1125 003a 03D0     		beq	.L65
+ 327:libraries/zf_driver/zf_driver_spi.c ****         {
+ 328:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 329:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_NOT_INIT;                           // SPI 模块未初
+ 1126              		.loc 1 329 26
+ 1127 003c 2123     		movs	r3, #33
+ 1128 003e 8DF81730 		strb	r3, [sp, #23]
+ 330:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1129              		.loc 1 330 13
+ 1130 0042 03E1     		b	.L66
+ 1131              	.L65:
+ 331:libraries/zf_driver/zf_driver_spi.c ****         }
+ 332:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(1000000 <= baudrate && spi_obj_list[spi_index].clock_input / 2 >= baudrate
+ 1132              		.loc 1 332 11
+ 1133 0044 009B     		ldr	r3, [sp]
+ 1134 0046 864A     		ldr	r2, .L78+8
+ 1135 0048 9342     		cmp	r3, r2
+ 1136 004a 0DD9     		bls	.L67
+ 1137              		.loc 1 332 12 discriminator 2
+ 1138 004c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1139 0050 8149     		ldr	r1, .L78
+ 1140 0052 1346     		mov	r3, r2
+ 1141 0054 5B00     		lsls	r3, r3, #1
+ 1142 0056 1344     		add	r3, r3, r2
+ 1143 0058 DB00     		lsls	r3, r3, #3
+ 1144 005a 0B44     		add	r3, r3, r1
+ 1145 005c 0433     		adds	r3, r3, #4
+ 1146 005e 1B68     		ldr	r3, [r3]
+ 1147 0060 5B08     		lsrs	r3, r3, #1
+ 1148 0062 009A     		ldr	r2, [sp]
+ 1149 0064 9A42     		cmp	r2, r3
+ 1150 0066 0CD9     		bls	.L77
+ 1151              	.L67:
+ 1152              		.loc 1 332 12 is_stmt 0 discriminator 3
+ 1153 0068 0022     		movs	r2, #0
+ 1154 006a 4FF4A671 		mov	r1, #332
+ 1155 006e 7B48     		ldr	r0, .L78+4
+ 1156 0070 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1157 0074 0346     		mov	r3, r0
+ 1158 0076 002B     		cmp	r3, #0
+ 1159 0078 03D0     		beq	.L77
+ 333:libraries/zf_driver/zf_driver_spi.c ****         {
+ 334:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明输入的 SPI 的波特率不正确
+ 335:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_SPEED_UNSUPPORTED;                         // SPI 传输速率
+ 1160              		.loc 1 335 26 is_stmt 1
+ 1161 007a 2223     		movs	r3, #34
+ 1162 007c 8DF81730 		strb	r3, [sp, #23]
+ 336:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1163              		.loc 1 336 13
+ 1164 0080 E4E0     		b	.L66
+ 1165              	.L77:
+ 337:libraries/zf_driver/zf_driver_spi.c ****         }
+ 338:libraries/zf_driver/zf_driver_spi.c **** 
+ 339:libraries/zf_driver/zf_driver_spi.c ****         while(SPI_STATE_BUY(spi_index));                                        // 等待传输完�
+ 1166              		.loc 1 339 14
+ 1167 0082 00BF     		nop
+ 1168              	.L69:
+ 1169              		.loc 1 339 15 discriminator 1
+ 1170 0084 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1171 0088 7349     		ldr	r1, .L78
+ 1172 008a 1346     		mov	r3, r2
+ 1173 008c 5B00     		lsls	r3, r3, #1
+ 1174 008e 1344     		add	r3, r3, r2
+ 1175 0090 DB00     		lsls	r3, r3, #3
+ 1176 0092 0B44     		add	r3, r3, r1
+ 1177 0094 1B68     		ldr	r3, [r3]
+ 1178 0096 9B68     		ldr	r3, [r3, #8]
+ 1179 0098 03F08003 		and	r3, r3, #128
+ 1180              		.loc 1 339 14 discriminator 1
+ 1181 009c 002B     		cmp	r3, #0
+ 1182 009e F1D1     		bne	.L69
+ 340:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].spi_ptr->CR1 &= ~SPI_CR1_SPE;
+ 1183              		.loc 1 340 32
+ 1184 00a0 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1185 00a4 6C49     		ldr	r1, .L78
+ 1186 00a6 1346     		mov	r3, r2
+ 1187 00a8 5B00     		lsls	r3, r3, #1
+ 1188 00aa 1344     		add	r3, r3, r2
+ 1189 00ac DB00     		lsls	r3, r3, #3
+ 1190 00ae 0B44     		add	r3, r3, r1
+ 1191 00b0 1B68     		ldr	r3, [r3]
+ 1192              		.loc 1 340 46
+ 1193 00b2 1968     		ldr	r1, [r3]
+ 1194              		.loc 1 340 32
+ 1195 00b4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1196 00b8 6748     		ldr	r0, .L78
+ 1197 00ba 1346     		mov	r3, r2
+ 1198 00bc 5B00     		lsls	r3, r3, #1
+ 1199 00be 1344     		add	r3, r3, r2
+ 1200 00c0 DB00     		lsls	r3, r3, #3
+ 1201 00c2 0344     		add	r3, r3, r0
+ 1202 00c4 1B68     		ldr	r3, [r3]
+ 1203              		.loc 1 340 46
+ 1204 00c6 21F04002 		bic	r2, r1, #64
+ 1205 00ca 1A60     		str	r2, [r3]
+ 1206              	.LBB3:
+ 341:libraries/zf_driver/zf_driver_spi.c **** 
+ 342:libraries/zf_driver/zf_driver_spi.c ****         {
+ 343:libraries/zf_driver/zf_driver_spi.c ****             uint8   i           = 0;
+ 1207              		.loc 1 343 21
+ 1208 00cc 0023     		movs	r3, #0
+ 1209 00ce 8DF81630 		strb	r3, [sp, #22]
+ 344:libraries/zf_driver/zf_driver_spi.c ****             uint16  div         = 2;
+ 1210              		.loc 1 344 21
+ 1211 00d2 0223     		movs	r3, #2
+ 1212 00d4 ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 345:libraries/zf_driver/zf_driver_spi.c ****             uint32  baud_large  = spi_obj_list[spi_index].clock_input / div;
+ 1213              		.loc 1 345 58
+ 1214 00d8 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1215 00dc 5E49     		ldr	r1, .L78
+ 1216 00de 1346     		mov	r3, r2
+ 1217 00e0 5B00     		lsls	r3, r3, #1
+ 1218 00e2 1344     		add	r3, r3, r2
+ 1219 00e4 DB00     		lsls	r3, r3, #3
+ 1220 00e6 0B44     		add	r3, r3, r1
+ 1221 00e8 0433     		adds	r3, r3, #4
+ 1222 00ea 1A68     		ldr	r2, [r3]
+ 1223              		.loc 1 345 71
+ 1224 00ec BDF81430 		ldrh	r3, [sp, #20]
+ 1225              		.loc 1 345 21
+ 1226 00f0 B2FBF3F3 		udiv	r3, r2, r3
+ 1227 00f4 0493     		str	r3, [sp, #16]
+ 346:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].baudrate = spi_obj_list[spi_index].clock_input / div;
+ 1228              		.loc 1 346 71
+ 1229 00f6 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1230 00fa 5749     		ldr	r1, .L78
+ 1231 00fc 1346     		mov	r3, r2
+ 1232 00fe 5B00     		lsls	r3, r3, #1
+ 1233 0100 1344     		add	r3, r3, r2
+ 1234 0102 DB00     		lsls	r3, r3, #3
+ 1235 0104 0B44     		add	r3, r3, r1
+ 1236 0106 0433     		adds	r3, r3, #4
+ 1237 0108 1968     		ldr	r1, [r3]
+ 1238              		.loc 1 346 84
+ 1239 010a BDF81430 		ldrh	r3, [sp, #20]
+ 1240              		.loc 1 346 36
+ 1241 010e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1242              		.loc 1 346 84
+ 1243 0112 B1FBF3F1 		udiv	r1, r1, r3
+ 1244              		.loc 1 346 46
+ 1245 0116 5048     		ldr	r0, .L78
+ 1246 0118 1346     		mov	r3, r2
+ 1247 011a 5B00     		lsls	r3, r3, #1
+ 1248 011c 1344     		add	r3, r3, r2
+ 1249 011e DB00     		lsls	r3, r3, #3
+ 1250 0120 0344     		add	r3, r3, r0
+ 1251 0122 1033     		adds	r3, r3, #16
+ 1252 0124 1960     		str	r1, [r3]
+ 347:libraries/zf_driver/zf_driver_spi.c **** 
+ 348:libraries/zf_driver/zf_driver_spi.c ****             for(i = 0; 8 > i; i ++, div *= 2)
+ 1253              		.loc 1 348 19
+ 1254 0126 0023     		movs	r3, #0
+ 1255 0128 8DF81630 		strb	r3, [sp, #22]
+ 1256              		.loc 1 348 13
+ 1257 012c 39E0     		b	.L70
+ 1258              	.L73:
+ 349:libraries/zf_driver/zf_driver_spi.c ****             {
+ 350:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].baudrate = spi_obj_list[spi_index].clock_input / div;
+ 1259              		.loc 1 350 75
+ 1260 012e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1261 0132 4949     		ldr	r1, .L78
+ 1262 0134 1346     		mov	r3, r2
+ 1263 0136 5B00     		lsls	r3, r3, #1
+ 1264 0138 1344     		add	r3, r3, r2
+ 1265 013a DB00     		lsls	r3, r3, #3
+ 1266 013c 0B44     		add	r3, r3, r1
+ 1267 013e 0433     		adds	r3, r3, #4
+ 1268 0140 1968     		ldr	r1, [r3]
+ 1269              		.loc 1 350 88
+ 1270 0142 BDF81430 		ldrh	r3, [sp, #20]
+ 1271              		.loc 1 350 40
+ 1272 0146 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1273              		.loc 1 350 88
+ 1274 014a B1FBF3F1 		udiv	r1, r1, r3
+ 1275              		.loc 1 350 50
+ 1276 014e 4248     		ldr	r0, .L78
+ 1277 0150 1346     		mov	r3, r2
+ 1278 0152 5B00     		lsls	r3, r3, #1
+ 1279 0154 1344     		add	r3, r3, r2
+ 1280 0156 DB00     		lsls	r3, r3, #3
+ 1281 0158 0344     		add	r3, r3, r0
+ 1282 015a 1033     		adds	r3, r3, #16
+ 1283 015c 1960     		str	r1, [r3]
+ 351:libraries/zf_driver/zf_driver_spi.c ****                 if(spi_obj_list[spi_index].baudrate < baudrate)
+ 1284              		.loc 1 351 43
+ 1285 015e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1286 0162 3D49     		ldr	r1, .L78
+ 1287 0164 1346     		mov	r3, r2
+ 1288 0166 5B00     		lsls	r3, r3, #1
+ 1289 0168 1344     		add	r3, r3, r2
+ 1290 016a DB00     		lsls	r3, r3, #3
+ 1291 016c 0B44     		add	r3, r3, r1
+ 1292 016e 1033     		adds	r3, r3, #16
+ 1293 0170 1B68     		ldr	r3, [r3]
+ 1294              		.loc 1 351 19
+ 1295 0172 009A     		ldr	r2, [sp]
+ 1296 0174 9A42     		cmp	r2, r3
+ 1297 0176 19D8     		bhi	.L76
+ 352:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 353:libraries/zf_driver/zf_driver_spi.c ****                     break;
+ 354:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 355:libraries/zf_driver/zf_driver_spi.c ****                 baud_large = spi_obj_list[spi_index].baudrate;
+ 1298              		.loc 1 355 53 discriminator 2
+ 1299 0178 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1300              		.loc 1 355 28 discriminator 2
+ 1301 017c 3649     		ldr	r1, .L78
+ 1302 017e 1346     		mov	r3, r2
+ 1303 0180 5B00     		lsls	r3, r3, #1
+ 1304 0182 1344     		add	r3, r3, r2
+ 1305 0184 DB00     		lsls	r3, r3, #3
+ 1306 0186 0B44     		add	r3, r3, r1
+ 1307 0188 1033     		adds	r3, r3, #16
+ 1308 018a 1B68     		ldr	r3, [r3]
+ 1309 018c 0493     		str	r3, [sp, #16]
+ 348:libraries/zf_driver/zf_driver_spi.c ****             {
+ 1310              		.loc 1 348 33 discriminator 2
+ 1311 018e 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1312 0192 0133     		adds	r3, r3, #1
+ 1313 0194 8DF81630 		strb	r3, [sp, #22]
+ 348:libraries/zf_driver/zf_driver_spi.c ****             {
+ 1314              		.loc 1 348 41 discriminator 2
+ 1315 0198 BDF81430 		ldrh	r3, [sp, #20]	@ movhi
+ 1316 019c 5B00     		lsls	r3, r3, #1
+ 1317 019e ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 1318              	.L70:
+ 348:libraries/zf_driver/zf_driver_spi.c ****             {
+ 1319              		.loc 1 348 13 discriminator 1
+ 1320 01a2 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1321 01a6 072B     		cmp	r3, #7
+ 1322 01a8 C1D9     		bls	.L73
+ 1323 01aa 00E0     		b	.L72
+ 1324              	.L76:
+ 353:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 1325              		.loc 1 353 21
+ 1326 01ac 00BF     		nop
+ 1327              	.L72:
+ 356:libraries/zf_driver/zf_driver_spi.c ****             }
+ 357:libraries/zf_driver/zf_driver_spi.c ****             if((baud_large - baudrate) < (baudrate - spi_obj_list[spi_index].baudrate))
+ 1328              		.loc 1 357 28
+ 1329 01ae 049A     		ldr	r2, [sp, #16]
+ 1330 01b0 009B     		ldr	r3, [sp]
+ 1331 01b2 D11A     		subs	r1, r2, r3
+ 1332              		.loc 1 357 77
+ 1333 01b4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1334 01b8 2748     		ldr	r0, .L78
+ 1335 01ba 1346     		mov	r3, r2
+ 1336 01bc 5B00     		lsls	r3, r3, #1
+ 1337 01be 1344     		add	r3, r3, r2
+ 1338 01c0 DB00     		lsls	r3, r3, #3
+ 1339 01c2 0344     		add	r3, r3, r0
+ 1340 01c4 1033     		adds	r3, r3, #16
+ 1341 01c6 1B68     		ldr	r3, [r3]
+ 1342              		.loc 1 357 52
+ 1343 01c8 009A     		ldr	r2, [sp]
+ 1344 01ca D31A     		subs	r3, r2, r3
+ 1345              		.loc 1 357 15
+ 1346 01cc 9942     		cmp	r1, r3
+ 1347 01ce 19D2     		bcs	.L74
+ 358:libraries/zf_driver/zf_driver_spi.c ****             {
+ 359:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].baudrate *= 2;
+ 1348              		.loc 1 359 50
+ 1349 01d0 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1350 01d4 2049     		ldr	r1, .L78
+ 1351 01d6 1346     		mov	r3, r2
+ 1352 01d8 5B00     		lsls	r3, r3, #1
+ 1353 01da 1344     		add	r3, r3, r2
+ 1354 01dc DB00     		lsls	r3, r3, #3
+ 1355 01de 0B44     		add	r3, r3, r1
+ 1356 01e0 1033     		adds	r3, r3, #16
+ 1357 01e2 1B68     		ldr	r3, [r3]
+ 1358 01e4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1359 01e8 5900     		lsls	r1, r3, #1
+ 1360 01ea 1B48     		ldr	r0, .L78
+ 1361 01ec 1346     		mov	r3, r2
+ 1362 01ee 5B00     		lsls	r3, r3, #1
+ 1363 01f0 1344     		add	r3, r3, r2
+ 1364 01f2 DB00     		lsls	r3, r3, #3
+ 1365 01f4 0344     		add	r3, r3, r0
+ 1366 01f6 1033     		adds	r3, r3, #16
+ 1367 01f8 1960     		str	r1, [r3]
+ 360:libraries/zf_driver/zf_driver_spi.c ****                 i -= 1;
+ 1368              		.loc 1 360 19
+ 1369 01fa 9DF81630 		ldrb	r3, [sp, #22]
+ 1370 01fe 013B     		subs	r3, r3, #1
+ 1371 0200 8DF81630 		strb	r3, [sp, #22]
+ 1372              	.L74:
+ 361:libraries/zf_driver/zf_driver_spi.c ****             }
+ 362:libraries/zf_driver/zf_driver_spi.c **** 
+ 363:libraries/zf_driver/zf_driver_spi.c ****             uint32 register_temp = spi_obj_list[spi_index].spi_ptr->CR1;
+ 1373              		.loc 1 363 59
+ 1374 0204 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1375 0208 1349     		ldr	r1, .L78
+ 1376 020a 1346     		mov	r3, r2
+ 1377 020c 5B00     		lsls	r3, r3, #1
+ 1378 020e 1344     		add	r3, r3, r2
+ 1379 0210 DB00     		lsls	r3, r3, #3
+ 1380 0212 0B44     		add	r3, r3, r1
+ 1381 0214 1B68     		ldr	r3, [r3]
+ 1382              		.loc 1 363 20
+ 1383 0216 1B68     		ldr	r3, [r3]
+ 1384 0218 0393     		str	r3, [sp, #12]
+ 364:libraries/zf_driver/zf_driver_spi.c ****             register_temp &= ~(0x00000038);
+ 1385              		.loc 1 364 27
+ 1386 021a 039B     		ldr	r3, [sp, #12]
+ 1387 021c 23F03803 		bic	r3, r3, #56
+ 1388 0220 0393     		str	r3, [sp, #12]
+ 365:libraries/zf_driver/zf_driver_spi.c ****             register_temp |= (i << 3);
+ 1389              		.loc 1 365 33
+ 1390 0222 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1391 0226 DB00     		lsls	r3, r3, #3
+ 1392 0228 1A46     		mov	r2, r3
+ 1393              		.loc 1 365 27
+ 1394 022a 039B     		ldr	r3, [sp, #12]
+ 1395 022c 1343     		orrs	r3, r3, r2
+ 1396 022e 0393     		str	r3, [sp, #12]
+ 366:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].spi_ptr->CR1 = register_temp;
+ 1397              		.loc 1 366 36
+ 1398 0230 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1399 0234 0849     		ldr	r1, .L78
+ 1400 0236 1346     		mov	r3, r2
+ 1401 0238 5B00     		lsls	r3, r3, #1
+ 1402 023a 1344     		add	r3, r3, r2
+ 1403 023c DB00     		lsls	r3, r3, #3
+ 1404 023e 0B44     		add	r3, r3, r1
+ 1405 0240 1B68     		ldr	r3, [r3]
+ 1406              		.loc 1 366 50
+ 1407 0242 039A     		ldr	r2, [sp, #12]
+ 1408 0244 1A60     		str	r2, [r3]
+ 1409              	.LBE3:
+ 367:libraries/zf_driver/zf_driver_spi.c ****         }
+ 368:libraries/zf_driver/zf_driver_spi.c **** 
+ 369:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 1410              		.loc 1 369 22
+ 1411 0246 0023     		movs	r3, #0
+ 1412 0248 8DF81730 		strb	r3, [sp, #23]
+ 1413              	.L66:
+ 370:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 371:libraries/zf_driver/zf_driver_spi.c **** 
+ 372:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 1414              		.loc 1 372 12
+ 1415 024c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 373:libraries/zf_driver/zf_driver_spi.c **** }
+ 1416              		.loc 1 373 1
+ 1417 0250 1846     		mov	r0, r3
+ 1418 0252 07B0     		add	sp, sp, #28
+ 1419              		.cfi_def_cfa_offset 4
+ 1420              		@ sp needed
+ 1421 0254 5DF804FB 		ldr	pc, [sp], #4
+ 1422              	.L79:
+ 1423              		.align	2
+ 1424              	.L78:
+ 1425 0258 00000000 		.word	spi_obj_list
+ 1426 025c 00000000 		.word	.LC0
+ 1427 0260 3F420F00 		.word	999999
+ 1428              		.cfi_endproc
+ 1429              	.LFE184:
+ 1431              		.section	.text.zf_spi_enable,"ax",%progbits
+ 1432              		.align	1
+ 1433              		.p2align 4,,15
+ 1434              		.global	zf_spi_enable
+ 1435              		.syntax unified
+ 1436              		.thumb
+ 1437              		.thumb_func
+ 1439              	zf_spi_enable:
+ 1440              	.LFB185:
+ 374:libraries/zf_driver/zf_driver_spi.c **** 
+ 375:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 376:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 接口  使能
+ 377:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 378:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 379:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_enable(spi_index);
+ 380:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 381:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 382:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_enable (zf_spi_index_enum spi_index)
+ 383:libraries/zf_driver/zf_driver_spi.c **** {
+ 1441              		.loc 1 383 1
+ 1442              		.cfi_startproc
+ 1443              		@ args = 0, pretend = 0, frame = 16
+ 1444              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1445 0000 00B5     		push	{lr}
+ 1446              		.cfi_def_cfa_offset 4
+ 1447              		.cfi_offset 14, -4
+ 1448 0002 85B0     		sub	sp, sp, #20
+ 1449              		.cfi_def_cfa_offset 24
+ 1450 0004 0346     		mov	r3, r0
+ 1451 0006 8DF80730 		strb	r3, [sp, #7]
+ 384:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 1452              		.loc 1 384 36
+ 1453 000a 0123     		movs	r3, #1
+ 1454 000c 8DF80F30 		strb	r3, [sp, #15]
+ 385:libraries/zf_driver/zf_driver_spi.c **** 
+ 386:libraries/zf_driver/zf_driver_spi.c ****     do
+ 387:libraries/zf_driver/zf_driver_spi.c ****     {
+ 388:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_obj_list[spi_index].baudrate))
+ 1455              		.loc 1 388 12
+ 1456 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1457 0014 1749     		ldr	r1, .L84
+ 1458 0016 1346     		mov	r3, r2
+ 1459 0018 5B00     		lsls	r3, r3, #1
+ 1460 001a 1344     		add	r3, r3, r2
+ 1461 001c DB00     		lsls	r3, r3, #3
+ 1462 001e 0B44     		add	r3, r3, r1
+ 1463 0020 1033     		adds	r3, r3, #16
+ 1464 0022 1B68     		ldr	r3, [r3]
+ 1465              		.loc 1 388 11
+ 1466 0024 002B     		cmp	r3, #0
+ 1467 0026 0CD1     		bne	.L81
+ 1468              		.loc 1 388 12 discriminator 1
+ 1469 0028 0022     		movs	r2, #0
+ 1470 002a 4FF4C271 		mov	r1, #388
+ 1471 002e 1248     		ldr	r0, .L84+4
+ 1472 0030 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1473 0034 0346     		mov	r3, r0
+ 1474 0036 002B     		cmp	r3, #0
+ 1475 0038 03D0     		beq	.L81
+ 389:libraries/zf_driver/zf_driver_spi.c ****         {
+ 390:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 391:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_NOT_INIT;                           // SPI 模块未初
+ 1476              		.loc 1 391 26
+ 1477 003a 2123     		movs	r3, #33
+ 1478 003c 8DF80F30 		strb	r3, [sp, #15]
+ 392:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1479              		.loc 1 392 13
+ 1480 0040 11E0     		b	.L82
+ 1481              	.L81:
+ 393:libraries/zf_driver/zf_driver_spi.c ****         }
+ 394:libraries/zf_driver/zf_driver_spi.c **** 
+ 395:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].enable = ZF_ENABLE;
+ 1482              		.loc 1 395 32
+ 1483 0042 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1484              		.loc 1 395 40
+ 1485 0046 0B49     		ldr	r1, .L84
+ 1486 0048 1346     		mov	r3, r2
+ 1487 004a 5B00     		lsls	r3, r3, #1
+ 1488 004c 1344     		add	r3, r3, r2
+ 1489 004e DB00     		lsls	r3, r3, #3
+ 1490 0050 0B44     		add	r3, r3, r1
+ 1491 0052 03F11002 		add	r2, r3, #16
+ 1492 0056 1379     		ldrb	r3, [r2, #4]
+ 1493 0058 0121     		movs	r1, #1
+ 1494 005a 61F30713 		bfi	r3, r1, #4, #4
+ 1495 005e 1371     		strb	r3, [r2, #4]
+ 396:libraries/zf_driver/zf_driver_spi.c **** 
+ 397:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 1496              		.loc 1 397 22
+ 1497 0060 0023     		movs	r3, #0
+ 1498 0062 8DF80F30 		strb	r3, [sp, #15]
+ 1499              	.L82:
+ 398:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 399:libraries/zf_driver/zf_driver_spi.c **** 
+ 400:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 1500              		.loc 1 400 12
+ 1501 0066 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 401:libraries/zf_driver/zf_driver_spi.c **** }
+ 1502              		.loc 1 401 1
+ 1503 006a 1846     		mov	r0, r3
+ 1504 006c 05B0     		add	sp, sp, #20
+ 1505              		.cfi_def_cfa_offset 4
+ 1506              		@ sp needed
+ 1507 006e 5DF804FB 		ldr	pc, [sp], #4
+ 1508              	.L85:
+ 1509 0072 00BF     		.align	2
+ 1510              	.L84:
+ 1511 0074 00000000 		.word	spi_obj_list
+ 1512 0078 00000000 		.word	.LC0
+ 1513              		.cfi_endproc
+ 1514              	.LFE185:
+ 1516              		.section	.text.zf_spi_disable,"ax",%progbits
+ 1517              		.align	1
+ 1518              		.p2align 4,,15
+ 1519              		.global	zf_spi_disable
+ 1520              		.syntax unified
+ 1521              		.thumb
+ 1522              		.thumb_func
+ 1524              	zf_spi_disable:
+ 1525              	.LFB186:
+ 402:libraries/zf_driver/zf_driver_spi.c **** 
+ 403:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 404:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 接口  禁止
+ 405:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 406:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 407:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_disable(spi_index);
+ 408:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 409:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 410:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_disable (zf_spi_index_enum spi_index)
+ 411:libraries/zf_driver/zf_driver_spi.c **** {
+ 1526              		.loc 1 411 1
+ 1527              		.cfi_startproc
+ 1528              		@ args = 0, pretend = 0, frame = 16
+ 1529              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1530 0000 00B5     		push	{lr}
+ 1531              		.cfi_def_cfa_offset 4
+ 1532              		.cfi_offset 14, -4
+ 1533 0002 85B0     		sub	sp, sp, #20
+ 1534              		.cfi_def_cfa_offset 24
+ 1535 0004 0346     		mov	r3, r0
+ 1536 0006 8DF80730 		strb	r3, [sp, #7]
+ 412:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 1537              		.loc 1 412 36
+ 1538 000a 0123     		movs	r3, #1
+ 1539 000c 8DF80F30 		strb	r3, [sp, #15]
+ 413:libraries/zf_driver/zf_driver_spi.c **** 
+ 414:libraries/zf_driver/zf_driver_spi.c ****     do
+ 415:libraries/zf_driver/zf_driver_spi.c ****     {
+ 416:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_obj_list[spi_index].baudrate))
+ 1540              		.loc 1 416 12
+ 1541 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1542 0014 1649     		ldr	r1, .L90
+ 1543 0016 1346     		mov	r3, r2
+ 1544 0018 5B00     		lsls	r3, r3, #1
+ 1545 001a 1344     		add	r3, r3, r2
+ 1546 001c DB00     		lsls	r3, r3, #3
+ 1547 001e 0B44     		add	r3, r3, r1
+ 1548 0020 1033     		adds	r3, r3, #16
+ 1549 0022 1B68     		ldr	r3, [r3]
+ 1550              		.loc 1 416 11
+ 1551 0024 002B     		cmp	r3, #0
+ 1552 0026 0CD1     		bne	.L87
+ 1553              		.loc 1 416 12 discriminator 1
+ 1554 0028 0022     		movs	r2, #0
+ 1555 002a 4FF4D071 		mov	r1, #416
+ 1556 002e 1148     		ldr	r0, .L90+4
+ 1557 0030 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1558 0034 0346     		mov	r3, r0
+ 1559 0036 002B     		cmp	r3, #0
+ 1560 0038 03D0     		beq	.L87
+ 417:libraries/zf_driver/zf_driver_spi.c ****         {
+ 418:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 419:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_NOT_INIT;                           // SPI 模块未初
+ 1561              		.loc 1 419 26
+ 1562 003a 2123     		movs	r3, #33
+ 1563 003c 8DF80F30 		strb	r3, [sp, #15]
+ 420:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1564              		.loc 1 420 13
+ 1565 0040 10E0     		b	.L88
+ 1566              	.L87:
+ 421:libraries/zf_driver/zf_driver_spi.c ****         }
+ 422:libraries/zf_driver/zf_driver_spi.c **** 
+ 423:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].enable = ZF_DISABLE;
+ 1567              		.loc 1 423 32
+ 1568 0042 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1569              		.loc 1 423 40
+ 1570 0046 0A49     		ldr	r1, .L90
+ 1571 0048 1346     		mov	r3, r2
+ 1572 004a 5B00     		lsls	r3, r3, #1
+ 1573 004c 1344     		add	r3, r3, r2
+ 1574 004e DB00     		lsls	r3, r3, #3
+ 1575 0050 0B44     		add	r3, r3, r1
+ 1576 0052 03F11002 		add	r2, r3, #16
+ 1577 0056 1379     		ldrb	r3, [r2, #4]
+ 1578 0058 6FF30713 		bfc	r3, #4, #4
+ 1579 005c 1371     		strb	r3, [r2, #4]
+ 424:libraries/zf_driver/zf_driver_spi.c **** 
+ 425:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 1580              		.loc 1 425 22
+ 1581 005e 0023     		movs	r3, #0
+ 1582 0060 8DF80F30 		strb	r3, [sp, #15]
+ 1583              	.L88:
+ 426:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 427:libraries/zf_driver/zf_driver_spi.c **** 
+ 428:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 1584              		.loc 1 428 12
+ 1585 0064 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 429:libraries/zf_driver/zf_driver_spi.c **** }
+ 1586              		.loc 1 429 1
+ 1587 0068 1846     		mov	r0, r3
+ 1588 006a 05B0     		add	sp, sp, #20
+ 1589              		.cfi_def_cfa_offset 4
+ 1590              		@ sp needed
+ 1591 006c 5DF804FB 		ldr	pc, [sp], #4
+ 1592              	.L91:
+ 1593              		.align	2
+ 1594              	.L90:
+ 1595 0070 00000000 		.word	spi_obj_list
+ 1596 0074 00000000 		.word	.LC0
+ 1597              		.cfi_endproc
+ 1598              	.LFE186:
+ 1600              		.section	.text.zf_spi_deinit,"ax",%progbits
+ 1601              		.align	1
+ 1602              		.p2align 4,,15
+ 1603              		.global	zf_spi_deinit
+ 1604              		.syntax unified
+ 1605              		.thumb
+ 1606              		.thumb_func
+ 1608              	zf_spi_deinit:
+ 1609              	.LFB187:
+ 430:libraries/zf_driver/zf_driver_spi.c **** 
+ 431:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 432:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 接口 注销初始化
+ 433:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 434:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 435:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_deinit(spi_index);
+ 436:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 437:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 438:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_deinit (zf_spi_index_enum spi_index)
+ 439:libraries/zf_driver/zf_driver_spi.c **** {
+ 1610              		.loc 1 439 1
+ 1611              		.cfi_startproc
+ 1612              		@ args = 0, pretend = 0, frame = 16
+ 1613              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1614 0000 00B5     		push	{lr}
+ 1615              		.cfi_def_cfa_offset 4
+ 1616              		.cfi_offset 14, -4
+ 1617 0002 85B0     		sub	sp, sp, #20
+ 1618              		.cfi_def_cfa_offset 24
+ 1619 0004 0346     		mov	r3, r0
+ 1620 0006 8DF80730 		strb	r3, [sp, #7]
+ 440:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 1621              		.loc 1 440 36
+ 1622 000a 0123     		movs	r3, #1
+ 1623 000c 8DF80F30 		strb	r3, [sp, #15]
+ 441:libraries/zf_driver/zf_driver_spi.c **** 
+ 442:libraries/zf_driver/zf_driver_spi.c ****     do
+ 443:libraries/zf_driver/zf_driver_spi.c ****     {
+ 444:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_obj_list[spi_index].baudrate))
+ 1624              		.loc 1 444 12
+ 1625 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1626 0014 6149     		ldr	r1, .L98
+ 1627 0016 1346     		mov	r3, r2
+ 1628 0018 5B00     		lsls	r3, r3, #1
+ 1629 001a 1344     		add	r3, r3, r2
+ 1630 001c DB00     		lsls	r3, r3, #3
+ 1631 001e 0B44     		add	r3, r3, r1
+ 1632 0020 1033     		adds	r3, r3, #16
+ 1633 0022 1B68     		ldr	r3, [r3]
+ 1634              		.loc 1 444 11
+ 1635 0024 002B     		cmp	r3, #0
+ 1636 0026 0CD1     		bne	.L93
+ 1637              		.loc 1 444 12 discriminator 1
+ 1638 0028 0022     		movs	r2, #0
+ 1639 002a 4FF4DE71 		mov	r1, #444
+ 1640 002e 5C48     		ldr	r0, .L98+4
+ 1641 0030 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1642 0034 0346     		mov	r3, r0
+ 1643 0036 002B     		cmp	r3, #0
+ 1644 0038 03D0     		beq	.L93
+ 445:libraries/zf_driver/zf_driver_spi.c ****         {
+ 446:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 447:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_NOT_INIT;                           // SPI 模块未初
+ 1645              		.loc 1 447 26
+ 1646 003a 2123     		movs	r3, #33
+ 1647 003c 8DF80F30 		strb	r3, [sp, #15]
+ 448:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1648              		.loc 1 448 13
+ 1649 0040 A6E0     		b	.L94
+ 1650              	.L93:
+ 449:libraries/zf_driver/zf_driver_spi.c ****         }
+ 450:libraries/zf_driver/zf_driver_spi.c **** 
+ 451:libraries/zf_driver/zf_driver_spi.c ****         zf_gpio_deinit((zf_gpio_pin_enum)spi_obj_list[spi_index].sck_pin);
+ 1651              		.loc 1 451 9
+ 1652 0042 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1653              		.loc 1 451 65
+ 1654 0046 5549     		ldr	r1, .L98
+ 1655 0048 1346     		mov	r3, r2
+ 1656 004a 5B00     		lsls	r3, r3, #1
+ 1657 004c 1344     		add	r3, r3, r2
+ 1658 004e DB00     		lsls	r3, r3, #3
+ 1659 0050 0B44     		add	r3, r3, r1
+ 1660 0052 0833     		adds	r3, r3, #8
+ 1661 0054 1B88     		ldrh	r3, [r3]
+ 1662              		.loc 1 451 9
+ 1663 0056 1846     		mov	r0, r3
+ 1664 0058 FFF7FEFF 		bl	zf_gpio_deinit
+ 452:libraries/zf_driver/zf_driver_spi.c ****         zf_gpio_deinit((zf_gpio_pin_enum)spi_obj_list[spi_index].mosi_pin);
+ 1665              		.loc 1 452 9
+ 1666 005c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1667              		.loc 1 452 65
+ 1668 0060 4E49     		ldr	r1, .L98
+ 1669 0062 1346     		mov	r3, r2
+ 1670 0064 5B00     		lsls	r3, r3, #1
+ 1671 0066 1344     		add	r3, r3, r2
+ 1672 0068 DB00     		lsls	r3, r3, #3
+ 1673 006a 0B44     		add	r3, r3, r1
+ 1674 006c 0A33     		adds	r3, r3, #10
+ 1675 006e 1B88     		ldrh	r3, [r3]
+ 1676              		.loc 1 452 9
+ 1677 0070 1846     		mov	r0, r3
+ 1678 0072 FFF7FEFF 		bl	zf_gpio_deinit
+ 453:libraries/zf_driver/zf_driver_spi.c ****         if(spi_obj_list[spi_index].use_miso)
+ 1679              		.loc 1 453 35
+ 1680 0076 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1681 007a 4849     		ldr	r1, .L98
+ 1682 007c 1346     		mov	r3, r2
+ 1683 007e 5B00     		lsls	r3, r3, #1
+ 1684 0080 1344     		add	r3, r3, r2
+ 1685 0082 DB00     		lsls	r3, r3, #3
+ 1686 0084 0B44     		add	r3, r3, r1
+ 1687 0086 1033     		adds	r3, r3, #16
+ 1688 0088 9B79     		ldrb	r3, [r3, #6]
+ 1689 008a C3F30303 		ubfx	r3, r3, #0, #4
+ 1690 008e DBB2     		uxtb	r3, r3
+ 1691              		.loc 1 453 11
+ 1692 0090 002B     		cmp	r3, #0
+ 1693 0092 0CD0     		beq	.L95
+ 454:libraries/zf_driver/zf_driver_spi.c ****         {
+ 455:libraries/zf_driver/zf_driver_spi.c ****             zf_gpio_deinit((zf_gpio_pin_enum)spi_obj_list[spi_index].miso_pin);
+ 1694              		.loc 1 455 13
+ 1695 0094 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1696              		.loc 1 455 69
+ 1697 0098 4049     		ldr	r1, .L98
+ 1698 009a 1346     		mov	r3, r2
+ 1699 009c 5B00     		lsls	r3, r3, #1
+ 1700 009e 1344     		add	r3, r3, r2
+ 1701 00a0 DB00     		lsls	r3, r3, #3
+ 1702 00a2 0B44     		add	r3, r3, r1
+ 1703 00a4 0C33     		adds	r3, r3, #12
+ 1704 00a6 1B88     		ldrh	r3, [r3]
+ 1705              		.loc 1 455 13
+ 1706 00a8 1846     		mov	r0, r3
+ 1707 00aa FFF7FEFF 		bl	zf_gpio_deinit
+ 1708              	.L95:
+ 456:libraries/zf_driver/zf_driver_spi.c ****         }
+ 457:libraries/zf_driver/zf_driver_spi.c ****         if(spi_obj_list[spi_index].use_cs)
+ 1709              		.loc 1 457 35
+ 1710 00ae 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1711 00b2 3A49     		ldr	r1, .L98
+ 1712 00b4 1346     		mov	r3, r2
+ 1713 00b6 5B00     		lsls	r3, r3, #1
+ 1714 00b8 1344     		add	r3, r3, r2
+ 1715 00ba DB00     		lsls	r3, r3, #3
+ 1716 00bc 0B44     		add	r3, r3, r1
+ 1717 00be 1033     		adds	r3, r3, #16
+ 1718 00c0 9B79     		ldrb	r3, [r3, #6]
+ 1719 00c2 C3F30313 		ubfx	r3, r3, #4, #4
+ 1720 00c6 DBB2     		uxtb	r3, r3
+ 1721              		.loc 1 457 11
+ 1722 00c8 002B     		cmp	r3, #0
+ 1723 00ca 0CD0     		beq	.L96
+ 458:libraries/zf_driver/zf_driver_spi.c ****         {
+ 459:libraries/zf_driver/zf_driver_spi.c ****             zf_gpio_deinit((zf_gpio_pin_enum)spi_obj_list[spi_index].cs_pin);
+ 1724              		.loc 1 459 13
+ 1725 00cc 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1726              		.loc 1 459 69
+ 1727 00d0 3249     		ldr	r1, .L98
+ 1728 00d2 1346     		mov	r3, r2
+ 1729 00d4 5B00     		lsls	r3, r3, #1
+ 1730 00d6 1344     		add	r3, r3, r2
+ 1731 00d8 DB00     		lsls	r3, r3, #3
+ 1732 00da 0B44     		add	r3, r3, r1
+ 1733 00dc 0E33     		adds	r3, r3, #14
+ 1734 00de 1B88     		ldrh	r3, [r3]
+ 1735              		.loc 1 459 13
+ 1736 00e0 1846     		mov	r0, r3
+ 1737 00e2 FFF7FEFF 		bl	zf_gpio_deinit
+ 1738              	.L96:
+ 460:libraries/zf_driver/zf_driver_spi.c ****         }
+ 461:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].baudrate    = 0;
+ 1739              		.loc 1 461 32
+ 1740 00e6 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1741              		.loc 1 461 45
+ 1742 00ea 2C49     		ldr	r1, .L98
+ 1743 00ec 1346     		mov	r3, r2
+ 1744 00ee 5B00     		lsls	r3, r3, #1
+ 1745 00f0 1344     		add	r3, r3, r2
+ 1746 00f2 DB00     		lsls	r3, r3, #3
+ 1747 00f4 0B44     		add	r3, r3, r1
+ 1748 00f6 1033     		adds	r3, r3, #16
+ 1749 00f8 0022     		movs	r2, #0
+ 1750 00fa 1A60     		str	r2, [r3]
+ 462:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].config_info = 0;
+ 1751              		.loc 1 462 32
+ 1752 00fc 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1753              		.loc 1 462 45
+ 1754 0100 2649     		ldr	r1, .L98
+ 1755 0102 1346     		mov	r3, r2
+ 1756 0104 5B00     		lsls	r3, r3, #1
+ 1757 0106 1344     		add	r3, r3, r2
+ 1758 0108 DB00     		lsls	r3, r3, #3
+ 1759 010a 0B44     		add	r3, r3, r1
+ 1760 010c 1433     		adds	r3, r3, #20
+ 1761 010e 0022     		movs	r2, #0
+ 1762 0110 1A60     		str	r2, [r3]
+ 463:libraries/zf_driver/zf_driver_spi.c ****         
+ 464:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].sck_pin     = 0xFF;
+ 1763              		.loc 1 464 32
+ 1764 0112 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1765              		.loc 1 464 45
+ 1766 0116 2149     		ldr	r1, .L98
+ 1767 0118 1346     		mov	r3, r2
+ 1768 011a 5B00     		lsls	r3, r3, #1
+ 1769 011c 1344     		add	r3, r3, r2
+ 1770 011e DB00     		lsls	r3, r3, #3
+ 1771 0120 0B44     		add	r3, r3, r1
+ 1772 0122 0833     		adds	r3, r3, #8
+ 1773 0124 FF22     		movs	r2, #255
+ 1774 0126 1A80     		strh	r2, [r3]	@ movhi
+ 465:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].mosi_pin    = 0xFF;
+ 1775              		.loc 1 465 32
+ 1776 0128 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1777              		.loc 1 465 45
+ 1778 012c 1B49     		ldr	r1, .L98
+ 1779 012e 1346     		mov	r3, r2
+ 1780 0130 5B00     		lsls	r3, r3, #1
+ 1781 0132 1344     		add	r3, r3, r2
+ 1782 0134 DB00     		lsls	r3, r3, #3
+ 1783 0136 0B44     		add	r3, r3, r1
+ 1784 0138 0A33     		adds	r3, r3, #10
+ 1785 013a FF22     		movs	r2, #255
+ 1786 013c 1A80     		strh	r2, [r3]	@ movhi
+ 466:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].miso_pin    = 0xFF;
+ 1787              		.loc 1 466 32
+ 1788 013e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1789              		.loc 1 466 45
+ 1790 0142 1649     		ldr	r1, .L98
+ 1791 0144 1346     		mov	r3, r2
+ 1792 0146 5B00     		lsls	r3, r3, #1
+ 1793 0148 1344     		add	r3, r3, r2
+ 1794 014a DB00     		lsls	r3, r3, #3
+ 1795 014c 0B44     		add	r3, r3, r1
+ 1796 014e 0C33     		adds	r3, r3, #12
+ 1797 0150 FF22     		movs	r2, #255
+ 1798 0152 1A80     		strh	r2, [r3]	@ movhi
+ 467:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].cs_pin      = 0xFF;
+ 1799              		.loc 1 467 32
+ 1800 0154 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1801              		.loc 1 467 45
+ 1802 0158 1049     		ldr	r1, .L98
+ 1803 015a 1346     		mov	r3, r2
+ 1804 015c 5B00     		lsls	r3, r3, #1
+ 1805 015e 1344     		add	r3, r3, r2
+ 1806 0160 DB00     		lsls	r3, r3, #3
+ 1807 0162 0B44     		add	r3, r3, r1
+ 1808 0164 0E33     		adds	r3, r3, #14
+ 1809 0166 FF22     		movs	r2, #255
+ 1810 0168 1A80     		strh	r2, [r3]	@ movhi
+ 468:libraries/zf_driver/zf_driver_spi.c **** 
+ 469:libraries/zf_driver/zf_driver_spi.c ****         zf_rcc_peripheral_reset(spi_rcc_index_list[spi_index]);
+ 1811              		.loc 1 469 9
+ 1812 016a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1813 016e 0D4A     		ldr	r2, .L98+8
+ 1814 0170 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 1815 0174 1846     		mov	r0, r3
+ 1816 0176 FFF7FEFF 		bl	zf_rcc_peripheral_reset
+ 470:libraries/zf_driver/zf_driver_spi.c ****         zf_rcc_clock_disable(spi_rcc_index_list[spi_index]);
+ 1817              		.loc 1 470 9
+ 1818 017a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1819 017e 094A     		ldr	r2, .L98+8
+ 1820 0180 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 1821 0184 1846     		mov	r0, r3
+ 1822 0186 FFF7FEFF 		bl	zf_rcc_clock_disable
+ 471:libraries/zf_driver/zf_driver_spi.c **** 
+ 472:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 1823              		.loc 1 472 22
+ 1824 018a 0023     		movs	r3, #0
+ 1825 018c 8DF80F30 		strb	r3, [sp, #15]
+ 1826              	.L94:
+ 473:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 474:libraries/zf_driver/zf_driver_spi.c **** 
+ 475:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 1827              		.loc 1 475 12
+ 1828 0190 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 476:libraries/zf_driver/zf_driver_spi.c **** }
+ 1829              		.loc 1 476 1
+ 1830 0194 1846     		mov	r0, r3
+ 1831 0196 05B0     		add	sp, sp, #20
+ 1832              		.cfi_def_cfa_offset 4
+ 1833              		@ sp needed
+ 1834 0198 5DF804FB 		ldr	pc, [sp], #4
+ 1835              	.L99:
+ 1836              		.align	2
+ 1837              	.L98:
+ 1838 019c 00000000 		.word	spi_obj_list
+ 1839 01a0 00000000 		.word	.LC0
+ 1840 01a4 00000000 		.word	spi_rcc_index_list
+ 1841              		.cfi_endproc
+ 1842              	.LFE187:
+ 1844              		.section	.text.zf_spi_init,"ax",%progbits
+ 1845              		.align	1
+ 1846              		.p2align 4,,15
+ 1847              		.global	zf_spi_init
+ 1848              		.syntax unified
+ 1849              		.thumb
+ 1850              		.thumb_func
+ 1852              	zf_spi_init:
+ 1853              	.LFB188:
+ 477:libraries/zf_driver/zf_driver_spi.c **** 
+ 478:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 479:libraries/zf_driver/zf_driver_spi.c **** // 函数简介     SPI 接口初始化
+ 480:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 481:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     mode                SPI 模式        (详见 zf_driver_spi.h 内 zf_spi_mode_e
+ 482:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     baudrate            设置 SPI 的波特率 不超过系统时钟的一半 会�
+ 483:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     sck_pin             选择 SCK 引脚   (详见 zf_driver_spi.h 内 zf_spi_sck_
+ 484:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     mosi_pin            选择 MOSI 引脚  (详见 zf_driver_spi.h 内 zf_spi_mosi
+ 485:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     miso_pin            选择 MISO 引脚  (详见 zf_driver_spi.h 内 zf_spi_miso
+ 486:libraries/zf_driver/zf_driver_spi.c **** // 参数说明     cs_pin              选择 CS 引脚    (详见 zf_driver_spi.h 内 zf_spi_cs_p
+ 487:libraries/zf_driver/zf_driver_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SPI_OPERATION_DONE - 完成 其�
+ 488:libraries/zf_driver/zf_driver_spi.c **** // 使用示例     zf_spi_init(spi_index, mode, baudrate, sck_pin, mosi_pin, miso_pin, cs_pin);
+ 489:libraries/zf_driver/zf_driver_spi.c **** // 备注信息     
+ 490:libraries/zf_driver/zf_driver_spi.c **** //-------------------------------------------------------------------------------------------------
+ 491:libraries/zf_driver/zf_driver_spi.c **** uint8 zf_spi_init (zf_spi_index_enum spi_index, zf_spi_mode_enum mode, uint32 baudrate, zf_spi_sck_
+ 492:libraries/zf_driver/zf_driver_spi.c **** {
+ 1854              		.loc 1 492 1
+ 1855              		.cfi_startproc
+ 1856              		@ args = 12, pretend = 0, frame = 32
+ 1857              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1858 0000 00B5     		push	{lr}
+ 1859              		.cfi_def_cfa_offset 4
+ 1860              		.cfi_offset 14, -4
+ 1861 0002 89B0     		sub	sp, sp, #36
+ 1862              		.cfi_def_cfa_offset 40
+ 1863 0004 0292     		str	r2, [sp, #8]
+ 1864 0006 0193     		str	r3, [sp, #4]
+ 1865 0008 0346     		mov	r3, r0
+ 1866 000a 8DF80F30 		strb	r3, [sp, #15]
+ 1867 000e 0B46     		mov	r3, r1
+ 1868 0010 8DF80E30 		strb	r3, [sp, #14]
+ 493:libraries/zf_driver/zf_driver_spi.c ****     zf_spi_operation_state_enum    return_state    =   SPI_ERROR_UNKNOW;
+ 1869              		.loc 1 493 36
+ 1870 0014 0123     		movs	r3, #1
+ 1871 0016 8DF81F30 		strb	r3, [sp, #31]
+ 1872              	.LBB4:
+ 494:libraries/zf_driver/zf_driver_spi.c **** 
+ 495:libraries/zf_driver/zf_driver_spi.c ****     do
+ 496:libraries/zf_driver/zf_driver_spi.c ****     {
+ 497:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(!spi_obj_list[spi_index].baudrate))
+ 1873              		.loc 1 497 12
+ 1874 001a 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 1875 001e 5949     		ldr	r1, .L128
+ 1876 0020 1346     		mov	r3, r2
+ 1877 0022 5B00     		lsls	r3, r3, #1
+ 1878 0024 1344     		add	r3, r3, r2
+ 1879 0026 DB00     		lsls	r3, r3, #3
+ 1880 0028 0B44     		add	r3, r3, r1
+ 1881 002a 1033     		adds	r3, r3, #16
+ 1882 002c 1B68     		ldr	r3, [r3]
+ 1883              		.loc 1 497 11
+ 1884 002e 002B     		cmp	r3, #0
+ 1885 0030 0CD0     		beq	.L101
+ 1886              		.loc 1 497 12 discriminator 1
+ 1887 0032 0022     		movs	r2, #0
+ 1888 0034 40F2F111 		movw	r1, #497
+ 1889 0038 5348     		ldr	r0, .L128+4
+ 1890 003a FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1891 003e 0346     		mov	r3, r0
+ 1892 0040 002B     		cmp	r3, #0
+ 1893 0042 03D0     		beq	.L101
+ 498:libraries/zf_driver/zf_driver_spi.c ****         {
+ 499:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明本模块已经被初始化过一次 重复初�
+ 500:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MODULE_OCCUPIED;                           // SPI 模块已被
+ 1894              		.loc 1 500 26
+ 1895 0044 2023     		movs	r3, #32
+ 1896 0046 8DF81F30 		strb	r3, [sp, #31]
+ 501:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1897              		.loc 1 501 13
+ 1898 004a C7E2     		b	.L102
+ 1899              	.L101:
+ 502:libraries/zf_driver/zf_driver_spi.c ****         }
+ 503:libraries/zf_driver/zf_driver_spi.c **** 
+ 504:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_index == ((sck_pin >> SPI_INDEX_OFFSET) & SPI_INDEX_MASK)))
+ 1900              		.loc 1 504 12
+ 1901 004c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 1902 0050 019B     		ldr	r3, [sp, #4]
+ 1903 0052 1B0C     		lsrs	r3, r3, #16
+ 1904 0054 03F00F03 		and	r3, r3, #15
+ 1905              		.loc 1 504 11
+ 1906 0058 9A42     		cmp	r2, r3
+ 1907 005a 0CD0     		beq	.L103
+ 1908              		.loc 1 504 12 discriminator 1
+ 1909 005c 0022     		movs	r2, #0
+ 1910 005e 4FF4FC71 		mov	r1, #504
+ 1911 0062 4948     		ldr	r0, .L128+4
+ 1912 0064 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1913 0068 0346     		mov	r3, r0
+ 1914 006a 002B     		cmp	r3, #0
+ 1915 006c 03D0     		beq	.L103
+ 505:libraries/zf_driver/zf_driver_spi.c ****         {
+ 506:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明输入的 SCK 引脚与 spi_index 不匹配
+ 507:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_SCK_PIN_ILLEGAL;
+ 1916              		.loc 1 507 26
+ 1917 006e 2323     		movs	r3, #35
+ 1918 0070 8DF81F30 		strb	r3, [sp, #31]
+ 508:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1919              		.loc 1 508 13
+ 1920 0074 B2E2     		b	.L102
+ 1921              	.L103:
+ 509:libraries/zf_driver/zf_driver_spi.c ****         }
+ 510:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(spi_index == ((mosi_pin >> SPI_INDEX_OFFSET) & SPI_INDEX_MASK)))
+ 1922              		.loc 1 510 12
+ 1923 0076 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 1924 007a 0A9B     		ldr	r3, [sp, #40]
+ 1925 007c 1B0C     		lsrs	r3, r3, #16
+ 1926 007e 03F00F03 		and	r3, r3, #15
+ 1927              		.loc 1 510 11
+ 1928 0082 9A42     		cmp	r2, r3
+ 1929 0084 0CD0     		beq	.L104
+ 1930              		.loc 1 510 12 discriminator 1
+ 1931 0086 0022     		movs	r2, #0
+ 1932 0088 4FF4FF71 		mov	r1, #510
+ 1933 008c 3E48     		ldr	r0, .L128+4
+ 1934 008e FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1935 0092 0346     		mov	r3, r0
+ 1936 0094 002B     		cmp	r3, #0
+ 1937 0096 03D0     		beq	.L104
+ 511:libraries/zf_driver/zf_driver_spi.c ****         {
+ 512:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明输入的 MOSI 引脚与 spi_index 不匹配
+ 513:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MOSI_PIN_ILLEGAL;
+ 1938              		.loc 1 513 26
+ 1939 0098 2423     		movs	r3, #36
+ 1940 009a 8DF81F30 		strb	r3, [sp, #31]
+ 514:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1941              		.loc 1 514 13
+ 1942 009e 9DE2     		b	.L102
+ 1943              	.L104:
+ 515:libraries/zf_driver/zf_driver_spi.c ****         }
+ 516:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(
+ 1944              		.loc 1 516 12
+ 1945 00a0 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 1946 00a4 0B9B     		ldr	r3, [sp, #44]
+ 1947 00a6 1B0C     		lsrs	r3, r3, #16
+ 1948 00a8 03F00F03 		and	r3, r3, #15
+ 1949              		.loc 1 516 11
+ 1950 00ac 9A42     		cmp	r2, r3
+ 1951 00ae 11D0     		beq	.L105
+ 1952              		.loc 1 516 12 discriminator 1
+ 1953 00b0 0B9B     		ldr	r3, [sp, #44]
+ 1954 00b2 40F6FF72 		movw	r2, #4095
+ 1955 00b6 9342     		cmp	r3, r2
+ 1956 00b8 0CD0     		beq	.L105
+ 1957              		.loc 1 516 12 is_stmt 0 discriminator 2
+ 1958 00ba 0022     		movs	r2, #0
+ 1959 00bc 4FF40171 		mov	r1, #516
+ 1960 00c0 3148     		ldr	r0, .L128+4
+ 1961 00c2 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1962 00c6 0346     		mov	r3, r0
+ 1963 00c8 002B     		cmp	r3, #0
+ 1964 00ca 03D0     		beq	.L105
+ 517:libraries/zf_driver/zf_driver_spi.c ****             (spi_index == ((miso_pin >> SPI_INDEX_OFFSET) & SPI_INDEX_MASK))
+ 518:libraries/zf_driver/zf_driver_spi.c ****             || (SPI_MISO_NULL == miso_pin)))
+ 519:libraries/zf_driver/zf_driver_spi.c ****         {
+ 520:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明输入的 MISO 引脚与 spi_index 不匹配
+ 521:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_MISO_PIN_ILLEGAL;
+ 1965              		.loc 1 521 26 is_stmt 1
+ 1966 00cc 2523     		movs	r3, #37
+ 1967 00ce 8DF81F30 		strb	r3, [sp, #31]
+ 522:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1968              		.loc 1 522 13
+ 1969 00d2 83E2     		b	.L102
+ 1970              	.L105:
+ 523:libraries/zf_driver/zf_driver_spi.c ****         }
+ 524:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(
+ 1971              		.loc 1 524 12
+ 1972 00d4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 1973 00d8 0C9B     		ldr	r3, [sp, #48]
+ 1974 00da 1B0C     		lsrs	r3, r3, #16
+ 1975 00dc 03F00F03 		and	r3, r3, #15
+ 1976              		.loc 1 524 11
+ 1977 00e0 9A42     		cmp	r2, r3
+ 1978 00e2 11D0     		beq	.L106
+ 1979              		.loc 1 524 12 discriminator 1
+ 1980 00e4 0C9B     		ldr	r3, [sp, #48]
+ 1981 00e6 40F6FF72 		movw	r2, #4095
+ 1982 00ea 9342     		cmp	r3, r2
+ 1983 00ec 0CD0     		beq	.L106
+ 1984              		.loc 1 524 12 is_stmt 0 discriminator 2
+ 1985 00ee 0022     		movs	r2, #0
+ 1986 00f0 4FF40371 		mov	r1, #524
+ 1987 00f4 2448     		ldr	r0, .L128+4
+ 1988 00f6 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1989 00fa 0346     		mov	r3, r0
+ 1990 00fc 002B     		cmp	r3, #0
+ 1991 00fe 03D0     		beq	.L106
+ 525:libraries/zf_driver/zf_driver_spi.c ****             (spi_index == ((cs_pin >> SPI_INDEX_OFFSET) & SPI_INDEX_MASK))
+ 526:libraries/zf_driver/zf_driver_spi.c ****             || (SPI_CS_NULL == cs_pin)))
+ 527:libraries/zf_driver/zf_driver_spi.c ****         {
+ 528:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明输入的 CS 引脚与 spi_index 不匹配
+ 529:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_CS_PIN_ILLEGAL;
+ 1992              		.loc 1 529 26 is_stmt 1
+ 1993 0100 2623     		movs	r3, #38
+ 1994 0102 8DF81F30 		strb	r3, [sp, #31]
+ 530:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 1995              		.loc 1 530 13
+ 1996 0106 69E2     		b	.L102
+ 1997              	.L106:
+ 531:libraries/zf_driver/zf_driver_spi.c ****         }
+ 532:libraries/zf_driver/zf_driver_spi.c **** 
+ 533:libraries/zf_driver/zf_driver_spi.c ****         uint8 clock_div = (RCC_INDEX_APB1L_BUS_INDEX == (spi_rcc_index_list[spi_index] & RCC_BUS_IN
+ 1998              		.loc 1 533 76
+ 1999 0108 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 2000 010c 1F4A     		ldr	r2, .L128+8
+ 2001 010e 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 2002              		.loc 1 533 88
+ 2003 0112 03F00F03 		and	r3, r3, #15
+ 2004              		.loc 1 533 15
+ 2005 0116 042B     		cmp	r3, #4
+ 2006 0118 01D1     		bne	.L107
+ 2007              		.loc 1 533 15 is_stmt 0 discriminator 1
+ 2008 011a 0423     		movs	r3, #4
+ 2009 011c 00E0     		b	.L108
+ 2010              	.L107:
+ 2011              		.loc 1 533 15 discriminator 2
+ 2012 011e 0223     		movs	r3, #2
+ 2013              	.L108:
+ 2014              		.loc 1 533 15 discriminator 4
+ 2015 0120 8DF81330 		strb	r3, [sp, #19]
+ 534:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].clock_input = zf_system_clock / clock_div;
+ 2016              		.loc 1 534 63 is_stmt 1 discriminator 4
+ 2017 0124 1A4B     		ldr	r3, .L128+12
+ 2018 0126 1968     		ldr	r1, [r3]
+ 2019 0128 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+ 2020              		.loc 1 534 32 discriminator 4
+ 2021 012c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2022              		.loc 1 534 63 discriminator 4
+ 2023 0130 B1FBF3F1 		udiv	r1, r1, r3
+ 2024              		.loc 1 534 45 discriminator 4
+ 2025 0134 1348     		ldr	r0, .L128
+ 2026 0136 1346     		mov	r3, r2
+ 2027 0138 5B00     		lsls	r3, r3, #1
+ 2028 013a 1344     		add	r3, r3, r2
+ 2029 013c DB00     		lsls	r3, r3, #3
+ 2030 013e 0344     		add	r3, r3, r0
+ 2031 0140 0433     		adds	r3, r3, #4
+ 2032 0142 1960     		str	r1, [r3]
+ 535:libraries/zf_driver/zf_driver_spi.c ****         if(zf_spi_assert(1000000 <= baudrate && spi_obj_list[spi_index].clock_input / 2 >= baudrate
+ 2033              		.loc 1 535 11 discriminator 4
+ 2034 0144 029B     		ldr	r3, [sp, #8]
+ 2035 0146 134A     		ldr	r2, .L128+16
+ 2036 0148 9342     		cmp	r3, r2
+ 2037 014a 0DD9     		bls	.L109
+ 2038              		.loc 1 535 12 discriminator 2
+ 2039 014c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2040 0150 0C49     		ldr	r1, .L128
+ 2041 0152 1346     		mov	r3, r2
+ 2042 0154 5B00     		lsls	r3, r3, #1
+ 2043 0156 1344     		add	r3, r3, r2
+ 2044 0158 DB00     		lsls	r3, r3, #3
+ 2045 015a 0B44     		add	r3, r3, r1
+ 2046 015c 0433     		adds	r3, r3, #4
+ 2047 015e 1B68     		ldr	r3, [r3]
+ 2048 0160 5B08     		lsrs	r3, r3, #1
+ 2049 0162 029A     		ldr	r2, [sp, #8]
+ 2050 0164 9A42     		cmp	r2, r3
+ 2051 0166 17D9     		bls	.L110
+ 2052              	.L109:
+ 2053              		.loc 1 535 12 is_stmt 0 discriminator 3
+ 2054 0168 0022     		movs	r2, #0
+ 2055 016a 40F21721 		movw	r1, #535
+ 2056 016e 0648     		ldr	r0, .L128+4
+ 2057 0170 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 2058 0174 0346     		mov	r3, r0
+ 2059 0176 002B     		cmp	r3, #0
+ 2060 0178 0ED0     		beq	.L110
+ 536:libraries/zf_driver/zf_driver_spi.c ****         {
+ 537:libraries/zf_driver/zf_driver_spi.c ****             // 此处如果断言报错 那么证明输入的 SPI 的波特率不正确
+ 538:libraries/zf_driver/zf_driver_spi.c ****             return_state = SPI_ERROR_SPEED_UNSUPPORTED;                         // SPI 传输速率
+ 2061              		.loc 1 538 26 is_stmt 1
+ 2062 017a 2223     		movs	r3, #34
+ 2063 017c 8DF81F30 		strb	r3, [sp, #31]
+ 539:libraries/zf_driver/zf_driver_spi.c ****             break;
+ 2064              		.loc 1 539 13
+ 2065 0180 2CE2     		b	.L102
+ 2066              	.L129:
+ 2067 0182 00BF     		.align	2
+ 2068              	.L128:
+ 2069 0184 00000000 		.word	spi_obj_list
+ 2070 0188 00000000 		.word	.LC0
+ 2071 018c 00000000 		.word	spi_rcc_index_list
+ 2072 0190 00000000 		.word	zf_system_clock
+ 2073 0194 3F420F00 		.word	999999
+ 2074              	.L110:
+ 540:libraries/zf_driver/zf_driver_spi.c ****         }
+ 541:libraries/zf_driver/zf_driver_spi.c **** 
+ 542:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].sck_pin     = (zf_gpio_pin_enum)(sck_pin  & SPI_PIN_INDEX_MASK);
+ 2075              		.loc 1 542 47
+ 2076 0198 019B     		ldr	r3, [sp, #4]
+ 2077 019a 9BB2     		uxth	r3, r3
+ 2078              		.loc 1 542 32
+ 2079 019c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2080              		.loc 1 542 75
+ 2081 01a0 C3F30B03 		ubfx	r3, r3, #0, #12
+ 2082 01a4 98B2     		uxth	r0, r3
+ 2083              		.loc 1 542 45
+ 2084 01a6 BB49     		ldr	r1, .L130
+ 2085 01a8 1346     		mov	r3, r2
+ 2086 01aa 5B00     		lsls	r3, r3, #1
+ 2087 01ac 1344     		add	r3, r3, r2
+ 2088 01ae DB00     		lsls	r3, r3, #3
+ 2089 01b0 0B44     		add	r3, r3, r1
+ 2090 01b2 0833     		adds	r3, r3, #8
+ 2091 01b4 0246     		mov	r2, r0	@ movhi
+ 2092 01b6 1A80     		strh	r2, [r3]	@ movhi
+ 543:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].mosi_pin    = (zf_gpio_pin_enum)(mosi_pin & SPI_PIN_INDEX_MASK);
+ 2093              		.loc 1 543 47
+ 2094 01b8 0A9B     		ldr	r3, [sp, #40]
+ 2095 01ba 9BB2     		uxth	r3, r3
+ 2096              		.loc 1 543 32
+ 2097 01bc 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2098              		.loc 1 543 75
+ 2099 01c0 C3F30B03 		ubfx	r3, r3, #0, #12
+ 2100 01c4 98B2     		uxth	r0, r3
+ 2101              		.loc 1 543 45
+ 2102 01c6 B349     		ldr	r1, .L130
+ 2103 01c8 1346     		mov	r3, r2
+ 2104 01ca 5B00     		lsls	r3, r3, #1
+ 2105 01cc 1344     		add	r3, r3, r2
+ 2106 01ce DB00     		lsls	r3, r3, #3
+ 2107 01d0 0B44     		add	r3, r3, r1
+ 2108 01d2 0A33     		adds	r3, r3, #10
+ 2109 01d4 0246     		mov	r2, r0	@ movhi
+ 2110 01d6 1A80     		strh	r2, [r3]	@ movhi
+ 544:libraries/zf_driver/zf_driver_spi.c **** 
+ 545:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].mode        = mode;
+ 2111              		.loc 1 545 32
+ 2112 01d8 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2113              		.loc 1 545 45
+ 2114 01dc 9DF80E30 		ldrb	r3, [sp, #14]
+ 2115 01e0 03F00F03 		and	r3, r3, #15
+ 2116 01e4 D9B2     		uxtb	r1, r3
+ 2117 01e6 AB48     		ldr	r0, .L130
+ 2118 01e8 1346     		mov	r3, r2
+ 2119 01ea 5B00     		lsls	r3, r3, #1
+ 2120 01ec 1344     		add	r3, r3, r2
+ 2121 01ee DB00     		lsls	r3, r3, #3
+ 2122 01f0 0344     		add	r3, r3, r0
+ 2123 01f2 03F11002 		add	r2, r3, #16
+ 2124 01f6 1379     		ldrb	r3, [r2, #4]
+ 2125 01f8 61F30303 		bfi	r3, r1, #0, #4
+ 2126 01fc 1371     		strb	r3, [r2, #4]
+ 546:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].width       = (SPI_CONFIG_DATA_LENGTH_8BIT & SPI_CONFIG_VALUE_MASK)
+ 2127              		.loc 1 546 32
+ 2128 01fe 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2129              		.loc 1 546 45
+ 2130 0202 A449     		ldr	r1, .L130
+ 2131 0204 1346     		mov	r3, r2
+ 2132 0206 5B00     		lsls	r3, r3, #1
+ 2133 0208 1344     		add	r3, r3, r2
+ 2134 020a DB00     		lsls	r3, r3, #3
+ 2135 020c 0B44     		add	r3, r3, r1
+ 2136 020e 03F11002 		add	r2, r3, #16
+ 2137 0212 5379     		ldrb	r3, [r2, #5]
+ 2138 0214 6FF30303 		bfc	r3, #0, #4
+ 2139 0218 5371     		strb	r3, [r2, #5]
+ 547:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].format      = (SPI_CONFIG_DATA_FORMAT_MSB  & SPI_CONFIG_VALUE_MASK)
+ 2140              		.loc 1 547 32
+ 2141 021a 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2142              		.loc 1 547 45
+ 2143 021e 9D49     		ldr	r1, .L130
+ 2144 0220 1346     		mov	r3, r2
+ 2145 0222 5B00     		lsls	r3, r3, #1
+ 2146 0224 1344     		add	r3, r3, r2
+ 2147 0226 DB00     		lsls	r3, r3, #3
+ 2148 0228 0B44     		add	r3, r3, r1
+ 2149 022a 03F11002 		add	r2, r3, #16
+ 2150 022e 5379     		ldrb	r3, [r2, #5]
+ 2151 0230 6FF30713 		bfc	r3, #4, #4
+ 2152 0234 5371     		strb	r3, [r2, #5]
+ 548:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].use_miso    = ZF_DISABLE;
+ 2153              		.loc 1 548 32
+ 2154 0236 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2155              		.loc 1 548 45
+ 2156 023a 9649     		ldr	r1, .L130
+ 2157 023c 1346     		mov	r3, r2
+ 2158 023e 5B00     		lsls	r3, r3, #1
+ 2159 0240 1344     		add	r3, r3, r2
+ 2160 0242 DB00     		lsls	r3, r3, #3
+ 2161 0244 0B44     		add	r3, r3, r1
+ 2162 0246 03F11002 		add	r2, r3, #16
+ 2163 024a 9379     		ldrb	r3, [r2, #6]
+ 2164 024c 6FF30303 		bfc	r3, #0, #4
+ 2165 0250 9371     		strb	r3, [r2, #6]
+ 549:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].use_cs      = ZF_DISABLE;
+ 2166              		.loc 1 549 32
+ 2167 0252 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2168              		.loc 1 549 45
+ 2169 0256 8F49     		ldr	r1, .L130
+ 2170 0258 1346     		mov	r3, r2
+ 2171 025a 5B00     		lsls	r3, r3, #1
+ 2172 025c 1344     		add	r3, r3, r2
+ 2173 025e DB00     		lsls	r3, r3, #3
+ 2174 0260 0B44     		add	r3, r3, r1
+ 2175 0262 03F11002 		add	r2, r3, #16
+ 2176 0266 9379     		ldrb	r3, [r2, #6]
+ 2177 0268 6FF30713 		bfc	r3, #4, #4
+ 2178 026c 9371     		strb	r3, [r2, #6]
+ 550:libraries/zf_driver/zf_driver_spi.c **** 
+ 551:libraries/zf_driver/zf_driver_spi.c ****         zf_afio_init(
+ 2179              		.loc 1 551 9
+ 2180 026e 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2181 0272 8849     		ldr	r1, .L130
+ 2182 0274 1346     		mov	r3, r2
+ 2183 0276 5B00     		lsls	r3, r3, #1
+ 2184 0278 1344     		add	r3, r3, r2
+ 2185 027a DB00     		lsls	r3, r3, #3
+ 2186 027c 0B44     		add	r3, r3, r1
+ 2187 027e 0833     		adds	r3, r3, #8
+ 2188 0280 1888     		ldrh	r0, [r3]
+ 552:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].sck_pin,
+ 553:libraries/zf_driver/zf_driver_spi.c ****             GPO_AF_PUSH_PULL,
+ 554:libraries/zf_driver/zf_driver_spi.c ****             (zf_gpio_af_enum)((sck_pin >> SPI_PIN_AF_OFFSET) & SPI_PIN_AF_MASK));
+ 2189              		.loc 1 554 40
+ 2190 0282 019B     		ldr	r3, [sp, #4]
+ 2191 0284 1B0B     		lsrs	r3, r3, #12
+ 551:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].sck_pin,
+ 2192              		.loc 1 551 9
+ 2193 0286 DBB2     		uxtb	r3, r3
+ 2194              		.loc 1 554 62
+ 2195 0288 03F00F03 		and	r3, r3, #15
+ 2196 028c DBB2     		uxtb	r3, r3
+ 551:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].sck_pin,
+ 2197              		.loc 1 551 9
+ 2198 028e 1A46     		mov	r2, r3
+ 2199 0290 1221     		movs	r1, #18
+ 2200 0292 FFF7FEFF 		bl	zf_afio_init
+ 555:libraries/zf_driver/zf_driver_spi.c ****         zf_afio_init(
+ 2201              		.loc 1 555 9
+ 2202 0296 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2203 029a 7E49     		ldr	r1, .L130
+ 2204 029c 1346     		mov	r3, r2
+ 2205 029e 5B00     		lsls	r3, r3, #1
+ 2206 02a0 1344     		add	r3, r3, r2
+ 2207 02a2 DB00     		lsls	r3, r3, #3
+ 2208 02a4 0B44     		add	r3, r3, r1
+ 2209 02a6 0A33     		adds	r3, r3, #10
+ 2210 02a8 1888     		ldrh	r0, [r3]
+ 556:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].mosi_pin,
+ 557:libraries/zf_driver/zf_driver_spi.c ****             GPO_AF_PUSH_PULL,
+ 558:libraries/zf_driver/zf_driver_spi.c ****             (zf_gpio_af_enum)((mosi_pin >> SPI_PIN_AF_OFFSET) & SPI_PIN_AF_MASK));
+ 2211              		.loc 1 558 41
+ 2212 02aa 0A9B     		ldr	r3, [sp, #40]
+ 2213 02ac 1B0B     		lsrs	r3, r3, #12
+ 555:libraries/zf_driver/zf_driver_spi.c ****         zf_afio_init(
+ 2214              		.loc 1 555 9
+ 2215 02ae DBB2     		uxtb	r3, r3
+ 2216              		.loc 1 558 63
+ 2217 02b0 03F00F03 		and	r3, r3, #15
+ 2218 02b4 DBB2     		uxtb	r3, r3
+ 555:libraries/zf_driver/zf_driver_spi.c ****         zf_afio_init(
+ 2219              		.loc 1 555 9
+ 2220 02b6 1A46     		mov	r2, r3
+ 2221 02b8 1221     		movs	r1, #18
+ 2222 02ba FFF7FEFF 		bl	zf_afio_init
+ 559:libraries/zf_driver/zf_driver_spi.c ****         if(SPI_MISO_NULL != miso_pin)
+ 2223              		.loc 1 559 11
+ 2224 02be 0B9B     		ldr	r3, [sp, #44]
+ 2225 02c0 40F6FF72 		movw	r2, #4095
+ 2226 02c4 9342     		cmp	r3, r2
+ 2227 02c6 32D0     		beq	.L111
+ 560:libraries/zf_driver/zf_driver_spi.c ****         {
+ 561:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].use_miso = ZF_ENABLE;
+ 2228              		.loc 1 561 36
+ 2229 02c8 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2230              		.loc 1 561 46
+ 2231 02cc 7149     		ldr	r1, .L130
+ 2232 02ce 1346     		mov	r3, r2
+ 2233 02d0 5B00     		lsls	r3, r3, #1
+ 2234 02d2 1344     		add	r3, r3, r2
+ 2235 02d4 DB00     		lsls	r3, r3, #3
+ 2236 02d6 0B44     		add	r3, r3, r1
+ 2237 02d8 03F11002 		add	r2, r3, #16
+ 2238 02dc 9379     		ldrb	r3, [r2, #6]
+ 2239 02de 0121     		movs	r1, #1
+ 2240 02e0 61F30303 		bfi	r3, r1, #0, #4
+ 2241 02e4 9371     		strb	r3, [r2, #6]
+ 562:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].miso_pin = (zf_gpio_pin_enum)(miso_pin &SPI_PIN_INDEX_MASK);
+ 2242              		.loc 1 562 48
+ 2243 02e6 0B9B     		ldr	r3, [sp, #44]
+ 2244 02e8 9BB2     		uxth	r3, r3
+ 2245              		.loc 1 562 36
+ 2246 02ea 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2247              		.loc 1 562 76
+ 2248 02ee C3F30B03 		ubfx	r3, r3, #0, #12
+ 2249 02f2 98B2     		uxth	r0, r3
+ 2250              		.loc 1 562 46
+ 2251 02f4 6749     		ldr	r1, .L130
+ 2252 02f6 1346     		mov	r3, r2
+ 2253 02f8 5B00     		lsls	r3, r3, #1
+ 2254 02fa 1344     		add	r3, r3, r2
+ 2255 02fc DB00     		lsls	r3, r3, #3
+ 2256 02fe 0B44     		add	r3, r3, r1
+ 2257 0300 0C33     		adds	r3, r3, #12
+ 2258 0302 0246     		mov	r2, r0	@ movhi
+ 2259 0304 1A80     		strh	r2, [r3]	@ movhi
+ 563:libraries/zf_driver/zf_driver_spi.c ****             zf_afio_init(
+ 2260              		.loc 1 563 13
+ 2261 0306 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2262 030a 6249     		ldr	r1, .L130
+ 2263 030c 1346     		mov	r3, r2
+ 2264 030e 5B00     		lsls	r3, r3, #1
+ 2265 0310 1344     		add	r3, r3, r2
+ 2266 0312 DB00     		lsls	r3, r3, #3
+ 2267 0314 0B44     		add	r3, r3, r1
+ 2268 0316 0C33     		adds	r3, r3, #12
+ 2269 0318 1888     		ldrh	r0, [r3]
+ 564:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].miso_pin,
+ 565:libraries/zf_driver/zf_driver_spi.c ****                 GPO_AF_OPEN_DRAIN,
+ 566:libraries/zf_driver/zf_driver_spi.c ****                 (zf_gpio_af_enum)((miso_pin >> SPI_PIN_AF_OFFSET) & SPI_PIN_AF_MASK));
+ 2270              		.loc 1 566 45
+ 2271 031a 0B9B     		ldr	r3, [sp, #44]
+ 2272 031c 1B0B     		lsrs	r3, r3, #12
+ 563:libraries/zf_driver/zf_driver_spi.c ****             zf_afio_init(
+ 2273              		.loc 1 563 13
+ 2274 031e DBB2     		uxtb	r3, r3
+ 2275              		.loc 1 566 67
+ 2276 0320 03F00F03 		and	r3, r3, #15
+ 2277 0324 DBB2     		uxtb	r3, r3
+ 563:libraries/zf_driver/zf_driver_spi.c ****             zf_afio_init(
+ 2278              		.loc 1 563 13
+ 2279 0326 1A46     		mov	r2, r3
+ 2280 0328 1321     		movs	r1, #19
+ 2281 032a FFF7FEFF 		bl	zf_afio_init
+ 2282              	.L111:
+ 567:libraries/zf_driver/zf_driver_spi.c ****         }
+ 568:libraries/zf_driver/zf_driver_spi.c ****         if(SPI_CS_NULL != cs_pin)
+ 2283              		.loc 1 568 11
+ 2284 032e 0C9B     		ldr	r3, [sp, #48]
+ 2285 0330 40F6FF72 		movw	r2, #4095
+ 2286 0334 9342     		cmp	r3, r2
+ 2287 0336 32D0     		beq	.L112
+ 569:libraries/zf_driver/zf_driver_spi.c ****         {
+ 570:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].use_cs = ZF_ENABLE;
+ 2288              		.loc 1 570 36
+ 2289 0338 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2290              		.loc 1 570 44
+ 2291 033c 5549     		ldr	r1, .L130
+ 2292 033e 1346     		mov	r3, r2
+ 2293 0340 5B00     		lsls	r3, r3, #1
+ 2294 0342 1344     		add	r3, r3, r2
+ 2295 0344 DB00     		lsls	r3, r3, #3
+ 2296 0346 0B44     		add	r3, r3, r1
+ 2297 0348 03F11002 		add	r2, r3, #16
+ 2298 034c 9379     		ldrb	r3, [r2, #6]
+ 2299 034e 0121     		movs	r1, #1
+ 2300 0350 61F30713 		bfi	r3, r1, #4, #4
+ 2301 0354 9371     		strb	r3, [r2, #6]
+ 571:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].cs_pin = (zf_gpio_pin_enum)(cs_pin &SPI_PIN_INDEX_MASK);
+ 2302              		.loc 1 571 46
+ 2303 0356 0C9B     		ldr	r3, [sp, #48]
+ 2304 0358 9BB2     		uxth	r3, r3
+ 2305              		.loc 1 571 36
+ 2306 035a 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2307              		.loc 1 571 72
+ 2308 035e C3F30B03 		ubfx	r3, r3, #0, #12
+ 2309 0362 98B2     		uxth	r0, r3
+ 2310              		.loc 1 571 44
+ 2311 0364 4B49     		ldr	r1, .L130
+ 2312 0366 1346     		mov	r3, r2
+ 2313 0368 5B00     		lsls	r3, r3, #1
+ 2314 036a 1344     		add	r3, r3, r2
+ 2315 036c DB00     		lsls	r3, r3, #3
+ 2316 036e 0B44     		add	r3, r3, r1
+ 2317 0370 0E33     		adds	r3, r3, #14
+ 2318 0372 0246     		mov	r2, r0	@ movhi
+ 2319 0374 1A80     		strh	r2, [r3]	@ movhi
+ 572:libraries/zf_driver/zf_driver_spi.c ****             zf_afio_init(
+ 2320              		.loc 1 572 13
+ 2321 0376 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2322 037a 4649     		ldr	r1, .L130
+ 2323 037c 1346     		mov	r3, r2
+ 2324 037e 5B00     		lsls	r3, r3, #1
+ 2325 0380 1344     		add	r3, r3, r2
+ 2326 0382 DB00     		lsls	r3, r3, #3
+ 2327 0384 0B44     		add	r3, r3, r1
+ 2328 0386 0E33     		adds	r3, r3, #14
+ 2329 0388 1888     		ldrh	r0, [r3]
+ 573:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].cs_pin,
+ 574:libraries/zf_driver/zf_driver_spi.c ****                 GPO_AF_PUSH_PULL,
+ 575:libraries/zf_driver/zf_driver_spi.c ****                 (zf_gpio_af_enum)((cs_pin >> SPI_PIN_AF_OFFSET) & SPI_PIN_AF_MASK));
+ 2330              		.loc 1 575 43
+ 2331 038a 0C9B     		ldr	r3, [sp, #48]
+ 2332 038c 1B0B     		lsrs	r3, r3, #12
+ 572:libraries/zf_driver/zf_driver_spi.c ****             zf_afio_init(
+ 2333              		.loc 1 572 13
+ 2334 038e DBB2     		uxtb	r3, r3
+ 2335              		.loc 1 575 65
+ 2336 0390 03F00F03 		and	r3, r3, #15
+ 2337 0394 DBB2     		uxtb	r3, r3
+ 572:libraries/zf_driver/zf_driver_spi.c ****             zf_afio_init(
+ 2338              		.loc 1 572 13
+ 2339 0396 1A46     		mov	r2, r3
+ 2340 0398 1221     		movs	r1, #18
+ 2341 039a FFF7FEFF 		bl	zf_afio_init
+ 2342              	.L112:
+ 576:libraries/zf_driver/zf_driver_spi.c ****         }
+ 577:libraries/zf_driver/zf_driver_spi.c **** 
+ 578:libraries/zf_driver/zf_driver_spi.c ****         zf_rcc_clock_enable(spi_rcc_index_list[spi_index]);
+ 2343              		.loc 1 578 9
+ 2344 039e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 2345 03a2 3D4A     		ldr	r2, .L130+4
+ 2346 03a4 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 2347 03a8 1846     		mov	r0, r3
+ 2348 03aa FFF7FEFF 		bl	zf_rcc_clock_enable
+ 2349              	.LBB5:
+ 579:libraries/zf_driver/zf_driver_spi.c **** 
+ 580:libraries/zf_driver/zf_driver_spi.c ****         {
+ 581:libraries/zf_driver/zf_driver_spi.c ****             uint8   i               = 0;
+ 2350              		.loc 1 581 21
+ 2351 03ae 0023     		movs	r3, #0
+ 2352 03b0 8DF81E30 		strb	r3, [sp, #30]
+ 582:libraries/zf_driver/zf_driver_spi.c ****             uint16  div             = 2;
+ 2353              		.loc 1 582 21
+ 2354 03b4 0223     		movs	r3, #2
+ 2355 03b6 ADF81C30 		strh	r3, [sp, #28]	@ movhi
+ 583:libraries/zf_driver/zf_driver_spi.c ****             uint32  register_temp   = 0;
+ 2356              		.loc 1 583 21
+ 2357 03ba 0023     		movs	r3, #0
+ 2358 03bc 0693     		str	r3, [sp, #24]
+ 584:libraries/zf_driver/zf_driver_spi.c ****             uint32  baud_large      = spi_obj_list[spi_index].clock_input / div;
+ 2359              		.loc 1 584 62
+ 2360 03be 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2361 03c2 3449     		ldr	r1, .L130
+ 2362 03c4 1346     		mov	r3, r2
+ 2363 03c6 5B00     		lsls	r3, r3, #1
+ 2364 03c8 1344     		add	r3, r3, r2
+ 2365 03ca DB00     		lsls	r3, r3, #3
+ 2366 03cc 0B44     		add	r3, r3, r1
+ 2367 03ce 0433     		adds	r3, r3, #4
+ 2368 03d0 1A68     		ldr	r2, [r3]
+ 2369              		.loc 1 584 75
+ 2370 03d2 BDF81C30 		ldrh	r3, [sp, #28]
+ 2371              		.loc 1 584 21
+ 2372 03d6 B2FBF3F3 		udiv	r3, r2, r3
+ 2373 03da 0593     		str	r3, [sp, #20]
+ 585:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].baudrate = spi_obj_list[spi_index].clock_input / div;
+ 2374              		.loc 1 585 71
+ 2375 03dc 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2376 03e0 2C49     		ldr	r1, .L130
+ 2377 03e2 1346     		mov	r3, r2
+ 2378 03e4 5B00     		lsls	r3, r3, #1
+ 2379 03e6 1344     		add	r3, r3, r2
+ 2380 03e8 DB00     		lsls	r3, r3, #3
+ 2381 03ea 0B44     		add	r3, r3, r1
+ 2382 03ec 0433     		adds	r3, r3, #4
+ 2383 03ee 1968     		ldr	r1, [r3]
+ 2384              		.loc 1 585 84
+ 2385 03f0 BDF81C30 		ldrh	r3, [sp, #28]
+ 2386              		.loc 1 585 36
+ 2387 03f4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2388              		.loc 1 585 84
+ 2389 03f8 B1FBF3F1 		udiv	r1, r1, r3
+ 2390              		.loc 1 585 46
+ 2391 03fc 2548     		ldr	r0, .L130
+ 2392 03fe 1346     		mov	r3, r2
+ 2393 0400 5B00     		lsls	r3, r3, #1
+ 2394 0402 1344     		add	r3, r3, r2
+ 2395 0404 DB00     		lsls	r3, r3, #3
+ 2396 0406 0344     		add	r3, r3, r0
+ 2397 0408 1033     		adds	r3, r3, #16
+ 2398 040a 1960     		str	r1, [r3]
+ 586:libraries/zf_driver/zf_driver_spi.c **** 
+ 587:libraries/zf_driver/zf_driver_spi.c ****             for(i = 0; 8 > i; i ++, div *= 2)
+ 2399              		.loc 1 587 19
+ 2400 040c 0023     		movs	r3, #0
+ 2401 040e 8DF81E30 		strb	r3, [sp, #30]
+ 2402              		.loc 1 587 13
+ 2403 0412 39E0     		b	.L113
+ 2404              	.L116:
+ 588:libraries/zf_driver/zf_driver_spi.c ****             {
+ 589:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].baudrate = spi_obj_list[spi_index].clock_input / div;
+ 2405              		.loc 1 589 75
+ 2406 0414 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2407 0418 1E49     		ldr	r1, .L130
+ 2408 041a 1346     		mov	r3, r2
+ 2409 041c 5B00     		lsls	r3, r3, #1
+ 2410 041e 1344     		add	r3, r3, r2
+ 2411 0420 DB00     		lsls	r3, r3, #3
+ 2412 0422 0B44     		add	r3, r3, r1
+ 2413 0424 0433     		adds	r3, r3, #4
+ 2414 0426 1968     		ldr	r1, [r3]
+ 2415              		.loc 1 589 88
+ 2416 0428 BDF81C30 		ldrh	r3, [sp, #28]
+ 2417              		.loc 1 589 40
+ 2418 042c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2419              		.loc 1 589 88
+ 2420 0430 B1FBF3F1 		udiv	r1, r1, r3
+ 2421              		.loc 1 589 50
+ 2422 0434 1748     		ldr	r0, .L130
+ 2423 0436 1346     		mov	r3, r2
+ 2424 0438 5B00     		lsls	r3, r3, #1
+ 2425 043a 1344     		add	r3, r3, r2
+ 2426 043c DB00     		lsls	r3, r3, #3
+ 2427 043e 0344     		add	r3, r3, r0
+ 2428 0440 1033     		adds	r3, r3, #16
+ 2429 0442 1960     		str	r1, [r3]
+ 590:libraries/zf_driver/zf_driver_spi.c ****                 if(spi_obj_list[spi_index].baudrate < baudrate)
+ 2430              		.loc 1 590 43
+ 2431 0444 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2432 0448 1249     		ldr	r1, .L130
+ 2433 044a 1346     		mov	r3, r2
+ 2434 044c 5B00     		lsls	r3, r3, #1
+ 2435 044e 1344     		add	r3, r3, r2
+ 2436 0450 DB00     		lsls	r3, r3, #3
+ 2437 0452 0B44     		add	r3, r3, r1
+ 2438 0454 1033     		adds	r3, r3, #16
+ 2439 0456 1B68     		ldr	r3, [r3]
+ 2440              		.loc 1 590 19
+ 2441 0458 029A     		ldr	r2, [sp, #8]
+ 2442 045a 9A42     		cmp	r2, r3
+ 2443 045c 1ED8     		bhi	.L126
+ 591:libraries/zf_driver/zf_driver_spi.c ****                 {
+ 592:libraries/zf_driver/zf_driver_spi.c ****                     break;
+ 593:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 594:libraries/zf_driver/zf_driver_spi.c ****                 baud_large = spi_obj_list[spi_index].baudrate;
+ 2444              		.loc 1 594 53 discriminator 2
+ 2445 045e 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2446              		.loc 1 594 28 discriminator 2
+ 2447 0462 0C49     		ldr	r1, .L130
+ 2448 0464 1346     		mov	r3, r2
+ 2449 0466 5B00     		lsls	r3, r3, #1
+ 2450 0468 1344     		add	r3, r3, r2
+ 2451 046a DB00     		lsls	r3, r3, #3
+ 2452 046c 0B44     		add	r3, r3, r1
+ 2453 046e 1033     		adds	r3, r3, #16
+ 2454 0470 1B68     		ldr	r3, [r3]
+ 2455 0472 0593     		str	r3, [sp, #20]
+ 587:libraries/zf_driver/zf_driver_spi.c ****             {
+ 2456              		.loc 1 587 33 discriminator 2
+ 2457 0474 9DF81E30 		ldrb	r3, [sp, #30]	@ zero_extendqisi2
+ 2458 0478 0133     		adds	r3, r3, #1
+ 2459 047a 8DF81E30 		strb	r3, [sp, #30]
+ 587:libraries/zf_driver/zf_driver_spi.c ****             {
+ 2460              		.loc 1 587 41 discriminator 2
+ 2461 047e BDF81C30 		ldrh	r3, [sp, #28]	@ movhi
+ 2462 0482 5B00     		lsls	r3, r3, #1
+ 2463 0484 ADF81C30 		strh	r3, [sp, #28]	@ movhi
+ 2464              	.L113:
+ 587:libraries/zf_driver/zf_driver_spi.c ****             {
+ 2465              		.loc 1 587 13 discriminator 1
+ 2466 0488 9DF81E30 		ldrb	r3, [sp, #30]	@ zero_extendqisi2
+ 2467 048c 072B     		cmp	r3, #7
+ 2468 048e C1D9     		bls	.L116
+ 2469 0490 05E0     		b	.L115
+ 2470              	.L131:
+ 2471 0492 00BF     		.align	2
+ 2472              	.L130:
+ 2473 0494 00000000 		.word	spi_obj_list
+ 2474 0498 00000000 		.word	spi_rcc_index_list
+ 2475              	.L126:
+ 592:libraries/zf_driver/zf_driver_spi.c ****                 }
+ 2476              		.loc 1 592 21
+ 2477 049c 00BF     		nop
+ 2478              	.L115:
+ 595:libraries/zf_driver/zf_driver_spi.c ****             }
+ 596:libraries/zf_driver/zf_driver_spi.c ****             if((baud_large - baudrate) < (baudrate - spi_obj_list[spi_index].baudrate))
+ 2479              		.loc 1 596 28
+ 2480 049e 059A     		ldr	r2, [sp, #20]
+ 2481 04a0 029B     		ldr	r3, [sp, #8]
+ 2482 04a2 D11A     		subs	r1, r2, r3
+ 2483              		.loc 1 596 77
+ 2484 04a4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2485 04a8 4F48     		ldr	r0, .L132
+ 2486 04aa 1346     		mov	r3, r2
+ 2487 04ac 5B00     		lsls	r3, r3, #1
+ 2488 04ae 1344     		add	r3, r3, r2
+ 2489 04b0 DB00     		lsls	r3, r3, #3
+ 2490 04b2 0344     		add	r3, r3, r0
+ 2491 04b4 1033     		adds	r3, r3, #16
+ 2492 04b6 1B68     		ldr	r3, [r3]
+ 2493              		.loc 1 596 52
+ 2494 04b8 029A     		ldr	r2, [sp, #8]
+ 2495 04ba D31A     		subs	r3, r2, r3
+ 2496              		.loc 1 596 15
+ 2497 04bc 9942     		cmp	r1, r3
+ 2498 04be 19D2     		bcs	.L117
+ 597:libraries/zf_driver/zf_driver_spi.c ****             {
+ 598:libraries/zf_driver/zf_driver_spi.c ****                 spi_obj_list[spi_index].baudrate *= 2;
+ 2499              		.loc 1 598 50
+ 2500 04c0 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2501 04c4 4849     		ldr	r1, .L132
+ 2502 04c6 1346     		mov	r3, r2
+ 2503 04c8 5B00     		lsls	r3, r3, #1
+ 2504 04ca 1344     		add	r3, r3, r2
+ 2505 04cc DB00     		lsls	r3, r3, #3
+ 2506 04ce 0B44     		add	r3, r3, r1
+ 2507 04d0 1033     		adds	r3, r3, #16
+ 2508 04d2 1B68     		ldr	r3, [r3]
+ 2509 04d4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2510 04d8 5900     		lsls	r1, r3, #1
+ 2511 04da 4348     		ldr	r0, .L132
+ 2512 04dc 1346     		mov	r3, r2
+ 2513 04de 5B00     		lsls	r3, r3, #1
+ 2514 04e0 1344     		add	r3, r3, r2
+ 2515 04e2 DB00     		lsls	r3, r3, #3
+ 2516 04e4 0344     		add	r3, r3, r0
+ 2517 04e6 1033     		adds	r3, r3, #16
+ 2518 04e8 1960     		str	r1, [r3]
+ 599:libraries/zf_driver/zf_driver_spi.c ****                 i -= 1;
+ 2519              		.loc 1 599 19
+ 2520 04ea 9DF81E30 		ldrb	r3, [sp, #30]
+ 2521 04ee 013B     		subs	r3, r3, #1
+ 2522 04f0 8DF81E30 		strb	r3, [sp, #30]
+ 2523              	.L117:
+ 600:libraries/zf_driver/zf_driver_spi.c ****             }
+ 601:libraries/zf_driver/zf_driver_spi.c **** 
+ 602:libraries/zf_driver/zf_driver_spi.c ****             register_temp |= (i << 3);
+ 2524              		.loc 1 602 33
+ 2525 04f4 9DF81E30 		ldrb	r3, [sp, #30]	@ zero_extendqisi2
+ 2526 04f8 DB00     		lsls	r3, r3, #3
+ 2527 04fa 1A46     		mov	r2, r3
+ 2528              		.loc 1 602 27
+ 2529 04fc 069B     		ldr	r3, [sp, #24]
+ 2530 04fe 1343     		orrs	r3, r3, r2
+ 2531 0500 0693     		str	r3, [sp, #24]
+ 603:libraries/zf_driver/zf_driver_spi.c **** 
+ 604:libraries/zf_driver/zf_driver_spi.c ****             switch(mode)
+ 2532              		.loc 1 604 13
+ 2533 0502 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2534 0506 032B     		cmp	r3, #3
+ 2535 0508 19D8     		bhi	.L127
+ 2536 050a 01A2     		adr	r2, .L120
+ 2537 050c 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 2538              		.p2align 2
+ 2539              	.L120:
+ 2540 0510 3F050000 		.word	.L127+1
+ 2541 0514 21050000 		.word	.L122+1
+ 2542 0518 2B050000 		.word	.L121+1
+ 2543 051c 35050000 		.word	.L119+1
+ 2544              		.p2align 1
+ 2545              	.L122:
+ 605:libraries/zf_driver/zf_driver_spi.c ****             {
+ 606:libraries/zf_driver/zf_driver_spi.c ****                 case SPI_MODE0: register_temp |= 0x00000000;    break;
+ 607:libraries/zf_driver/zf_driver_spi.c ****                 case SPI_MODE1: register_temp |= 0x00000001;    break;
+ 2546              		.loc 1 607 47
+ 2547 0520 069B     		ldr	r3, [sp, #24]
+ 2548 0522 43F00103 		orr	r3, r3, #1
+ 2549 0526 0693     		str	r3, [sp, #24]
+ 2550              		.loc 1 607 17
+ 2551 0528 0AE0     		b	.L124
+ 2552              	.L121:
+ 608:libraries/zf_driver/zf_driver_spi.c ****                 case SPI_MODE2: register_temp |= 0x00000002;    break;
+ 2553              		.loc 1 608 47
+ 2554 052a 069B     		ldr	r3, [sp, #24]
+ 2555 052c 43F00203 		orr	r3, r3, #2
+ 2556 0530 0693     		str	r3, [sp, #24]
+ 2557              		.loc 1 608 17
+ 2558 0532 05E0     		b	.L124
+ 2559              	.L119:
+ 609:libraries/zf_driver/zf_driver_spi.c ****                 case SPI_MODE3: register_temp |= 0x00000003;    break;
+ 2560              		.loc 1 609 47
+ 2561 0534 069B     		ldr	r3, [sp, #24]
+ 2562 0536 43F00303 		orr	r3, r3, #3
+ 2563 053a 0693     		str	r3, [sp, #24]
+ 2564              		.loc 1 609 17
+ 2565 053c 00E0     		b	.L124
+ 2566              	.L127:
+ 610:libraries/zf_driver/zf_driver_spi.c ****                 default:                                        break;
+ 2567              		.loc 1 610 17
+ 2568 053e 00BF     		nop
+ 2569              	.L124:
+ 611:libraries/zf_driver/zf_driver_spi.c ****             }
+ 612:libraries/zf_driver/zf_driver_spi.c **** 
+ 613:libraries/zf_driver/zf_driver_spi.c ****             register_temp |= 0x00000004;
+ 2570              		.loc 1 613 27
+ 2571 0540 069B     		ldr	r3, [sp, #24]
+ 2572 0542 43F00403 		orr	r3, r3, #4
+ 2573 0546 0693     		str	r3, [sp, #24]
+ 614:libraries/zf_driver/zf_driver_spi.c **** 
+ 615:libraries/zf_driver/zf_driver_spi.c ****             spi_obj_list[spi_index].spi_ptr->CR1 = register_temp;
+ 2574              		.loc 1 615 36
+ 2575 0548 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2576 054c 2649     		ldr	r1, .L132
+ 2577 054e 1346     		mov	r3, r2
+ 2578 0550 5B00     		lsls	r3, r3, #1
+ 2579 0552 1344     		add	r3, r3, r2
+ 2580 0554 DB00     		lsls	r3, r3, #3
+ 2581 0556 0B44     		add	r3, r3, r1
+ 2582 0558 1B68     		ldr	r3, [r3]
+ 2583              		.loc 1 615 50
+ 2584 055a 069A     		ldr	r2, [sp, #24]
+ 2585 055c 1A60     		str	r2, [r3]
+ 2586              	.LBE5:
+ 616:libraries/zf_driver/zf_driver_spi.c ****         }
+ 617:libraries/zf_driver/zf_driver_spi.c **** 
+ 618:libraries/zf_driver/zf_driver_spi.c ****         SPI_CTRL_CS(spi_index, ZF_DISABLE);
+ 619:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].spi_ptr->CR2 |= SPI_CR2_SSOE | SPI_CR2_NSSP | SPI_CR2_FRXTH;
+ 2587              		.loc 1 619 32
+ 2588 055e 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2589 0562 2149     		ldr	r1, .L132
+ 2590 0564 1346     		mov	r3, r2
+ 2591 0566 5B00     		lsls	r3, r3, #1
+ 2592 0568 1344     		add	r3, r3, r2
+ 2593 056a DB00     		lsls	r3, r3, #3
+ 2594 056c 0B44     		add	r3, r3, r1
+ 2595 056e 1B68     		ldr	r3, [r3]
+ 2596              		.loc 1 619 46
+ 2597 0570 5968     		ldr	r1, [r3, #4]
+ 2598              		.loc 1 619 32
+ 2599 0572 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2600 0576 1C48     		ldr	r0, .L132
+ 2601 0578 1346     		mov	r3, r2
+ 2602 057a 5B00     		lsls	r3, r3, #1
+ 2603 057c 1344     		add	r3, r3, r2
+ 2604 057e DB00     		lsls	r3, r3, #3
+ 2605 0580 0344     		add	r3, r3, r0
+ 2606 0582 1A68     		ldr	r2, [r3]
+ 2607              		.loc 1 619 46
+ 2608 0584 41F20C03 		movw	r3, #4108
+ 2609 0588 0B43     		orrs	r3, r3, r1
+ 2610 058a 5360     		str	r3, [r2, #4]
+ 620:libraries/zf_driver/zf_driver_spi.c ****         // spi_obj_list[spi_index].spi_ptr->CR1 &= ~SPI_CR1_SPE;
+ 621:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].spi_ptr->CR1 |= SPI_CR1_SPE;
+ 2611              		.loc 1 621 32
+ 2612 058c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2613 0590 1549     		ldr	r1, .L132
+ 2614 0592 1346     		mov	r3, r2
+ 2615 0594 5B00     		lsls	r3, r3, #1
+ 2616 0596 1344     		add	r3, r3, r2
+ 2617 0598 DB00     		lsls	r3, r3, #3
+ 2618 059a 0B44     		add	r3, r3, r1
+ 2619 059c 1B68     		ldr	r3, [r3]
+ 2620              		.loc 1 621 46
+ 2621 059e 1968     		ldr	r1, [r3]
+ 2622              		.loc 1 621 32
+ 2623 05a0 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2624 05a4 1048     		ldr	r0, .L132
+ 2625 05a6 1346     		mov	r3, r2
+ 2626 05a8 5B00     		lsls	r3, r3, #1
+ 2627 05aa 1344     		add	r3, r3, r2
+ 2628 05ac DB00     		lsls	r3, r3, #3
+ 2629 05ae 0344     		add	r3, r3, r0
+ 2630 05b0 1B68     		ldr	r3, [r3]
+ 2631              		.loc 1 621 46
+ 2632 05b2 41F04002 		orr	r2, r1, #64
+ 2633 05b6 1A60     		str	r2, [r3]
+ 622:libraries/zf_driver/zf_driver_spi.c ****         spi_obj_list[spi_index].enable = ZF_ENABLE;
+ 2634              		.loc 1 622 32
+ 2635 05b8 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2636              		.loc 1 622 40
+ 2637 05bc 0A49     		ldr	r1, .L132
+ 2638 05be 1346     		mov	r3, r2
+ 2639 05c0 5B00     		lsls	r3, r3, #1
+ 2640 05c2 1344     		add	r3, r3, r2
+ 2641 05c4 DB00     		lsls	r3, r3, #3
+ 2642 05c6 0B44     		add	r3, r3, r1
+ 2643 05c8 03F11002 		add	r2, r3, #16
+ 2644 05cc 1379     		ldrb	r3, [r2, #4]
+ 2645 05ce 0121     		movs	r1, #1
+ 2646 05d0 61F30713 		bfi	r3, r1, #4, #4
+ 2647 05d4 1371     		strb	r3, [r2, #4]
+ 623:libraries/zf_driver/zf_driver_spi.c **** 
+ 624:libraries/zf_driver/zf_driver_spi.c ****         return_state = SPI_OPERATION_DONE;
+ 2648              		.loc 1 624 22
+ 2649 05d6 0023     		movs	r3, #0
+ 2650 05d8 8DF81F30 		strb	r3, [sp, #31]
+ 2651              	.L102:
+ 2652              	.LBE4:
+ 625:libraries/zf_driver/zf_driver_spi.c ****     }while(0);
+ 626:libraries/zf_driver/zf_driver_spi.c **** 
+ 627:libraries/zf_driver/zf_driver_spi.c ****     return return_state;
+ 2653              		.loc 1 627 12
+ 2654 05dc 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 628:libraries/zf_driver/zf_driver_spi.c **** }
+ 2655              		.loc 1 628 1
+ 2656 05e0 1846     		mov	r0, r3
+ 2657 05e2 09B0     		add	sp, sp, #36
+ 2658              		.cfi_def_cfa_offset 4
+ 2659              		@ sp needed
+ 2660 05e4 5DF804FB 		ldr	pc, [sp], #4
+ 2661              	.L133:
+ 2662              		.align	2
+ 2663              	.L132:
+ 2664 05e8 00000000 		.word	spi_obj_list
+ 2665              		.cfi_endproc
+ 2666              	.LFE188:
+ 2668              		.text
+ 2669              	.Letext0:
+ 2670              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 2671              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 2672              		.file 4 "libraries/zf_common/zf_common_typedef.h"
+ 2673              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_SPI.
+ 2674              		.file 6 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 2675              		.file 7 "libraries/zf_driver/zf_driver_rcc.h"
+ 2676              		.file 8 "libraries/zf_driver/zf_driver_gpio.h"
+ 2677              		.file 9 "libraries/zf_driver/zf_driver_spi.h"
+ 2678              		.file 10 "libraries/zf_driver/zf_driver_system.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_spi.c
+D:\Users\TMP\ccNbq7xt.s:19     .rodata.spi_rcc_index_list:00000000 $d
+D:\Users\TMP\ccNbq7xt.s:22     .rodata.spi_rcc_index_list:00000000 spi_rcc_index_list
+D:\Users\TMP\ccNbq7xt.s:32     .data.spi_obj_list:00000000 spi_obj_list
+D:\Users\TMP\ccNbq7xt.s:29     .data.spi_obj_list:00000000 $d
+D:\Users\TMP\ccNbq7xt.s:66     .text.zf_spi_assert_handler:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:73     .text.zf_spi_assert_handler:00000000 zf_spi_assert_handler
+D:\Users\TMP\ccNbq7xt.s:103    .rodata:00000000 $d
+D:\Users\TMP\ccNbq7xt.s:107    .text.zf_spi_transfer_8bit_array:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:114    .text.zf_spi_transfer_8bit_array:00000000 zf_spi_transfer_8bit_array
+D:\Users\TMP\ccNbq7xt.s:323    .text.zf_spi_transfer_8bit_array:00000154 $d
+D:\Users\TMP\ccNbq7xt.s:329    .text.zf_spi_transfer_16bit_array:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:336    .text.zf_spi_transfer_16bit_array:00000000 zf_spi_transfer_16bit_array
+D:\Users\TMP\ccNbq7xt.s:699    .text.zf_spi_transfer_16bit_array:00000264 $d
+D:\Users\TMP\ccNbq7xt.s:703    .text.zf_spi_transfer_16bit_array:0000026c $t
+D:\Users\TMP\ccNbq7xt.s:834    .text.zf_spi_transfer_16bit_array:00000354 $d
+D:\Users\TMP\ccNbq7xt.s:839    .text.zf_spi_set_config:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:846    .text.zf_spi_set_config:00000000 zf_spi_set_config
+D:\Users\TMP\ccNbq7xt.s:1075   .text.zf_spi_set_config:0000018c $d
+D:\Users\TMP\ccNbq7xt.s:1081   .text.zf_spi_set_speed:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:1088   .text.zf_spi_set_speed:00000000 zf_spi_set_speed
+D:\Users\TMP\ccNbq7xt.s:1425   .text.zf_spi_set_speed:00000258 $d
+D:\Users\TMP\ccNbq7xt.s:1432   .text.zf_spi_enable:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:1439   .text.zf_spi_enable:00000000 zf_spi_enable
+D:\Users\TMP\ccNbq7xt.s:1511   .text.zf_spi_enable:00000074 $d
+D:\Users\TMP\ccNbq7xt.s:1517   .text.zf_spi_disable:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:1524   .text.zf_spi_disable:00000000 zf_spi_disable
+D:\Users\TMP\ccNbq7xt.s:1595   .text.zf_spi_disable:00000070 $d
+D:\Users\TMP\ccNbq7xt.s:1601   .text.zf_spi_deinit:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:1608   .text.zf_spi_deinit:00000000 zf_spi_deinit
+D:\Users\TMP\ccNbq7xt.s:1838   .text.zf_spi_deinit:0000019c $d
+D:\Users\TMP\ccNbq7xt.s:1845   .text.zf_spi_init:00000000 $t
+D:\Users\TMP\ccNbq7xt.s:1852   .text.zf_spi_init:00000000 zf_spi_init
+D:\Users\TMP\ccNbq7xt.s:2069   .text.zf_spi_init:00000184 $d
+D:\Users\TMP\ccNbq7xt.s:2076   .text.zf_spi_init:00000198 $t
+D:\Users\TMP\ccNbq7xt.s:2473   .text.zf_spi_init:00000494 $d
+D:\Users\TMP\ccNbq7xt.s:2477   .text.zf_spi_init:0000049c $t
+D:\Users\TMP\ccNbq7xt.s:2540   .text.zf_spi_init:00000510 $d
+D:\Users\TMP\ccNbq7xt.s:2544   .text.zf_spi_init:00000520 $t
+D:\Users\TMP\ccNbq7xt.s:2664   .text.zf_spi_init:000005e8 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.33.55df87f2fcab0bfad11b8ab617e6a3e1
+                           .group:00000000 wm4.zf_driver_spi.h.62.950b1f52ed365034df2907601137b455
+
+UNDEFINED SYMBOLS
+debug_message_handler
+zf_gpio_assert_handler
+zf_gpio_deinit
+zf_rcc_peripheral_reset
+zf_rcc_clock_disable
+zf_system_clock
+zf_afio_init
+zf_rcc_clock_enable

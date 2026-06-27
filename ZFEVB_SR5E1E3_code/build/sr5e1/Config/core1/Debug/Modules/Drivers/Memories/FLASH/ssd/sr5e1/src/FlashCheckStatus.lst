@@ -1,0 +1,1184 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"FlashCheckStatus.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.FlashCheckStatus,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.global	FlashCheckStatus
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	FlashCheckStatus:
+  27              	.LFB0:
+  28              		.file 1 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/
+   1:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** /****************************************************************************
+   2:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  *
+   3:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  *
+   5:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  * terms SLA0098 at www.st.com.
+   7:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  *
+   8:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  *
+  11:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  *
+  12:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  *****************************************************************************/
+  13:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+  14:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** /*************************************************************************
+  15:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                                                                       *
+  16:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *               Standard Software Driver for C55                        *
+  17:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                                                                       *
+  18:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * FILE NAME     : FlashCheckStatus.c                                    *
+  19:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * FUNCTION      : FlashCheckStatus                                      *
+  20:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * DESCRIPTION   : This function will check the status of an on-going    *
+  21:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                   flash or UTest operation. If the current operation  *
+  22:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                   finishes, this function may call the relevant       *
+  23:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                   functions to finish the whole operation.            *
+  24:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * PARAMETERS    : pSSDConfig - Flash driver configuration structure     *
+  25:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                 modeOp - the operation to check                       *
+  26:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                 opResult - variable to store result of the operation  *
+  27:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                 pCtxData - the context data                           *
+  28:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                 pReqCompletionFn - the function for completing        *
+  29:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                   the operation
+  30:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * RETURN        : C55_OK - passes                                       *
+  31:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * DATE          : February 04, 2022                                     *
+  32:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * AUTHOR        : ...                                                   *
+  33:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** * E-mail        : ...                                                   *
+  34:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *                                                                       *
+  35:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** *************************************************************************/
+  36:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+  37:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** /******************************* CHANGES *********************************
+  38:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****   0.1.0   04.02.2022      G. Cuce       Initial version
+  39:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** ***************************************************************************************************
+  40:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+  41:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** #include "ssd_types.h"
+  42:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** #include "ssd_C55.h"
+  43:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** #include "ssd_C55_internal.h"
+  44:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+  45:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+  46:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** UINT32 FlashCheckStatus ( PSSD_CONFIG pSSDConfig,
+  47:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                           UINT8 modeOp,
+  48:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                           UINT32 *opResult,
+  49:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                           PCONTEXT_DATA pCtxData
+  50:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                           )
+  51:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** {
+  29              		.loc 1 51 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  34              		.cfi_def_cfa_offset 20
+  35              		.cfi_offset 4, -20
+  36              		.cfi_offset 5, -16
+  37              		.cfi_offset 6, -12
+  38              		.cfi_offset 7, -8
+  39              		.cfi_offset 14, -4
+  40 0002 8DB0     		sub	sp, sp, #52
+  41              		.cfi_def_cfa_offset 72
+  42 0004 0790     		str	r0, [sp, #28]
+  43 0006 0592     		str	r2, [sp, #20]
+  44 0008 0493     		str	r3, [sp, #16]
+  45 000a 0B46     		mov	r3, r1
+  46 000c 8DF81B30 		strb	r3, [sp, #27]
+  52:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     volatile UINT32 returnCode;     /* return code */
+  53:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****  
+  54:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     UINT32 RegAddress;              /* address of MCR or UT0 register */
+  55:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     UINT32 RegValue;                /* content of MCR or UT0 register */
+  56:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     void* pCompletionFn;
+  57:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+  58:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     /* Initialize return code */
+  59:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     returnCode = C55_DONE;
+  47              		.loc 1 59 16
+  48 0010 4FF48033 		mov	r3, #65536
+  49 0014 0893     		str	r3, [sp, #32]
+  60:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     *opResult = C55_OK;
+  50              		.loc 1 60 15
+  51 0016 059B     		ldr	r3, [sp, #20]
+  52 0018 0022     		movs	r2, #0
+  53 001a 1A60     		str	r2, [r3]
+  61:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+  62:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     switch ( modeOp )
+  54              		.loc 1 62 5
+  55 001c 9DF81B30 		ldrb	r3, [sp, #27]	@ zero_extendqisi2
+  56 0020 052B     		cmp	r3, #5
+  57 0022 31D8     		bhi	.L2
+  58 0024 01A2     		adr	r2, .L4
+  59 0026 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+  60 002a 00BF     		.p2align 2
+  61              	.L4:
+  62 002c 45000000 		.word	.L9+1
+  63 0030 F7010000 		.word	.L47+1
+  64 0034 59000000 		.word	.L7+1
+  65 0038 6D000000 		.word	.L6+1
+  66 003c 81000000 		.word	.L5+1
+  67 0040 79030000 		.word	.L48+1
+  68              		.p2align 1
+  69              	.L9:
+  63:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+  64:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     case C55_MODE_OP_PROGRAM:
+  65:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         pCompletionFn = pCtxData->pReqCompletionFn;
+  70              		.loc 1 65 23
+  71 0044 049B     		ldr	r3, [sp, #16]
+  72 0046 1B6A     		ldr	r3, [r3, #32]
+  73 0048 0A93     		str	r3, [sp, #40]
+  66:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto PROGRAM;
+  74              		.loc 1 66 9
+  75 004a 00BF     		nop
+  76              	.L10:
+  67:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+  68:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     case C55_MODE_OP_ERASE:
+  69:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* Don't care about the completion function pointer */
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto ERASE;
+  71:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+  72:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     case C55_MODE_OP_PROGRAM_VERIFY:
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         pCompletionFn = pCtxData->pReqCompletionFn;
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto PROGRAMVERIFY;
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+  76:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     case C55_MODE_OP_BLANK_CHECK:
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         pCompletionFn = pCtxData->pReqCompletionFn;
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto BLANKCHECK;
+  79:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+  80:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     case C55_MODE_OP_CHECK_SUM:
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         pCompletionFn = pCtxData->pReqCompletionFn;
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto CHECKSUM;
+  83:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+  84:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     case C55_MODE_OP_USER_TEST_CHECK:
+  85:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* Don't care about the completion function pointer */
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto UTESTCHECK;
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     default:
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         returnCode = C55_ERROR_MODE_OP;
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto EXIT;
+  91:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+  92:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+  93:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** PROGRAM:
+  94:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     /* Determine which MCR register should be used */
+  95:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     if ( pSSDConfig->mainInterfaceFlag )
+  77              		.loc 1 95 20
+  78 004c 079B     		ldr	r3, [sp, #28]
+  79 004e 93F84030 		ldrb	r3, [r3, #64]	@ zero_extendqisi2
+  80              		.loc 1 95 8
+  81 0052 002B     		cmp	r3, #0
+  82 0054 20D0     		beq	.L17
+  83 0056 1BE0     		b	.L44
+  84              	.L7:
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto PROGRAMVERIFY;
+  85              		.loc 1 73 23
+  86 0058 049B     		ldr	r3, [sp, #16]
+  87 005a 1B6A     		ldr	r3, [r3, #32]
+  88 005c 0A93     		str	r3, [sp, #40]
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+  89              		.loc 1 74 9
+  90 005e 00BF     		nop
+  91              	.L12:
+  96:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+  97:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         RegAddress = pSSDConfig->c55RegBase + C55_MCR;
+  98:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+  99:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     else
+ 100:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         RegAddress = pSSDConfig->c55RegBase + C55_MCRA;
+ 102:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 103:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     RegValue = C55_REG_READ (RegAddress);
+ 105:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 106:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     /* There must be a program operation */
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     if ( RegValue & C55_MCR_PGM )
+ 108:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 109:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* If DONE bit goes high */
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         if ( RegValue & C55_MCR_DONE )
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 112:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             /* If the operation is suspended */
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             if ( RegValue & C55_MCR_PSUS )
+ 114:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 115:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 /* Check if the suspended program is PGM_SUS or ERS_SUS_PGM_SUS */
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 if ( RegValue & C55_MCR_ERS )
+ 117:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 118:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     returnCode = C55_ERS_SUS_PGM_SUS;
+ 119:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 120:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 else
+ 121:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 122:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     returnCode = C55_PGM_SUS;
+ 123:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 124:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             }
+ 125:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             else
+ 126:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 127:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 /* Check PGOOD (PEG) */
+ 128:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 if ( RegValue & C55_MCR_PEG )
+ 129:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 130:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     /* Clear EHV if it is high */
+ 131:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     if ( RegValue & C55_MCR_EHV )
+ 132:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 133:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_EHV);
+ 134:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         
+ 135:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         /* If there is remaining data needs to be programmed */
+ 136:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         if ( pCtxData->size )
+ 137:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 138:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             returnCode = C55_INPROGRESS;
+ 139:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 140:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             /* Call FlashProgram to continue the operation */
+ 141:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             *opResult = ((PFLASHPROGRAM)pCompletionFn)( pSSDConfig,
+ 142:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                                         FALSE,
+ 143:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                                         pCtxData->dest,
+ 144:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                                         pCtxData->size,
+ 145:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                                         pCtxData->source,
+ 146:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                                         pCtxData );
+ 147:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       
+ 148:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             if ( *opResult != C55_OK )
+ 149:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             {
+ 150:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                 returnCode = C55_DONE;
+ 151:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             }
+ 152:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 153:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         else /* pCtxData->size == 0 */
+ 154:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 155:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             /* Program finished successfully, clear FERS, PGM */
+ 156:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_FERS);
+ 157:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_PGM);
+ 158:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 159:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 160:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     else /* EHV == 0 */
+ 161:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 162:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         if ( RegValue & C55_MCR_ERS )
+ 163:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 164:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             returnCode = C55_ERS_SUS_PGM_WRITE;
+ 165:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 166:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         else
+ 167:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 168:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             returnCode = C55_PGM_WRITE;
+ 169:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 170:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 171:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 172:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 else /* PEG == 0 */
+ 173:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 174:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     if ( RegValue & C55_MCR_EHV )
+ 175:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 176:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         /* PGOOD (PEG) is low */
+ 177:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         *opResult = C55_ERROR_PGOOD;
+ 178:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         
+ 179:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         /* Clear EHV */
+ 180:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_EHV);
+ 181:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         
+ 182:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         /* Program finished unsuccessfully, clear FERS, PGM */
+ 183:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_FERS);
+ 184:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_PGM);
+ 185:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 186:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     else /* EHV == 0 */
+ 187:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 188:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         /* PEG is invalid at this stage */
+ 189:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         if ( RegValue & C55_MCR_ERS )
+ 190:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 191:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             returnCode = C55_ERS_SUS_PGM_WRITE;
+ 192:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 193:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         else
+ 194:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 195:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             returnCode = C55_PGM_WRITE;
+ 196:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 197:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 198:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 199:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             }
+ 200:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 201:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         else /* DONE == 0 */
+ 202:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 203:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             /* DONE bit is still low means the operation is in-progress */
+ 204:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             returnCode = C55_INPROGRESS;
+ 205:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 206:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     goto EXIT;
+ 208:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 209:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 210:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** ERASE:
+ 211:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     /* Determine which MCR register should be used */
+ 212:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     if ( pSSDConfig->mainInterfaceFlag )
+ 213:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 214:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         RegAddress = pSSDConfig->c55RegBase + C55_MCR;
+ 215:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 216:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     else
+ 217:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 218:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         RegAddress = pSSDConfig->c55RegBase + C55_MCRA;
+ 219:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 220:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 221:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     RegValue = C55_REG_READ (RegAddress);
+ 222:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 223:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     /* There must be an erase operation */
+ 224:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     if ( RegValue & C55_MCR_ERS )
+ 225:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 226:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* If DONE bit goes high */
+ 227:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         if ( RegValue & C55_MCR_DONE )
+ 228:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 229:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             /* If the operation is suspended */
+ 230:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             if ( RegValue & C55_MCR_ESUS )
+ 231:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 232:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 returnCode = C55_ERS_SUS;
+ 233:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             }
+ 234:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             else
+ 235:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 236:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 /* Check EGOOD (PEG) */
+ 237:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 if ( RegValue & C55_MCR_PEG )
+ 238:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 239:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     /* Clear EHV if it is high */
+ 240:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     if ( RegValue & C55_MCR_EHV )
+ 241:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 242:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_EHV);
+ 243:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 244:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     else
+ 245:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 246:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         returnCode = C55_ERS_WRITE;
+ 247:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 248:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 249:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 else
+ 250:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 251:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     /* EGOOD (PEG) is low */
+ 252:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     *opResult = C55_ERROR_EGOOD;
+ 253:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     
+ 254:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     /* Clear EHV if it is high */
+ 255:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     if ( RegValue & C55_MCR_EHV )
+ 256:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 257:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_EHV);
+ 258:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 259:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     else
+ 260:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 261:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         returnCode = C55_DONE;
+ 262:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 263:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 264:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 
+ 265:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 if ( returnCode != C55_ERS_WRITE )
+ 266:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 267:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     /* Clear ERS */
+ 268:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_FERS);
+ 269:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_ERS);
+ 270:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 271:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             }
+ 272:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 273:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         else
+ 274:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 275:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             /* DONE bit is still low means the operation is in-progress */
+ 276:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             returnCode = C55_INPROGRESS;
+ 277:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 278:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 279:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     goto EXIT;
+ 280:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 281:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 282:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** PROGRAMVERIFY:
+ 283:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     /* If the whole operation is unfinished */
+ 284:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     if ( pCtxData->size )
+  92              		.loc 1 284 18
+  93 0060 049B     		ldr	r3, [sp, #16]
+  94 0062 5B68     		ldr	r3, [r3, #4]
+  95              		.loc 1 284 8
+  96 0064 002B     		cmp	r3, #0
+  97 0066 00F08981 		beq	.L49
+  98 006a 32E1     		b	.L45
+  99              	.L6:
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto BLANKCHECK;
+ 100              		.loc 1 77 23
+ 101 006c 049B     		ldr	r3, [sp, #16]
+ 102 006e 1B6A     		ldr	r3, [r3, #32]
+ 103 0070 0A93     		str	r3, [sp, #40]
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+ 104              		.loc 1 78 9
+ 105 0072 00BF     		nop
+ 106              	.L13:
+ 285:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 286:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         returnCode = C55_INPROGRESS;
+ 287:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* Call ProgramVerify to continue the operation */
+ 288:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         *opResult = ((PPROGRAMVERIFY) pCompletionFn)( pSSDConfig,
+ 289:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->dest,
+ 290:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->size,
+ 291:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->source,
+ 292:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->pFailedAddress,
+ 293:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->pFailedData,
+ 294:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->pFailedSource,
+ 295:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData );
+ 296:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+ 297:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         if ( *opResult != C55_OK || 0 == pCtxData->size )
+ 298:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 299:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             returnCode = C55_DONE;
+ 300:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 301:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 302:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     goto EXIT;
+ 303:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 304:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 305:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** BLANKCHECK:
+ 306:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     /* If the whole operation is unfinished */
+ 307:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     if ( pCtxData->size )
+ 107              		.loc 1 307 18
+ 108 0074 049B     		ldr	r3, [sp, #16]
+ 109 0076 5B68     		ldr	r3, [r3, #4]
+ 110              		.loc 1 307 8
+ 111 0078 002B     		cmp	r3, #0
+ 112 007a 00F08181 		beq	.L50
+ 113 007e 59E1     		b	.L46
+ 114              	.L5:
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto CHECKSUM;
+ 115              		.loc 1 81 23
+ 116 0080 049B     		ldr	r3, [sp, #16]
+ 117 0082 1B6A     		ldr	r3, [r3, #32]
+ 118 0084 0A93     		str	r3, [sp, #40]
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+ 119              		.loc 1 82 9
+ 120 0086 80E1     		b	.L16
+ 121              	.L2:
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         goto EXIT;
+ 122              		.loc 1 89 20
+ 123 0088 4FF40043 		mov	r3, #32768
+ 124 008c 0893     		str	r3, [sp, #32]
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 125              		.loc 1 90 9
+ 126 008e 7CE1     		b	.L16
+ 127              	.L44:
+  97:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 128              		.loc 1 97 20
+ 129 0090 079B     		ldr	r3, [sp, #28]
+ 130 0092 1B68     		ldr	r3, [r3]
+ 131 0094 0B93     		str	r3, [sp, #44]
+ 132 0096 03E0     		b	.L18
+ 133              	.L17:
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 134              		.loc 1 101 32
+ 135 0098 079B     		ldr	r3, [sp, #28]
+ 136 009a 1B68     		ldr	r3, [r3]
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 137              		.loc 1 101 20
+ 138 009c 0433     		adds	r3, r3, #4
+ 139 009e 0B93     		str	r3, [sp, #44]
+ 140              	.L18:
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 141              		.loc 1 104 16
+ 142 00a0 0B9B     		ldr	r3, [sp, #44]
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 143              		.loc 1 104 14
+ 144 00a2 1B68     		ldr	r3, [r3]
+ 145 00a4 0993     		str	r3, [sp, #36]
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 146              		.loc 1 107 19
+ 147 00a6 099B     		ldr	r3, [sp, #36]
+ 148 00a8 03F01003 		and	r3, r3, #16
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 149              		.loc 1 107 8
+ 150 00ac 002B     		cmp	r3, #0
+ 151 00ae 00F06981 		beq	.L51
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 152              		.loc 1 110 23
+ 153 00b2 099B     		ldr	r3, [sp, #36]
+ 154 00b4 03F48063 		and	r3, r3, #1024
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 155              		.loc 1 110 12
+ 156 00b8 002B     		cmp	r3, #0
+ 157 00ba 00F09880 		beq	.L20
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 158              		.loc 1 113 27
+ 159 00be 099B     		ldr	r3, [sp, #36]
+ 160 00c0 03F00803 		and	r3, r3, #8
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 161              		.loc 1 113 16
+ 162 00c4 002B     		cmp	r3, #0
+ 163 00c6 0AD0     		beq	.L21
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 164              		.loc 1 116 31
+ 165 00c8 099B     		ldr	r3, [sp, #36]
+ 166 00ca 03F00403 		and	r3, r3, #4
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 167              		.loc 1 116 20
+ 168 00ce 002B     		cmp	r3, #0
+ 169 00d0 02D0     		beq	.L22
+ 118:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 170              		.loc 1 118 32
+ 171 00d2 1623     		movs	r3, #22
+ 172 00d4 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 173              		.loc 1 207 5
+ 174 00d6 55E1     		b	.L51
+ 175              	.L22:
+ 122:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 176              		.loc 1 122 32
+ 177 00d8 1423     		movs	r3, #20
+ 178 00da 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 179              		.loc 1 207 5
+ 180 00dc 52E1     		b	.L51
+ 181              	.L21:
+ 128:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 182              		.loc 1 128 31
+ 183 00de 099B     		ldr	r3, [sp, #36]
+ 184 00e0 03F40073 		and	r3, r3, #512
+ 128:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 185              		.loc 1 128 20
+ 186 00e4 002B     		cmp	r3, #0
+ 187 00e6 50D0     		beq	.L23
+ 131:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 188              		.loc 1 131 35
+ 189 00e8 099B     		ldr	r3, [sp, #36]
+ 190 00ea 03F00103 		and	r3, r3, #1
+ 131:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 191              		.loc 1 131 24
+ 192 00ee 002B     		cmp	r3, #0
+ 193 00f0 40D0     		beq	.L24
+ 133:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         
+ 194              		.loc 1 133 25
+ 195 00f2 0B9B     		ldr	r3, [sp, #44]
+ 196 00f4 1968     		ldr	r1, [r3]
+ 197 00f6 0B9A     		ldr	r2, [sp, #44]
+ 198 00f8 8A4B     		ldr	r3, .L53
+ 199 00fa 0B40     		ands	r3, r3, r1
+ 200 00fc 1360     		str	r3, [r2]
+ 201              		.syntax unified
+ 202              	@ 133 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 203 00fe BFF35F8F 		dmb
+ 204              	@ 0 "" 2
+ 205              	@ 133 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 206 0102 BFF35F8F 		dmb
+ 207              	@ 0 "" 2
+ 136:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 208              		.loc 1 136 38
+ 209              		.thumb
+ 210              		.syntax unified
+ 211 0106 049B     		ldr	r3, [sp, #16]
+ 212 0108 5B68     		ldr	r3, [r3, #4]
+ 136:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 213              		.loc 1 136 28
+ 214 010a 002B     		cmp	r3, #0
+ 215 010c 1DD0     		beq	.L25
+ 138:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 216              		.loc 1 138 40
+ 217 010e 4FF40033 		mov	r3, #131072
+ 218 0112 0893     		str	r3, [sp, #32]
+ 141:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                                         FALSE,
+ 219              		.loc 1 141 42
+ 220 0114 0A9C     		ldr	r4, [sp, #40]
+ 221 0116 049B     		ldr	r3, [sp, #16]
+ 222 0118 1968     		ldr	r1, [r3]
+ 223 011a 049B     		ldr	r3, [sp, #16]
+ 224 011c 5868     		ldr	r0, [r3, #4]
+ 225 011e 049B     		ldr	r3, [sp, #16]
+ 226 0120 9B68     		ldr	r3, [r3, #8]
+ 227 0122 049A     		ldr	r2, [sp, #16]
+ 228 0124 0192     		str	r2, [sp, #4]
+ 229 0126 0093     		str	r3, [sp]
+ 230 0128 0346     		mov	r3, r0
+ 231 012a 0A46     		mov	r2, r1
+ 232 012c 0021     		movs	r1, #0
+ 233 012e 0798     		ldr	r0, [sp, #28]
+ 234 0130 A047     		blx	r4
+ 235              	.LVL0:
+ 236 0132 0246     		mov	r2, r0
+ 141:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                                         FALSE,
+ 237              		.loc 1 141 39
+ 238 0134 059B     		ldr	r3, [sp, #20]
+ 239 0136 1A60     		str	r2, [r3]
+ 148:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             {
+ 240              		.loc 1 148 34
+ 241 0138 059B     		ldr	r3, [sp, #20]
+ 242 013a 1B68     		ldr	r3, [r3]
+ 148:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             {
+ 243              		.loc 1 148 32
+ 244 013c 002B     		cmp	r3, #0
+ 245 013e 00F02181 		beq	.L51
+ 150:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             }
+ 246              		.loc 1 150 44
+ 247 0142 4FF48033 		mov	r3, #65536
+ 248 0146 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 249              		.loc 1 207 5
+ 250 0148 1CE1     		b	.L51
+ 251              	.L25:
+ 156:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                             C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_PGM);
+ 252              		.loc 1 156 29
+ 253 014a 0B9B     		ldr	r3, [sp, #44]
+ 254 014c 1968     		ldr	r1, [r3]
+ 255 014e 0B9A     		ldr	r2, [sp, #44]
+ 256 0150 754B     		ldr	r3, .L53+4
+ 257 0152 0B40     		ands	r3, r3, r1
+ 258 0154 1360     		str	r3, [r2]
+ 259              		.syntax unified
+ 260              	@ 156 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 261 0156 BFF35F8F 		dmb
+ 262              	@ 0 "" 2
+ 263              	@ 156 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 264 015a BFF35F8F 		dmb
+ 265              	@ 0 "" 2
+ 157:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 266              		.loc 1 157 29
+ 267              		.thumb
+ 268              		.syntax unified
+ 269 015e 0B9B     		ldr	r3, [sp, #44]
+ 270 0160 1968     		ldr	r1, [r3]
+ 271 0162 0B9A     		ldr	r2, [sp, #44]
+ 272 0164 714B     		ldr	r3, .L53+8
+ 273 0166 0B40     		ands	r3, r3, r1
+ 274 0168 1360     		str	r3, [r2]
+ 275              		.syntax unified
+ 276              	@ 157 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 277 016a BFF35F8F 		dmb
+ 278              	@ 0 "" 2
+ 279              	@ 157 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 280 016e BFF35F8F 		dmb
+ 281              	@ 0 "" 2
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 282              		.loc 1 207 5
+ 283              		.thumb
+ 284              		.syntax unified
+ 285 0172 07E1     		b	.L51
+ 286              	.L24:
+ 162:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 287              		.loc 1 162 39
+ 288 0174 099B     		ldr	r3, [sp, #36]
+ 289 0176 03F00403 		and	r3, r3, #4
+ 162:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 290              		.loc 1 162 28
+ 291 017a 002B     		cmp	r3, #0
+ 292 017c 02D0     		beq	.L26
+ 164:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 293              		.loc 1 164 40
+ 294 017e 1323     		movs	r3, #19
+ 295 0180 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 296              		.loc 1 207 5
+ 297 0182 FFE0     		b	.L51
+ 298              	.L26:
+ 168:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 299              		.loc 1 168 40
+ 300 0184 1123     		movs	r3, #17
+ 301 0186 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 302              		.loc 1 207 5
+ 303 0188 FCE0     		b	.L51
+ 304              	.L23:
+ 174:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 305              		.loc 1 174 35
+ 306 018a 099B     		ldr	r3, [sp, #36]
+ 307 018c 03F00103 		and	r3, r3, #1
+ 174:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 308              		.loc 1 174 24
+ 309 0190 002B     		cmp	r3, #0
+ 310 0192 21D0     		beq	.L27
+ 177:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         
+ 311              		.loc 1 177 35
+ 312 0194 059B     		ldr	r3, [sp, #20]
+ 313 0196 0822     		movs	r2, #8
+ 314 0198 1A60     		str	r2, [r3]
+ 180:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         
+ 315              		.loc 1 180 25
+ 316 019a 0B9B     		ldr	r3, [sp, #44]
+ 317 019c 1968     		ldr	r1, [r3]
+ 318 019e 0B9A     		ldr	r2, [sp, #44]
+ 319 01a0 604B     		ldr	r3, .L53
+ 320 01a2 0B40     		ands	r3, r3, r1
+ 321 01a4 1360     		str	r3, [r2]
+ 322              		.syntax unified
+ 323              	@ 180 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 324 01a6 BFF35F8F 		dmb
+ 325              	@ 0 "" 2
+ 326              	@ 180 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 327 01aa BFF35F8F 		dmb
+ 328              	@ 0 "" 2
+ 183:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_PGM);
+ 329              		.loc 1 183 25
+ 330              		.thumb
+ 331              		.syntax unified
+ 332 01ae 0B9B     		ldr	r3, [sp, #44]
+ 333 01b0 1968     		ldr	r1, [r3]
+ 334 01b2 0B9A     		ldr	r2, [sp, #44]
+ 335 01b4 5C4B     		ldr	r3, .L53+4
+ 336 01b6 0B40     		ands	r3, r3, r1
+ 337 01b8 1360     		str	r3, [r2]
+ 338              		.syntax unified
+ 339              	@ 183 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 340 01ba BFF35F8F 		dmb
+ 341              	@ 0 "" 2
+ 342              	@ 183 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 343 01be BFF35F8F 		dmb
+ 344              	@ 0 "" 2
+ 184:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 345              		.loc 1 184 25
+ 346              		.thumb
+ 347              		.syntax unified
+ 348 01c2 0B9B     		ldr	r3, [sp, #44]
+ 349 01c4 1968     		ldr	r1, [r3]
+ 350 01c6 0B9A     		ldr	r2, [sp, #44]
+ 351 01c8 584B     		ldr	r3, .L53+8
+ 352 01ca 0B40     		ands	r3, r3, r1
+ 353 01cc 1360     		str	r3, [r2]
+ 354              		.syntax unified
+ 355              	@ 184 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 356 01ce BFF35F8F 		dmb
+ 357              	@ 0 "" 2
+ 358              	@ 184 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 359 01d2 BFF35F8F 		dmb
+ 360              	@ 0 "" 2
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 361              		.loc 1 207 5
+ 362              		.thumb
+ 363              		.syntax unified
+ 364 01d6 D5E0     		b	.L51
+ 365              	.L27:
+ 189:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 366              		.loc 1 189 39
+ 367 01d8 099B     		ldr	r3, [sp, #36]
+ 368 01da 03F00403 		and	r3, r3, #4
+ 189:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         {
+ 369              		.loc 1 189 28
+ 370 01de 002B     		cmp	r3, #0
+ 371 01e0 02D0     		beq	.L28
+ 191:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 372              		.loc 1 191 40
+ 373 01e2 1323     		movs	r3, #19
+ 374 01e4 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 375              		.loc 1 207 5
+ 376 01e6 CDE0     		b	.L51
+ 377              	.L28:
+ 195:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                         }
+ 378              		.loc 1 195 40
+ 379 01e8 1123     		movs	r3, #17
+ 380 01ea 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 381              		.loc 1 207 5
+ 382 01ec CAE0     		b	.L51
+ 383              	.L20:
+ 204:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 384              		.loc 1 204 24
+ 385 01ee 4FF40033 		mov	r3, #131072
+ 386 01f2 0893     		str	r3, [sp, #32]
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 387              		.loc 1 207 5
+ 388 01f4 C6E0     		b	.L51
+ 389              	.L47:
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+ 390              		.loc 1 70 9
+ 391 01f6 00BF     		nop
+ 392              	.L11:
+ 212:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 393              		.loc 1 212 20
+ 394 01f8 079B     		ldr	r3, [sp, #28]
+ 395 01fa 93F84030 		ldrb	r3, [r3, #64]	@ zero_extendqisi2
+ 212:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 396              		.loc 1 212 8
+ 397 01fe 002B     		cmp	r3, #0
+ 398 0200 03D0     		beq	.L29
+ 214:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 399              		.loc 1 214 20
+ 400 0202 079B     		ldr	r3, [sp, #28]
+ 401 0204 1B68     		ldr	r3, [r3]
+ 402 0206 0B93     		str	r3, [sp, #44]
+ 403 0208 03E0     		b	.L30
+ 404              	.L29:
+ 218:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 405              		.loc 1 218 32
+ 406 020a 079B     		ldr	r3, [sp, #28]
+ 407 020c 1B68     		ldr	r3, [r3]
+ 218:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 408              		.loc 1 218 20
+ 409 020e 0433     		adds	r3, r3, #4
+ 410 0210 0B93     		str	r3, [sp, #44]
+ 411              	.L30:
+ 221:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 412              		.loc 1 221 16
+ 413 0212 0B9B     		ldr	r3, [sp, #44]
+ 221:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     
+ 414              		.loc 1 221 14
+ 415 0214 1B68     		ldr	r3, [r3]
+ 416 0216 0993     		str	r3, [sp, #36]
+ 224:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 417              		.loc 1 224 19
+ 418 0218 099B     		ldr	r3, [sp, #36]
+ 419 021a 03F00403 		and	r3, r3, #4
+ 224:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 420              		.loc 1 224 8
+ 421 021e 002B     		cmp	r3, #0
+ 422 0220 00F0B280 		beq	.L52
+ 227:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 423              		.loc 1 227 23
+ 424 0224 099B     		ldr	r3, [sp, #36]
+ 425 0226 03F48063 		and	r3, r3, #1024
+ 227:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 426              		.loc 1 227 12
+ 427 022a 002B     		cmp	r3, #0
+ 428 022c 4DD0     		beq	.L32
+ 230:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 429              		.loc 1 230 27
+ 430 022e 099B     		ldr	r3, [sp, #36]
+ 431 0230 03F00203 		and	r3, r3, #2
+ 230:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             {
+ 432              		.loc 1 230 16
+ 433 0234 002B     		cmp	r3, #0
+ 434 0236 02D0     		beq	.L33
+ 232:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             }
+ 435              		.loc 1 232 28
+ 436 0238 1523     		movs	r3, #21
+ 437 023a 0893     		str	r3, [sp, #32]
+ 279:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 438              		.loc 1 279 5
+ 439 023c A4E0     		b	.L52
+ 440              	.L33:
+ 237:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 441              		.loc 1 237 31
+ 442 023e 099B     		ldr	r3, [sp, #36]
+ 443 0240 03F40073 		and	r3, r3, #512
+ 237:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 444              		.loc 1 237 20
+ 445 0244 002B     		cmp	r3, #0
+ 446 0246 12D0     		beq	.L34
+ 240:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 447              		.loc 1 240 35
+ 448 0248 099B     		ldr	r3, [sp, #36]
+ 449 024a 03F00103 		and	r3, r3, #1
+ 240:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 450              		.loc 1 240 24
+ 451 024e 002B     		cmp	r3, #0
+ 452 0250 0AD0     		beq	.L35
+ 242:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 453              		.loc 1 242 25
+ 454 0252 0B9B     		ldr	r3, [sp, #44]
+ 455 0254 1968     		ldr	r1, [r3]
+ 456 0256 0B9A     		ldr	r2, [sp, #44]
+ 457 0258 324B     		ldr	r3, .L53
+ 458 025a 0B40     		ands	r3, r3, r1
+ 459 025c 1360     		str	r3, [r2]
+ 460              		.syntax unified
+ 461              	@ 242 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 462 025e BFF35F8F 		dmb
+ 463              	@ 0 "" 2
+ 464              	@ 242 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 465 0262 BFF35F8F 		dmb
+ 466              	@ 0 "" 2
+ 467              		.thumb
+ 468              		.syntax unified
+ 469 0266 18E0     		b	.L36
+ 470              	.L35:
+ 246:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 471              		.loc 1 246 36
+ 472 0268 1223     		movs	r3, #18
+ 473 026a 0893     		str	r3, [sp, #32]
+ 474 026c 15E0     		b	.L36
+ 475              	.L34:
+ 252:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     
+ 476              		.loc 1 252 31
+ 477 026e 059B     		ldr	r3, [sp, #20]
+ 478 0270 1022     		movs	r2, #16
+ 479 0272 1A60     		str	r2, [r3]
+ 255:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 480              		.loc 1 255 35
+ 481 0274 099B     		ldr	r3, [sp, #36]
+ 482 0276 03F00103 		and	r3, r3, #1
+ 255:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     {
+ 483              		.loc 1 255 24
+ 484 027a 002B     		cmp	r3, #0
+ 485 027c 0AD0     		beq	.L37
+ 257:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 486              		.loc 1 257 25
+ 487 027e 0B9B     		ldr	r3, [sp, #44]
+ 488 0280 1968     		ldr	r1, [r3]
+ 489 0282 0B9A     		ldr	r2, [sp, #44]
+ 490 0284 274B     		ldr	r3, .L53
+ 491 0286 0B40     		ands	r3, r3, r1
+ 492 0288 1360     		str	r3, [r2]
+ 493              		.syntax unified
+ 494              	@ 257 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 495 028a BFF35F8F 		dmb
+ 496              	@ 0 "" 2
+ 497              	@ 257 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 498 028e BFF35F8F 		dmb
+ 499              	@ 0 "" 2
+ 500              		.thumb
+ 501              		.syntax unified
+ 502 0292 02E0     		b	.L36
+ 503              	.L37:
+ 261:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     }
+ 504              		.loc 1 261 36
+ 505 0294 4FF48033 		mov	r3, #65536
+ 506 0298 0893     		str	r3, [sp, #32]
+ 507              	.L36:
+ 265:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 508              		.loc 1 265 33
+ 509 029a 089B     		ldr	r3, [sp, #32]
+ 265:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 {
+ 510              		.loc 1 265 20
+ 511 029c 122B     		cmp	r3, #18
+ 512 029e 73D0     		beq	.L52
+ 268:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                     C55_MCR_BIT_CLEAR (RegAddress, C55_MCR_ERS);
+ 513              		.loc 1 268 21
+ 514 02a0 0B9B     		ldr	r3, [sp, #44]
+ 515 02a2 1968     		ldr	r1, [r3]
+ 516 02a4 0B9A     		ldr	r2, [sp, #44]
+ 517 02a6 204B     		ldr	r3, .L53+4
+ 518 02a8 0B40     		ands	r3, r3, r1
+ 519 02aa 1360     		str	r3, [r2]
+ 520              		.syntax unified
+ 521              	@ 268 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 522 02ac BFF35F8F 		dmb
+ 523              	@ 0 "" 2
+ 524              	@ 268 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 525 02b0 BFF35F8F 		dmb
+ 526              	@ 0 "" 2
+ 269:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                 }
+ 527              		.loc 1 269 21
+ 528              		.thumb
+ 529              		.syntax unified
+ 530 02b4 0B9B     		ldr	r3, [sp, #44]
+ 531 02b6 1968     		ldr	r1, [r3]
+ 532 02b8 0B9A     		ldr	r2, [sp, #44]
+ 533 02ba 1D4B     		ldr	r3, .L53+12
+ 534 02bc 0B40     		ands	r3, r3, r1
+ 535 02be 1360     		str	r3, [r2]
+ 536              		.syntax unified
+ 537              	@ 269 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 538 02c0 BFF35F8F 		dmb
+ 539              	@ 0 "" 2
+ 540              	@ 269 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 541 02c4 BFF35F8F 		dmb
+ 542              	@ 0 "" 2
+ 279:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 543              		.loc 1 279 5
+ 544              		.thumb
+ 545              		.syntax unified
+ 546 02c8 5EE0     		b	.L52
+ 547              	.L32:
+ 276:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 548              		.loc 1 276 24
+ 549 02ca 4FF40033 		mov	r3, #131072
+ 550 02ce 0893     		str	r3, [sp, #32]
+ 279:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 551              		.loc 1 279 5
+ 552 02d0 5AE0     		b	.L52
+ 553              	.L45:
+ 286:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* Call ProgramVerify to continue the operation */
+ 554              		.loc 1 286 20
+ 555 02d2 4FF40033 		mov	r3, #131072
+ 556 02d6 0893     		str	r3, [sp, #32]
+ 288:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->dest,
+ 557              		.loc 1 288 22
+ 558 02d8 0A9C     		ldr	r4, [sp, #40]
+ 559 02da 049B     		ldr	r3, [sp, #16]
+ 560 02dc 1D68     		ldr	r5, [r3]
+ 561 02de 049B     		ldr	r3, [sp, #16]
+ 562 02e0 5E68     		ldr	r6, [r3, #4]
+ 563 02e2 049B     		ldr	r3, [sp, #16]
+ 564 02e4 9F68     		ldr	r7, [r3, #8]
+ 565 02e6 049B     		ldr	r3, [sp, #16]
+ 566 02e8 DB68     		ldr	r3, [r3, #12]
+ 567 02ea 049A     		ldr	r2, [sp, #16]
+ 568 02ec 1269     		ldr	r2, [r2, #16]
+ 569 02ee 0499     		ldr	r1, [sp, #16]
+ 570 02f0 4969     		ldr	r1, [r1, #20]
+ 571 02f2 0498     		ldr	r0, [sp, #16]
+ 572 02f4 0390     		str	r0, [sp, #12]
+ 573 02f6 0291     		str	r1, [sp, #8]
+ 574 02f8 0192     		str	r2, [sp, #4]
+ 575 02fa 0093     		str	r3, [sp]
+ 576 02fc 3B46     		mov	r3, r7
+ 577 02fe 3246     		mov	r2, r6
+ 578 0300 2946     		mov	r1, r5
+ 579 0302 0798     		ldr	r0, [sp, #28]
+ 580 0304 A047     		blx	r4
+ 581              	.LVL1:
+ 582 0306 0246     		mov	r2, r0
+ 288:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                       pCtxData->dest,
+ 583              		.loc 1 288 19
+ 584 0308 059B     		ldr	r3, [sp, #20]
+ 585 030a 1A60     		str	r2, [r3]
+ 297:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 586              		.loc 1 297 14
+ 587 030c 059B     		ldr	r3, [sp, #20]
+ 588 030e 1B68     		ldr	r3, [r3]
+ 297:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 589              		.loc 1 297 12
+ 590 0310 002B     		cmp	r3, #0
+ 591 0312 03D1     		bne	.L39
+ 297:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 592              		.loc 1 297 50 discriminator 1
+ 593 0314 049B     		ldr	r3, [sp, #16]
+ 594 0316 5B68     		ldr	r3, [r3, #4]
+ 297:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 595              		.loc 1 297 34 discriminator 1
+ 596 0318 002B     		cmp	r3, #0
+ 597 031a 2FD1     		bne	.L49
+ 598              	.L39:
+ 299:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 599              		.loc 1 299 24
+ 600 031c 4FF48033 		mov	r3, #65536
+ 601 0320 0893     		str	r3, [sp, #32]
+ 302:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 602              		.loc 1 302 5
+ 603 0322 2BE0     		b	.L49
+ 604              	.L54:
+ 605              		.align	2
+ 606              	.L53:
+ 607 0324 FE1FFFFF 		.word	-57346
+ 608 0328 7F1FFFFF 		.word	-57473
+ 609 032c EF1FFFFF 		.word	-57361
+ 610 0330 FB1FFFFF 		.word	-57349
+ 611              	.L46:
+ 308:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 309:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         returnCode = C55_INPROGRESS;
+ 612              		.loc 1 309 20
+ 613 0334 4FF40033 		mov	r3, #131072
+ 614 0338 0893     		str	r3, [sp, #32]
+ 310:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* Call BlankCheck to continue the operation */
+ 311:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         *opResult = ((PBLANKCHECK) pCompletionFn)( pSSDConfig,
+ 615              		.loc 1 311 22
+ 616 033a 0A9C     		ldr	r4, [sp, #40]
+ 617 033c 049B     		ldr	r3, [sp, #16]
+ 618 033e 1968     		ldr	r1, [r3]
+ 619 0340 049B     		ldr	r3, [sp, #16]
+ 620 0342 5868     		ldr	r0, [r3, #4]
+ 621 0344 049B     		ldr	r3, [sp, #16]
+ 622 0346 DD68     		ldr	r5, [r3, #12]
+ 623 0348 049B     		ldr	r3, [sp, #16]
+ 624 034a 1B69     		ldr	r3, [r3, #16]
+ 625 034c 049A     		ldr	r2, [sp, #16]
+ 626 034e 0192     		str	r2, [sp, #4]
+ 627 0350 0093     		str	r3, [sp]
+ 628 0352 2B46     		mov	r3, r5
+ 629 0354 0246     		mov	r2, r0
+ 630 0356 0798     		ldr	r0, [sp, #28]
+ 631 0358 A047     		blx	r4
+ 632              	.LVL2:
+ 633 035a 0246     		mov	r2, r0
+ 634              		.loc 1 311 19
+ 635 035c 059B     		ldr	r3, [sp, #20]
+ 636 035e 1A60     		str	r2, [r3]
+ 312:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                    pCtxData->dest,
+ 313:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                    pCtxData->size,
+ 314:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                    pCtxData->pFailedAddress,
+ 315:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                    pCtxData->pFailedData,
+ 316:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****                                                    pCtxData );
+ 317:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+ 318:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         if ( *opResult != C55_OK || 0 == pCtxData->size )
+ 637              		.loc 1 318 14
+ 638 0360 059B     		ldr	r3, [sp, #20]
+ 639 0362 1B68     		ldr	r3, [r3]
+ 640              		.loc 1 318 12
+ 641 0364 002B     		cmp	r3, #0
+ 642 0366 03D1     		bne	.L41
+ 643              		.loc 1 318 50 discriminator 1
+ 644 0368 049B     		ldr	r3, [sp, #16]
+ 645 036a 5B68     		ldr	r3, [r3, #4]
+ 646              		.loc 1 318 34 discriminator 1
+ 647 036c 002B     		cmp	r3, #0
+ 648 036e 07D1     		bne	.L50
+ 649              	.L41:
+ 319:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         {
+ 320:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****             returnCode = C55_DONE;
+ 650              		.loc 1 320 24
+ 651 0370 4FF48033 		mov	r3, #65536
+ 652 0374 0893     		str	r3, [sp, #32]
+ 321:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         }
+ 322:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 323:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     goto EXIT;
+ 653              		.loc 1 323 5
+ 654 0376 03E0     		b	.L50
+ 655              	.L14:
+ 656              	.L15:
+ 657              	.L48:
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+ 658              		.loc 1 86 9
+ 659 0378 00BF     		nop
+ 660 037a 06E0     		b	.L16
+ 661              	.L49:
+ 302:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 662              		.loc 1 302 5
+ 663 037c 00BF     		nop
+ 664 037e 04E0     		b	.L16
+ 665              	.L50:
+ 666              		.loc 1 323 5
+ 667 0380 00BF     		nop
+ 668 0382 02E0     		b	.L16
+ 669              	.L51:
+ 207:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 670              		.loc 1 207 5
+ 671 0384 00BF     		nop
+ 672 0386 00E0     		b	.L16
+ 673              	.L52:
+ 279:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 674              		.loc 1 279 5
+ 675 0388 00BF     		nop
+ 676              	.L16:
+ 324:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 325:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 326:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** CHECKSUM:
+ 327:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 328:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 329:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** UTESTCHECK:
+ 330:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 331:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 332:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** EXIT:
+ 333:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     if (pSSDConfig->BDMEnable)
+ 677              		.loc 1 333 19
+ 678 038a 079B     		ldr	r3, [sp, #28]
+ 679 038c 93F84830 		ldrb	r3, [r3, #72]	@ zero_extendqisi2
+ 680              		.loc 1 333 8
+ 681 0390 002B     		cmp	r3, #0
+ 682 0392 04D0     		beq	.L42
+ 334:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     {
+ 335:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         /* save the return code to R3 */
+ 336:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         ASM_KEYWORD(" mov r3, %0 " ::"r"(returnCode));
+ 683              		.loc 1 336 9
+ 684 0394 089B     		ldr	r3, [sp, #32]
+ 685              		.syntax unified
+ 686              	@ 336 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 687 0396 1B46     		 mov r3, r3 
+ 688              	@ 0 "" 2
+ 337:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         
+ 338:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         asm volatile ( "nop" );
+ 689              		.loc 1 338 9
+ 690              	@ 338 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 691 0398 00BF     		nop
+ 692              	@ 0 "" 2
+ 339:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         asm volatile ( "bkpt #0" );
+ 693              		.loc 1 339 9
+ 694              	@ 339 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 695 039a 00BE     		bkpt #0
+ 696              	@ 0 "" 2
+ 340:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****         asm volatile ( "nop" );
+ 697              		.loc 1 340 9
+ 698              	@ 340 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 699 039c 00BF     		nop
+ 700              	@ 0 "" 2
+ 701              		.thumb
+ 702              		.syntax unified
+ 703              	.L42:
+ 341:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     }
+ 342:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** 
+ 343:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c ****     return returnCode;
+ 704              		.loc 1 343 12
+ 705 039e 089B     		ldr	r3, [sp, #32]
+ 344:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashCheckStatus.c **** }
+ 706              		.loc 1 344 1
+ 707 03a0 1846     		mov	r0, r3
+ 708 03a2 0DB0     		add	sp, sp, #52
+ 709              		.cfi_def_cfa_offset 20
+ 710              		@ sp needed
+ 711 03a4 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 712              		.cfi_endproc
+ 713              	.LFE0:
+ 715 03a6 00BF     		.text
+ 716              	.Letext0:
+ 717              		.file 2 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+ 718              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+DEFINED SYMBOLS
+                            *ABS*:00000000 FlashCheckStatus.c
+D:\Users\TMP\ccdmoChL.s:19     .text.FlashCheckStatus:00000000 $t
+D:\Users\TMP\ccdmoChL.s:26     .text.FlashCheckStatus:00000000 FlashCheckStatus
+D:\Users\TMP\ccdmoChL.s:62     .text.FlashCheckStatus:0000002c $d
+D:\Users\TMP\ccdmoChL.s:68     .text.FlashCheckStatus:00000044 $t
+D:\Users\TMP\ccdmoChL.s:607    .text.FlashCheckStatus:00000324 $d
+D:\Users\TMP\ccdmoChL.s:613    .text.FlashCheckStatus:00000334 $t
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.ssd_types.h.29.f65f270075dc88598f2bc4634b2ba066
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.ssd_C55_internal.h.29.1a4d39bf6721f834026b4f5e5340cfd8
+
+NO UNDEFINED SYMBOLS

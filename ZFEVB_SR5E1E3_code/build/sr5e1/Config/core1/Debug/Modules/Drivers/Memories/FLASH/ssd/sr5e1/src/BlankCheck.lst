@@ -1,0 +1,319 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"BlankCheck.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.BlankCheck,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.global	BlankCheck
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	BlankCheck:
+  27              	.LFB0:
+  28              		.file 1 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/
+   1:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** /****************************************************************************
+   2:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  *
+   3:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  *
+   5:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  * terms SLA0098 at www.st.com.
+   7:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  *
+   8:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  *
+  11:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  *
+  12:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  *****************************************************************************/
+  13:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  14:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** /*************************************************************************
+  15:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                                                                       *
+  16:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *               Standard Software Driver for C55                        *
+  17:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                                                                       *
+  18:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * FILE NAME     : BlankCheck.c                                          *
+  19:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * FUNCTION      : BlankCheck                                            *
+  20:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * DESCRIPTION   : This function will check whether block has been       *
+  21:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                   erased                                              *
+  22:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * PARAMETERS    : pSSDConfig - Flash driver configuration structure     *
+  23:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                 dest - start flash addr to be checked                 *
+  24:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                 size - number of bytes to be checked                  *
+  25:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                   (need to be word-aligned)                           *
+  26:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                 pFailedAddress - pointer to first failing address     *
+  27:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                 pFailedData - pointer to first failing actual data    *
+  28:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * RETURN        : C55_OK           - passes                             *
+  29:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                 C55_ERROR_NOT_BLANK - Address is not erased           *
+  30:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                 C55_ERROR_ALIGNMENT - Invalid alignment               *
+  31:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * DATE          : February 04, 2022                                     *
+  32:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * AUTHOR        : ...                                                   *
+  33:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** * E-mail        : ...                                                   *
+  34:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *                                                                       *
+  35:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *************************************************************************/
+  36:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  37:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** /******************************* CHANGES *********************************
+  38:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****   0.1.0   04.02.2022      G. Cuce     Initial version
+  39:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** *************************************************************************/
+  40:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  41:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** #include "ssd_types.h"
+  42:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** #include "ssd_C55.h"
+  43:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** #include "ssd_C55_internal.h"
+  44:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  45:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  46:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** UINT32 BlankCheck ( PSSD_CONFIG pSSDConfig,
+  47:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****                     UINT32 dest,
+  48:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****                     UINT32 size,
+  49:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****                     UINT32 *pFailedAddress,
+  50:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****                     UINT32 *pFailedData,
+  51:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****                     PCONTEXT_DATA pCtxData )
+  52:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** {
+  29              		.loc 1 52 1
+  30              		.cfi_startproc
+  31              		@ args = 8, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 88B0     		sub	sp, sp, #32
+  35              		.cfi_def_cfa_offset 32
+  36 0002 0390     		str	r0, [sp, #12]
+  37 0004 0291     		str	r1, [sp, #8]
+  38 0006 0192     		str	r2, [sp, #4]
+  39 0008 0093     		str	r3, [sp]
+  53:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     volatile UINT32 returnCode;   /* return code */
+  54:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  
+  55:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****  
+  56:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     UINT32 destIndex;                      /* destination address index */
+  57:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     volatile UINT32 temp;
+  58:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  59:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     returnCode = C55_OK;
+  40              		.loc 1 59 16
+  41 000a 0023     		movs	r3, #0
+  42 000c 0693     		str	r3, [sp, #24]
+  60:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  61:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     
+  62:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     /* Check alignments */
+  63:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     if ( ((dest | size) % C55_WORD_SIZE) != 0 )
+  43              		.loc 1 63 17
+  44 000e 029A     		ldr	r2, [sp, #8]
+  45 0010 019B     		ldr	r3, [sp, #4]
+  46 0012 1343     		orrs	r3, r3, r2
+  47              		.loc 1 63 25
+  48 0014 03F00303 		and	r3, r3, #3
+  49              		.loc 1 63 8
+  50 0018 002B     		cmp	r3, #0
+  51 001a 02D0     		beq	.L2
+  64:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+  65:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         returnCode = C55_ERROR_ALIGNMENT;
+  52              		.loc 1 65 20
+  53 001c 0123     		movs	r3, #1
+  54 001e 0693     		str	r3, [sp, #24]
+  66:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         goto EXIT;
+  55              		.loc 1 66 9
+  56 0020 37E0     		b	.L3
+  57              	.L2:
+  67:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     }
+  68:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  69:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     /* Anything to check */
+  71:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     if ( 0 == size )
+  58              		.loc 1 71 8
+  59 0022 019B     		ldr	r3, [sp, #4]
+  60 0024 002B     		cmp	r3, #0
+  61 0026 33D0     		beq	.L11
+  72:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         goto EXIT;
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     }
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     
+  76:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     /* Number of words needs to be checked for blank */
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     temp = size / C55_WORD_SIZE;
+  62              		.loc 1 77 17
+  63 0028 019B     		ldr	r3, [sp, #4]
+  64 002a 9B08     		lsrs	r3, r3, #2
+  65              		.loc 1 77 10
+  66 002c 0593     		str	r3, [sp, #20]
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     
+  79:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     /* In each blank check cycle, we take up to a certain words */
+  80:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     if ( temp >= NUM_WORDS_BLANK_CHECK_CYCLE )
+  67              		.loc 1 80 15
+  68 002e 059B     		ldr	r3, [sp, #20]
+  69              		.loc 1 80 8
+  70 0030 592B     		cmp	r3, #89
+  71 0032 01D9     		bls	.L5
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         temp = NUM_WORDS_BLANK_CHECK_CYCLE;
+  72              		.loc 1 82 14
+  73 0034 5A23     		movs	r3, #90
+  74 0036 0593     		str	r3, [sp, #20]
+  75              	.L5:
+  83:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     }
+  84:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  85:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     /* Word by word blank check */
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     for ( destIndex = 0; destIndex < temp; destIndex++ )
+  76              		.loc 1 87 21
+  77 0038 0023     		movs	r3, #0
+  78 003a 0793     		str	r3, [sp, #28]
+  79              		.loc 1 87 5
+  80 003c 14E0     		b	.L6
+  81              	.L8:
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         if ( (*(VUINT32 *)dest) != 0xFFFFFFFF )
+  82              		.loc 1 89 16
+  83 003e 029B     		ldr	r3, [sp, #8]
+  84              		.loc 1 89 15
+  85 0040 1B68     		ldr	r3, [r3]
+  86              		.loc 1 89 12
+  87 0042 B3F1FF3F 		cmp	r3, #-1
+  88 0046 09D0     		beq	.L7
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         {
+  91:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****             returnCode = C55_ERROR_NOT_BLANK;
+  89              		.loc 1 91 24
+  90 0048 2023     		movs	r3, #32
+  91 004a 0693     		str	r3, [sp, #24]
+  92:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****             *pFailedAddress = dest;
+  92              		.loc 1 92 29
+  93 004c 009B     		ldr	r3, [sp]
+  94 004e 029A     		ldr	r2, [sp, #8]
+  95 0050 1A60     		str	r2, [r3]
+  93:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****             *pFailedData = *(VUINT32 *)dest;
+  96              		.loc 1 93 29
+  97 0052 029B     		ldr	r3, [sp, #8]
+  98              		.loc 1 93 28
+  99 0054 1A68     		ldr	r2, [r3]
+ 100              		.loc 1 93 26
+ 101 0056 089B     		ldr	r3, [sp, #32]
+ 102 0058 1A60     		str	r2, [r3]
+  94:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****             goto EXIT;
+ 103              		.loc 1 94 13
+ 104 005a 1AE0     		b	.L3
+ 105              	.L7:
+  95:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         }
+  96:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+  97:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         dest += C55_WORD_SIZE;
+ 106              		.loc 1 97 14 discriminator 2
+ 107 005c 029B     		ldr	r3, [sp, #8]
+ 108 005e 0433     		adds	r3, r3, #4
+ 109 0060 0293     		str	r3, [sp, #8]
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+ 110              		.loc 1 87 53 discriminator 2
+ 111 0062 079B     		ldr	r3, [sp, #28]
+ 112 0064 0133     		adds	r3, r3, #1
+ 113 0066 0793     		str	r3, [sp, #28]
+ 114              	.L6:
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+ 115              		.loc 1 87 36 discriminator 1
+ 116 0068 059B     		ldr	r3, [sp, #20]
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+ 117              		.loc 1 87 5 discriminator 1
+ 118 006a 079A     		ldr	r2, [sp, #28]
+ 119 006c 9A42     		cmp	r2, r3
+ 120 006e E6D3     		bcc	.L8
+  98:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     }
+  99:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     
+ 100:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     /* Update the context data */
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     pCtxData->dest = dest;
+ 121              		.loc 1 101 20
+ 122 0070 099B     		ldr	r3, [sp, #36]
+ 123 0072 029A     		ldr	r2, [sp, #8]
+ 124 0074 1A60     		str	r2, [r3]
+ 102:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     pCtxData->size = size - temp * C55_WORD_SIZE;
+ 125              		.loc 1 102 34
+ 126 0076 059B     		ldr	r3, [sp, #20]
+ 127 0078 9B00     		lsls	r3, r3, #2
+ 128              		.loc 1 102 27
+ 129 007a 019A     		ldr	r2, [sp, #4]
+ 130 007c D21A     		subs	r2, r2, r3
+ 131              		.loc 1 102 20
+ 132 007e 099B     		ldr	r3, [sp, #36]
+ 133 0080 5A60     		str	r2, [r3, #4]
+ 103:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     pCtxData->pFailedAddress = pFailedAddress;
+ 134              		.loc 1 103 30
+ 135 0082 099B     		ldr	r3, [sp, #36]
+ 136 0084 009A     		ldr	r2, [sp]
+ 137 0086 DA60     		str	r2, [r3, #12]
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     pCtxData->pFailedData = pFailedData;
+ 138              		.loc 1 104 27
+ 139 0088 099B     		ldr	r3, [sp, #36]
+ 140 008a 089A     		ldr	r2, [sp, #32]
+ 141 008c 1A61     		str	r2, [r3, #16]
+ 142 008e 00E0     		b	.L3
+ 143              	.L11:
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     }
+ 144              		.loc 1 73 9
+ 145 0090 00BF     		nop
+ 146              	.L3:
+ 105:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+ 106:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** EXIT:
+ 108:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     if (pSSDConfig->BDMEnable)
+ 147              		.loc 1 108 19
+ 148 0092 039B     		ldr	r3, [sp, #12]
+ 149 0094 93F84830 		ldrb	r3, [r3, #72]	@ zero_extendqisi2
+ 150              		.loc 1 108 8
+ 151 0098 002B     		cmp	r3, #0
+ 152 009a 04D0     		beq	.L9
+ 109:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     {
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         /* save the return code to R3 */
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         ASM_KEYWORD(" mov r3, %0 " ::"r"(returnCode));
+ 153              		.loc 1 111 9
+ 154 009c 069B     		ldr	r3, [sp, #24]
+ 155              		.syntax unified
+ 156              	@ 111 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Bla
+ 157 009e 1B46     		 mov r3, r3 
+ 158              	@ 0 "" 2
+ 112:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         asm volatile ( "nop" );
+ 159              		.loc 1 113 9
+ 160              	@ 113 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Bla
+ 161 00a0 00BF     		nop
+ 162              	@ 0 "" 2
+ 114:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         asm volatile ( "bkpt #0" );
+ 163              		.loc 1 114 9
+ 164              	@ 114 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Bla
+ 165 00a2 00BE     		bkpt #0
+ 166              	@ 0 "" 2
+ 115:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****         asm volatile ( "nop" );
+ 167              		.loc 1 115 9
+ 168              	@ 115 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Bla
+ 169 00a4 00BF     		nop
+ 170              	@ 0 "" 2
+ 171              		.thumb
+ 172              		.syntax unified
+ 173              	.L9:
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     }
+ 117:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** 
+ 118:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c ****     return returnCode;
+ 174              		.loc 1 118 12
+ 175 00a6 069B     		ldr	r3, [sp, #24]
+ 119:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\BlankCheck.c **** }
+ 176              		.loc 1 119 1
+ 177 00a8 1846     		mov	r0, r3
+ 178 00aa 08B0     		add	sp, sp, #32
+ 179              		.cfi_def_cfa_offset 0
+ 180              		@ sp needed
+ 181 00ac 7047     		bx	lr
+ 182              		.cfi_endproc
+ 183              	.LFE0:
+ 185 00ae 00BF     		.text
+ 186              	.Letext0:
+ 187              		.file 2 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+ 188              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+DEFINED SYMBOLS
+                            *ABS*:00000000 BlankCheck.c
+D:\Users\TMP\ccXnPWnT.s:19     .text.BlankCheck:00000000 $t
+D:\Users\TMP\ccXnPWnT.s:26     .text.BlankCheck:00000000 BlankCheck
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.ssd_types.h.29.f65f270075dc88598f2bc4634b2ba066
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.ssd_C55_internal.h.29.1a4d39bf6721f834026b4f5e5340cfd8
+
+NO UNDEFINED SYMBOLS

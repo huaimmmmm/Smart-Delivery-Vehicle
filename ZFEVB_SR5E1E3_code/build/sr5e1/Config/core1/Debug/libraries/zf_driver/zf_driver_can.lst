@@ -1,0 +1,1848 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_can.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	can_obj_list
+  19              		.section	.data.can_obj_list,"aw"
+  20              		.align	2
+  23              	can_obj_list:
+  24 0000 00000000 		.word	DRV_CAN1
+  25 0004 00000000 		.word	0
+  26 0008 FF0F     		.short	4095
+  27 000a FF0F     		.short	4095
+  28 000c 00000000 		.word	0
+  29 0010 00000000 		.word	DRV_CAN2
+  30 0014 00000000 		.word	0
+  31 0018 FF0F     		.short	4095
+  32 001a FF0F     		.short	4095
+  33 001c 00000000 		.word	0
+  34 0020 00000000 		.word	DRV_CAN3
+  35 0024 00000000 		.word	0
+  36 0028 FF0F     		.short	4095
+  37 002a FF0F     		.short	4095
+  38 002c 00000000 		.word	0
+  39 0030 00000000 		.word	DRV_CAN4
+  40 0034 00000000 		.word	0
+  41 0038 FF0F     		.short	4095
+  42 003a FF0F     		.short	4095
+  43 003c 00000000 		.word	0
+  44              		.global	can_message_buffer
+  45              		.section	.data.can_message_buffer,"aw"
+  46              		.align	2
+  49              	can_message_buffer:
+  50 0000 FFFF     		.short	-1
+  51 0002 00000000 		.ascii	"\000\000\000\000\000\000\000\000"
+  51      00000000 
+  52 000a FFFF     		.short	-1
+  53 000c 00000000 		.ascii	"\000\000\000\000\000\000\000\000"
+  53      00000000 
+  54 0014 FFFF     		.short	-1
+  55 0016 00000000 		.ascii	"\000\000\000\000\000\000\000\000"
+  55      00000000 
+  56 001e FFFF     		.short	-1
+  57 0020 00000000 		.ascii	"\000\000\000\000\000\000\000\000"
+  57      00000000 
+  58              		.section	.rodata.can_irq_index_list,"a"
+  59              		.align	2
+  62              	can_irq_index_list:
+  63 0000 54       		.byte	84
+  64 0001 57       		.byte	87
+  65 0002 5A       		.byte	90
+  66 0003 5D       		.byte	93
+  67              		.section	.rodata.can_rcc_index_list,"a"
+  68              		.align	2
+  71              	can_rcc_index_list:
+  72 0000 8600     		.short	134
+  73 0002 A600     		.short	166
+  74 0004 C600     		.short	198
+  75 0006 E600     		.short	230
+  76              		.section	.text.can_receive_cb,"ax",%progbits
+  77              		.align	1
+  78              		.p2align 4,,15
+  79              		.syntax unified
+  80              		.thumb
+  81              		.thumb_func
+  83              	can_receive_cb:
+  84              	.LFB482:
+  85              		.file 1 "libraries/zf_driver/zf_driver_can.c"
+   1:libraries/zf_driver/zf_driver_can.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_can.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_can.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_can.c **** *
+   5:libraries/zf_driver/zf_driver_can.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_can.c **** *
+   7:libraries/zf_driver/zf_driver_can.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_can.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_can.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_can.c **** *
+  11:libraries/zf_driver/zf_driver_can.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_can.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_can.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_can.c **** *
+  15:libraries/zf_driver/zf_driver_can.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_can.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_can.c **** *
+  18:libraries/zf_driver/zf_driver_can.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_can.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_can.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_can.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_can.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_can.c **** *
+  24:libraries/zf_driver/zf_driver_can.c **** * 文件名称          zf_driver_can
+  25:libraries/zf_driver/zf_driver_can.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_can.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_can.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_can.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_can.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_can.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_can.c **** 
+  32:libraries/zf_driver/zf_driver_can.c **** // zf_common 层引用
+  33:libraries/zf_driver/zf_driver_can.c **** #include "zf_common_debug.h"
+  34:libraries/zf_driver/zf_driver_can.c **** #include "zf_common_fifo.h"
+  35:libraries/zf_driver/zf_driver_can.c **** #include "zf_common_memory.h"
+  36:libraries/zf_driver/zf_driver_can.c **** 
+  37:libraries/zf_driver/zf_driver_can.c **** // zf_driver 层引用
+  38:libraries/zf_driver/zf_driver_can.c **** #include "zf_driver_interrupt.h"
+  39:libraries/zf_driver/zf_driver_can.c **** #include "zf_driver_rcc.h"
+  40:libraries/zf_driver/zf_driver_can.c **** 
+  41:libraries/zf_driver/zf_driver_can.c **** // 自身头文件
+  42:libraries/zf_driver/zf_driver_can.c **** #include "zf_driver_can.h"
+  43:libraries/zf_driver/zf_driver_can.c **** 
+  44:libraries/zf_driver/zf_driver_can.c **** // 此处定义 本文件用使用的模块管理数据 这里不允许用户修改 这里不允许
+  45:libraries/zf_driver/zf_driver_can.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  46:libraries/zf_driver/zf_driver_can.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  47:libraries/zf_driver/zf_driver_can.c **** AT_ZF_LIB_SECTION_START
+  48:libraries/zf_driver/zf_driver_can.c **** AT_ZF_LIB_SECTION zf_can_obj_struct can_obj_list[CAN_NUM_MAX] = 
+  49:libraries/zf_driver/zf_driver_can.c **** {
+  50:libraries/zf_driver/zf_driver_can.c ****     {.can_ptr = &DRV_CAN1, .bps = 0, .tx_pin = PIN_NULL, .rx_pin = PIN_NULL, .config_info = 0},
+  51:libraries/zf_driver/zf_driver_can.c ****     {.can_ptr = &DRV_CAN2, .bps = 0, .tx_pin = PIN_NULL, .rx_pin = PIN_NULL, .config_info = 0},
+  52:libraries/zf_driver/zf_driver_can.c ****     {.can_ptr = &DRV_CAN3, .bps = 0, .tx_pin = PIN_NULL, .rx_pin = PIN_NULL, .config_info = 0},
+  53:libraries/zf_driver/zf_driver_can.c ****     {.can_ptr = &DRV_CAN4, .bps = 0, .tx_pin = PIN_NULL, .rx_pin = PIN_NULL, .config_info = 0},
+  54:libraries/zf_driver/zf_driver_can.c **** };
+  55:libraries/zf_driver/zf_driver_can.c **** 
+  56:libraries/zf_driver/zf_driver_can.c **** AT_ZF_LIB_SECTION zf_can_message_buffer_struct can_message_buffer[CAN_NUM_MAX] = 
+  57:libraries/zf_driver/zf_driver_can.c **** {
+  58:libraries/zf_driver/zf_driver_can.c ****     {.id = 0xFFFF, .data = {0, 0, 0, 0, 0, 0, 0, 0}},
+  59:libraries/zf_driver/zf_driver_can.c ****     {.id = 0xFFFF, .data = {0, 0, 0, 0, 0, 0, 0, 0}},
+  60:libraries/zf_driver/zf_driver_can.c ****     {.id = 0xFFFF, .data = {0, 0, 0, 0, 0, 0, 0, 0}},
+  61:libraries/zf_driver/zf_driver_can.c ****     {.id = 0xFFFF, .data = {0, 0, 0, 0, 0, 0, 0, 0}}
+  62:libraries/zf_driver/zf_driver_can.c **** };
+  63:libraries/zf_driver/zf_driver_can.c **** AT_ZF_LIB_SECTION_END
+  64:libraries/zf_driver/zf_driver_can.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  65:libraries/zf_driver/zf_driver_can.c **** 
+  66:libraries/zf_driver/zf_driver_can.c **** // 此处定义 本文件用使用的静态或常亮数据 这里不允许用户修改 这里不允
+  67:libraries/zf_driver/zf_driver_can.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  68:libraries/zf_driver/zf_driver_can.c **** // 用于固定值或指向的内容 主要是用少量存储占用来减少栈开销
+  69:libraries/zf_driver/zf_driver_can.c **** static const zf_interrupt_index_enum can_irq_index_list[CAN_NUM_MAX] =
+  70:libraries/zf_driver/zf_driver_can.c **** {
+  71:libraries/zf_driver/zf_driver_can.c ****     INTERRUPT_INDEX_CAN1, INTERRUPT_INDEX_CAN2, INTERRUPT_INDEX_CAN3, INTERRUPT_INDEX_CAN4
+  72:libraries/zf_driver/zf_driver_can.c **** };
+  73:libraries/zf_driver/zf_driver_can.c **** 
+  74:libraries/zf_driver/zf_driver_can.c **** static const zf_rcc_index_enum can_rcc_index_list[CAN_NUM_MAX] = 
+  75:libraries/zf_driver/zf_driver_can.c **** {
+  76:libraries/zf_driver/zf_driver_can.c ****     RCC_INDEX_FDCAN1, RCC_INDEX_FDCAN2, RCC_INDEX_FDCAN3, RCC_INDEX_FDCAN4
+  77:libraries/zf_driver/zf_driver_can.c **** };
+  78:libraries/zf_driver/zf_driver_can.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  79:libraries/zf_driver/zf_driver_can.c **** 
+  80:libraries/zf_driver/zf_driver_can.c **** // 此处列举 本文件的所有函数声明 [ 其中包括宏定义函数 ] 这里不允许用�
+  81:libraries/zf_driver/zf_driver_can.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  82:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+  83:libraries/zf_driver/zf_driver_can.c **** // 函数简介     CAN 接收中断回调
+  84:libraries/zf_driver/zf_driver_can.c **** // 参数说明     *cdp            CAN 实例
+  85:libraries/zf_driver/zf_driver_can.c **** // 参数说明     frame           CAN 帧 实例
+  86:libraries/zf_driver/zf_driver_can.c **** // 参数说明     event           触发事件
+  87:libraries/zf_driver/zf_driver_can.c **** // 返回参数     void            无返回值
+  88:libraries/zf_driver/zf_driver_can.c **** // 使用示例     
+  89:libraries/zf_driver/zf_driver_can.c **** // 备注信息     内部调用
+  90:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+  91:libraries/zf_driver/zf_driver_can.c **** static void can_receive_cb (can_driver_t *cdp, can_frame_t frame, can_evt_t event)
+  92:libraries/zf_driver/zf_driver_can.c **** {
+  86              		.loc 1 92 1
+  87              		.cfi_startproc
+  88              		@ args = 84, pretend = 8, frame = 16
+  89              		@ frame_needed = 0, uses_anonymous_args = 0
+  90              		@ link register save eliminated.
+  91 0000 82B0     		sub	sp, sp, #8
+  92              		.cfi_def_cfa_offset 8
+  93 0002 84B0     		sub	sp, sp, #16
+  94              		.cfi_def_cfa_offset 24
+  95 0004 0190     		str	r0, [sp, #4]
+  96 0006 04A9     		add	r1, sp, #16
+  97 0008 81E80C00 		stm	r1, {r2, r3}
+  93:libraries/zf_driver/zf_driver_can.c ****     (void)frame;
+  94:libraries/zf_driver/zf_driver_can.c ****     (void)event;
+  95:libraries/zf_driver/zf_driver_can.c **** 
+  96:libraries/zf_driver/zf_driver_can.c ****     if ((CAN_CB_RX == event) &&
+  98              		.loc 1 96 8
+  99 000c 9DF86030 		ldrb	r3, [sp, #96]	@ zero_extendqisi2
+ 100 0010 002B     		cmp	r3, #0
+ 101 0012 40F09080 		bne	.L6
+  97:libraries/zf_driver/zf_driver_can.c ****         (CAN_ID_STD == frame.TYPE))
+ 102              		.loc 1 97 29 discriminator 1
+ 103 0016 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+  96:libraries/zf_driver/zf_driver_can.c ****         (CAN_ID_STD == frame.TYPE))
+ 104              		.loc 1 96 30 discriminator 1
+ 105 001a 002B     		cmp	r3, #0
+ 106 001c 40F08B80 		bne	.L6
+ 107              	.LBB2:
+  98:libraries/zf_driver/zf_driver_can.c ****     {
+  99:libraries/zf_driver/zf_driver_can.c ****         for(uint8 i = 0; i < CAN_NUM_MAX; i ++)
+ 108              		.loc 1 99 19
+ 109 0020 0023     		movs	r3, #0
+ 110 0022 8DF80F30 		strb	r3, [sp, #15]
+ 111              		.loc 1 99 9
+ 112 0026 81E0     		b	.L3
+ 113              	.L5:
+ 100:libraries/zf_driver/zf_driver_can.c ****         {
+ 101:libraries/zf_driver/zf_driver_can.c ****             if(cdp == can_obj_list[i].can_ptr)
+ 114              		.loc 1 101 38
+ 115 0028 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 116 002c 444A     		ldr	r2, .L7
+ 117 002e 1B01     		lsls	r3, r3, #4
+ 118 0030 1344     		add	r3, r3, r2
+ 119 0032 1B68     		ldr	r3, [r3]
+ 120              		.loc 1 101 15
+ 121 0034 019A     		ldr	r2, [sp, #4]
+ 122 0036 9A42     		cmp	r2, r3
+ 123 0038 73D1     		bne	.L4
+ 102:libraries/zf_driver/zf_driver_can.c ****             {
+ 103:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].id = frame.ID;
+ 124              		.loc 1 103 49
+ 125 003a 069B     		ldr	r3, [sp, #24]
+ 126              		.loc 1 103 38
+ 127 003c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 128              		.loc 1 103 42
+ 129 0040 98B2     		uxth	r0, r3
+ 130 0042 4049     		ldr	r1, .L7+4
+ 131 0044 1346     		mov	r3, r2
+ 132 0046 9B00     		lsls	r3, r3, #2
+ 133 0048 1344     		add	r3, r3, r2
+ 134 004a 5B00     		lsls	r3, r3, #1
+ 135 004c 0B44     		add	r3, r3, r1
+ 136 004e 0246     		mov	r2, r0	@ movhi
+ 137 0050 1A80     		strh	r2, [r3]	@ movhi
+ 104:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[0] = frame.data8[0];
+ 138              		.loc 1 104 43
+ 139 0052 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 140              		.loc 1 104 60
+ 141 0056 9DF82000 		ldrb	r0, [sp, #32]	@ zero_extendqisi2
+ 142              		.loc 1 104 47
+ 143 005a 3A49     		ldr	r1, .L7+4
+ 144 005c 1346     		mov	r3, r2
+ 145 005e 9B00     		lsls	r3, r3, #2
+ 146 0060 1344     		add	r3, r3, r2
+ 147 0062 5B00     		lsls	r3, r3, #1
+ 148 0064 0B44     		add	r3, r3, r1
+ 149 0066 0233     		adds	r3, r3, #2
+ 150 0068 0246     		mov	r2, r0
+ 151 006a 1A70     		strb	r2, [r3]
+ 105:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[1] = frame.data8[1];
+ 152              		.loc 1 105 43
+ 153 006c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 154              		.loc 1 105 60
+ 155 0070 9DF82100 		ldrb	r0, [sp, #33]	@ zero_extendqisi2
+ 156              		.loc 1 105 47
+ 157 0074 3349     		ldr	r1, .L7+4
+ 158 0076 1346     		mov	r3, r2
+ 159 0078 9B00     		lsls	r3, r3, #2
+ 160 007a 1344     		add	r3, r3, r2
+ 161 007c 5B00     		lsls	r3, r3, #1
+ 162 007e 0B44     		add	r3, r3, r1
+ 163 0080 0333     		adds	r3, r3, #3
+ 164 0082 0246     		mov	r2, r0
+ 165 0084 1A70     		strb	r2, [r3]
+ 106:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[2] = frame.data8[2];
+ 166              		.loc 1 106 43
+ 167 0086 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 168              		.loc 1 106 60
+ 169 008a 9DF82200 		ldrb	r0, [sp, #34]	@ zero_extendqisi2
+ 170              		.loc 1 106 47
+ 171 008e 2D49     		ldr	r1, .L7+4
+ 172 0090 1346     		mov	r3, r2
+ 173 0092 9B00     		lsls	r3, r3, #2
+ 174 0094 1344     		add	r3, r3, r2
+ 175 0096 5B00     		lsls	r3, r3, #1
+ 176 0098 0B44     		add	r3, r3, r1
+ 177 009a 0433     		adds	r3, r3, #4
+ 178 009c 0246     		mov	r2, r0
+ 179 009e 1A70     		strb	r2, [r3]
+ 107:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[3] = frame.data8[3];
+ 180              		.loc 1 107 43
+ 181 00a0 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 182              		.loc 1 107 60
+ 183 00a4 9DF82300 		ldrb	r0, [sp, #35]	@ zero_extendqisi2
+ 184              		.loc 1 107 47
+ 185 00a8 2649     		ldr	r1, .L7+4
+ 186 00aa 1346     		mov	r3, r2
+ 187 00ac 9B00     		lsls	r3, r3, #2
+ 188 00ae 1344     		add	r3, r3, r2
+ 189 00b0 5B00     		lsls	r3, r3, #1
+ 190 00b2 0B44     		add	r3, r3, r1
+ 191 00b4 0533     		adds	r3, r3, #5
+ 192 00b6 0246     		mov	r2, r0
+ 193 00b8 1A70     		strb	r2, [r3]
+ 108:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[4] = frame.data8[4];
+ 194              		.loc 1 108 43
+ 195 00ba 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 196              		.loc 1 108 60
+ 197 00be 9DF82400 		ldrb	r0, [sp, #36]	@ zero_extendqisi2
+ 198              		.loc 1 108 47
+ 199 00c2 2049     		ldr	r1, .L7+4
+ 200 00c4 1346     		mov	r3, r2
+ 201 00c6 9B00     		lsls	r3, r3, #2
+ 202 00c8 1344     		add	r3, r3, r2
+ 203 00ca 5B00     		lsls	r3, r3, #1
+ 204 00cc 0B44     		add	r3, r3, r1
+ 205 00ce 0633     		adds	r3, r3, #6
+ 206 00d0 0246     		mov	r2, r0
+ 207 00d2 1A70     		strb	r2, [r3]
+ 109:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[5] = frame.data8[5];
+ 208              		.loc 1 109 43
+ 209 00d4 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 210              		.loc 1 109 60
+ 211 00d8 9DF82500 		ldrb	r0, [sp, #37]	@ zero_extendqisi2
+ 212              		.loc 1 109 47
+ 213 00dc 1949     		ldr	r1, .L7+4
+ 214 00de 1346     		mov	r3, r2
+ 215 00e0 9B00     		lsls	r3, r3, #2
+ 216 00e2 1344     		add	r3, r3, r2
+ 217 00e4 5B00     		lsls	r3, r3, #1
+ 218 00e6 0B44     		add	r3, r3, r1
+ 219 00e8 0733     		adds	r3, r3, #7
+ 220 00ea 0246     		mov	r2, r0
+ 221 00ec 1A70     		strb	r2, [r3]
+ 110:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[6] = frame.data8[6];
+ 222              		.loc 1 110 43
+ 223 00ee 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 224              		.loc 1 110 60
+ 225 00f2 9DF82600 		ldrb	r0, [sp, #38]	@ zero_extendqisi2
+ 226              		.loc 1 110 47
+ 227 00f6 1349     		ldr	r1, .L7+4
+ 228 00f8 1346     		mov	r3, r2
+ 229 00fa 9B00     		lsls	r3, r3, #2
+ 230 00fc 1344     		add	r3, r3, r2
+ 231 00fe 5B00     		lsls	r3, r3, #1
+ 232 0100 0B44     		add	r3, r3, r1
+ 233 0102 0833     		adds	r3, r3, #8
+ 234 0104 0246     		mov	r2, r0
+ 235 0106 1A70     		strb	r2, [r3]
+ 111:libraries/zf_driver/zf_driver_can.c ****                 can_message_buffer[i].data[7] = frame.data8[7];
+ 236              		.loc 1 111 43
+ 237 0108 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 238              		.loc 1 111 60
+ 239 010c 9DF82700 		ldrb	r0, [sp, #39]	@ zero_extendqisi2
+ 240              		.loc 1 111 47
+ 241 0110 0C49     		ldr	r1, .L7+4
+ 242 0112 1346     		mov	r3, r2
+ 243 0114 9B00     		lsls	r3, r3, #2
+ 244 0116 1344     		add	r3, r3, r2
+ 245 0118 5B00     		lsls	r3, r3, #1
+ 246 011a 0B44     		add	r3, r3, r1
+ 247 011c 0933     		adds	r3, r3, #9
+ 248 011e 0246     		mov	r2, r0
+ 249 0120 1A70     		strb	r2, [r3]
+ 250              	.L4:
+  99:libraries/zf_driver/zf_driver_can.c ****         {
+ 251              		.loc 1 99 45 discriminator 2
+ 252 0122 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 253 0126 0133     		adds	r3, r3, #1
+ 254 0128 8DF80F30 		strb	r3, [sp, #15]
+ 255              	.L3:
+  99:libraries/zf_driver/zf_driver_can.c ****         {
+ 256              		.loc 1 99 9 discriminator 1
+ 257 012c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 258 0130 032B     		cmp	r3, #3
+ 259 0132 7FF679AF 		bls	.L5
+ 260              	.L6:
+ 261              	.LBE2:
+ 112:libraries/zf_driver/zf_driver_can.c ****             }
+ 113:libraries/zf_driver/zf_driver_can.c ****         }
+ 114:libraries/zf_driver/zf_driver_can.c ****     }
+ 115:libraries/zf_driver/zf_driver_can.c **** }
+ 262              		.loc 1 115 1
+ 263 0136 00BF     		nop
+ 264 0138 04B0     		add	sp, sp, #16
+ 265              		.cfi_def_cfa_offset 8
+ 266              		@ sp needed
+ 267 013a 02B0     		add	sp, sp, #8
+ 268              		.cfi_def_cfa_offset 0
+ 269 013c 7047     		bx	lr
+ 270              	.L8:
+ 271 013e 00BF     		.align	2
+ 272              	.L7:
+ 273 0140 00000000 		.word	can_obj_list
+ 274 0144 00000000 		.word	can_message_buffer
+ 275              		.cfi_endproc
+ 276              	.LFE482:
+ 278              		.section	.text.zf_can_assert_handler,"ax",%progbits
+ 279              		.align	1
+ 280              		.p2align 4,,15
+ 281              		.global	zf_can_assert_handler
+ 282              		.syntax unified
+ 283              		.thumb
+ 284              		.thumb_func
+ 286              	zf_can_assert_handler:
+ 287              	.LFB483:
+ 116:libraries/zf_driver/zf_driver_can.c **** 
+ 117:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 118:libraries/zf_driver/zf_driver_can.c **** // 函数简介     CAN 断言处理
+ 119:libraries/zf_driver/zf_driver_can.c **** // 参数说明     *file               文件路径
+ 120:libraries/zf_driver/zf_driver_can.c **** // 参数说明     line                报错行
+ 121:libraries/zf_driver/zf_driver_can.c **** // 参数说明     *tips               输出信息
+ 122:libraries/zf_driver/zf_driver_can.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+ 123:libraries/zf_driver/zf_driver_can.c **** // 使用示例     zf_can_assert_handler(file, line, tips);
+ 124:libraries/zf_driver/zf_driver_can.c **** // 备注信息     
+ 125:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 126:libraries/zf_driver/zf_driver_can.c **** uint8 zf_can_assert_handler (char *file, int line, char *tips)
+ 127:libraries/zf_driver/zf_driver_can.c **** {
+ 288              		.loc 1 127 1
+ 289              		.cfi_startproc
+ 290              		@ args = 0, pretend = 0, frame = 16
+ 291              		@ frame_needed = 0, uses_anonymous_args = 0
+ 292 0000 00B5     		push	{lr}
+ 293              		.cfi_def_cfa_offset 4
+ 294              		.cfi_offset 14, -4
+ 295 0002 87B0     		sub	sp, sp, #28
+ 296              		.cfi_def_cfa_offset 32
+ 297 0004 0590     		str	r0, [sp, #20]
+ 298 0006 0491     		str	r1, [sp, #16]
+ 299 0008 0392     		str	r2, [sp, #12]
+ 128:libraries/zf_driver/zf_driver_can.c ****     debug_message_handler(DEBUG_OUTPUT_LEVEL_ASSERT, ZF_FALSE, tips, file, line);
+ 300              		.loc 1 128 5
+ 301 000a 049B     		ldr	r3, [sp, #16]
+ 302 000c 0093     		str	r3, [sp]
+ 303 000e 059B     		ldr	r3, [sp, #20]
+ 304 0010 039A     		ldr	r2, [sp, #12]
+ 305 0012 0021     		movs	r1, #0
+ 306 0014 0220     		movs	r0, #2
+ 307 0016 FFF7FEFF 		bl	debug_message_handler
+ 308              	.L10:
+ 129:libraries/zf_driver/zf_driver_can.c ****     while(1);
+ 309              		.loc 1 129 10 discriminator 1
+ 310 001a FEE7     		b	.L10
+ 311              		.cfi_endproc
+ 312              	.LFE483:
+ 314              		.section	.rodata
+ 315              		.align	2
+ 316              	.LC0:
+ 317 0000 6C696272 		.ascii	"libraries/zf_driver/zf_driver_can.c\000"
+ 317      61726965 
+ 317      732F7A66 
+ 317      5F647269 
+ 317      7665722F 
+ 318              		.section	.text.zf_can_write_frame,"ax",%progbits
+ 319              		.align	1
+ 320              		.p2align 4,,15
+ 321              		.global	zf_can_write_frame
+ 322              		.syntax unified
+ 323              		.thumb
+ 324              		.thumb_func
+ 326              	zf_can_write_frame:
+ 327              	.LFB484:
+ 130:libraries/zf_driver/zf_driver_can.c ****     return ZF_ERROR;
+ 131:libraries/zf_driver/zf_driver_can.c **** }
+ 132:libraries/zf_driver/zf_driver_can.c **** 
+ 133:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 134:libraries/zf_driver/zf_driver_can.c **** // 函数简介     CAN 发送标准帧
+ 135:libraries/zf_driver/zf_driver_can.c **** // 参数说明     can_index           CAN 模块号 (详见 zf_driver_can.h 内 zf_can_index_enum
+ 136:libraries/zf_driver/zf_driver_can.c **** // 参数说明     *message_buffer     CAN 缓冲区 (详见 zf_driver_can.h 内 zf_can_message_bu
+ 137:libraries/zf_driver/zf_driver_can.c **** // 参数说明     data_len            数据长度 [1:8]
+ 138:libraries/zf_driver/zf_driver_can.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+ 139:libraries/zf_driver/zf_driver_can.c **** // 使用示例     zf_can_write_frame(can_index, message_buffer, data_len);
+ 140:libraries/zf_driver/zf_driver_can.c **** // 备注信息     
+ 141:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 142:libraries/zf_driver/zf_driver_can.c **** uint8 zf_can_write_frame (zf_can_index_enum can_index, zf_can_message_buffer_struct *message_buffer
+ 143:libraries/zf_driver/zf_driver_can.c **** {
+ 328              		.loc 1 143 1
+ 329              		.cfi_startproc
+ 330              		@ args = 0, pretend = 0, frame = 96
+ 331              		@ frame_needed = 0, uses_anonymous_args = 0
+ 332 0000 00B5     		push	{lr}
+ 333              		.cfi_def_cfa_offset 4
+ 334              		.cfi_offset 14, -4
+ 335 0002 99B0     		sub	sp, sp, #100
+ 336              		.cfi_def_cfa_offset 104
+ 337 0004 0346     		mov	r3, r0
+ 338 0006 0091     		str	r1, [sp]
+ 339 0008 8DF80730 		strb	r3, [sp, #7]
+ 340 000c 1346     		mov	r3, r2
+ 341 000e 8DF80630 		strb	r3, [sp, #6]
+ 144:libraries/zf_driver/zf_driver_can.c ****     zf_can_operation_state_enum return_state = CAN_ERROR_UNKNOW;
+ 342              		.loc 1 144 33
+ 343 0012 0123     		movs	r3, #1
+ 344 0014 8DF85F30 		strb	r3, [sp, #95]
+ 345              	.LBB3:
+ 145:libraries/zf_driver/zf_driver_can.c **** 
+ 146:libraries/zf_driver/zf_driver_can.c ****     do
+ 147:libraries/zf_driver/zf_driver_can.c ****     {
+ 148:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(can_obj_list[can_index].bps))
+ 346              		.loc 1 148 12
+ 347 0018 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 348 001c 314A     		ldr	r2, .L17
+ 349 001e 1B01     		lsls	r3, r3, #4
+ 350 0020 1344     		add	r3, r3, r2
+ 351 0022 0433     		adds	r3, r3, #4
+ 352 0024 1B68     		ldr	r3, [r3]
+ 353              		.loc 1 148 11
+ 354 0026 002B     		cmp	r3, #0
+ 355 0028 0BD1     		bne	.L12
+ 356              		.loc 1 148 12 discriminator 1
+ 357 002a 0022     		movs	r2, #0
+ 358 002c 9421     		movs	r1, #148
+ 359 002e 2E48     		ldr	r0, .L17+4
+ 360 0030 FFF7FEFF 		bl	zf_can_assert_handler
+ 361 0034 0346     		mov	r3, r0
+ 362 0036 002B     		cmp	r3, #0
+ 363 0038 03D0     		beq	.L12
+ 149:libraries/zf_driver/zf_driver_can.c ****         {
+ 150:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 151:libraries/zf_driver/zf_driver_can.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 152:libraries/zf_driver/zf_driver_can.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 153:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_MODULE_NOT_INIT;                           // CAN 模块未初
+ 364              		.loc 1 153 26
+ 365 003a 2123     		movs	r3, #33
+ 366 003c 8DF85F30 		strb	r3, [sp, #95]
+ 154:libraries/zf_driver/zf_driver_can.c ****             break;
+ 367              		.loc 1 154 13
+ 368 0040 49E0     		b	.L15
+ 369              	.L12:
+ 155:libraries/zf_driver/zf_driver_can.c ****         }
+ 156:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(NULL != message_buffer))
+ 370              		.loc 1 156 11
+ 371 0042 009B     		ldr	r3, [sp]
+ 372 0044 002B     		cmp	r3, #0
+ 373 0046 0BD1     		bne	.L14
+ 374              		.loc 1 156 12 discriminator 1
+ 375 0048 0022     		movs	r2, #0
+ 376 004a 9C21     		movs	r1, #156
+ 377 004c 2648     		ldr	r0, .L17+4
+ 378 004e FFF7FEFF 		bl	zf_can_assert_handler
+ 379 0052 0346     		mov	r3, r0
+ 380 0054 002B     		cmp	r3, #0
+ 381 0056 03D0     		beq	.L14
+ 157:libraries/zf_driver/zf_driver_can.c ****         {
+ 158:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 159:libraries/zf_driver/zf_driver_can.c ****             // 不可以对空指针进行操作
+ 160:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_DATA_BUFFER_NULL;                          // CAN 数据指针
+ 382              		.loc 1 160 26
+ 383 0058 2723     		movs	r3, #39
+ 384 005a 8DF85F30 		strb	r3, [sp, #95]
+ 161:libraries/zf_driver/zf_driver_can.c ****             break;
+ 385              		.loc 1 161 13
+ 386 005e 3AE0     		b	.L15
+ 387              	.L14:
+ 162:libraries/zf_driver/zf_driver_can.c ****         }
+ 163:libraries/zf_driver/zf_driver_can.c **** 
+ 164:libraries/zf_driver/zf_driver_can.c ****         can_frame_t frame;
+ 165:libraries/zf_driver/zf_driver_can.c ****         frame.TYPE = CAN_ID_STD;                                                    // 标准 ID
+ 388              		.loc 1 165 20
+ 389 0060 0023     		movs	r3, #0
+ 390 0062 8DF80C30 		strb	r3, [sp, #12]
+ 166:libraries/zf_driver/zf_driver_can.c ****         frame.DLC = data_len;                                                       // 默认数据
+ 391              		.loc 1 166 19
+ 392 0066 9DF80630 		ldrb	r3, [sp, #6]
+ 393 006a 8DF81430 		strb	r3, [sp, #20]
+ 167:libraries/zf_driver/zf_driver_can.c ****         frame.OPERATION = CAN_OPERATION_NORMAL;                                     // 正常模式
+ 394              		.loc 1 167 25
+ 395 006e 0023     		movs	r3, #0
+ 396 0070 8DF80A30 		strb	r3, [sp, #10]
+ 168:libraries/zf_driver/zf_driver_can.c ****         frame.ID = message_buffer->id;
+ 397              		.loc 1 168 34
+ 398 0074 009B     		ldr	r3, [sp]
+ 399 0076 1B88     		ldrh	r3, [r3]
+ 400              		.loc 1 168 18
+ 401 0078 0493     		str	r3, [sp, #16]
+ 169:libraries/zf_driver/zf_driver_can.c ****         frame.data8[0] = message_buffer->data[0];
+ 402              		.loc 1 169 46
+ 403 007a 009B     		ldr	r3, [sp]
+ 404 007c 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 405              		.loc 1 169 24
+ 406 007e 8DF81830 		strb	r3, [sp, #24]
+ 170:libraries/zf_driver/zf_driver_can.c ****         frame.data8[1] = message_buffer->data[1];
+ 407              		.loc 1 170 46
+ 408 0082 009B     		ldr	r3, [sp]
+ 409 0084 DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 410              		.loc 1 170 24
+ 411 0086 8DF81930 		strb	r3, [sp, #25]
+ 171:libraries/zf_driver/zf_driver_can.c ****         frame.data8[2] = message_buffer->data[2];
+ 412              		.loc 1 171 46
+ 413 008a 009B     		ldr	r3, [sp]
+ 414 008c 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 415              		.loc 1 171 24
+ 416 008e 8DF81A30 		strb	r3, [sp, #26]
+ 172:libraries/zf_driver/zf_driver_can.c ****         frame.data8[3] = message_buffer->data[3];
+ 417              		.loc 1 172 46
+ 418 0092 009B     		ldr	r3, [sp]
+ 419 0094 5B79     		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+ 420              		.loc 1 172 24
+ 421 0096 8DF81B30 		strb	r3, [sp, #27]
+ 173:libraries/zf_driver/zf_driver_can.c ****         frame.data8[4] = message_buffer->data[4];
+ 422              		.loc 1 173 46
+ 423 009a 009B     		ldr	r3, [sp]
+ 424 009c 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 425              		.loc 1 173 24
+ 426 009e 8DF81C30 		strb	r3, [sp, #28]
+ 174:libraries/zf_driver/zf_driver_can.c ****         frame.data8[5] = message_buffer->data[5];
+ 427              		.loc 1 174 46
+ 428 00a2 009B     		ldr	r3, [sp]
+ 429 00a4 DB79     		ldrb	r3, [r3, #7]	@ zero_extendqisi2
+ 430              		.loc 1 174 24
+ 431 00a6 8DF81D30 		strb	r3, [sp, #29]
+ 175:libraries/zf_driver/zf_driver_can.c ****         frame.data8[6] = message_buffer->data[6];
+ 432              		.loc 1 175 46
+ 433 00aa 009B     		ldr	r3, [sp]
+ 434 00ac 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 435              		.loc 1 175 24
+ 436 00ae 8DF81E30 		strb	r3, [sp, #30]
+ 176:libraries/zf_driver/zf_driver_can.c ****         frame.data8[7] = message_buffer->data[7];
+ 437              		.loc 1 176 46
+ 438 00b2 009B     		ldr	r3, [sp]
+ 439 00b4 5B7A     		ldrb	r3, [r3, #9]	@ zero_extendqisi2
+ 440              		.loc 1 176 24
+ 441 00b6 8DF81F30 		strb	r3, [sp, #31]
+ 177:libraries/zf_driver/zf_driver_can.c ****         can_transmit(can_obj_list[can_index].can_ptr, CAN_TX_ANY_BUFFER, &frame);
+ 442              		.loc 1 177 9
+ 443 00ba 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 444 00be 094A     		ldr	r2, .L17
+ 445 00c0 1B01     		lsls	r3, r3, #4
+ 446 00c2 1344     		add	r3, r3, r2
+ 447 00c4 1B68     		ldr	r3, [r3]
+ 448 00c6 02AA     		add	r2, sp, #8
+ 449 00c8 FF21     		movs	r1, #255
+ 450 00ca 1846     		mov	r0, r3
+ 451 00cc FFF7FEFF 		bl	can_transmit
+ 178:libraries/zf_driver/zf_driver_can.c **** 
+ 179:libraries/zf_driver/zf_driver_can.c ****         return_state = CAN_OPERATION_DONE;
+ 452              		.loc 1 179 22
+ 453 00d0 0023     		movs	r3, #0
+ 454 00d2 8DF85F30 		strb	r3, [sp, #95]
+ 455              	.L15:
+ 456              	.LBE3:
+ 180:libraries/zf_driver/zf_driver_can.c ****     }while(0);
+ 181:libraries/zf_driver/zf_driver_can.c **** 
+ 182:libraries/zf_driver/zf_driver_can.c **** return return_state;
+ 457              		.loc 1 182 8
+ 458 00d6 9DF85F30 		ldrb	r3, [sp, #95]	@ zero_extendqisi2
+ 183:libraries/zf_driver/zf_driver_can.c **** }
+ 459              		.loc 1 183 1
+ 460 00da 1846     		mov	r0, r3
+ 461 00dc 19B0     		add	sp, sp, #100
+ 462              		.cfi_def_cfa_offset 4
+ 463              		@ sp needed
+ 464 00de 5DF804FB 		ldr	pc, [sp], #4
+ 465              	.L18:
+ 466 00e2 00BF     		.align	2
+ 467              	.L17:
+ 468 00e4 00000000 		.word	can_obj_list
+ 469 00e8 00000000 		.word	.LC0
+ 470              		.cfi_endproc
+ 471              	.LFE484:
+ 473              		.section	.text.zf_can_read_frame,"ax",%progbits
+ 474              		.align	1
+ 475              		.p2align 4,,15
+ 476              		.global	zf_can_read_frame
+ 477              		.syntax unified
+ 478              		.thumb
+ 479              		.thumb_func
+ 481              	zf_can_read_frame:
+ 482              	.LFB485:
+ 184:libraries/zf_driver/zf_driver_can.c **** 
+ 185:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 186:libraries/zf_driver/zf_driver_can.c **** // 函数简介     CAN 阻塞接收标准帧
+ 187:libraries/zf_driver/zf_driver_can.c **** // 参数说明     can_index           CAN 模块号 (详见 zf_driver_can.h 内 zf_can_index_enum
+ 188:libraries/zf_driver/zf_driver_can.c **** // 参数说明     *message_buffer     CAN 缓冲区 (详见 zf_driver_can.h 内 zf_can_message_bu
+ 189:libraries/zf_driver/zf_driver_can.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+ 190:libraries/zf_driver/zf_driver_can.c **** // 使用示例     zf_can_read_frame(can_index, message_buffer, data_len);
+ 191:libraries/zf_driver/zf_driver_can.c **** // 备注信息     
+ 192:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 193:libraries/zf_driver/zf_driver_can.c **** uint8 zf_can_read_frame (zf_can_index_enum can_index, zf_can_message_buffer_struct *message_buffer)
+ 194:libraries/zf_driver/zf_driver_can.c **** {
+ 483              		.loc 1 194 1
+ 484              		.cfi_startproc
+ 485              		@ args = 0, pretend = 0, frame = 16
+ 486              		@ frame_needed = 0, uses_anonymous_args = 0
+ 487 0000 00B5     		push	{lr}
+ 488              		.cfi_def_cfa_offset 4
+ 489              		.cfi_offset 14, -4
+ 490 0002 85B0     		sub	sp, sp, #20
+ 491              		.cfi_def_cfa_offset 24
+ 492 0004 0346     		mov	r3, r0
+ 493 0006 0091     		str	r1, [sp]
+ 494 0008 8DF80730 		strb	r3, [sp, #7]
+ 195:libraries/zf_driver/zf_driver_can.c ****     zf_can_operation_state_enum return_state = CAN_ERROR_UNKNOW;
+ 495              		.loc 1 195 33
+ 496 000c 0123     		movs	r3, #1
+ 497 000e 8DF80F30 		strb	r3, [sp, #15]
+ 498              	.LBB4:
+ 196:libraries/zf_driver/zf_driver_can.c **** 
+ 197:libraries/zf_driver/zf_driver_can.c ****     do
+ 198:libraries/zf_driver/zf_driver_can.c ****     {
+ 199:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(can_obj_list[can_index].bps))
+ 499              		.loc 1 199 12
+ 500 0012 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 501 0016 304A     		ldr	r2, .L27
+ 502 0018 1B01     		lsls	r3, r3, #4
+ 503 001a 1344     		add	r3, r3, r2
+ 504 001c 0433     		adds	r3, r3, #4
+ 505 001e 1B68     		ldr	r3, [r3]
+ 506              		.loc 1 199 11
+ 507 0020 002B     		cmp	r3, #0
+ 508 0022 0BD1     		bne	.L20
+ 509              		.loc 1 199 12 discriminator 1
+ 510 0024 0022     		movs	r2, #0
+ 511 0026 C721     		movs	r1, #199
+ 512 0028 2C48     		ldr	r0, .L27+4
+ 513 002a FFF7FEFF 		bl	zf_can_assert_handler
+ 514 002e 0346     		mov	r3, r0
+ 515 0030 002B     		cmp	r3, #0
+ 516 0032 03D0     		beq	.L20
+ 200:libraries/zf_driver/zf_driver_can.c ****         {
+ 201:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 202:libraries/zf_driver/zf_driver_can.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 203:libraries/zf_driver/zf_driver_can.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 204:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_MODULE_NOT_INIT;                           // CAN 模块未初
+ 517              		.loc 1 204 26
+ 518 0034 2123     		movs	r3, #33
+ 519 0036 8DF80F30 		strb	r3, [sp, #15]
+ 205:libraries/zf_driver/zf_driver_can.c ****             break;
+ 520              		.loc 1 205 13
+ 521 003a 47E0     		b	.L21
+ 522              	.L20:
+ 206:libraries/zf_driver/zf_driver_can.c ****         }
+ 207:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(NULL != message_buffer))
+ 523              		.loc 1 207 11
+ 524 003c 009B     		ldr	r3, [sp]
+ 525 003e 002B     		cmp	r3, #0
+ 526 0040 0BD1     		bne	.L22
+ 527              		.loc 1 207 12 discriminator 1
+ 528 0042 0022     		movs	r2, #0
+ 529 0044 CF21     		movs	r1, #207
+ 530 0046 2548     		ldr	r0, .L27+4
+ 531 0048 FFF7FEFF 		bl	zf_can_assert_handler
+ 532 004c 0346     		mov	r3, r0
+ 533 004e 002B     		cmp	r3, #0
+ 534 0050 03D0     		beq	.L22
+ 208:libraries/zf_driver/zf_driver_can.c ****         {
+ 209:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 210:libraries/zf_driver/zf_driver_can.c ****             // 不可以对空指针进行操作
+ 211:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_DATA_BUFFER_NULL;                          // CAN 数据指针
+ 535              		.loc 1 211 26
+ 536 0052 2723     		movs	r3, #39
+ 537 0054 8DF80F30 		strb	r3, [sp, #15]
+ 212:libraries/zf_driver/zf_driver_can.c ****             break;
+ 538              		.loc 1 212 13
+ 539 0058 38E0     		b	.L21
+ 540              	.L22:
+ 213:libraries/zf_driver/zf_driver_can.c ****         }
+ 214:libraries/zf_driver/zf_driver_can.c **** 
+ 215:libraries/zf_driver/zf_driver_can.c ****         vuint32 timeout_count   = 0;
+ 541              		.loc 1 215 17
+ 542 005a 0023     		movs	r3, #0
+ 543 005c 0293     		str	r3, [sp, #8]
+ 216:libraries/zf_driver/zf_driver_can.c ****         while(timeout_count ++ <= CAN_DEFAULT_TIMEOUT_COUNT && 0xFFFF == can_message_buffer[can_ind
+ 544              		.loc 1 216 14
+ 545 005e 00BF     		nop
+ 546              	.L24:
+ 547              		.loc 1 216 29 discriminator 2
+ 548 0060 029B     		ldr	r3, [sp, #8]
+ 549 0062 5A1C     		adds	r2, r3, #1
+ 550 0064 0292     		str	r2, [sp, #8]
+ 551              		.loc 1 216 14 discriminator 2
+ 552 0066 B3F5001F 		cmp	r3, #2097152
+ 553 006a 0CD2     		bcs	.L23
+ 554              		.loc 1 216 103 discriminator 1
+ 555 006c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 556 0070 1B49     		ldr	r1, .L27+8
+ 557 0072 1346     		mov	r3, r2
+ 558 0074 9B00     		lsls	r3, r3, #2
+ 559 0076 1344     		add	r3, r3, r2
+ 560 0078 5B00     		lsls	r3, r3, #1
+ 561 007a 0B44     		add	r3, r3, r1
+ 562 007c 1B88     		ldrh	r3, [r3]
+ 563              		.loc 1 216 61 discriminator 1
+ 564 007e 4FF6FF72 		movw	r2, #65535
+ 565 0082 9342     		cmp	r3, r2
+ 566 0084 ECD0     		beq	.L24
+ 567              	.L23:
+ 217:libraries/zf_driver/zf_driver_can.c ****         if(timeout_count >= CAN_DEFAULT_TIMEOUT_COUNT)
+ 568              		.loc 1 217 26
+ 569 0086 029B     		ldr	r3, [sp, #8]
+ 570              		.loc 1 217 11
+ 571 0088 164A     		ldr	r2, .L27+12
+ 572 008a 9342     		cmp	r3, r2
+ 573 008c 03D9     		bls	.L25
+ 218:libraries/zf_driver/zf_driver_can.c ****         {
+ 219:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_WARNING_OPERATION_TIMEOUT;                       // UART 操作超�
+ 574              		.loc 1 219 26
+ 575 008e 1123     		movs	r3, #17
+ 576 0090 8DF80F30 		strb	r3, [sp, #15]
+ 220:libraries/zf_driver/zf_driver_can.c ****             break;
+ 577              		.loc 1 220 13
+ 578 0094 1AE0     		b	.L21
+ 579              	.L25:
+ 221:libraries/zf_driver/zf_driver_can.c ****         }
+ 222:libraries/zf_driver/zf_driver_can.c **** 
+ 223:libraries/zf_driver/zf_driver_can.c ****         memcpy(message_buffer, &can_message_buffer[can_index], sizeof(zf_can_message_buffer_struct)
+ 580              		.loc 1 223 51
+ 581 0096 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 582              		.loc 1 223 32
+ 583 009a 1346     		mov	r3, r2
+ 584 009c 9B00     		lsls	r3, r3, #2
+ 585 009e 1344     		add	r3, r3, r2
+ 586 00a0 5B00     		lsls	r3, r3, #1
+ 587 00a2 0F4A     		ldr	r2, .L27+8
+ 588 00a4 1344     		add	r3, r3, r2
+ 589              		.loc 1 223 9
+ 590 00a6 0A22     		movs	r2, #10
+ 591 00a8 1946     		mov	r1, r3
+ 592 00aa 0098     		ldr	r0, [sp]
+ 593 00ac FFF7FEFF 		bl	memcpy
+ 224:libraries/zf_driver/zf_driver_can.c ****         can_message_buffer[can_index].id = 0xFFFF;
+ 594              		.loc 1 224 38
+ 595 00b0 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 596              		.loc 1 224 42
+ 597 00b4 0A49     		ldr	r1, .L27+8
+ 598 00b6 1346     		mov	r3, r2
+ 599 00b8 9B00     		lsls	r3, r3, #2
+ 600 00ba 1344     		add	r3, r3, r2
+ 601 00bc 5B00     		lsls	r3, r3, #1
+ 602 00be 0B44     		add	r3, r3, r1
+ 603 00c0 4FF6FF72 		movw	r2, #65535
+ 604 00c4 1A80     		strh	r2, [r3]	@ movhi
+ 225:libraries/zf_driver/zf_driver_can.c **** 
+ 226:libraries/zf_driver/zf_driver_can.c ****         return_state = CAN_OPERATION_DONE;
+ 605              		.loc 1 226 22
+ 606 00c6 0023     		movs	r3, #0
+ 607 00c8 8DF80F30 		strb	r3, [sp, #15]
+ 608              	.L21:
+ 609              	.LBE4:
+ 227:libraries/zf_driver/zf_driver_can.c ****     }while(0);
+ 228:libraries/zf_driver/zf_driver_can.c **** 
+ 229:libraries/zf_driver/zf_driver_can.c ****     return return_state;
+ 610              		.loc 1 229 12
+ 611 00cc 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 230:libraries/zf_driver/zf_driver_can.c **** }
+ 612              		.loc 1 230 1
+ 613 00d0 1846     		mov	r0, r3
+ 614 00d2 05B0     		add	sp, sp, #20
+ 615              		.cfi_def_cfa_offset 4
+ 616              		@ sp needed
+ 617 00d4 5DF804FB 		ldr	pc, [sp], #4
+ 618              	.L28:
+ 619              		.align	2
+ 620              	.L27:
+ 621 00d8 00000000 		.word	can_obj_list
+ 622 00dc 00000000 		.word	.LC0
+ 623 00e0 00000000 		.word	can_message_buffer
+ 624 00e4 FEFF1F00 		.word	2097150
+ 625              		.cfi_endproc
+ 626              	.LFE485:
+ 628              		.section	.text.zf_can_query_frame,"ax",%progbits
+ 629              		.align	1
+ 630              		.p2align 4,,15
+ 631              		.global	zf_can_query_frame
+ 632              		.syntax unified
+ 633              		.thumb
+ 634              		.thumb_func
+ 636              	zf_can_query_frame:
+ 637              	.LFB486:
+ 231:libraries/zf_driver/zf_driver_can.c **** 
+ 232:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 233:libraries/zf_driver/zf_driver_can.c **** // 函数简介     CAN 查询接收标准帧
+ 234:libraries/zf_driver/zf_driver_can.c **** // 参数说明     can_index           CAN 模块号 (详见 zf_driver_can.h 内 zf_can_index_enum
+ 235:libraries/zf_driver/zf_driver_can.c **** // 参数说明     *message_buffer     CAN 缓冲区 (详见 zf_driver_can.h 内 zf_can_message_bu
+ 236:libraries/zf_driver/zf_driver_can.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+ 237:libraries/zf_driver/zf_driver_can.c **** // 使用示例     zf_can_query_frame(can_index, message_buffer, data_len);
+ 238:libraries/zf_driver/zf_driver_can.c **** // 备注信息     
+ 239:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 240:libraries/zf_driver/zf_driver_can.c **** uint8 zf_can_query_frame (zf_can_index_enum can_index, zf_can_message_buffer_struct *message_buffer
+ 241:libraries/zf_driver/zf_driver_can.c **** {
+ 638              		.loc 1 241 1
+ 639              		.cfi_startproc
+ 640              		@ args = 0, pretend = 0, frame = 16
+ 641              		@ frame_needed = 0, uses_anonymous_args = 0
+ 642 0000 00B5     		push	{lr}
+ 643              		.cfi_def_cfa_offset 4
+ 644              		.cfi_offset 14, -4
+ 645 0002 85B0     		sub	sp, sp, #20
+ 646              		.cfi_def_cfa_offset 24
+ 647 0004 0346     		mov	r3, r0
+ 648 0006 0091     		str	r1, [sp]
+ 649 0008 8DF80730 		strb	r3, [sp, #7]
+ 242:libraries/zf_driver/zf_driver_can.c ****     zf_can_operation_state_enum return_state = CAN_ERROR_UNKNOW;
+ 650              		.loc 1 242 33
+ 651 000c 0123     		movs	r3, #1
+ 652 000e 8DF80F30 		strb	r3, [sp, #15]
+ 243:libraries/zf_driver/zf_driver_can.c **** 
+ 244:libraries/zf_driver/zf_driver_can.c ****     do
+ 245:libraries/zf_driver/zf_driver_can.c ****     {
+ 246:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(can_obj_list[can_index].bps))
+ 653              		.loc 1 246 12
+ 654 0012 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 655 0016 294A     		ldr	r2, .L34
+ 656 0018 1B01     		lsls	r3, r3, #4
+ 657 001a 1344     		add	r3, r3, r2
+ 658 001c 0433     		adds	r3, r3, #4
+ 659 001e 1B68     		ldr	r3, [r3]
+ 660              		.loc 1 246 11
+ 661 0020 002B     		cmp	r3, #0
+ 662 0022 0BD1     		bne	.L30
+ 663              		.loc 1 246 12 discriminator 1
+ 664 0024 0022     		movs	r2, #0
+ 665 0026 F621     		movs	r1, #246
+ 666 0028 2548     		ldr	r0, .L34+4
+ 667 002a FFF7FEFF 		bl	zf_can_assert_handler
+ 668 002e 0346     		mov	r3, r0
+ 669 0030 002B     		cmp	r3, #0
+ 670 0032 03D0     		beq	.L30
+ 247:libraries/zf_driver/zf_driver_can.c ****         {
+ 248:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 249:libraries/zf_driver/zf_driver_can.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 250:libraries/zf_driver/zf_driver_can.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 251:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_MODULE_NOT_INIT;                           // CAN 模块未初
+ 671              		.loc 1 251 26
+ 672 0034 2123     		movs	r3, #33
+ 673 0036 8DF80F30 		strb	r3, [sp, #15]
+ 252:libraries/zf_driver/zf_driver_can.c ****             break;
+ 674              		.loc 1 252 13
+ 675 003a 39E0     		b	.L31
+ 676              	.L30:
+ 253:libraries/zf_driver/zf_driver_can.c ****         }
+ 254:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(NULL != message_buffer))
+ 677              		.loc 1 254 11
+ 678 003c 009B     		ldr	r3, [sp]
+ 679 003e 002B     		cmp	r3, #0
+ 680 0040 0BD1     		bne	.L32
+ 681              		.loc 1 254 12 discriminator 1
+ 682 0042 0022     		movs	r2, #0
+ 683 0044 FE21     		movs	r1, #254
+ 684 0046 1E48     		ldr	r0, .L34+4
+ 685 0048 FFF7FEFF 		bl	zf_can_assert_handler
+ 686 004c 0346     		mov	r3, r0
+ 687 004e 002B     		cmp	r3, #0
+ 688 0050 03D0     		beq	.L32
+ 255:libraries/zf_driver/zf_driver_can.c ****         {
+ 256:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 257:libraries/zf_driver/zf_driver_can.c ****             // 不可以对空指针进行操作
+ 258:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_DATA_BUFFER_NULL;                          // CAN 数据指针
+ 689              		.loc 1 258 26
+ 690 0052 2723     		movs	r3, #39
+ 691 0054 8DF80F30 		strb	r3, [sp, #15]
+ 259:libraries/zf_driver/zf_driver_can.c ****             break;
+ 692              		.loc 1 259 13
+ 693 0058 2AE0     		b	.L31
+ 694              	.L32:
+ 260:libraries/zf_driver/zf_driver_can.c ****         }
+ 261:libraries/zf_driver/zf_driver_can.c **** 
+ 262:libraries/zf_driver/zf_driver_can.c ****         return_state = CAN_WARNING_NO_DATA;
+ 695              		.loc 1 262 22
+ 696 005a 1223     		movs	r3, #18
+ 697 005c 8DF80F30 		strb	r3, [sp, #15]
+ 263:libraries/zf_driver/zf_driver_can.c ****         if(0xFFFF != can_message_buffer[can_index].id)
+ 698              		.loc 1 263 51
+ 699 0060 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 700 0064 1749     		ldr	r1, .L34+8
+ 701 0066 1346     		mov	r3, r2
+ 702 0068 9B00     		lsls	r3, r3, #2
+ 703 006a 1344     		add	r3, r3, r2
+ 704 006c 5B00     		lsls	r3, r3, #1
+ 705 006e 0B44     		add	r3, r3, r1
+ 706 0070 1B88     		ldrh	r3, [r3]
+ 707              		.loc 1 263 11
+ 708 0072 4FF6FF72 		movw	r2, #65535
+ 709 0076 9342     		cmp	r3, r2
+ 710 0078 1AD0     		beq	.L31
+ 264:libraries/zf_driver/zf_driver_can.c ****         {
+ 265:libraries/zf_driver/zf_driver_can.c ****             memcpy(message_buffer, &can_message_buffer[can_index], sizeof(zf_can_message_buffer_str
+ 711              		.loc 1 265 55
+ 712 007a 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 713              		.loc 1 265 36
+ 714 007e 1346     		mov	r3, r2
+ 715 0080 9B00     		lsls	r3, r3, #2
+ 716 0082 1344     		add	r3, r3, r2
+ 717 0084 5B00     		lsls	r3, r3, #1
+ 718 0086 0F4A     		ldr	r2, .L34+8
+ 719 0088 1344     		add	r3, r3, r2
+ 720              		.loc 1 265 13
+ 721 008a 0A22     		movs	r2, #10
+ 722 008c 1946     		mov	r1, r3
+ 723 008e 0098     		ldr	r0, [sp]
+ 724 0090 FFF7FEFF 		bl	memcpy
+ 266:libraries/zf_driver/zf_driver_can.c ****             can_message_buffer[can_index].id = 0xFFFF;
+ 725              		.loc 1 266 42
+ 726 0094 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 727              		.loc 1 266 46
+ 728 0098 0A49     		ldr	r1, .L34+8
+ 729 009a 1346     		mov	r3, r2
+ 730 009c 9B00     		lsls	r3, r3, #2
+ 731 009e 1344     		add	r3, r3, r2
+ 732 00a0 5B00     		lsls	r3, r3, #1
+ 733 00a2 0B44     		add	r3, r3, r1
+ 734 00a4 4FF6FF72 		movw	r2, #65535
+ 735 00a8 1A80     		strh	r2, [r3]	@ movhi
+ 267:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_OPERATION_DONE;
+ 736              		.loc 1 267 26
+ 737 00aa 0023     		movs	r3, #0
+ 738 00ac 8DF80F30 		strb	r3, [sp, #15]
+ 739              	.L31:
+ 268:libraries/zf_driver/zf_driver_can.c ****         }
+ 269:libraries/zf_driver/zf_driver_can.c ****     }while(0);
+ 270:libraries/zf_driver/zf_driver_can.c **** 
+ 271:libraries/zf_driver/zf_driver_can.c ****     return return_state;
+ 740              		.loc 1 271 12
+ 741 00b0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 272:libraries/zf_driver/zf_driver_can.c **** }
+ 742              		.loc 1 272 1
+ 743 00b4 1846     		mov	r0, r3
+ 744 00b6 05B0     		add	sp, sp, #20
+ 745              		.cfi_def_cfa_offset 4
+ 746              		@ sp needed
+ 747 00b8 5DF804FB 		ldr	pc, [sp], #4
+ 748              	.L35:
+ 749              		.align	2
+ 750              	.L34:
+ 751 00bc 00000000 		.word	can_obj_list
+ 752 00c0 00000000 		.word	.LC0
+ 753 00c4 00000000 		.word	can_message_buffer
+ 754              		.cfi_endproc
+ 755              	.LFE486:
+ 757              		.section	.text.zf_can_deinit,"ax",%progbits
+ 758              		.align	1
+ 759              		.p2align 4,,15
+ 760              		.global	zf_can_deinit
+ 761              		.syntax unified
+ 762              		.thumb
+ 763              		.thumb_func
+ 765              	zf_can_deinit:
+ 766              	.LFB487:
+ 273:libraries/zf_driver/zf_driver_can.c **** 
+ 274:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 275:libraries/zf_driver/zf_driver_can.c **** // 函数简介     CAN 注销初始化
+ 276:libraries/zf_driver/zf_driver_can.c **** // 参数说明     can_index           CAN 模块号 (详见 zf_driver_can.h 内 zf_can_index_enum
+ 277:libraries/zf_driver/zf_driver_can.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+ 278:libraries/zf_driver/zf_driver_can.c **** // 使用示例     zf_can_deinit(CAN_1);
+ 279:libraries/zf_driver/zf_driver_can.c **** // 备注信息     
+ 280:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 281:libraries/zf_driver/zf_driver_can.c **** uint8 zf_can_deinit (zf_can_index_enum can_index)
+ 282:libraries/zf_driver/zf_driver_can.c **** {
+ 767              		.loc 1 282 1
+ 768              		.cfi_startproc
+ 769              		@ args = 0, pretend = 0, frame = 16
+ 770              		@ frame_needed = 0, uses_anonymous_args = 0
+ 771 0000 00B5     		push	{lr}
+ 772              		.cfi_def_cfa_offset 4
+ 773              		.cfi_offset 14, -4
+ 774 0002 85B0     		sub	sp, sp, #20
+ 775              		.cfi_def_cfa_offset 24
+ 776 0004 0346     		mov	r3, r0
+ 777 0006 8DF80730 		strb	r3, [sp, #7]
+ 283:libraries/zf_driver/zf_driver_can.c ****     zf_can_operation_state_enum return_state = CAN_ERROR_UNKNOW;
+ 778              		.loc 1 283 33
+ 779 000a 0123     		movs	r3, #1
+ 780 000c 8DF80F30 		strb	r3, [sp, #15]
+ 284:libraries/zf_driver/zf_driver_can.c **** 
+ 285:libraries/zf_driver/zf_driver_can.c ****     do
+ 286:libraries/zf_driver/zf_driver_can.c ****     {
+ 287:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(can_obj_list[can_index].bps))
+ 781              		.loc 1 287 12
+ 782 0010 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 783 0014 344A     		ldr	r2, .L40
+ 784 0016 1B01     		lsls	r3, r3, #4
+ 785 0018 1344     		add	r3, r3, r2
+ 786 001a 0433     		adds	r3, r3, #4
+ 787 001c 1B68     		ldr	r3, [r3]
+ 788              		.loc 1 287 11
+ 789 001e 002B     		cmp	r3, #0
+ 790 0020 0CD1     		bne	.L37
+ 791              		.loc 1 287 12 discriminator 1
+ 792 0022 0022     		movs	r2, #0
+ 793 0024 40F21F11 		movw	r1, #287
+ 794 0028 3048     		ldr	r0, .L40+4
+ 795 002a FFF7FEFF 		bl	zf_can_assert_handler
+ 796 002e 0346     		mov	r3, r0
+ 797 0030 002B     		cmp	r3, #0
+ 798 0032 03D0     		beq	.L37
+ 288:libraries/zf_driver/zf_driver_can.c ****         {
+ 289:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 290:libraries/zf_driver/zf_driver_can.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 291:libraries/zf_driver/zf_driver_can.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 292:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_MODULE_NOT_INIT;
+ 799              		.loc 1 292 26
+ 800 0034 2123     		movs	r3, #33
+ 801 0036 8DF80F30 		strb	r3, [sp, #15]
+ 293:libraries/zf_driver/zf_driver_can.c ****             break;
+ 802              		.loc 1 293 13
+ 803 003a 4FE0     		b	.L38
+ 804              	.L37:
+ 294:libraries/zf_driver/zf_driver_can.c ****         }
+ 295:libraries/zf_driver/zf_driver_can.c **** 
+ 296:libraries/zf_driver/zf_driver_can.c ****         zf_gpio_deinit(can_obj_list[can_index].tx_pin);
+ 805              		.loc 1 296 9
+ 806 003c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 807 0040 294A     		ldr	r2, .L40
+ 808 0042 1B01     		lsls	r3, r3, #4
+ 809 0044 1344     		add	r3, r3, r2
+ 810 0046 0833     		adds	r3, r3, #8
+ 811 0048 1B88     		ldrh	r3, [r3]
+ 812 004a 1846     		mov	r0, r3
+ 813 004c FFF7FEFF 		bl	zf_gpio_deinit
+ 297:libraries/zf_driver/zf_driver_can.c ****         zf_gpio_deinit(can_obj_list[can_index].rx_pin);
+ 814              		.loc 1 297 9
+ 815 0050 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 816 0054 244A     		ldr	r2, .L40
+ 817 0056 1B01     		lsls	r3, r3, #4
+ 818 0058 1344     		add	r3, r3, r2
+ 819 005a 0A33     		adds	r3, r3, #10
+ 820 005c 1B88     		ldrh	r3, [r3]
+ 821 005e 1846     		mov	r0, r3
+ 822 0060 FFF7FEFF 		bl	zf_gpio_deinit
+ 298:libraries/zf_driver/zf_driver_can.c **** 
+ 299:libraries/zf_driver/zf_driver_can.c ****         zf_rcc_peripheral_reset(can_rcc_index_list[can_index]);
+ 823              		.loc 1 299 9
+ 824 0064 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 825 0068 214A     		ldr	r2, .L40+8
+ 826 006a 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 827 006e 1846     		mov	r0, r3
+ 828 0070 FFF7FEFF 		bl	zf_rcc_peripheral_reset
+ 300:libraries/zf_driver/zf_driver_can.c ****         zf_rcc_clock_disable(can_rcc_index_list[can_index]);
+ 829              		.loc 1 300 9
+ 830 0074 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 831 0078 1D4A     		ldr	r2, .L40+8
+ 832 007a 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 833 007e 1846     		mov	r0, r3
+ 834 0080 FFF7FEFF 		bl	zf_rcc_clock_disable
+ 301:libraries/zf_driver/zf_driver_can.c **** 
+ 302:libraries/zf_driver/zf_driver_can.c ****         zf_interrupt_disable(can_irq_index_list[can_index]);
+ 835              		.loc 1 302 9
+ 836 0084 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 837 0088 1A4A     		ldr	r2, .L40+12
+ 838 008a D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 839 008c 1846     		mov	r0, r3
+ 840 008e FFF7FEFF 		bl	zf_interrupt_disable
+ 303:libraries/zf_driver/zf_driver_can.c **** 
+ 304:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].bps = 0;
+ 841              		.loc 1 304 32
+ 842 0092 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 843              		.loc 1 304 37
+ 844 0096 144A     		ldr	r2, .L40
+ 845 0098 1B01     		lsls	r3, r3, #4
+ 846 009a 1344     		add	r3, r3, r2
+ 847 009c 0433     		adds	r3, r3, #4
+ 848 009e 0022     		movs	r2, #0
+ 849 00a0 1A60     		str	r2, [r3]
+ 305:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].tx_pin = PIN_NULL;
+ 850              		.loc 1 305 32
+ 851 00a2 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 852              		.loc 1 305 40
+ 853 00a6 104A     		ldr	r2, .L40
+ 854 00a8 1B01     		lsls	r3, r3, #4
+ 855 00aa 1344     		add	r3, r3, r2
+ 856 00ac 0833     		adds	r3, r3, #8
+ 857 00ae 40F6FF72 		movw	r2, #4095
+ 858 00b2 1A80     		strh	r2, [r3]	@ movhi
+ 306:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].rx_pin = PIN_NULL;
+ 859              		.loc 1 306 32
+ 860 00b4 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 861              		.loc 1 306 40
+ 862 00b8 0B4A     		ldr	r2, .L40
+ 863 00ba 1B01     		lsls	r3, r3, #4
+ 864 00bc 1344     		add	r3, r3, r2
+ 865 00be 0A33     		adds	r3, r3, #10
+ 866 00c0 40F6FF72 		movw	r2, #4095
+ 867 00c4 1A80     		strh	r2, [r3]	@ movhi
+ 307:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].config_info = 0;
+ 868              		.loc 1 307 32
+ 869 00c6 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 870              		.loc 1 307 45
+ 871 00ca 074A     		ldr	r2, .L40
+ 872 00cc 1B01     		lsls	r3, r3, #4
+ 873 00ce 1344     		add	r3, r3, r2
+ 874 00d0 0C33     		adds	r3, r3, #12
+ 875 00d2 0022     		movs	r2, #0
+ 876 00d4 1A60     		str	r2, [r3]
+ 308:libraries/zf_driver/zf_driver_can.c **** 
+ 309:libraries/zf_driver/zf_driver_can.c ****         return_state = CAN_OPERATION_DONE;
+ 877              		.loc 1 309 22
+ 878 00d6 0023     		movs	r3, #0
+ 879 00d8 8DF80F30 		strb	r3, [sp, #15]
+ 880              	.L38:
+ 310:libraries/zf_driver/zf_driver_can.c ****     }while(0);
+ 311:libraries/zf_driver/zf_driver_can.c **** 
+ 312:libraries/zf_driver/zf_driver_can.c ****     return return_state;
+ 881              		.loc 1 312 12
+ 882 00dc 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 313:libraries/zf_driver/zf_driver_can.c **** }
+ 883              		.loc 1 313 1
+ 884 00e0 1846     		mov	r0, r3
+ 885 00e2 05B0     		add	sp, sp, #20
+ 886              		.cfi_def_cfa_offset 4
+ 887              		@ sp needed
+ 888 00e4 5DF804FB 		ldr	pc, [sp], #4
+ 889              	.L41:
+ 890              		.align	2
+ 891              	.L40:
+ 892 00e8 00000000 		.word	can_obj_list
+ 893 00ec 00000000 		.word	.LC0
+ 894 00f0 00000000 		.word	can_rcc_index_list
+ 895 00f4 00000000 		.word	can_irq_index_list
+ 896              		.cfi_endproc
+ 897              	.LFE487:
+ 899              		.section	.text.zf_can_init,"ax",%progbits
+ 900              		.align	1
+ 901              		.p2align 4,,15
+ 902              		.global	zf_can_init
+ 903              		.syntax unified
+ 904              		.thumb
+ 905              		.thumb_func
+ 907              	zf_can_init:
+ 908              	.LFB488:
+ 314:libraries/zf_driver/zf_driver_can.c **** 
+ 315:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 316:libraries/zf_driver/zf_driver_can.c **** // 函数简介     CAN 初始化
+ 317:libraries/zf_driver/zf_driver_can.c **** // 参数说明     can_index           CAN 模块号 (详见 zf_driver_can.h 内 zf_can_index_enum
+ 318:libraries/zf_driver/zf_driver_can.c **** // 参数说明     bps                 CAN 比特率 (详见 zf_driver_can.h 内 zf_can_bsp_enum �
+ 319:libraries/zf_driver/zf_driver_can.c **** // 参数说明     tx_pin              CAN 发送脚 (详见 zf_driver_can.h 内 zf_can_tx_pin_enu
+ 320:libraries/zf_driver/zf_driver_can.c **** // 参数说明     rx_pin              CAN 接收脚 (详见 zf_driver_can.h 内 zf_can_rx_pin_enu
+ 321:libraries/zf_driver/zf_driver_can.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / CAN_OPERATION_DONE - 完成 其�
+ 322:libraries/zf_driver/zf_driver_can.c **** // 使用示例     zf_can_init(CAN_1, 250 * 1000, CAN1_TX_D2, CAN1_RX_D1);
+ 323:libraries/zf_driver/zf_driver_can.c **** // 备注信息     
+ 324:libraries/zf_driver/zf_driver_can.c **** //-------------------------------------------------------------------------------------------------
+ 325:libraries/zf_driver/zf_driver_can.c **** uint8 zf_can_init (zf_can_index_enum can_index, zf_can_bsp_enum bps, zf_can_tx_pin_enum tx_pin, zf_
+ 326:libraries/zf_driver/zf_driver_can.c **** {
+ 909              		.loc 1 326 1
+ 910              		.cfi_startproc
+ 911              		@ args = 0, pretend = 0, frame = 24
+ 912              		@ frame_needed = 0, uses_anonymous_args = 0
+ 913 0000 00B5     		push	{lr}
+ 914              		.cfi_def_cfa_offset 4
+ 915              		.cfi_offset 14, -4
+ 916 0002 89B0     		sub	sp, sp, #36
+ 917              		.cfi_def_cfa_offset 40
+ 918 0004 0491     		str	r1, [sp, #16]
+ 919 0006 0392     		str	r2, [sp, #12]
+ 920 0008 0293     		str	r3, [sp, #8]
+ 921 000a 0346     		mov	r3, r0
+ 922 000c 8DF81730 		strb	r3, [sp, #23]
+ 327:libraries/zf_driver/zf_driver_can.c ****     zf_can_operation_state_enum return_state = CAN_ERROR_UNKNOW;
+ 923              		.loc 1 327 33
+ 924 0010 0123     		movs	r3, #1
+ 925 0012 8DF81F30 		strb	r3, [sp, #31]
+ 328:libraries/zf_driver/zf_driver_can.c **** 
+ 329:libraries/zf_driver/zf_driver_can.c ****     do
+ 330:libraries/zf_driver/zf_driver_can.c ****     {
+ 331:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(!can_obj_list[can_index].bps))
+ 926              		.loc 1 331 12
+ 927 0016 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 928 001a A44A     		ldr	r2, .L51
+ 929 001c 1B01     		lsls	r3, r3, #4
+ 930 001e 1344     		add	r3, r3, r2
+ 931 0020 0433     		adds	r3, r3, #4
+ 932 0022 1B68     		ldr	r3, [r3]
+ 933              		.loc 1 331 11
+ 934 0024 002B     		cmp	r3, #0
+ 935 0026 0CD0     		beq	.L43
+ 936              		.loc 1 331 12 discriminator 1
+ 937 0028 0022     		movs	r2, #0
+ 938 002a 40F24B11 		movw	r1, #331
+ 939 002e A048     		ldr	r0, .L51+4
+ 940 0030 FFF7FEFF 		bl	zf_can_assert_handler
+ 941 0034 0346     		mov	r3, r0
+ 942 0036 002B     		cmp	r3, #0
+ 943 0038 03D0     		beq	.L43
+ 332:libraries/zf_driver/zf_driver_can.c ****         {
+ 333:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明本模块已经被初始化过一次 重复初�
+ 334:libraries/zf_driver/zf_driver_can.c ****             // 否则应当先注销初始化之后再重新初始化
+ 335:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_MODULE_OCCUPIED;                           // CAN 模块未初
+ 944              		.loc 1 335 26
+ 945 003a 2023     		movs	r3, #32
+ 946 003c 8DF81F30 		strb	r3, [sp, #31]
+ 336:libraries/zf_driver/zf_driver_can.c ****             break;
+ 947              		.loc 1 336 13
+ 948 0040 2DE1     		b	.L44
+ 949              	.L43:
+ 337:libraries/zf_driver/zf_driver_can.c ****         }
+ 338:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(
+ 950              		.loc 1 338 12
+ 951 0042 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 952 0046 039B     		ldr	r3, [sp, #12]
+ 953 0048 1B0C     		lsrs	r3, r3, #16
+ 954 004a 03F00F03 		and	r3, r3, #15
+ 955              		.loc 1 338 11
+ 956 004e 9A42     		cmp	r2, r3
+ 957 0050 0CD0     		beq	.L45
+ 958              		.loc 1 338 12 discriminator 1
+ 959 0052 0022     		movs	r2, #0
+ 960 0054 4FF4A971 		mov	r1, #338
+ 961 0058 9548     		ldr	r0, .L51+4
+ 962 005a FFF7FEFF 		bl	zf_can_assert_handler
+ 963 005e 0346     		mov	r3, r0
+ 964 0060 002B     		cmp	r3, #0
+ 965 0062 03D0     		beq	.L45
+ 339:libraries/zf_driver/zf_driver_can.c ****             can_index == ((tx_pin >> CAN_INDEX_OFFSET) & CAN_INDEX_MASK)))                         
+ 340:libraries/zf_driver/zf_driver_can.c ****         {
+ 341:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明 TX 引脚跟 UART 索引不匹配
+ 342:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_TX_PIN_MISMATCH;
+ 966              		.loc 1 342 26
+ 967 0064 2223     		movs	r3, #34
+ 968 0066 8DF81F30 		strb	r3, [sp, #31]
+ 343:libraries/zf_driver/zf_driver_can.c ****             break;
+ 969              		.loc 1 343 13
+ 970 006a 18E1     		b	.L44
+ 971              	.L45:
+ 344:libraries/zf_driver/zf_driver_can.c ****         }
+ 345:libraries/zf_driver/zf_driver_can.c ****         if(zf_can_assert(
+ 972              		.loc 1 345 12
+ 973 006c 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 974 0070 029B     		ldr	r3, [sp, #8]
+ 975 0072 1B0C     		lsrs	r3, r3, #16
+ 976 0074 03F00F03 		and	r3, r3, #15
+ 977              		.loc 1 345 11
+ 978 0078 9A42     		cmp	r2, r3
+ 979 007a 0CD0     		beq	.L46
+ 980              		.loc 1 345 12 discriminator 1
+ 981 007c 0022     		movs	r2, #0
+ 982 007e 40F25911 		movw	r1, #345
+ 983 0082 8B48     		ldr	r0, .L51+4
+ 984 0084 FFF7FEFF 		bl	zf_can_assert_handler
+ 985 0088 0346     		mov	r3, r0
+ 986 008a 002B     		cmp	r3, #0
+ 987 008c 03D0     		beq	.L46
+ 346:libraries/zf_driver/zf_driver_can.c ****             can_index == ((rx_pin >> CAN_INDEX_OFFSET) & CAN_INDEX_MASK)))                         
+ 347:libraries/zf_driver/zf_driver_can.c ****         {
+ 348:libraries/zf_driver/zf_driver_can.c ****             // 此处如果断言报错 那么证明 RX 引脚跟 UART 索引不匹配
+ 349:libraries/zf_driver/zf_driver_can.c ****             return_state = CAN_ERROR_RX_PIN_MISMATCH;
+ 988              		.loc 1 349 26
+ 989 008e 2323     		movs	r3, #35
+ 990 0090 8DF81F30 		strb	r3, [sp, #31]
+ 350:libraries/zf_driver/zf_driver_can.c ****             break;
+ 991              		.loc 1 350 13
+ 992 0094 03E1     		b	.L44
+ 993              	.L46:
+ 351:libraries/zf_driver/zf_driver_can.c ****         }
+ 352:libraries/zf_driver/zf_driver_can.c ****         zf_rcc_clock_enable(can_rcc_index_list[can_index]);
+ 994              		.loc 1 352 9
+ 995 0096 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 996 009a 864A     		ldr	r2, .L51+8
+ 997 009c 32F81330 		ldrh	r3, [r2, r3, lsl #1]
+ 998 00a0 1846     		mov	r0, r3
+ 999 00a2 FFF7FEFF 		bl	zf_rcc_clock_enable
+ 353:libraries/zf_driver/zf_driver_can.c **** 
+ 354:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].bps = bps;
+ 1000              		.loc 1 354 32
+ 1001 00a6 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1002              		.loc 1 354 37
+ 1003 00aa 804A     		ldr	r2, .L51
+ 1004 00ac 1B01     		lsls	r3, r3, #4
+ 1005 00ae 1344     		add	r3, r3, r2
+ 1006 00b0 0433     		adds	r3, r3, #4
+ 1007 00b2 049A     		ldr	r2, [sp, #16]
+ 1008 00b4 1A60     		str	r2, [r3]
+ 355:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].tx_pin = (zf_gpio_pin_enum)(tx_pin & CAN_PIN_INDEX_MASK);
+ 1009              		.loc 1 355 42
+ 1010 00b6 039B     		ldr	r3, [sp, #12]
+ 1011 00b8 9AB2     		uxth	r2, r3
+ 1012              		.loc 1 355 32
+ 1013 00ba 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1014              		.loc 1 355 68
+ 1015 00be C2F30B02 		ubfx	r2, r2, #0, #12
+ 1016 00c2 91B2     		uxth	r1, r2
+ 1017              		.loc 1 355 40
+ 1018 00c4 794A     		ldr	r2, .L51
+ 1019 00c6 1B01     		lsls	r3, r3, #4
+ 1020 00c8 1344     		add	r3, r3, r2
+ 1021 00ca 0833     		adds	r3, r3, #8
+ 1022 00cc 0A46     		mov	r2, r1	@ movhi
+ 1023 00ce 1A80     		strh	r2, [r3]	@ movhi
+ 356:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].rx_pin = (zf_gpio_pin_enum)(rx_pin & CAN_PIN_INDEX_MASK);
+ 1024              		.loc 1 356 42
+ 1025 00d0 029B     		ldr	r3, [sp, #8]
+ 1026 00d2 9AB2     		uxth	r2, r3
+ 1027              		.loc 1 356 32
+ 1028 00d4 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1029              		.loc 1 356 68
+ 1030 00d8 C2F30B02 		ubfx	r2, r2, #0, #12
+ 1031 00dc 91B2     		uxth	r1, r2
+ 1032              		.loc 1 356 40
+ 1033 00de 734A     		ldr	r2, .L51
+ 1034 00e0 1B01     		lsls	r3, r3, #4
+ 1035 00e2 1344     		add	r3, r3, r2
+ 1036 00e4 0A33     		adds	r3, r3, #10
+ 1037 00e6 0A46     		mov	r2, r1	@ movhi
+ 1038 00e8 1A80     		strh	r2, [r3]	@ movhi
+ 357:libraries/zf_driver/zf_driver_can.c ****         can_obj_list[can_index].enable = ZF_ENABLE;
+ 1039              		.loc 1 357 32
+ 1040 00ea 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1041              		.loc 1 357 40
+ 1042 00ee 6F4A     		ldr	r2, .L51
+ 1043 00f0 1B01     		lsls	r3, r3, #4
+ 1044 00f2 1344     		add	r3, r3, r2
+ 1045 00f4 0C33     		adds	r3, r3, #12
+ 1046 00f6 0122     		movs	r2, #1
+ 1047 00f8 1A70     		strb	r2, [r3]
+ 358:libraries/zf_driver/zf_driver_can.c **** 
+ 359:libraries/zf_driver/zf_driver_can.c ****         zf_afio_init(can_obj_list[can_index].tx_pin,
+ 1048              		.loc 1 359 9
+ 1049 00fa 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1050 00fe 6B4A     		ldr	r2, .L51
+ 1051 0100 1B01     		lsls	r3, r3, #4
+ 1052 0102 1344     		add	r3, r3, r2
+ 1053 0104 0833     		adds	r3, r3, #8
+ 1054 0106 1888     		ldrh	r0, [r3]
+ 360:libraries/zf_driver/zf_driver_can.c ****             GPO_AF_PUSH_PULL,
+ 361:libraries/zf_driver/zf_driver_can.c ****             (zf_gpio_af_enum)((tx_pin >> CAN_PIN_AF_OFFSET) & CAN_PIN_AF_MASK));
+ 1055              		.loc 1 361 39
+ 1056 0108 039B     		ldr	r3, [sp, #12]
+ 1057 010a 1B0B     		lsrs	r3, r3, #12
+ 359:libraries/zf_driver/zf_driver_can.c ****             GPO_AF_PUSH_PULL,
+ 1058              		.loc 1 359 9
+ 1059 010c DBB2     		uxtb	r3, r3
+ 1060              		.loc 1 361 61
+ 1061 010e 03F00F03 		and	r3, r3, #15
+ 1062 0112 DBB2     		uxtb	r3, r3
+ 359:libraries/zf_driver/zf_driver_can.c ****             GPO_AF_PUSH_PULL,
+ 1063              		.loc 1 359 9
+ 1064 0114 1A46     		mov	r2, r3
+ 1065 0116 1221     		movs	r1, #18
+ 1066 0118 FFF7FEFF 		bl	zf_afio_init
+ 362:libraries/zf_driver/zf_driver_can.c ****         zf_afio_init(can_obj_list[can_index].rx_pin,
+ 1067              		.loc 1 362 9
+ 1068 011c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1069 0120 624A     		ldr	r2, .L51
+ 1070 0122 1B01     		lsls	r3, r3, #4
+ 1071 0124 1344     		add	r3, r3, r2
+ 1072 0126 0A33     		adds	r3, r3, #10
+ 1073 0128 1888     		ldrh	r0, [r3]
+ 363:libraries/zf_driver/zf_driver_can.c ****             GPO_AF_PUSH_PULL,
+ 364:libraries/zf_driver/zf_driver_can.c **** //            GPO_AF_OPEN_DRAIN,
+ 365:libraries/zf_driver/zf_driver_can.c ****             (zf_gpio_af_enum)((rx_pin >> CAN_PIN_AF_OFFSET) & CAN_PIN_AF_MASK));
+ 1074              		.loc 1 365 39
+ 1075 012a 029B     		ldr	r3, [sp, #8]
+ 1076 012c 1B0B     		lsrs	r3, r3, #12
+ 362:libraries/zf_driver/zf_driver_can.c ****         zf_afio_init(can_obj_list[can_index].rx_pin,
+ 1077              		.loc 1 362 9
+ 1078 012e DBB2     		uxtb	r3, r3
+ 1079              		.loc 1 365 61
+ 1080 0130 03F00F03 		and	r3, r3, #15
+ 1081 0134 DBB2     		uxtb	r3, r3
+ 362:libraries/zf_driver/zf_driver_can.c ****         zf_afio_init(can_obj_list[can_index].rx_pin,
+ 1082              		.loc 1 362 9
+ 1083 0136 1A46     		mov	r2, r3
+ 1084 0138 1221     		movs	r1, #18
+ 1085 013a FFF7FEFF 		bl	zf_afio_init
+ 366:libraries/zf_driver/zf_driver_can.c **** 
+ 367:libraries/zf_driver/zf_driver_can.c ****         {
+ 368:libraries/zf_driver/zf_driver_can.c ****             can_init(can_obj_list[can_index].can_ptr);                                             
+ 1086              		.loc 1 368 13
+ 1087 013e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1088 0142 5A4A     		ldr	r2, .L51
+ 1089 0144 1B01     		lsls	r3, r3, #4
+ 1090 0146 1344     		add	r3, r3, r2
+ 1091 0148 1B68     		ldr	r3, [r3]
+ 1092 014a 1846     		mov	r0, r3
+ 1093 014c FFF7FEFF 		bl	can_init
+ 369:libraries/zf_driver/zf_driver_can.c **** 
+ 370:libraries/zf_driver/zf_driver_can.c ****             can_set_irq_line    (can_obj_list[can_index].can_ptr, CAN_IRQ_LINE0);                  
+ 1094              		.loc 1 370 13
+ 1095 0150 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1096 0154 554A     		ldr	r2, .L51
+ 1097 0156 1B01     		lsls	r3, r3, #4
+ 1098 0158 1344     		add	r3, r3, r2
+ 1099 015a 1B68     		ldr	r3, [r3]
+ 1100 015c 0021     		movs	r1, #0
+ 1101 015e 1846     		mov	r0, r3
+ 1102 0160 FFF7FEFF 		bl	can_set_irq_line
+ 371:libraries/zf_driver/zf_driver_can.c ****             can_set_irq_mask    (can_obj_list[can_index].can_ptr, CAN_IRQ_ALL_ENABLED);            
+ 1103              		.loc 1 371 13
+ 1104 0164 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1105 0168 504A     		ldr	r2, .L51
+ 1106 016a 1B01     		lsls	r3, r3, #4
+ 1107 016c 1344     		add	r3, r3, r2
+ 1108 016e 1B68     		ldr	r3, [r3]
+ 1109 0170 40F6EE21 		movw	r1, #2798
+ 1110 0174 1846     		mov	r0, r3
+ 1111 0176 FFF7FEFF 		bl	can_set_irq_mask
+ 372:libraries/zf_driver/zf_driver_can.c ****             can_set_loopback    (can_obj_list[can_index].can_ptr, CAN_NO_LOOPBACK);                
+ 1112              		.loc 1 372 13
+ 1113 017a 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1114 017e 4B4A     		ldr	r2, .L51
+ 1115 0180 1B01     		lsls	r3, r3, #4
+ 1116 0182 1344     		add	r3, r3, r2
+ 1117 0184 1B68     		ldr	r3, [r3]
+ 1118 0186 0021     		movs	r1, #0
+ 1119 0188 1846     		mov	r0, r3
+ 1120 018a FFF7FEFF 		bl	can_set_loopback
+ 373:libraries/zf_driver/zf_driver_can.c **** 
+ 374:libraries/zf_driver/zf_driver_can.c ****             can_set_fd_mode     (can_obj_list[can_index].can_ptr, false);                          
+ 1121              		.loc 1 374 13
+ 1122 018e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1123 0192 464A     		ldr	r2, .L51
+ 1124 0194 1B01     		lsls	r3, r3, #4
+ 1125 0196 1344     		add	r3, r3, r2
+ 1126 0198 1B68     		ldr	r3, [r3]
+ 1127 019a 0021     		movs	r1, #0
+ 1128 019c 1846     		mov	r0, r3
+ 1129 019e FFF7FEFF 		bl	can_set_fd_mode
+ 375:libraries/zf_driver/zf_driver_can.c ****             can_set_datasize    (can_obj_list[can_index].can_ptr, CAN_DATASIZE_8BYTE);             
+ 1130              		.loc 1 375 13
+ 1131 01a2 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1132 01a6 414A     		ldr	r2, .L51
+ 1133 01a8 1B01     		lsls	r3, r3, #4
+ 1134 01aa 1344     		add	r3, r3, r2
+ 1135 01ac 1B68     		ldr	r3, [r3]
+ 1136 01ae 0821     		movs	r1, #8
+ 1137 01b0 1846     		mov	r0, r3
+ 1138 01b2 FFF7FEFF 		bl	can_set_datasize
+ 376:libraries/zf_driver/zf_driver_can.c ****             can_set_baudrate    (can_obj_list[can_index].can_ptr, (can_baudrate_t)bps);            
+ 1139              		.loc 1 376 13
+ 1140 01b6 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1141 01ba 3C4A     		ldr	r2, .L51
+ 1142 01bc 1B01     		lsls	r3, r3, #4
+ 1143 01be 1344     		add	r3, r3, r2
+ 1144 01c0 1B68     		ldr	r3, [r3]
+ 1145 01c2 0499     		ldr	r1, [sp, #16]
+ 1146 01c4 1846     		mov	r0, r3
+ 1147 01c6 FFF7FEFF 		bl	can_set_baudrate
+ 377:libraries/zf_driver/zf_driver_can.c ****             can_set_dmu_mode    (can_obj_list[can_index].can_ptr, false);                          
+ 1148              		.loc 1 377 13
+ 1149 01ca 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1150 01ce 374A     		ldr	r2, .L51
+ 1151 01d0 1B01     		lsls	r3, r3, #4
+ 1152 01d2 1344     		add	r3, r3, r2
+ 1153 01d4 1B68     		ldr	r3, [r3]
+ 1154 01d6 0021     		movs	r1, #0
+ 1155 01d8 1846     		mov	r0, r3
+ 1156 01da FFF7FEFF 		bl	can_set_dmu_mode
+ 1157              	.LBB5:
+ 378:libraries/zf_driver/zf_driver_can.c **** 
+ 379:libraries/zf_driver/zf_driver_can.c ****             for( uint32_t id = 0; id <  CAN_DEFAULT_FILTER_ID_RANGE && id < 128; id ++)
+ 1158              		.loc 1 379 27
+ 1159 01de 0023     		movs	r3, #0
+ 1160 01e0 0693     		str	r3, [sp, #24]
+ 1161              		.loc 1 379 13
+ 1162 01e2 13E0     		b	.L47
+ 1163              	.L49:
+ 380:libraries/zf_driver/zf_driver_can.c ****             {
+ 381:libraries/zf_driver/zf_driver_can.c ****                 can_set_filter  (can_obj_list[can_index].can_ptr, id + CAN_DEFAULT_FILTER_ID, 0,   
+ 1164              		.loc 1 381 17 discriminator 4
+ 1165 01e4 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1166 01e8 304A     		ldr	r2, .L51
+ 1167 01ea 1B01     		lsls	r3, r3, #4
+ 1168 01ec 1344     		add	r3, r3, r2
+ 1169 01ee 1868     		ldr	r0, [r3]
+ 1170 01f0 069B     		ldr	r3, [sp, #24]
+ 1171 01f2 03F5F061 		add	r1, r3, #1920
+ 1172 01f6 0723     		movs	r3, #7
+ 1173 01f8 0193     		str	r3, [sp, #4]
+ 1174 01fa 0223     		movs	r3, #2
+ 1175 01fc 0093     		str	r3, [sp]
+ 1176 01fe 0023     		movs	r3, #0
+ 1177 0200 0022     		movs	r2, #0
+ 1178 0202 FFF7FEFF 		bl	can_set_filter
+ 379:libraries/zf_driver/zf_driver_can.c ****             {
+ 1179              		.loc 1 379 85 discriminator 4
+ 1180 0206 069B     		ldr	r3, [sp, #24]
+ 1181 0208 0133     		adds	r3, r3, #1
+ 1182 020a 0693     		str	r3, [sp, #24]
+ 1183              	.L47:
+ 379:libraries/zf_driver/zf_driver_can.c ****             {
+ 1184              		.loc 1 379 13 discriminator 1
+ 1185 020c 069B     		ldr	r3, [sp, #24]
+ 1186 020e 7E2B     		cmp	r3, #126
+ 1187 0210 02D8     		bhi	.L48
+ 379:libraries/zf_driver/zf_driver_can.c ****             {
+ 1188              		.loc 1 379 69 discriminator 3
+ 1189 0212 069B     		ldr	r3, [sp, #24]
+ 1190 0214 7F2B     		cmp	r3, #127
+ 1191 0216 E5D9     		bls	.L49
+ 1192              	.L48:
+ 1193              	.LBE5:
+ 382:libraries/zf_driver/zf_driver_can.c ****                                      CAN_STD_FILTER_TYPE,
+ 383:libraries/zf_driver/zf_driver_can.c ****                                      CAN_FILTER_CLASSIC,
+ 384:libraries/zf_driver/zf_driver_can.c ****                                      CAN_FEC_RX_BUF);
+ 385:libraries/zf_driver/zf_driver_can.c ****             }
+ 386:libraries/zf_driver/zf_driver_can.c **** 
+ 387:libraries/zf_driver/zf_driver_can.c ****             can_set_buffers         (can_obj_list[can_index].can_ptr, 8, 8, 1, 1, 1);              
+ 1194              		.loc 1 387 13
+ 1195 0218 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1196 021c 234A     		ldr	r2, .L51
+ 1197 021e 1B01     		lsls	r3, r3, #4
+ 1198 0220 1344     		add	r3, r3, r2
+ 1199 0222 1868     		ldr	r0, [r3]
+ 1200 0224 0123     		movs	r3, #1
+ 1201 0226 0193     		str	r3, [sp, #4]
+ 1202 0228 0123     		movs	r3, #1
+ 1203 022a 0093     		str	r3, [sp]
+ 1204 022c 0123     		movs	r3, #1
+ 1205 022e 0822     		movs	r2, #8
+ 1206 0230 0821     		movs	r1, #8
+ 1207 0232 FFF7FEFF 		bl	can_set_buffers
+ 388:libraries/zf_driver/zf_driver_can.c **** 
+ 389:libraries/zf_driver/zf_driver_can.c ****             can_set_rx_polling_mode (can_obj_list[can_index].can_ptr, false);                      
+ 1208              		.loc 1 389 13
+ 1209 0236 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1210 023a 1C4A     		ldr	r2, .L51
+ 1211 023c 1B01     		lsls	r3, r3, #4
+ 1212 023e 1344     		add	r3, r3, r2
+ 1213 0240 1B68     		ldr	r3, [r3]
+ 1214 0242 0021     		movs	r1, #0
+ 1215 0244 1846     		mov	r0, r3
+ 1216 0246 FFF7FEFF 		bl	can_set_rx_polling_mode
+ 390:libraries/zf_driver/zf_driver_can.c ****             can_set_tx_mode         (can_obj_list[can_index].can_ptr, CAN_TX_MODE_DEDICATED_BUFF); 
+ 1217              		.loc 1 390 13
+ 1218 024a 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1219 024e 174A     		ldr	r2, .L51
+ 1220 0250 1B01     		lsls	r3, r3, #4
+ 1221 0252 1344     		add	r3, r3, r2
+ 1222 0254 1B68     		ldr	r3, [r3]
+ 1223 0256 0021     		movs	r1, #0
+ 1224 0258 1846     		mov	r0, r3
+ 1225 025a FFF7FEFF 		bl	can_set_tx_mode
+ 391:libraries/zf_driver/zf_driver_can.c **** 
+ 392:libraries/zf_driver/zf_driver_can.c ****             can_set_prio            (can_obj_list[can_index].can_ptr, IRQ_PRIORITY_4);
+ 1226              		.loc 1 392 13
+ 1227 025e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1228 0262 124A     		ldr	r2, .L51
+ 1229 0264 1B01     		lsls	r3, r3, #4
+ 1230 0266 1344     		add	r3, r3, r2
+ 1231 0268 1B68     		ldr	r3, [r3]
+ 1232 026a 0421     		movs	r1, #4
+ 1233 026c 1846     		mov	r0, r3
+ 1234 026e FFF7FEFF 		bl	can_set_prio
+ 393:libraries/zf_driver/zf_driver_can.c ****             can_set_cb              (can_obj_list[can_index].can_ptr, can_receive_cb);             
+ 1235              		.loc 1 393 13
+ 1236 0272 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1237 0276 0D4A     		ldr	r2, .L51
+ 1238 0278 1B01     		lsls	r3, r3, #4
+ 1239 027a 1344     		add	r3, r3, r2
+ 1240 027c 1B68     		ldr	r3, [r3]
+ 1241 027e 0E49     		ldr	r1, .L51+12
+ 1242 0280 1846     		mov	r0, r3
+ 1243 0282 FFF7FEFF 		bl	can_set_cb
+ 394:libraries/zf_driver/zf_driver_can.c **** 
+ 395:libraries/zf_driver/zf_driver_can.c ****             can_start(can_obj_list[can_index].can_ptr);                                            
+ 1244              		.loc 1 395 13
+ 1245 0286 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 1246 028a 084A     		ldr	r2, .L51
+ 1247 028c 1B01     		lsls	r3, r3, #4
+ 1248 028e 1344     		add	r3, r3, r2
+ 1249 0290 1B68     		ldr	r3, [r3]
+ 1250 0292 1846     		mov	r0, r3
+ 1251 0294 FFF7FEFF 		bl	can_start
+ 396:libraries/zf_driver/zf_driver_can.c ****         }
+ 397:libraries/zf_driver/zf_driver_can.c **** 
+ 398:libraries/zf_driver/zf_driver_can.c ****         return_state = CAN_OPERATION_DONE;
+ 1252              		.loc 1 398 22
+ 1253 0298 0023     		movs	r3, #0
+ 1254 029a 8DF81F30 		strb	r3, [sp, #31]
+ 1255              	.L44:
+ 399:libraries/zf_driver/zf_driver_can.c ****     }while(0);
+ 400:libraries/zf_driver/zf_driver_can.c **** 
+ 401:libraries/zf_driver/zf_driver_can.c ****     return return_state;
+ 1256              		.loc 1 401 12
+ 1257 029e 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 402:libraries/zf_driver/zf_driver_can.c **** }
+ 1258              		.loc 1 402 1
+ 1259 02a2 1846     		mov	r0, r3
+ 1260 02a4 09B0     		add	sp, sp, #36
+ 1261              		.cfi_def_cfa_offset 4
+ 1262              		@ sp needed
+ 1263 02a6 5DF804FB 		ldr	pc, [sp], #4
+ 1264              	.L52:
+ 1265 02aa 00BF     		.align	2
+ 1266              	.L51:
+ 1267 02ac 00000000 		.word	can_obj_list
+ 1268 02b0 00000000 		.word	.LC0
+ 1269 02b4 00000000 		.word	can_rcc_index_list
+ 1270 02b8 00000000 		.word	can_receive_cb
+ 1271              		.cfi_endproc
+ 1272              	.LFE488:
+ 1274              		.text
+ 1275              	.Letext0:
+ 1276              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1277              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1278              		.file 4 "libraries/zf_common/zf_common_typedef.h"
+ 1279              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 1280              		.file 6 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_DMA.
+ 1281              		.file 7 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_DMAM
+ 1282              		.file 8 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_FDCA
+ 1283              		.file 9 "libraries/zf_driver/zf_driver_interrupt.h"
+ 1284              		.file 10 "libraries/zf_driver/zf_driver_rcc.h"
+ 1285              		.file 11 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Comms/CAN/include/can.h"
+ 1286              		.file 12 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Comms/CAN/include/can_privat
+ 1287              		.file 13 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Comms/CAN/include/sr5e1/can_
+ 1288              		.file 14 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/DMA/include/dma.h"
+ 1289              		.file 15 "libraries/zf_driver/zf_driver_gpio.h"
+ 1290              		.file 16 "libraries/zf_driver/zf_driver_can.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_can.c
+D:\Users\TMP\cclpFniI.s:23     .data.can_obj_list:00000000 can_obj_list
+D:\Users\TMP\cclpFniI.s:20     .data.can_obj_list:00000000 $d
+D:\Users\TMP\cclpFniI.s:49     .data.can_message_buffer:00000000 can_message_buffer
+D:\Users\TMP\cclpFniI.s:46     .data.can_message_buffer:00000000 $d
+D:\Users\TMP\cclpFniI.s:59     .rodata.can_irq_index_list:00000000 $d
+D:\Users\TMP\cclpFniI.s:62     .rodata.can_irq_index_list:00000000 can_irq_index_list
+D:\Users\TMP\cclpFniI.s:68     .rodata.can_rcc_index_list:00000000 $d
+D:\Users\TMP\cclpFniI.s:71     .rodata.can_rcc_index_list:00000000 can_rcc_index_list
+D:\Users\TMP\cclpFniI.s:77     .text.can_receive_cb:00000000 $t
+D:\Users\TMP\cclpFniI.s:83     .text.can_receive_cb:00000000 can_receive_cb
+D:\Users\TMP\cclpFniI.s:273    .text.can_receive_cb:00000140 $d
+D:\Users\TMP\cclpFniI.s:279    .text.zf_can_assert_handler:00000000 $t
+D:\Users\TMP\cclpFniI.s:286    .text.zf_can_assert_handler:00000000 zf_can_assert_handler
+D:\Users\TMP\cclpFniI.s:315    .rodata:00000000 $d
+D:\Users\TMP\cclpFniI.s:319    .text.zf_can_write_frame:00000000 $t
+D:\Users\TMP\cclpFniI.s:326    .text.zf_can_write_frame:00000000 zf_can_write_frame
+D:\Users\TMP\cclpFniI.s:468    .text.zf_can_write_frame:000000e4 $d
+D:\Users\TMP\cclpFniI.s:474    .text.zf_can_read_frame:00000000 $t
+D:\Users\TMP\cclpFniI.s:481    .text.zf_can_read_frame:00000000 zf_can_read_frame
+D:\Users\TMP\cclpFniI.s:621    .text.zf_can_read_frame:000000d8 $d
+D:\Users\TMP\cclpFniI.s:629    .text.zf_can_query_frame:00000000 $t
+D:\Users\TMP\cclpFniI.s:636    .text.zf_can_query_frame:00000000 zf_can_query_frame
+D:\Users\TMP\cclpFniI.s:751    .text.zf_can_query_frame:000000bc $d
+D:\Users\TMP\cclpFniI.s:758    .text.zf_can_deinit:00000000 $t
+D:\Users\TMP\cclpFniI.s:765    .text.zf_can_deinit:00000000 zf_can_deinit
+D:\Users\TMP\cclpFniI.s:892    .text.zf_can_deinit:000000e8 $d
+D:\Users\TMP\cclpFniI.s:900    .text.zf_can_init:00000000 $t
+D:\Users\TMP\cclpFniI.s:907    .text.zf_can_init:00000000 zf_can_init
+D:\Users\TMP\cclpFniI.s:1267   .text.zf_can_init:000002ac $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.zf_common_fifo.h.33.e14e643902e26e4e65437b5b20e82793
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.can.h.25.3cfccb6c630ada4f656cab597e231e58
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_can.h.67.fd10d2fa867eb54a54d4b57027d73a60
+
+UNDEFINED SYMBOLS
+DRV_CAN1
+DRV_CAN2
+DRV_CAN3
+DRV_CAN4
+debug_message_handler
+can_transmit
+memcpy
+zf_gpio_deinit
+zf_rcc_peripheral_reset
+zf_rcc_clock_disable
+zf_interrupt_disable
+zf_rcc_clock_enable
+zf_afio_init
+can_init
+can_set_irq_line
+can_set_irq_mask
+can_set_loopback
+can_set_fd_mode
+can_set_datasize
+can_set_baudrate
+can_set_dmu_mode
+can_set_filter
+can_set_buffers
+can_set_rx_polling_mode
+can_set_tx_mode
+can_set_prio
+can_set_cb
+can_start

@@ -1,0 +1,14 @@
+doxygen/doxygen_new_line_after_brief=true
+doxygen/doxygen_use_brief_tag=false
+doxygen/doxygen_use_javadoc_tags=true
+doxygen/doxygen_use_pre_tag=false
+doxygen/doxygen_use_structural_commands=false
+eclipse.preferences.version=1
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/PATH/delimiter=;
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/PATH/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/PATH/value=C\:\\StellarStudio-7.0\\eclipse\\..\\SDKS\\TOOLS-1.4.0\\HostTools\\CoreUtils\\bin;C\:\\StellarStudio-7.0\\eclipse\\..\\SDKS\\TOOLS-1.4.0\\HostTools\\AsmMcs\\bin;C\:\\StellarStudio-7.0\\eclipse\\..\\SDKS\\TOOLS-1.4.0\\Toolchain\\ARM\\MINGW64_NT\\10.3-2021.10\\bin;C\:/StellarStudio-7.0/eclipse/jre/bin/server;C\:/StellarStudio-7.0/eclipse/jre/bin;C\:\\WINDOWS\\system32;C\:\\WINDOWS;C\:\\WINDOWS\\System32\\Wbem;C\:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C\:\\WINDOWS\\System32\\OpenSSH\\;;%USERPROFILE%\\AppData\\Local\\Microsoft\\WindowsApps;C\:\\StellarStudio-7.0\\eclipse
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/STELLAR_SDK_TOOLCHAIN_PATH/delimiter=;
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/STELLAR_SDK_TOOLCHAIN_PATH/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/STELLAR_SDK_TOOLCHAIN_PATH/value=C\:\\StellarStudio-7.0\\eclipse\\..\\SDKS\\TOOLS-1.4.0\\Toolchain\\ARM\\MINGW64_NT\\10.3-2021.10\\bin
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/append=true
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1569977912/appendContributed=true

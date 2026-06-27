@@ -1,0 +1,2032 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_common_debug.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.bss.debug_output_obj,"aw",%nobits
+  19              		.align	2
+  22              	debug_output_obj:
+  23 0000 00000000 		.space	20
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  24              		.section	.bss.debug_uart_buffer,"aw",%nobits
+  25              		.align	2
+  28              	debug_uart_buffer:
+  29 0000 00000000 		.space	64
+  29      00000000 
+  29      00000000 
+  29      00000000 
+  29      00000000 
+  30              		.section	.data.debug_uart_fifo,"aw"
+  31              		.align	2
+  34              	debug_uart_fifo:
+  35 0000 00000000 		.word	0
+  36 0004 00000000 		.word	0
+  37 0008 00000000 		.word	0
+  38 000c 00000000 		.word	0
+  39 0010 01       		.byte	1
+  40 0011 00       		.byte	0
+  41 0012 0000     		.space	2
+  42              		.section	.text._write,"ax",%progbits
+  43              		.align	1
+  44              		.p2align 4,,15
+  45              		.global	_write
+  46              		.syntax unified
+  47              		.thumb
+  48              		.thumb_func
+  50              	_write:
+  51              	.LFB3:
+  52              		.file 1 "libraries/zf_common/zf_common_debug.c"
+   1:libraries/zf_common/zf_common_debug.c **** /**************************************************************************************************
+   2:libraries/zf_common/zf_common_debug.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_common/zf_common_debug.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_common/zf_common_debug.c **** *
+   5:libraries/zf_common/zf_common_debug.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_common/zf_common_debug.c **** *
+   7:libraries/zf_common/zf_common_debug.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_common/zf_common_debug.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_common/zf_common_debug.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_common/zf_common_debug.c **** *
+  11:libraries/zf_common/zf_common_debug.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_common/zf_common_debug.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_common/zf_common_debug.c **** * 更多细节请参见 GPL
+  14:libraries/zf_common/zf_common_debug.c **** *
+  15:libraries/zf_common/zf_common_debug.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_common/zf_common_debug.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_common/zf_common_debug.c **** *
+  18:libraries/zf_common/zf_common_debug.c **** * 额外注明：
+  19:libraries/zf_common/zf_common_debug.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_common/zf_common_debug.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_common/zf_common_debug.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_common/zf_common_debug.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_common/zf_common_debug.c **** *
+  24:libraries/zf_common/zf_common_debug.c **** * 文件名称          zf_common_debug
+  25:libraries/zf_common/zf_common_debug.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_common/zf_common_debug.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_common/zf_common_debug.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_common/zf_common_debug.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_common/zf_common_debug.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_common/zf_common_debug.c **** ***************************************************************************************************
+  31:libraries/zf_common/zf_common_debug.c **** 
+  32:libraries/zf_common/zf_common_debug.c **** // zf_common 层引用
+  33:libraries/zf_common/zf_common_debug.c **** #include "zf_common_fifo.h"
+  34:libraries/zf_common/zf_common_debug.c **** #include "zf_common_memory.h"
+  35:libraries/zf_common/zf_common_debug.c **** 
+  36:libraries/zf_common/zf_common_debug.c **** // 自身头文件
+  37:libraries/zf_common/zf_common_debug.c **** #include "zf_common_debug.h"
+  38:libraries/zf_common/zf_common_debug.c **** 
+  39:libraries/zf_common/zf_common_debug.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  40:libraries/zf_common/zf_common_debug.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  41:libraries/zf_common/zf_common_debug.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  42:libraries/zf_common/zf_common_debug.c **** AT_ZF_LIB_SECTION_START
+  43:libraries/zf_common/zf_common_debug.c **** AT_ZF_LIB_SECTION static debug_obj_struct    debug_output_obj =
+  44:libraries/zf_common/zf_common_debug.c **** {
+  45:libraries/zf_common/zf_common_debug.c ****     .type_index             = DEBUG_OBJ_TYPE_NULL,
+  46:libraries/zf_common/zf_common_debug.c ****     .display_x_max          = 0,
+  47:libraries/zf_common/zf_common_debug.c ****     .display_y_max          = 0,
+  48:libraries/zf_common/zf_common_debug.c ****     .font_x_size            = 0,
+  49:libraries/zf_common/zf_common_debug.c ****     .font_y_size            = 0,
+  50:libraries/zf_common/zf_common_debug.c ****     .device_obj             = NULL,
+  51:libraries/zf_common/zf_common_debug.c ****     .output_uart            = NULL,
+  52:libraries/zf_common/zf_common_debug.c ****     .output_screen_clear    = NULL
+  53:libraries/zf_common/zf_common_debug.c **** };
+  54:libraries/zf_common/zf_common_debug.c **** 
+  55:libraries/zf_common/zf_common_debug.c **** #if DEBUG_UART_USE_INTERRUPT                                                    // 如果启用 deb
+  56:libraries/zf_common/zf_common_debug.c **** AT_ZF_LIB_SECTION static uint8               debug_uart_buffer[DEBUG_RING_BUFFER_LEN] = {0};
+  57:libraries/zf_common/zf_common_debug.c **** AT_ZF_LIB_SECTION static zf_fifo_obj_struct  debug_uart_fifo =
+  58:libraries/zf_common/zf_common_debug.c **** {
+  59:libraries/zf_common/zf_common_debug.c ****     .base_ptr       = 0,
+  60:libraries/zf_common/zf_common_debug.c ****     .tail_ptr       = 0,
+  61:libraries/zf_common/zf_common_debug.c ****     .write_ptr      = 0,
+  62:libraries/zf_common/zf_common_debug.c ****     .read_ptr       = 0,
+  63:libraries/zf_common/zf_common_debug.c ****     .step           = FIFO_DATA_8BIT,
+  64:libraries/zf_common/zf_common_debug.c ****     .state          = 0
+  65:libraries/zf_common/zf_common_debug.c **** };
+  66:libraries/zf_common/zf_common_debug.c **** #endif
+  67:libraries/zf_common/zf_common_debug.c **** AT_ZF_LIB_SECTION_END
+  68:libraries/zf_common/zf_common_debug.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  69:libraries/zf_common/zf_common_debug.c **** 
+  70:libraries/zf_common/zf_common_debug.c **** // 此处定义 本文件的外部重载函数 这里不允许用户修改
+  71:libraries/zf_common/zf_common_debug.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  72:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+  73:libraries/zf_common/zf_common_debug.c **** // 函数简介     重定向 printf 到串口
+  74:libraries/zf_common/zf_common_debug.c **** // 参数说明     size                需要打印的长度
+  75:libraries/zf_common/zf_common_debug.c **** // 参数说明     buf                 数据流
+  76:libraries/zf_common/zf_common_debug.c **** // 返回参数     int                 输出的数据数量
+  77:libraries/zf_common/zf_common_debug.c **** // 备注信息     此函数由编译器自带库里的printf所调用
+  78:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+  79:libraries/zf_common/zf_common_debug.c **** int _write(int fd, uint8_t *buf, int size)
+  80:libraries/zf_common/zf_common_debug.c **** {
+  53              		.loc 1 80 1
+  54              		.cfi_startproc
+  55              		@ args = 0, pretend = 0, frame = 16
+  56              		@ frame_needed = 0, uses_anonymous_args = 0
+  57 0000 00B5     		push	{lr}
+  58              		.cfi_def_cfa_offset 4
+  59              		.cfi_offset 14, -4
+  60 0002 85B0     		sub	sp, sp, #20
+  61              		.cfi_def_cfa_offset 24
+  62 0004 0390     		str	r0, [sp, #12]
+  63 0006 0291     		str	r1, [sp, #8]
+  64 0008 0192     		str	r2, [sp, #4]
+  81:libraries/zf_common/zf_common_debug.c ****     (void)fd;
+  82:libraries/zf_common/zf_common_debug.c ****     debug_uart_transfer_handler(buf, size, NULL, 0);
+  65              		.loc 1 82 5
+  66 000a 0199     		ldr	r1, [sp, #4]
+  67 000c 0023     		movs	r3, #0
+  68 000e 0022     		movs	r2, #0
+  69 0010 0298     		ldr	r0, [sp, #8]
+  70 0012 FFF7FEFF 		bl	debug_uart_transfer_handler
+  83:libraries/zf_common/zf_common_debug.c ****     return size;
+  71              		.loc 1 83 12
+  72 0016 019B     		ldr	r3, [sp, #4]
+  84:libraries/zf_common/zf_common_debug.c **** }
+  73              		.loc 1 84 1
+  74 0018 1846     		mov	r0, r3
+  75 001a 05B0     		add	sp, sp, #20
+  76              		.cfi_def_cfa_offset 4
+  77              		@ sp needed
+  78 001c 5DF804FB 		ldr	pc, [sp], #4
+  79              		.cfi_endproc
+  80              	.LFE3:
+  82              		.section	.data.heap_base.1,"aw"
+  83              		.align	2
+  86              	heap_base.1:
+  87 0000 00000000 		.word	__heap_base__
+  88              		.section	.text._sbrk,"ax",%progbits
+  89              		.align	1
+  90              		.p2align 4,,15
+  91              		.global	_sbrk
+  92              		.syntax unified
+  93              		.thumb
+  94              		.thumb_func
+  96              	_sbrk:
+  97              	.LFB4:
+  85:libraries/zf_common/zf_common_debug.c **** 
+  86:libraries/zf_common/zf_common_debug.c **** #if !defined(__ICCARM__)
+  87:libraries/zf_common/zf_common_debug.c **** 
+  88:libraries/zf_common/zf_common_debug.c **** #include <stdio.h>
+  89:libraries/zf_common/zf_common_debug.c **** #include <errno.h>
+  90:libraries/zf_common/zf_common_debug.c **** #include <stdint.h>
+  91:libraries/zf_common/zf_common_debug.c **** 
+  92:libraries/zf_common/zf_common_debug.c **** void *_sbrk (intptr_t increment)
+  93:libraries/zf_common/zf_common_debug.c **** {
+  98              		.loc 1 93 1
+  99              		.cfi_startproc
+ 100              		@ args = 0, pretend = 0, frame = 16
+ 101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 102 0000 00B5     		push	{lr}
+ 103              		.cfi_def_cfa_offset 4
+ 104              		.cfi_offset 14, -4
+ 105 0002 85B0     		sub	sp, sp, #20
+ 106              		.cfi_def_cfa_offset 24
+ 107 0004 0190     		str	r0, [sp, #4]
+  94:libraries/zf_common/zf_common_debug.c ****     extern uint8_t __heap_base__;
+  95:libraries/zf_common/zf_common_debug.c ****     extern uint8_t __heap_end__;
+  96:libraries/zf_common/zf_common_debug.c **** 
+  97:libraries/zf_common/zf_common_debug.c ****     static uint8_t *heap_base = &__heap_base__;
+  98:libraries/zf_common/zf_common_debug.c ****     uint8_t *prev_head_base;
+  99:libraries/zf_common/zf_common_debug.c **** 
+ 100:libraries/zf_common/zf_common_debug.c ****     prev_head_base = heap_base;
+ 108              		.loc 1 100 20
+ 109 0006 0E4B     		ldr	r3, .L6
+ 110 0008 1B68     		ldr	r3, [r3]
+ 111 000a 0393     		str	r3, [sp, #12]
+ 101:libraries/zf_common/zf_common_debug.c ****     if ((heap_base + increment) > (uint8_t*) &__heap_end__)
+ 112              		.loc 1 101 20
+ 113 000c 0C4B     		ldr	r3, .L6
+ 114 000e 1A68     		ldr	r2, [r3]
+ 115 0010 019B     		ldr	r3, [sp, #4]
+ 116 0012 1344     		add	r3, r3, r2
+ 117              		.loc 1 101 8
+ 118 0014 0B4A     		ldr	r2, .L6+4
+ 119 0016 9342     		cmp	r3, r2
+ 120 0018 07D9     		bls	.L4
+ 102:libraries/zf_common/zf_common_debug.c ****     {
+ 103:libraries/zf_common/zf_common_debug.c ****         errno = ENOMEM;
+ 121              		.loc 1 103 9
+ 122 001a FFF7FEFF 		bl	__errno
+ 123 001e 0346     		mov	r3, r0
+ 124              		.loc 1 103 15
+ 125 0020 0C22     		movs	r2, #12
+ 126 0022 1A60     		str	r2, [r3]
+ 104:libraries/zf_common/zf_common_debug.c ****         return (void *) -1;
+ 127              		.loc 1 104 16
+ 128 0024 4FF0FF33 		mov	r3, #-1
+ 129 0028 06E0     		b	.L5
+ 130              	.L4:
+ 105:libraries/zf_common/zf_common_debug.c ****     }
+ 106:libraries/zf_common/zf_common_debug.c ****     heap_base += increment;
+ 131              		.loc 1 106 15
+ 132 002a 054B     		ldr	r3, .L6
+ 133 002c 1A68     		ldr	r2, [r3]
+ 134 002e 019B     		ldr	r3, [sp, #4]
+ 135 0030 1344     		add	r3, r3, r2
+ 136 0032 034A     		ldr	r2, .L6
+ 137 0034 1360     		str	r3, [r2]
+ 107:libraries/zf_common/zf_common_debug.c **** 
+ 108:libraries/zf_common/zf_common_debug.c ****     return prev_head_base;
+ 138              		.loc 1 108 12
+ 139 0036 039B     		ldr	r3, [sp, #12]
+ 140              	.L5:
+ 109:libraries/zf_common/zf_common_debug.c **** }
+ 141              		.loc 1 109 1
+ 142 0038 1846     		mov	r0, r3
+ 143 003a 05B0     		add	sp, sp, #20
+ 144              		.cfi_def_cfa_offset 4
+ 145              		@ sp needed
+ 146 003c 5DF804FB 		ldr	pc, [sp], #4
+ 147              	.L7:
+ 148              		.align	2
+ 149              	.L6:
+ 150 0040 00000000 		.word	heap_base.1
+ 151 0044 00000000 		.word	__heap_end__
+ 152              		.cfi_endproc
+ 153              	.LFE4:
+ 155              		.section	.text.debug_pwm_protective_handler,"ax",%progbits
+ 156              		.align	1
+ 157              		.p2align 4,,15
+ 158              		.weak	debug_pwm_protective_handler
+ 159              		.syntax unified
+ 160              		.thumb
+ 161              		.thumb_func
+ 163              	debug_pwm_protective_handler:
+ 164              	.LFB5:
+ 110:libraries/zf_common/zf_common_debug.c **** #endif
+ 111:libraries/zf_common/zf_common_debug.c **** 
+ 112:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 113:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 保护处理 主要是防止断言后出现信号维持而导致硬件失
+ 114:libraries/zf_common/zf_common_debug.c **** // 参数说明     void
+ 115:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 116:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_pwm_protective_handler();
+ 117:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注
+ 118:libraries/zf_common/zf_common_debug.c **** //              本函数由底层在 zf_driver_pwm 中进行重载
+ 119:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 120:libraries/zf_common/zf_common_debug.c **** ZF_WEAK void debug_pwm_protective_handler (void)
+ 121:libraries/zf_common/zf_common_debug.c **** {
+ 165              		.loc 1 121 1
+ 166              		.cfi_startproc
+ 167              		@ args = 0, pretend = 0, frame = 0
+ 168              		@ frame_needed = 0, uses_anonymous_args = 0
+ 169              		@ link register save eliminated.
+ 122:libraries/zf_common/zf_common_debug.c **** }
+ 170              		.loc 1 122 1
+ 171 0000 00BF     		nop
+ 172 0002 7047     		bx	lr
+ 173              		.cfi_endproc
+ 174              	.LFE5:
+ 176              		.section	.text.debug_interrupt_protective_handler,"ax",%progbits
+ 177              		.align	1
+ 178              		.p2align 4,,15
+ 179              		.weak	debug_interrupt_protective_handler
+ 180              		.syntax unified
+ 181              		.thumb
+ 182              		.thumb_func
+ 184              	debug_interrupt_protective_handler:
+ 185              	.LFB6:
+ 123:libraries/zf_common/zf_common_debug.c **** 
+ 124:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 125:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 保护处理 主要是防止断言后出现依旧进行操作的现象
+ 126:libraries/zf_common/zf_common_debug.c **** // 参数说明     void
+ 127:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 128:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_interrupt_protective_handler();
+ 129:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注
+ 130:libraries/zf_common/zf_common_debug.c **** //              本函数由底层在 zf_driver_interrupt 中进行重载
+ 131:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 132:libraries/zf_common/zf_common_debug.c **** ZF_WEAK void debug_interrupt_protective_handler (void)
+ 133:libraries/zf_common/zf_common_debug.c **** {
+ 186              		.loc 1 133 1
+ 187              		.cfi_startproc
+ 188              		@ args = 0, pretend = 0, frame = 0
+ 189              		@ frame_needed = 0, uses_anonymous_args = 0
+ 190              		@ link register save eliminated.
+ 134:libraries/zf_common/zf_common_debug.c **** }
+ 191              		.loc 1 134 1
+ 192 0000 00BF     		nop
+ 193 0002 7047     		bx	lr
+ 194              		.cfi_endproc
+ 195              	.LFE6:
+ 197              		.section	.text.debug_uart_interrupr_handler,"ax",%progbits
+ 198              		.align	1
+ 199              		.p2align 4,,15
+ 200              		.weak	debug_uart_interrupr_handler
+ 201              		.syntax unified
+ 202              		.thumb
+ 203              		.thumb_func
+ 205              	debug_uart_interrupr_handler:
+ 206              	.LFB7:
+ 135:libraries/zf_common/zf_common_debug.c **** 
+ 136:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 137:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 串口中断处理函数 isr.c 中对应串口中断服务函数调用
+ 138:libraries/zf_common/zf_common_debug.c **** // 参数说明     event               中断事件
+ 139:libraries/zf_common/zf_common_debug.c **** // 参数说明     *ptr                默认传入是一个 fifo 对象
+ 140:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 141:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_interrupr_handler();
+ 142:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数需要开启 DEBUG_UART_USE_INTERRUPT 宏定义才可使用
+ 143:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 144:libraries/zf_common/zf_common_debug.c **** ZF_WEAK void debug_uart_interrupr_handler (uint32 event, void *ptr)
+ 145:libraries/zf_common/zf_common_debug.c **** {
+ 207              		.loc 1 145 1
+ 208              		.cfi_startproc
+ 209              		@ args = 0, pretend = 0, frame = 8
+ 210              		@ frame_needed = 0, uses_anonymous_args = 0
+ 211              		@ link register save eliminated.
+ 212 0000 82B0     		sub	sp, sp, #8
+ 213              		.cfi_def_cfa_offset 8
+ 214 0002 0190     		str	r0, [sp, #4]
+ 215 0004 0091     		str	r1, [sp]
+ 146:libraries/zf_common/zf_common_debug.c ****     (void)event;
+ 147:libraries/zf_common/zf_common_debug.c ****     (void)ptr;
+ 148:libraries/zf_common/zf_common_debug.c **** }
+ 216              		.loc 1 148 1
+ 217 0006 00BF     		nop
+ 218 0008 02B0     		add	sp, sp, #8
+ 219              		.cfi_def_cfa_offset 0
+ 220              		@ sp needed
+ 221 000a 7047     		bx	lr
+ 222              		.cfi_endproc
+ 223              	.LFE7:
+ 225              		.section	.text.debug_uart_str_output_handler,"ax",%progbits
+ 226              		.align	1
+ 227              		.p2align 4,,15
+ 228              		.weak	debug_uart_str_output_handler
+ 229              		.syntax unified
+ 230              		.thumb
+ 231              		.thumb_func
+ 233              	debug_uart_str_output_handler:
+ 234              	.LFB8:
+ 149:libraries/zf_common/zf_common_debug.c **** 
+ 150:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 151:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 串口字符输出接口
+ 152:libraries/zf_common/zf_common_debug.c **** // 参数说明     *str                需要输出的字符串
+ 153:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 154:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_uart_str_output_handler("Log message");
+ 155:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+ 156:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 157:libraries/zf_common/zf_common_debug.c **** ZF_WEAK void debug_uart_str_output_handler (const char *str)
+ 158:libraries/zf_common/zf_common_debug.c **** {
+ 235              		.loc 1 158 1
+ 236              		.cfi_startproc
+ 237              		@ args = 0, pretend = 0, frame = 8
+ 238              		@ frame_needed = 0, uses_anonymous_args = 0
+ 239              		@ link register save eliminated.
+ 240 0000 82B0     		sub	sp, sp, #8
+ 241              		.cfi_def_cfa_offset 8
+ 242 0002 0190     		str	r0, [sp, #4]
+ 159:libraries/zf_common/zf_common_debug.c ****     (void)str;
+ 160:libraries/zf_common/zf_common_debug.c **** }
+ 243              		.loc 1 160 1
+ 244 0004 00BF     		nop
+ 245 0006 02B0     		add	sp, sp, #8
+ 246              		.cfi_def_cfa_offset 0
+ 247              		@ sp needed
+ 248 0008 7047     		bx	lr
+ 249              		.cfi_endproc
+ 250              	.LFE8:
+ 252 000a 00BF     		.section	.text.debug_uart_write_buffer,"ax",%progbits
+ 253              		.align	1
+ 254              		.p2align 4,,15
+ 255              		.weak	debug_uart_write_buffer
+ 256              		.syntax unified
+ 257              		.thumb
+ 258              		.thumb_func
+ 260              	debug_uart_write_buffer:
+ 261              	.LFB9:
+ 161:libraries/zf_common/zf_common_debug.c **** 
+ 162:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 163:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 串口输出接口
+ 164:libraries/zf_common/zf_common_debug.c **** // 参数说明     *buff           数据地址
+ 165:libraries/zf_common/zf_common_debug.c **** // 参数说明     *length         长度
+ 166:libraries/zf_common/zf_common_debug.c **** // 返回参数     uint32          剩余未发送数据长度
+ 167:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+ 168:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 169:libraries/zf_common/zf_common_debug.c **** ZF_WEAK uint8 debug_uart_write_buffer (const uint8 *buff, uint32 *length)
+ 170:libraries/zf_common/zf_common_debug.c **** {
+ 262              		.loc 1 170 1
+ 263              		.cfi_startproc
+ 264              		@ args = 0, pretend = 0, frame = 8
+ 265              		@ frame_needed = 0, uses_anonymous_args = 0
+ 266              		@ link register save eliminated.
+ 267 0000 82B0     		sub	sp, sp, #8
+ 268              		.cfi_def_cfa_offset 8
+ 269 0002 0190     		str	r0, [sp, #4]
+ 270 0004 0091     		str	r1, [sp]
+ 171:libraries/zf_common/zf_common_debug.c ****     (void)buff;
+ 172:libraries/zf_common/zf_common_debug.c ****     (void)length;
+ 173:libraries/zf_common/zf_common_debug.c ****     // 当选择自定义通讯方式时 需要自行完成数据接收功能
+ 174:libraries/zf_common/zf_common_debug.c ****     return 0;
+ 271              		.loc 1 174 12
+ 272 0006 0023     		movs	r3, #0
+ 175:libraries/zf_common/zf_common_debug.c **** }
+ 273              		.loc 1 175 1
+ 274 0008 1846     		mov	r0, r3
+ 275 000a 02B0     		add	sp, sp, #8
+ 276              		.cfi_def_cfa_offset 0
+ 277              		@ sp needed
+ 278 000c 7047     		bx	lr
+ 279              		.cfi_endproc
+ 280              	.LFE9:
+ 282 000e 00BF     		.section	.text.debug_uart_read_buffer,"ax",%progbits
+ 283              		.align	1
+ 284              		.p2align 4,,15
+ 285              		.weak	debug_uart_read_buffer
+ 286              		.syntax unified
+ 287              		.thumb
+ 288              		.thumb_func
+ 290              	debug_uart_read_buffer:
+ 291              	.LFB10:
+ 176:libraries/zf_common/zf_common_debug.c **** 
+ 177:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 178:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 串口读取接口
+ 179:libraries/zf_common/zf_common_debug.c **** // 参数说明     *buff           数据地址
+ 180:libraries/zf_common/zf_common_debug.c **** // 参数说明     *length         长度
+ 181:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 182:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_uart_str_output_handler("Log message");
+ 183:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+ 184:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 185:libraries/zf_common/zf_common_debug.c **** ZF_WEAK uint8 debug_uart_read_buffer (uint8 *buff, uint32 *length)
+ 186:libraries/zf_common/zf_common_debug.c **** {
+ 292              		.loc 1 186 1
+ 293              		.cfi_startproc
+ 294              		@ args = 0, pretend = 0, frame = 8
+ 295              		@ frame_needed = 0, uses_anonymous_args = 0
+ 296              		@ link register save eliminated.
+ 297 0000 82B0     		sub	sp, sp, #8
+ 298              		.cfi_def_cfa_offset 8
+ 299 0002 0190     		str	r0, [sp, #4]
+ 300 0004 0091     		str	r1, [sp]
+ 187:libraries/zf_common/zf_common_debug.c ****     (void)buff;
+ 188:libraries/zf_common/zf_common_debug.c ****     (void)length;
+ 189:libraries/zf_common/zf_common_debug.c ****     // 当选择自定义通讯方式时 需要自行完成数据接收功能
+ 190:libraries/zf_common/zf_common_debug.c ****     return 0;
+ 301              		.loc 1 190 12
+ 302 0006 0023     		movs	r3, #0
+ 191:libraries/zf_common/zf_common_debug.c **** }
+ 303              		.loc 1 191 1
+ 304 0008 1846     		mov	r0, r3
+ 305 000a 02B0     		add	sp, sp, #8
+ 306              		.cfi_def_cfa_offset 0
+ 307              		@ sp needed
+ 308 000c 7047     		bx	lr
+ 309              		.cfi_endproc
+ 310              	.LFE10:
+ 312 000e 00BF     		.section	.text.debug_uart_transfer_handler,"ax",%progbits
+ 313              		.align	1
+ 314              		.p2align 4,,15
+ 315              		.weak	debug_uart_transfer_handler
+ 316              		.syntax unified
+ 317              		.thumb
+ 318              		.thumb_func
+ 320              	debug_uart_transfer_handler:
+ 321              	.LFB11:
+ 192:libraries/zf_common/zf_common_debug.c **** 
+ 193:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 194:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 串口传输接口
+ 195:libraries/zf_common/zf_common_debug.c **** // 参数说明     *out                输出数据缓冲区
+ 196:libraries/zf_common/zf_common_debug.c **** // 参数说明     out_len             输出长度
+ 197:libraries/zf_common/zf_common_debug.c **** // 参数说明     *in                 接收数据缓冲区
+ 198:libraries/zf_common/zf_common_debug.c **** // 参数说明     in_len              接收长度
+ 199:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 200:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_uart_transfer_handler(out, out_len, in, in_len);
+ 201:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+ 202:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 203:libraries/zf_common/zf_common_debug.c **** ZF_WEAK void debug_uart_transfer_handler (const uint8 *out, uint32 out_len, uint8 *in, uint32 in_le
+ 204:libraries/zf_common/zf_common_debug.c **** {
+ 322              		.loc 1 204 1
+ 323              		.cfi_startproc
+ 324              		@ args = 0, pretend = 0, frame = 16
+ 325              		@ frame_needed = 0, uses_anonymous_args = 0
+ 326              		@ link register save eliminated.
+ 327 0000 84B0     		sub	sp, sp, #16
+ 328              		.cfi_def_cfa_offset 16
+ 329 0002 0390     		str	r0, [sp, #12]
+ 330 0004 0291     		str	r1, [sp, #8]
+ 331 0006 0192     		str	r2, [sp, #4]
+ 332 0008 0093     		str	r3, [sp]
+ 205:libraries/zf_common/zf_common_debug.c ****     (void)out;
+ 206:libraries/zf_common/zf_common_debug.c ****     (void)out_len;
+ 207:libraries/zf_common/zf_common_debug.c ****     (void)in;
+ 208:libraries/zf_common/zf_common_debug.c ****     (void)in_len;
+ 209:libraries/zf_common/zf_common_debug.c **** }
+ 333              		.loc 1 209 1
+ 334 000a 00BF     		nop
+ 335 000c 04B0     		add	sp, sp, #16
+ 336              		.cfi_def_cfa_offset 0
+ 337              		@ sp needed
+ 338 000e 7047     		bx	lr
+ 339              		.cfi_endproc
+ 340              	.LFE11:
+ 342              		.section	.text.debug_uart_init_handler,"ax",%progbits
+ 343              		.align	1
+ 344              		.p2align 4,,15
+ 345              		.weak	debug_uart_init_handler
+ 346              		.syntax unified
+ 347              		.thumb
+ 348              		.thumb_func
+ 350              	debug_uart_init_handler:
+ 351              	.LFB12:
+ 210:libraries/zf_common/zf_common_debug.c **** 
+ 211:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 212:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 串口初始化操作
+ 213:libraries/zf_common/zf_common_debug.c **** // 参数说明     *obj                Debug 对象指针
+ 214:libraries/zf_common/zf_common_debug.c **** // 参数说明     callback            回调函数 为无返回值 uint32 加 void * 参数的函
+ 215:libraries/zf_common/zf_common_debug.c **** // 参数说明     *ptr                回调参数 用户自拟定的参数指针 不需要的话
+ 216:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 217:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_uart_init_handler(obj, callback, ptr);
+ 218:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+ 219:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 220:libraries/zf_common/zf_common_debug.c **** ZF_WEAK void debug_uart_init_handler (debug_obj_struct *obj, void_callback_uint32_ptr callback, voi
+ 221:libraries/zf_common/zf_common_debug.c **** {
+ 352              		.loc 1 221 1
+ 353              		.cfi_startproc
+ 354              		@ args = 0, pretend = 0, frame = 16
+ 355              		@ frame_needed = 0, uses_anonymous_args = 0
+ 356              		@ link register save eliminated.
+ 357 0000 84B0     		sub	sp, sp, #16
+ 358              		.cfi_def_cfa_offset 16
+ 359 0002 0390     		str	r0, [sp, #12]
+ 360 0004 0291     		str	r1, [sp, #8]
+ 361 0006 0192     		str	r2, [sp, #4]
+ 222:libraries/zf_common/zf_common_debug.c ****     (void)obj;
+ 223:libraries/zf_common/zf_common_debug.c ****     (void)callback;
+ 224:libraries/zf_common/zf_common_debug.c ****     (void)ptr;
+ 225:libraries/zf_common/zf_common_debug.c **** }
+ 362              		.loc 1 225 1
+ 363 0008 00BF     		nop
+ 364 000a 04B0     		add	sp, sp, #16
+ 365              		.cfi_def_cfa_offset 0
+ 366              		@ sp needed
+ 367 000c 7047     		bx	lr
+ 368              		.cfi_endproc
+ 369              	.LFE12:
+ 371 000e 00BF     		.section	.text.debug_delay,"ax",%progbits
+ 372              		.align	1
+ 373              		.p2align 4,,15
+ 374              		.syntax unified
+ 375              		.thumb
+ 376              		.thumb_func
+ 378              	debug_delay:
+ 379              	.LFB13:
+ 226:libraries/zf_common/zf_common_debug.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+ 227:libraries/zf_common/zf_common_debug.c **** 
+ 228:libraries/zf_common/zf_common_debug.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+ 229:libraries/zf_common/zf_common_debug.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ 230:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 231:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 软延时函数 各单片机需要根据各自时钟测试才能知道具
+ 232:libraries/zf_common/zf_common_debug.c **** // 参数说明     void
+ 233:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 234:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_delay();
+ 235:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+ 236:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 237:libraries/zf_common/zf_common_debug.c **** static void debug_delay (void)
+ 238:libraries/zf_common/zf_common_debug.c **** {
+ 380              		.loc 1 238 1
+ 381              		.cfi_startproc
+ 382              		@ args = 0, pretend = 0, frame = 8
+ 383              		@ frame_needed = 0, uses_anonymous_args = 0
+ 384              		@ link register save eliminated.
+ 385 0000 82B0     		sub	sp, sp, #8
+ 386              		.cfi_def_cfa_offset 8
+ 239:libraries/zf_common/zf_common_debug.c ****     vuint32 loop_1 = 0, loop_2 = 0;
+ 387              		.loc 1 239 13
+ 388 0002 0023     		movs	r3, #0
+ 389 0004 0193     		str	r3, [sp, #4]
+ 390              		.loc 1 239 25
+ 391 0006 0023     		movs	r3, #0
+ 392 0008 0093     		str	r3, [sp]
+ 240:libraries/zf_common/zf_common_debug.c ****     for(loop_1 = 0; 0xFF >= loop_1; loop_1 ++)
+ 393              		.loc 1 240 16
+ 394 000a 0023     		movs	r3, #0
+ 395 000c 0193     		str	r3, [sp, #4]
+ 396              		.loc 1 240 5
+ 397 000e 0CE0     		b	.L19
+ 398              	.L22:
+ 241:libraries/zf_common/zf_common_debug.c ****     {
+ 242:libraries/zf_common/zf_common_debug.c ****         for(loop_2 = 0; 0xFFFF >= loop_2; loop_2 ++)
+ 399              		.loc 1 242 20
+ 400 0010 0023     		movs	r3, #0
+ 401 0012 0093     		str	r3, [sp]
+ 402              		.loc 1 242 9
+ 403 0014 02E0     		b	.L20
+ 404              	.L21:
+ 405              		.loc 1 242 50 discriminator 3
+ 406 0016 009B     		ldr	r3, [sp]
+ 407 0018 0133     		adds	r3, r3, #1
+ 408 001a 0093     		str	r3, [sp]
+ 409              	.L20:
+ 410              		.loc 1 242 32 discriminator 1
+ 411 001c 009B     		ldr	r3, [sp]
+ 412              		.loc 1 242 9 discriminator 1
+ 413 001e B3F5803F 		cmp	r3, #65536
+ 414 0022 F8D3     		bcc	.L21
+ 240:libraries/zf_common/zf_common_debug.c ****     for(loop_1 = 0; 0xFF >= loop_1; loop_1 ++)
+ 415              		.loc 1 240 44 discriminator 2
+ 416 0024 019B     		ldr	r3, [sp, #4]
+ 417 0026 0133     		adds	r3, r3, #1
+ 418 0028 0193     		str	r3, [sp, #4]
+ 419              	.L19:
+ 240:libraries/zf_common/zf_common_debug.c ****     for(loop_1 = 0; 0xFF >= loop_1; loop_1 ++)
+ 420              		.loc 1 240 26 discriminator 1
+ 421 002a 019B     		ldr	r3, [sp, #4]
+ 240:libraries/zf_common/zf_common_debug.c ****     for(loop_1 = 0; 0xFF >= loop_1; loop_1 ++)
+ 422              		.loc 1 240 5 discriminator 1
+ 423 002c FF2B     		cmp	r3, #255
+ 424 002e EFD9     		bls	.L22
+ 243:libraries/zf_common/zf_common_debug.c ****         {
+ 244:libraries/zf_common/zf_common_debug.c ****         }
+ 245:libraries/zf_common/zf_common_debug.c ****     }
+ 246:libraries/zf_common/zf_common_debug.c **** }
+ 425              		.loc 1 246 1
+ 426 0030 00BF     		nop
+ 427 0032 00BF     		nop
+ 428 0034 02B0     		add	sp, sp, #8
+ 429              		.cfi_def_cfa_offset 0
+ 430              		@ sp needed
+ 431 0036 7047     		bx	lr
+ 432              		.cfi_endproc
+ 433              	.LFE13:
+ 435              		.section	.rodata
+ 436              		.align	2
+ 437              	.LC0:
+ 438 0000 66696C65 		.ascii	"file: %s\000"
+ 438      3A202573 
+ 438      00
+ 439 0009 000000   		.align	2
+ 440              	.LC1:
+ 441 000c 66696C65 		.ascii	"file: mdk/%s\000"
+ 441      3A206D64 
+ 441      6B2F2573 
+ 441      00
+ 442 0019 000000   		.align	2
+ 443              	.LC2:
+ 444 001c 6C696E65 		.ascii	"line: %d\000"
+ 444      3A202564 
+ 444      00
+ 445 0025 000000   		.align	2
+ 446              	.LC3:
+ 447 0028 0D0A6669 		.ascii	"\015\012file %s line %d: %s.\015\012\000"
+ 447      6C652025 
+ 447      73206C69 
+ 447      6E652025 
+ 447      643A2025 
+ 448 0041 000000   		.align	2
+ 449              	.LC4:
+ 450 0044 0D0A6669 		.ascii	"\015\012file %s line %d.\015\012\000"
+ 450      6C652025 
+ 450      73206C69 
+ 450      6E652025 
+ 450      642E0D0A 
+ 451              		.section	.text.debug_output,"ax",%progbits
+ 452              		.align	1
+ 453              		.p2align 4,,15
+ 454              		.syntax unified
+ 455              		.thumb
+ 456              		.thumb_func
+ 458              	debug_output:
+ 459              	.LFB14:
+ 247:libraries/zf_common/zf_common_debug.c **** 
+ 248:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 249:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 输出接口
+ 250:libraries/zf_common/zf_common_debug.c **** // 参数说明     *type               log 类型
+ 251:libraries/zf_common/zf_common_debug.c **** // 参数说明     *file               文件名
+ 252:libraries/zf_common/zf_common_debug.c **** // 参数说明     line                目标行数
+ 253:libraries/zf_common/zf_common_debug.c **** // 参数说明     *str                信息
+ 254:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 255:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_output("Log message", file, line, str);
+ 256:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+ 257:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 258:libraries/zf_common/zf_common_debug.c **** static void debug_output (char *type, char *file, int line, char *str)
+ 259:libraries/zf_common/zf_common_debug.c **** {
+ 460              		.loc 1 259 1
+ 461              		.cfi_startproc
+ 462              		@ args = 0, pretend = 0, frame = 352
+ 463              		@ frame_needed = 0, uses_anonymous_args = 0
+ 464 0000 10B5     		push	{r4, lr}
+ 465              		.cfi_def_cfa_offset 8
+ 466              		.cfi_offset 4, -8
+ 467              		.cfi_offset 14, -4
+ 468 0002 DAB0     		sub	sp, sp, #360
+ 469              		.cfi_def_cfa_offset 368
+ 470 0004 5AAC     		add	r4, sp, #360
+ 471 0006 A4F5AA74 		sub	r4, r4, #340
+ 472 000a 2060     		str	r0, [r4]
+ 473 000c 5AA8     		add	r0, sp, #360
+ 474 000e A0F5AC70 		sub	r0, r0, #344
+ 475 0012 0160     		str	r1, [r0]
+ 476 0014 5AA9     		add	r1, sp, #360
+ 477 0016 A1F5AE71 		sub	r1, r1, #348
+ 478 001a 0A60     		str	r2, [r1]
+ 479 001c 5AAA     		add	r2, sp, #360
+ 480 001e A2F5B072 		sub	r2, r2, #352
+ 481 0022 1360     		str	r3, [r2]
+ 260:libraries/zf_common/zf_common_debug.c ****     char    *file_str       = NULL          ;
+ 482              		.loc 1 260 14
+ 483 0024 0023     		movs	r3, #0
+ 484 0026 5993     		str	r3, [sp, #356]
+ 261:libraries/zf_common/zf_common_debug.c ****     vuint16 temp_counter_1  = 0             ;
+ 485              		.loc 1 261 13
+ 486 0028 0023     		movs	r3, #0
+ 487 002a ADF86231 		strh	r3, [sp, #354]	@ movhi
+ 262:libraries/zf_common/zf_common_debug.c ****     vuint16 temp_counter_2  = 0             ;
+ 488              		.loc 1 262 13
+ 489 002e 0023     		movs	r3, #0
+ 490 0030 ADF86031 		strh	r3, [sp, #352]	@ movhi
+ 263:libraries/zf_common/zf_common_debug.c ****     vint16  len_origin      = strlen(file)  ;
+ 491              		.loc 1 263 31
+ 492 0034 5AAB     		add	r3, sp, #360
+ 493 0036 A3F5AC73 		sub	r3, r3, #344
+ 494 003a 1868     		ldr	r0, [r3]
+ 495 003c FFF7FEFF 		bl	strlen
+ 496 0040 0346     		mov	r3, r0
+ 497              		.loc 1 263 13
+ 498 0042 1BB2     		sxth	r3, r3
+ 499 0044 ADF85E31 		strh	r3, [sp, #350]	@ movhi
+ 264:libraries/zf_common/zf_common_debug.c ****     vint16  show_len        = 0             ;
+ 500              		.loc 1 264 13
+ 501 0048 0023     		movs	r3, #0
+ 502 004a ADF85C31 		strh	r3, [sp, #348]	@ movhi
+ 265:libraries/zf_common/zf_common_debug.c ****     vint16  show_line_index = 0             ;
+ 503              		.loc 1 265 13
+ 504 004e 0023     		movs	r3, #0
+ 505 0050 ADF85A31 		strh	r3, [sp, #346]	@ movhi
+ 266:libraries/zf_common/zf_common_debug.c **** 
+ 267:libraries/zf_common/zf_common_debug.c ****     char    output_buffer[256]              ;
+ 268:libraries/zf_common/zf_common_debug.c ****     char    file_path_buffer[64]            ;
+ 269:libraries/zf_common/zf_common_debug.c **** 
+ 270:libraries/zf_common/zf_common_debug.c ****     if(DEBUG_OBJ_TYPE_SCREEN == debug_output_obj.type_index)
+ 506              		.loc 1 270 49
+ 507 0054 9D4B     		ldr	r3, .L52
+ 508 0056 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 509              		.loc 1 270 7
+ 510 0058 032B     		cmp	r3, #3
+ 511 005a 40F0C181 		bne	.L24
+ 271:libraries/zf_common/zf_common_debug.c ****     {
+ 272:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_screen_clear(debug_output_obj.device_obj);
+ 512              		.loc 1 272 25
+ 513 005e 9B4B     		ldr	r3, .L52
+ 514 0060 1B69     		ldr	r3, [r3, #16]
+ 515              		.loc 1 272 9
+ 516 0062 9A4A     		ldr	r2, .L52
+ 517 0064 9268     		ldr	r2, [r2, #8]
+ 518 0066 1046     		mov	r0, r2
+ 519 0068 9847     		blx	r3
+ 520              	.LVL0:
+ 273:libraries/zf_common/zf_common_debug.c **** 
+ 274:libraries/zf_common/zf_common_debug.c ****         // 需要分行将文件的路径和行数输出
+ 275:libraries/zf_common/zf_common_debug.c ****         // <不输出完整路径 只输出一级目录 例如 src/main.c>
+ 276:libraries/zf_common/zf_common_debug.c ****         // 输出 line : xxxx
+ 277:libraries/zf_common/zf_common_debug.c **** 
+ 278:libraries/zf_common/zf_common_debug.c ****         // 首先输出 Log 类型 预设为断言输出 "Assert error" 调试信息输出 "Log mes
+ 279:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_screen(debug_output_obj.device_obj, 0, show_line_index ++, type);
+ 521              		.loc 1 279 25
+ 522 006a 984B     		ldr	r3, .L52
+ 523 006c DC68     		ldr	r4, [r3, #12]
+ 524              		.loc 1 279 9
+ 525 006e 974B     		ldr	r3, .L52
+ 526 0070 9868     		ldr	r0, [r3, #8]
+ 527              		.loc 1 279 88
+ 528 0072 BDF85A31 		ldrh	r3, [sp, #346]	@ movhi
+ 529 0076 1AB2     		sxth	r2, r3
+ 530 0078 93B2     		uxth	r3, r2
+ 531 007a 0133     		adds	r3, r3, #1
+ 532 007c 9BB2     		uxth	r3, r3
+ 533 007e 1BB2     		sxth	r3, r3
+ 534 0080 ADF85A31 		strh	r3, [sp, #346]	@ movhi
+ 535              		.loc 1 279 9
+ 536 0084 92B2     		uxth	r2, r2
+ 537 0086 5AAB     		add	r3, sp, #360
+ 538 0088 A3F5AA73 		sub	r3, r3, #340
+ 539 008c 1B68     		ldr	r3, [r3]
+ 540 008e 0021     		movs	r1, #0
+ 541 0090 A047     		blx	r4
+ 542              	.LVL1:
+ 280:libraries/zf_common/zf_common_debug.c **** 
+ 281:libraries/zf_common/zf_common_debug.c ****         file_str    = file;
+ 543              		.loc 1 281 21
+ 544 0092 5AAB     		add	r3, sp, #360
+ 545 0094 A3F5AC73 		sub	r3, r3, #344
+ 546 0098 1B68     		ldr	r3, [r3]
+ 547 009a 5993     		str	r3, [sp, #356]
+ 282:libraries/zf_common/zf_common_debug.c ****         len_origin  = strlen(file);
+ 548              		.loc 1 282 23
+ 549 009c 5AAB     		add	r3, sp, #360
+ 550 009e A3F5AC73 		sub	r3, r3, #344
+ 551 00a2 1868     		ldr	r0, [r3]
+ 552 00a4 FFF7FEFF 		bl	strlen
+ 553 00a8 0346     		mov	r3, r0
+ 554              		.loc 1 282 21
+ 555 00aa 1BB2     		sxth	r3, r3
+ 556 00ac ADF85E31 		strh	r3, [sp, #350]	@ movhi
+ 283:libraries/zf_common/zf_common_debug.c ****         show_len    = (debug_output_obj.display_x_max / debug_output_obj.font_x_size);
+ 557              		.loc 1 283 40
+ 558 00b0 864B     		ldr	r3, .L52
+ 559 00b2 5B88     		ldrh	r3, [r3, #2]
+ 560 00b4 1A46     		mov	r2, r3
+ 561              		.loc 1 283 73
+ 562 00b6 854B     		ldr	r3, .L52
+ 563 00b8 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 564              		.loc 1 283 55
+ 565 00ba 92FBF3F3 		sdiv	r3, r2, r3
+ 566              		.loc 1 283 21
+ 567 00be 1BB2     		sxth	r3, r3
+ 568 00c0 ADF85C31 		strh	r3, [sp, #348]	@ movhi
+ 284:libraries/zf_common/zf_common_debug.c **** 
+ 285:libraries/zf_common/zf_common_debug.c ****         // 首先把指针指向路径字符串尾部
+ 286:libraries/zf_common/zf_common_debug.c ****         // 因为只取一级目录显示 否则有的 IDE 会输出绝对路径 太长了没必要
+ 287:libraries/zf_common/zf_common_debug.c ****         // 只需要直接输出当前工程的相对目录就可以
+ 288:libraries/zf_common/zf_common_debug.c ****         while('\0' != *file_str ++);
+ 569              		.loc 1 288 14
+ 570 00c4 00BF     		nop
+ 571              	.L25:
+ 572              		.loc 1 288 33 discriminator 1
+ 573 00c6 599B     		ldr	r3, [sp, #356]
+ 574 00c8 5A1C     		adds	r2, r3, #1
+ 575 00ca 5992     		str	r2, [sp, #356]
+ 576              		.loc 1 288 23 discriminator 1
+ 577 00cc 93F90030 		ldrsb	r3, [r3]
+ 578              		.loc 1 288 14 discriminator 1
+ 579 00d0 002B     		cmp	r3, #0
+ 580 00d2 F8D1     		bne	.L25
+ 289:libraries/zf_common/zf_common_debug.c ****         for(temp_counter_2 = 0; (2 > temp_counter_2) && (0 <= len_origin); len_origin --)
+ 581              		.loc 1 289 28
+ 582 00d4 0023     		movs	r3, #0
+ 583 00d6 ADF86031 		strh	r3, [sp, #352]	@ movhi
+ 584              		.loc 1 289 9
+ 585 00da 1CE0     		b	.L26
+ 586              	.L30:
+ 290:libraries/zf_common/zf_common_debug.c ****         {                                                                       // 遍历路径 直
+ 291:libraries/zf_common/zf_common_debug.c ****             file_str --;                                                        // 指针一个字�
+ 587              		.loc 1 291 22
+ 588 00dc 599B     		ldr	r3, [sp, #356]
+ 589 00de 013B     		subs	r3, r3, #1
+ 590 00e0 5993     		str	r3, [sp, #356]
+ 292:libraries/zf_common/zf_common_debug.c ****             if(('/' == *file_str) || (0x5C == *file_str))                       // 查找两个 '/'
+ 591              		.loc 1 292 24
+ 592 00e2 599B     		ldr	r3, [sp, #356]
+ 593 00e4 93F90030 		ldrsb	r3, [r3]
+ 594              		.loc 1 292 15
+ 595 00e8 2F2B     		cmp	r3, #47
+ 596 00ea 04D0     		beq	.L27
+ 597              		.loc 1 292 47 discriminator 1
+ 598 00ec 599B     		ldr	r3, [sp, #356]
+ 599 00ee 93F90030 		ldrsb	r3, [r3]
+ 600              		.loc 1 292 35 discriminator 1
+ 601 00f2 5C2B     		cmp	r3, #92
+ 602 00f4 06D1     		bne	.L28
+ 603              	.L27:
+ 293:libraries/zf_common/zf_common_debug.c ****             {
+ 294:libraries/zf_common/zf_common_debug.c ****                 temp_counter_2 ++;
+ 604              		.loc 1 294 32
+ 605 00f6 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 606 00fa 9BB2     		uxth	r3, r3
+ 607 00fc 0133     		adds	r3, r3, #1
+ 608 00fe 9BB2     		uxth	r3, r3
+ 609 0100 ADF86031 		strh	r3, [sp, #352]	@ movhi
+ 610              	.L28:
+ 289:libraries/zf_common/zf_common_debug.c ****         {                                                                       // 遍历路径 直
+ 611              		.loc 1 289 87 discriminator 2
+ 612 0104 BDF85E31 		ldrh	r3, [sp, #350]	@ movhi
+ 613 0108 1BB2     		sxth	r3, r3
+ 614 010a 9BB2     		uxth	r3, r3
+ 615 010c 013B     		subs	r3, r3, #1
+ 616 010e 9BB2     		uxth	r3, r3
+ 617 0110 1BB2     		sxth	r3, r3
+ 618 0112 ADF85E31 		strh	r3, [sp, #350]	@ movhi
+ 619              	.L26:
+ 289:libraries/zf_common/zf_common_debug.c ****         {                                                                       // 遍历路径 直
+ 620              		.loc 1 289 36 discriminator 1
+ 621 0116 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 622 011a 9BB2     		uxth	r3, r3
+ 289:libraries/zf_common/zf_common_debug.c ****         {                                                                       // 遍历路径 直
+ 623              		.loc 1 289 9 discriminator 1
+ 624 011c 012B     		cmp	r3, #1
+ 625 011e 04D8     		bhi	.L29
+ 289:libraries/zf_common/zf_common_debug.c ****         {                                                                       // 遍历路径 直
+ 626              		.loc 1 289 60 discriminator 3
+ 627 0120 BDF85E31 		ldrh	r3, [sp, #350]	@ movhi
+ 628 0124 1BB2     		sxth	r3, r3
+ 289:libraries/zf_common/zf_common_debug.c ****         {                                                                       // 遍历路径 直
+ 629              		.loc 1 289 54 discriminator 3
+ 630 0126 002B     		cmp	r3, #0
+ 631 0128 D8DA     		bge	.L30
+ 632              	.L29:
+ 295:libraries/zf_common/zf_common_debug.c ****             }
+ 296:libraries/zf_common/zf_common_debug.c ****         }
+ 297:libraries/zf_common/zf_common_debug.c **** 
+ 298:libraries/zf_common/zf_common_debug.c ****         // 文件路径保存到数组中
+ 299:libraries/zf_common/zf_common_debug.c ****         if(0 <= len_origin)
+ 633              		.loc 1 299 14
+ 634 012a BDF85E31 		ldrh	r3, [sp, #350]	@ movhi
+ 635 012e 1BB2     		sxth	r3, r3
+ 636              		.loc 1 299 11
+ 637 0130 002B     		cmp	r3, #0
+ 638 0132 09DB     		blt	.L31
+ 300:libraries/zf_common/zf_common_debug.c ****         {
+ 301:libraries/zf_common/zf_common_debug.c ****             file_str ++;
+ 639              		.loc 1 301 22
+ 640 0134 599B     		ldr	r3, [sp, #356]
+ 641 0136 0133     		adds	r3, r3, #1
+ 642 0138 5993     		str	r3, [sp, #356]
+ 302:libraries/zf_common/zf_common_debug.c ****             sprintf(output_buffer, "file: %s", file_str);
+ 643              		.loc 1 302 13
+ 644 013a 16AB     		add	r3, sp, #88
+ 645 013c 599A     		ldr	r2, [sp, #356]
+ 646 013e 6449     		ldr	r1, .L52+4
+ 647 0140 1846     		mov	r0, r3
+ 648 0142 FFF7FEFF 		bl	sprintf
+ 649 0146 11E0     		b	.L32
+ 650              	.L31:
+ 303:libraries/zf_common/zf_common_debug.c ****         }
+ 304:libraries/zf_common/zf_common_debug.c ****         else
+ 305:libraries/zf_common/zf_common_debug.c ****         {
+ 306:libraries/zf_common/zf_common_debug.c ****             if(0 == temp_counter_2)
+ 651              		.loc 1 306 18
+ 652 0148 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 653 014c 9BB2     		uxth	r3, r3
+ 654              		.loc 1 306 15
+ 655 014e 002B     		cmp	r3, #0
+ 656 0150 06D1     		bne	.L33
+ 307:libraries/zf_common/zf_common_debug.c ****             {
+ 308:libraries/zf_common/zf_common_debug.c ****                 sprintf(output_buffer, "file: mdk/%s", file_str);
+ 657              		.loc 1 308 17
+ 658 0152 16AB     		add	r3, sp, #88
+ 659 0154 599A     		ldr	r2, [sp, #356]
+ 660 0156 5F49     		ldr	r1, .L52+8
+ 661 0158 1846     		mov	r0, r3
+ 662 015a FFF7FEFF 		bl	sprintf
+ 663 015e 05E0     		b	.L32
+ 664              	.L33:
+ 309:libraries/zf_common/zf_common_debug.c ****             }
+ 310:libraries/zf_common/zf_common_debug.c ****             else
+ 311:libraries/zf_common/zf_common_debug.c ****             {
+ 312:libraries/zf_common/zf_common_debug.c ****                 sprintf(output_buffer, "file: %s", file_str);
+ 665              		.loc 1 312 17
+ 666 0160 16AB     		add	r3, sp, #88
+ 667 0162 599A     		ldr	r2, [sp, #356]
+ 668 0164 5A49     		ldr	r1, .L52+4
+ 669 0166 1846     		mov	r0, r3
+ 670 0168 FFF7FEFF 		bl	sprintf
+ 671              	.L32:
+ 313:libraries/zf_common/zf_common_debug.c ****             }
+ 314:libraries/zf_common/zf_common_debug.c ****         }
+ 315:libraries/zf_common/zf_common_debug.c **** 
+ 316:libraries/zf_common/zf_common_debug.c ****         // 屏幕显示路径
+ 317:libraries/zf_common/zf_common_debug.c ****         // 这里就是根据屏幕的宽度来计算怎么显示
+ 318:libraries/zf_common/zf_common_debug.c ****         // 能单行显示完毕的就一行显示完毕了
+ 319:libraries/zf_common/zf_common_debug.c ****         // 需要多行显示的就会分成多行截断显示
+ 320:libraries/zf_common/zf_common_debug.c ****         for(temp_counter_1 = 0; temp_counter_1 < ((strlen(output_buffer) / show_len) + 1); temp_cou
+ 672              		.loc 1 320 28
+ 673 016c 0023     		movs	r3, #0
+ 674 016e ADF86231 		strh	r3, [sp, #354]	@ movhi
+ 675              		.loc 1 320 9
+ 676 0172 6BE0     		b	.L34
+ 677              	.L39:
+ 321:libraries/zf_common/zf_common_debug.c ****         {
+ 322:libraries/zf_common/zf_common_debug.c ****             for(temp_counter_2 = 0; temp_counter_2 < show_len; temp_counter_2 ++)
+ 678              		.loc 1 322 32
+ 679 0174 0023     		movs	r3, #0
+ 680 0176 ADF86031 		strh	r3, [sp, #352]	@ movhi
+ 681              		.loc 1 322 13
+ 682 017a 35E0     		b	.L35
+ 683              	.L38:
+ 323:libraries/zf_common/zf_common_debug.c ****             {
+ 324:libraries/zf_common/zf_common_debug.c ****                 if((uint16)strlen(output_buffer) < (temp_counter_2 + temp_counter_1 * show_len))
+ 684              		.loc 1 324 28
+ 685 017c 16AB     		add	r3, sp, #88
+ 686 017e 1846     		mov	r0, r3
+ 687 0180 FFF7FEFF 		bl	strlen
+ 688 0184 0346     		mov	r3, r0
+ 689              		.loc 1 324 20
+ 690 0186 9BB2     		uxth	r3, r3
+ 691 0188 1A46     		mov	r2, r3
+ 692              		.loc 1 324 68
+ 693 018a BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 694 018e 9BB2     		uxth	r3, r3
+ 695 0190 1946     		mov	r1, r3
+ 696              		.loc 1 324 85
+ 697 0192 BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 698 0196 9BB2     		uxth	r3, r3
+ 699 0198 BDF85C01 		ldrh	r0, [sp, #348]	@ movhi
+ 700 019c 00B2     		sxth	r0, r0
+ 701 019e 00FB03F3 		mul	r3, r0, r3
+ 702              		.loc 1 324 68
+ 703 01a2 0B44     		add	r3, r3, r1
+ 704              		.loc 1 324 19
+ 705 01a4 9A42     		cmp	r2, r3
+ 706 01a6 29DB     		blt	.L49
+ 325:libraries/zf_common/zf_common_debug.c ****                 {
+ 326:libraries/zf_common/zf_common_debug.c ****                     break;
+ 327:libraries/zf_common/zf_common_debug.c ****                 }
+ 328:libraries/zf_common/zf_common_debug.c ****                 file_path_buffer[temp_counter_2] = output_buffer[temp_counter_2 + temp_counter_1 * 
+ 707              		.loc 1 328 81 discriminator 2
+ 708 01a8 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 709 01ac 9BB2     		uxth	r3, r3
+ 710 01ae 1A46     		mov	r2, r3
+ 711              		.loc 1 328 98 discriminator 2
+ 712 01b0 BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 713 01b4 9BB2     		uxth	r3, r3
+ 714 01b6 BDF85C11 		ldrh	r1, [sp, #348]	@ movhi
+ 715 01ba 09B2     		sxth	r1, r1
+ 716 01bc 01FB03F3 		mul	r3, r1, r3
+ 717              		.loc 1 328 81 discriminator 2
+ 718 01c0 1344     		add	r3, r3, r2
+ 719              		.loc 1 328 33 discriminator 2
+ 720 01c2 BDF86021 		ldrh	r2, [sp, #352]	@ movhi
+ 721 01c6 92B2     		uxth	r2, r2
+ 722 01c8 1146     		mov	r1, r2
+ 723              		.loc 1 328 65 discriminator 2
+ 724 01ca 5AAA     		add	r2, sp, #360
+ 725 01cc A2F58872 		sub	r2, r2, #272
+ 726 01d0 D256     		ldrsb	r2, [r2, r3]
+ 727              		.loc 1 328 50 discriminator 2
+ 728 01d2 5AAB     		add	r3, sp, #360
+ 729 01d4 A3F5A873 		sub	r3, r3, #336
+ 730 01d8 5A54     		strb	r2, [r3, r1]
+ 322:libraries/zf_common/zf_common_debug.c ****             {
+ 731              		.loc 1 322 79 discriminator 2
+ 732 01da BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 733 01de 9BB2     		uxth	r3, r3
+ 734 01e0 0133     		adds	r3, r3, #1
+ 735 01e2 9BB2     		uxth	r3, r3
+ 736 01e4 ADF86031 		strh	r3, [sp, #352]	@ movhi
+ 737              	.L35:
+ 322:libraries/zf_common/zf_common_debug.c ****             {
+ 738              		.loc 1 322 52 discriminator 1
+ 739 01e8 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 740 01ec 9BB2     		uxth	r3, r3
+ 741 01ee 1A46     		mov	r2, r3
+ 742 01f0 BDF85C31 		ldrh	r3, [sp, #348]	@ movhi
+ 743 01f4 1BB2     		sxth	r3, r3
+ 322:libraries/zf_common/zf_common_debug.c ****             {
+ 744              		.loc 1 322 13 discriminator 1
+ 745 01f6 9A42     		cmp	r2, r3
+ 746 01f8 C0DB     		blt	.L38
+ 747 01fa 00E0     		b	.L37
+ 748              	.L49:
+ 326:libraries/zf_common/zf_common_debug.c ****                 }
+ 749              		.loc 1 326 21
+ 750 01fc 00BF     		nop
+ 751              	.L37:
+ 329:libraries/zf_common/zf_common_debug.c ****             }
+ 330:libraries/zf_common/zf_common_debug.c ****             
+ 331:libraries/zf_common/zf_common_debug.c ****             file_path_buffer[temp_counter_2] = '\0';                            // 末尾添加\0
+ 752              		.loc 1 331 29 discriminator 2
+ 753 01fe BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 754 0202 9BB2     		uxth	r3, r3
+ 755 0204 1A46     		mov	r2, r3
+ 756              		.loc 1 331 46 discriminator 2
+ 757 0206 5AAB     		add	r3, sp, #360
+ 758 0208 A3F5A873 		sub	r3, r3, #336
+ 759 020c 0021     		movs	r1, #0
+ 760 020e 9954     		strb	r1, [r3, r2]
+ 332:libraries/zf_common/zf_common_debug.c ****             
+ 333:libraries/zf_common/zf_common_debug.c ****             debug_output_obj.output_screen(debug_output_obj.device_obj, 0, debug_output_obj.font_y_
+ 761              		.loc 1 333 29 discriminator 2
+ 762 0210 2E4B     		ldr	r3, .L52
+ 763 0212 DC68     		ldr	r4, [r3, #12]
+ 764              		.loc 1 333 13 discriminator 2
+ 765 0214 2D4B     		ldr	r3, .L52
+ 766 0216 9868     		ldr	r0, [r3, #8]
+ 767              		.loc 1 333 92 discriminator 2
+ 768 0218 2C4B     		ldr	r3, .L52
+ 769 021a DB79     		ldrb	r3, [r3, #7]	@ zero_extendqisi2
+ 770              		.loc 1 333 13 discriminator 2
+ 771 021c 9AB2     		uxth	r2, r3
+ 772              		.loc 1 333 123 discriminator 2
+ 773 021e BDF85A31 		ldrh	r3, [sp, #346]	@ movhi
+ 774 0222 19B2     		sxth	r1, r3
+ 775 0224 8BB2     		uxth	r3, r1
+ 776 0226 0133     		adds	r3, r3, #1
+ 777 0228 9BB2     		uxth	r3, r3
+ 778 022a 1BB2     		sxth	r3, r3
+ 779 022c ADF85A31 		strh	r3, [sp, #346]	@ movhi
+ 780              		.loc 1 333 13 discriminator 2
+ 781 0230 8BB2     		uxth	r3, r1
+ 782 0232 12FB03F3 		smulbb	r3, r2, r3
+ 783 0236 9AB2     		uxth	r2, r3
+ 784 0238 06AB     		add	r3, sp, #24
+ 785 023a 0021     		movs	r1, #0
+ 786 023c A047     		blx	r4
+ 787              	.LVL2:
+ 320:libraries/zf_common/zf_common_debug.c ****         {
+ 788              		.loc 1 320 107 discriminator 2
+ 789 023e BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 790 0242 9BB2     		uxth	r3, r3
+ 791 0244 0133     		adds	r3, r3, #1
+ 792 0246 9BB2     		uxth	r3, r3
+ 793 0248 ADF86231 		strh	r3, [sp, #354]	@ movhi
+ 794              	.L34:
+ 320:libraries/zf_common/zf_common_debug.c ****         {
+ 795              		.loc 1 320 48 discriminator 1
+ 796 024c BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 797 0250 9BB2     		uxth	r3, r3
+ 798 0252 1C46     		mov	r4, r3
+ 320:libraries/zf_common/zf_common_debug.c ****         {
+ 799              		.loc 1 320 52 discriminator 1
+ 800 0254 16AB     		add	r3, sp, #88
+ 801 0256 1846     		mov	r0, r3
+ 802 0258 FFF7FEFF 		bl	strlen
+ 803 025c 0346     		mov	r3, r0
+ 320:libraries/zf_common/zf_common_debug.c ****         {
+ 804              		.loc 1 320 74 discriminator 1
+ 805 025e BDF85C21 		ldrh	r2, [sp, #348]	@ movhi
+ 806 0262 12B2     		sxth	r2, r2
+ 807 0264 B3FBF2F3 		udiv	r3, r3, r2
+ 320:libraries/zf_common/zf_common_debug.c ****         {
+ 808              		.loc 1 320 86 discriminator 1
+ 809 0268 0133     		adds	r3, r3, #1
+ 320:libraries/zf_common/zf_common_debug.c ****         {
+ 810              		.loc 1 320 9 discriminator 1
+ 811 026a 9C42     		cmp	r4, r3
+ 812 026c 82D3     		bcc	.L39
+ 334:libraries/zf_common/zf_common_debug.c ****         }
+ 335:libraries/zf_common/zf_common_debug.c **** 
+ 336:libraries/zf_common/zf_common_debug.c ****         // 屏幕显示行号
+ 337:libraries/zf_common/zf_common_debug.c ****         sprintf(output_buffer, "line: %d", line);
+ 813              		.loc 1 337 9
+ 814 026e 5AAB     		add	r3, sp, #360
+ 815 0270 A3F5AE73 		sub	r3, r3, #348
+ 816 0274 16A8     		add	r0, sp, #88
+ 817 0276 1A68     		ldr	r2, [r3]
+ 818 0278 1749     		ldr	r1, .L52+12
+ 819 027a FFF7FEFF 		bl	sprintf
+ 338:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_screen(debug_output_obj.device_obj, 0, debug_output_obj.font_y_size
+ 820              		.loc 1 338 25
+ 821 027e 134B     		ldr	r3, .L52
+ 822 0280 DC68     		ldr	r4, [r3, #12]
+ 823              		.loc 1 338 9
+ 824 0282 124B     		ldr	r3, .L52
+ 825 0284 9868     		ldr	r0, [r3, #8]
+ 826              		.loc 1 338 88
+ 827 0286 114B     		ldr	r3, .L52
+ 828 0288 DB79     		ldrb	r3, [r3, #7]	@ zero_extendqisi2
+ 829              		.loc 1 338 9
+ 830 028a 9AB2     		uxth	r2, r3
+ 831              		.loc 1 338 119
+ 832 028c BDF85A31 		ldrh	r3, [sp, #346]	@ movhi
+ 833 0290 19B2     		sxth	r1, r3
+ 834 0292 8BB2     		uxth	r3, r1
+ 835 0294 0133     		adds	r3, r3, #1
+ 836 0296 9BB2     		uxth	r3, r3
+ 837 0298 1BB2     		sxth	r3, r3
+ 838 029a ADF85A31 		strh	r3, [sp, #346]	@ movhi
+ 839              		.loc 1 338 9
+ 840 029e 8BB2     		uxth	r3, r1
+ 841 02a0 12FB03F3 		smulbb	r3, r2, r3
+ 842 02a4 9AB2     		uxth	r2, r3
+ 843 02a6 16AB     		add	r3, sp, #88
+ 844 02a8 0021     		movs	r1, #0
+ 845 02aa A047     		blx	r4
+ 846              	.LVL3:
+ 339:libraries/zf_common/zf_common_debug.c **** 
+ 340:libraries/zf_common/zf_common_debug.c ****         // 屏幕显示 Log 如果有的话
+ 341:libraries/zf_common/zf_common_debug.c ****         // 同样是根据屏幕的宽度来计算怎么显示
+ 342:libraries/zf_common/zf_common_debug.c ****         // 能单行显示完毕的就一行显示完毕了
+ 343:libraries/zf_common/zf_common_debug.c ****         // 需要多行显示的就会分成多行截断显示
+ 344:libraries/zf_common/zf_common_debug.c ****         if(NULL != str)
+ 847              		.loc 1 344 11
+ 848 02ac 5AAB     		add	r3, sp, #360
+ 849 02ae A3F5B073 		sub	r3, r3, #352
+ 850 02b2 1B68     		ldr	r3, [r3]
+ 851 02b4 002B     		cmp	r3, #0
+ 852 02b6 00F0CA80 		beq	.L50
+ 345:libraries/zf_common/zf_common_debug.c ****         {
+ 346:libraries/zf_common/zf_common_debug.c ****             for(temp_counter_1 = 0; temp_counter_1 < ((strlen(str) / show_len) + 1); temp_counter_1
+ 853              		.loc 1 346 32
+ 854 02ba 0023     		movs	r3, #0
+ 855 02bc ADF86231 		strh	r3, [sp, #354]	@ movhi
+ 856              		.loc 1 346 13
+ 857 02c0 79E0     		b	.L41
+ 858              	.L46:
+ 347:libraries/zf_common/zf_common_debug.c ****             {
+ 348:libraries/zf_common/zf_common_debug.c ****                 for(temp_counter_2 = 0; temp_counter_2 < show_len; temp_counter_2 ++)
+ 859              		.loc 1 348 36
+ 860 02c2 0023     		movs	r3, #0
+ 861 02c4 ADF86031 		strh	r3, [sp, #352]	@ movhi
+ 862              		.loc 1 348 17
+ 863 02c8 43E0     		b	.L42
+ 864              	.L53:
+ 865 02ca 00BF     		.align	2
+ 866              	.L52:
+ 867 02cc 00000000 		.word	debug_output_obj
+ 868 02d0 00000000 		.word	.LC0
+ 869 02d4 0C000000 		.word	.LC1
+ 870 02d8 1C000000 		.word	.LC2
+ 871              	.L45:
+ 349:libraries/zf_common/zf_common_debug.c ****                 {
+ 350:libraries/zf_common/zf_common_debug.c ****                     if((uint16)strlen(str) < (temp_counter_2 + temp_counter_1 * show_len))
+ 872              		.loc 1 350 32
+ 873 02dc 5AAB     		add	r3, sp, #360
+ 874 02de A3F5B073 		sub	r3, r3, #352
+ 875 02e2 1868     		ldr	r0, [r3]
+ 876 02e4 FFF7FEFF 		bl	strlen
+ 877 02e8 0346     		mov	r3, r0
+ 878              		.loc 1 350 24
+ 879 02ea 9BB2     		uxth	r3, r3
+ 880 02ec 1A46     		mov	r2, r3
+ 881              		.loc 1 350 62
+ 882 02ee BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 883 02f2 9BB2     		uxth	r3, r3
+ 884 02f4 1946     		mov	r1, r3
+ 885              		.loc 1 350 79
+ 886 02f6 BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 887 02fa 9BB2     		uxth	r3, r3
+ 888 02fc BDF85C01 		ldrh	r0, [sp, #348]	@ movhi
+ 889 0300 00B2     		sxth	r0, r0
+ 890 0302 00FB03F3 		mul	r3, r0, r3
+ 891              		.loc 1 350 62
+ 892 0306 0B44     		add	r3, r3, r1
+ 893              		.loc 1 350 23
+ 894 0308 9A42     		cmp	r2, r3
+ 895 030a 2CDB     		blt	.L51
+ 351:libraries/zf_common/zf_common_debug.c ****                     {
+ 352:libraries/zf_common/zf_common_debug.c ****                         break;
+ 353:libraries/zf_common/zf_common_debug.c ****                     }
+ 354:libraries/zf_common/zf_common_debug.c ****                     file_path_buffer[temp_counter_2] = str[temp_counter_2 + temp_counter_1 * show_l
+ 896              		.loc 1 354 75 discriminator 2
+ 897 030c BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 898 0310 9BB2     		uxth	r3, r3
+ 899 0312 1A46     		mov	r2, r3
+ 900              		.loc 1 354 92 discriminator 2
+ 901 0314 BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 902 0318 9BB2     		uxth	r3, r3
+ 903 031a BDF85C11 		ldrh	r1, [sp, #348]	@ movhi
+ 904 031e 09B2     		sxth	r1, r1
+ 905 0320 01FB03F3 		mul	r3, r1, r3
+ 906              		.loc 1 354 75 discriminator 2
+ 907 0324 1344     		add	r3, r3, r2
+ 908 0326 1A46     		mov	r2, r3
+ 909              		.loc 1 354 59 discriminator 2
+ 910 0328 5AAB     		add	r3, sp, #360
+ 911 032a A3F5B073 		sub	r3, r3, #352
+ 912 032e 1B68     		ldr	r3, [r3]
+ 913 0330 1344     		add	r3, r3, r2
+ 914              		.loc 1 354 37 discriminator 2
+ 915 0332 BDF86021 		ldrh	r2, [sp, #352]	@ movhi
+ 916 0336 92B2     		uxth	r2, r2
+ 917              		.loc 1 354 59 discriminator 2
+ 918 0338 93F90010 		ldrsb	r1, [r3]
+ 919              		.loc 1 354 54 discriminator 2
+ 920 033c 5AAB     		add	r3, sp, #360
+ 921 033e A3F5A873 		sub	r3, r3, #336
+ 922 0342 9954     		strb	r1, [r3, r2]
+ 348:libraries/zf_common/zf_common_debug.c ****                 {
+ 923              		.loc 1 348 83 discriminator 2
+ 924 0344 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 925 0348 9BB2     		uxth	r3, r3
+ 926 034a 0133     		adds	r3, r3, #1
+ 927 034c 9BB2     		uxth	r3, r3
+ 928 034e ADF86031 		strh	r3, [sp, #352]	@ movhi
+ 929              	.L42:
+ 348:libraries/zf_common/zf_common_debug.c ****                 {
+ 930              		.loc 1 348 56 discriminator 1
+ 931 0352 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 932 0356 9BB2     		uxth	r3, r3
+ 933 0358 1A46     		mov	r2, r3
+ 934 035a BDF85C31 		ldrh	r3, [sp, #348]	@ movhi
+ 935 035e 1BB2     		sxth	r3, r3
+ 348:libraries/zf_common/zf_common_debug.c ****                 {
+ 936              		.loc 1 348 17 discriminator 1
+ 937 0360 9A42     		cmp	r2, r3
+ 938 0362 BBDB     		blt	.L45
+ 939 0364 00E0     		b	.L44
+ 940              	.L51:
+ 352:libraries/zf_common/zf_common_debug.c ****                     }
+ 941              		.loc 1 352 25
+ 942 0366 00BF     		nop
+ 943              	.L44:
+ 355:libraries/zf_common/zf_common_debug.c ****                 }
+ 356:libraries/zf_common/zf_common_debug.c ****                 
+ 357:libraries/zf_common/zf_common_debug.c ****                 file_path_buffer[temp_counter_2] = '\0';                        // 末尾添加\0
+ 944              		.loc 1 357 33 discriminator 2
+ 945 0368 BDF86031 		ldrh	r3, [sp, #352]	@ movhi
+ 946 036c 9BB2     		uxth	r3, r3
+ 947 036e 1A46     		mov	r2, r3
+ 948              		.loc 1 357 50 discriminator 2
+ 949 0370 5AAB     		add	r3, sp, #360
+ 950 0372 A3F5A873 		sub	r3, r3, #336
+ 951 0376 0021     		movs	r1, #0
+ 952 0378 9954     		strb	r1, [r3, r2]
+ 358:libraries/zf_common/zf_common_debug.c ****                 
+ 359:libraries/zf_common/zf_common_debug.c ****                 debug_output_obj.output_screen(debug_output_obj.device_obj, 0, debug_output_obj.fon
+ 953              		.loc 1 359 33 discriminator 2
+ 954 037a 364B     		ldr	r3, .L54
+ 955 037c DC68     		ldr	r4, [r3, #12]
+ 956              		.loc 1 359 17 discriminator 2
+ 957 037e 354B     		ldr	r3, .L54
+ 958 0380 9868     		ldr	r0, [r3, #8]
+ 959              		.loc 1 359 96 discriminator 2
+ 960 0382 344B     		ldr	r3, .L54
+ 961 0384 DB79     		ldrb	r3, [r3, #7]	@ zero_extendqisi2
+ 962              		.loc 1 359 17 discriminator 2
+ 963 0386 9AB2     		uxth	r2, r3
+ 964              		.loc 1 359 127 discriminator 2
+ 965 0388 BDF85A31 		ldrh	r3, [sp, #346]	@ movhi
+ 966 038c 19B2     		sxth	r1, r3
+ 967 038e 8BB2     		uxth	r3, r1
+ 968 0390 0133     		adds	r3, r3, #1
+ 969 0392 9BB2     		uxth	r3, r3
+ 970 0394 1BB2     		sxth	r3, r3
+ 971 0396 ADF85A31 		strh	r3, [sp, #346]	@ movhi
+ 972              		.loc 1 359 17 discriminator 2
+ 973 039a 8BB2     		uxth	r3, r1
+ 974 039c 12FB03F3 		smulbb	r3, r2, r3
+ 975 03a0 9AB2     		uxth	r2, r3
+ 976 03a2 06AB     		add	r3, sp, #24
+ 977 03a4 0021     		movs	r1, #0
+ 978 03a6 A047     		blx	r4
+ 979              	.LVL4:
+ 346:libraries/zf_common/zf_common_debug.c ****             {
+ 980              		.loc 1 346 101 discriminator 2
+ 981 03a8 BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 982 03ac 9BB2     		uxth	r3, r3
+ 983 03ae 0133     		adds	r3, r3, #1
+ 984 03b0 9BB2     		uxth	r3, r3
+ 985 03b2 ADF86231 		strh	r3, [sp, #354]	@ movhi
+ 986              	.L41:
+ 346:libraries/zf_common/zf_common_debug.c ****             {
+ 987              		.loc 1 346 52 discriminator 1
+ 988 03b6 BDF86231 		ldrh	r3, [sp, #354]	@ movhi
+ 989 03ba 9BB2     		uxth	r3, r3
+ 990 03bc 1C46     		mov	r4, r3
+ 346:libraries/zf_common/zf_common_debug.c ****             {
+ 991              		.loc 1 346 56 discriminator 1
+ 992 03be 5AAB     		add	r3, sp, #360
+ 993 03c0 A3F5B073 		sub	r3, r3, #352
+ 994 03c4 1868     		ldr	r0, [r3]
+ 995 03c6 FFF7FEFF 		bl	strlen
+ 996 03ca 0346     		mov	r3, r0
+ 346:libraries/zf_common/zf_common_debug.c ****             {
+ 997              		.loc 1 346 68 discriminator 1
+ 998 03cc BDF85C21 		ldrh	r2, [sp, #348]	@ movhi
+ 999 03d0 12B2     		sxth	r2, r2
+ 1000 03d2 B3FBF2F3 		udiv	r3, r3, r2
+ 346:libraries/zf_common/zf_common_debug.c ****             {
+ 1001              		.loc 1 346 80 discriminator 1
+ 1002 03d6 0133     		adds	r3, r3, #1
+ 346:libraries/zf_common/zf_common_debug.c ****             {
+ 1003              		.loc 1 346 13 discriminator 1
+ 1004 03d8 9C42     		cmp	r4, r3
+ 1005 03da FFF472AF 		bcc	.L46
+ 360:libraries/zf_common/zf_common_debug.c ****             }
+ 361:libraries/zf_common/zf_common_debug.c ****         }
+ 362:libraries/zf_common/zf_common_debug.c ****     }
+ 363:libraries/zf_common/zf_common_debug.c ****     else
+ 364:libraries/zf_common/zf_common_debug.c ****     {
+ 365:libraries/zf_common/zf_common_debug.c ****         // 串口输出就没什么顾虑了
+ 366:libraries/zf_common/zf_common_debug.c ****         // 最高 256byte 直接怼到串口就完事了
+ 367:libraries/zf_common/zf_common_debug.c ****         memset(output_buffer, 0, 256);
+ 368:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_uart(type);
+ 369:libraries/zf_common/zf_common_debug.c ****         if(NULL != str)
+ 370:libraries/zf_common/zf_common_debug.c ****         {
+ 371:libraries/zf_common/zf_common_debug.c ****             sprintf(output_buffer, "\r\nfile %s line %d: %s.\r\n", file, line, str);
+ 372:libraries/zf_common/zf_common_debug.c ****         }
+ 373:libraries/zf_common/zf_common_debug.c ****         else
+ 374:libraries/zf_common/zf_common_debug.c ****         {
+ 375:libraries/zf_common/zf_common_debug.c ****             sprintf(output_buffer, "\r\nfile %s line %d.\r\n", file, line);
+ 376:libraries/zf_common/zf_common_debug.c ****         }
+ 377:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_uart(output_buffer);
+ 378:libraries/zf_common/zf_common_debug.c ****     }
+ 379:libraries/zf_common/zf_common_debug.c **** }
+ 1006              		.loc 1 379 1
+ 1007 03de 36E0     		b	.L50
+ 1008              	.L24:
+ 367:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_uart(type);
+ 1009              		.loc 1 367 9
+ 1010 03e0 16AB     		add	r3, sp, #88
+ 1011 03e2 4FF48072 		mov	r2, #256
+ 1012 03e6 0021     		movs	r1, #0
+ 1013 03e8 1846     		mov	r0, r3
+ 1014 03ea FFF7FEFF 		bl	memset
+ 368:libraries/zf_common/zf_common_debug.c ****         if(NULL != str)
+ 1015              		.loc 1 368 25
+ 1016 03ee 194B     		ldr	r3, .L54
+ 1017 03f0 DB68     		ldr	r3, [r3, #12]
+ 368:libraries/zf_common/zf_common_debug.c ****         if(NULL != str)
+ 1018              		.loc 1 368 9
+ 1019 03f2 5AAA     		add	r2, sp, #360
+ 1020 03f4 A2F5AA72 		sub	r2, r2, #340
+ 1021 03f8 1068     		ldr	r0, [r2]
+ 1022 03fa 9847     		blx	r3
+ 1023              	.LVL5:
+ 369:libraries/zf_common/zf_common_debug.c ****         {
+ 1024              		.loc 1 369 11
+ 1025 03fc 5AAB     		add	r3, sp, #360
+ 1026 03fe A3F5B073 		sub	r3, r3, #352
+ 1027 0402 1B68     		ldr	r3, [r3]
+ 1028 0404 002B     		cmp	r3, #0
+ 1029 0406 11D0     		beq	.L47
+ 371:libraries/zf_common/zf_common_debug.c ****         }
+ 1030              		.loc 1 371 13
+ 1031 0408 5AAB     		add	r3, sp, #360
+ 1032 040a A3F5AE73 		sub	r3, r3, #348
+ 1033 040e 5AAA     		add	r2, sp, #360
+ 1034 0410 A2F5AC72 		sub	r2, r2, #344
+ 1035 0414 16A8     		add	r0, sp, #88
+ 1036 0416 5AA9     		add	r1, sp, #360
+ 1037 0418 A1F5B071 		sub	r1, r1, #352
+ 1038 041c 0968     		ldr	r1, [r1]
+ 1039 041e 0091     		str	r1, [sp]
+ 1040 0420 1B68     		ldr	r3, [r3]
+ 1041 0422 1268     		ldr	r2, [r2]
+ 1042 0424 0C49     		ldr	r1, .L54+4
+ 1043 0426 FFF7FEFF 		bl	sprintf
+ 1044 042a 0BE0     		b	.L48
+ 1045              	.L47:
+ 375:libraries/zf_common/zf_common_debug.c ****         }
+ 1046              		.loc 1 375 13
+ 1047 042c 5AAB     		add	r3, sp, #360
+ 1048 042e A3F5AE73 		sub	r3, r3, #348
+ 1049 0432 5AAA     		add	r2, sp, #360
+ 1050 0434 A2F5AC72 		sub	r2, r2, #344
+ 1051 0438 16A8     		add	r0, sp, #88
+ 1052 043a 1B68     		ldr	r3, [r3]
+ 1053 043c 1268     		ldr	r2, [r2]
+ 1054 043e 0749     		ldr	r1, .L54+8
+ 1055 0440 FFF7FEFF 		bl	sprintf
+ 1056              	.L48:
+ 377:libraries/zf_common/zf_common_debug.c ****     }
+ 1057              		.loc 1 377 25
+ 1058 0444 034B     		ldr	r3, .L54
+ 1059 0446 DB68     		ldr	r3, [r3, #12]
+ 377:libraries/zf_common/zf_common_debug.c ****     }
+ 1060              		.loc 1 377 9
+ 1061 0448 16AA     		add	r2, sp, #88
+ 1062 044a 1046     		mov	r0, r2
+ 1063 044c 9847     		blx	r3
+ 1064              	.LVL6:
+ 1065              	.L50:
+ 1066              		.loc 1 379 1
+ 1067 044e 00BF     		nop
+ 1068 0450 5AB0     		add	sp, sp, #360
+ 1069              		.cfi_def_cfa_offset 8
+ 1070              		@ sp needed
+ 1071 0452 10BD     		pop	{r4, pc}
+ 1072              	.L55:
+ 1073              		.align	2
+ 1074              	.L54:
+ 1075 0454 00000000 		.word	debug_output_obj
+ 1076 0458 28000000 		.word	.LC3
+ 1077 045c 44000000 		.word	.LC4
+ 1078              		.cfi_endproc
+ 1079              	.LFE14:
+ 1081              		.section	.rodata
+ 1082 0059 000000   		.align	2
+ 1083              	.LC5:
+ 1084 005c 41737365 		.ascii	"Assert error\000"
+ 1084      72742065 
+ 1084      72726F72 
+ 1084      00
+ 1085 0069 000000   		.align	2
+ 1086              	.LC6:
+ 1087 006c 4C6F6720 		.ascii	"Log message\000"
+ 1087      6D657373 
+ 1087      61676500 
+ 1088              		.section	.text.debug_message_handler,"ax",%progbits
+ 1089              		.align	1
+ 1090              		.p2align 4,,15
+ 1091              		.global	debug_message_handler
+ 1092              		.syntax unified
+ 1093              		.thumb
+ 1094              		.thumb_func
+ 1096              	debug_message_handler:
+ 1097              	.LFB15:
+ 380:libraries/zf_common/zf_common_debug.c **** 
+ 381:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 382:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 调试信息处理函数
+ 383:libraries/zf_common/zf_common_debug.c **** // 参数说明     output_level        输出等级
+ 384:libraries/zf_common/zf_common_debug.c **** // 参数说明     pass                条件判断
+ 385:libraries/zf_common/zf_common_debug.c **** // 参数说明     *str                输出的信息
+ 386:libraries/zf_common/zf_common_debug.c **** // 参数说明     *file               文件名
+ 387:libraries/zf_common/zf_common_debug.c **** // 参数说明     line                目标行数
+ 388:libraries/zf_common/zf_common_debug.c **** // 返回参数     uint8               返回 pass 判断值
+ 389:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_message_handler(ZF_DEBUG_FILE, 0, "Error", ZF_DEBUG_FILE, ZF_DEBUG_LINE);
+ 390:libraries/zf_common/zf_common_debug.c **** // 备注信息     此部分不允许用户更改
+ 391:libraries/zf_common/zf_common_debug.c **** //              推荐使用 zf_commmon_debug.h 中的 zf_log(x, str) 接口
+ 392:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 393:libraries/zf_common/zf_common_debug.c **** uint8 debug_message_handler (uint8 output_level, uint8 pass, char *str, char *file, int line)
+ 394:libraries/zf_common/zf_common_debug.c **** {
+ 1098              		.loc 1 394 1
+ 1099              		.cfi_startproc
+ 1100              		@ args = 4, pretend = 0, frame = 16
+ 1101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1102 0000 00B5     		push	{lr}
+ 1103              		.cfi_def_cfa_offset 4
+ 1104              		.cfi_offset 14, -4
+ 1105 0002 85B0     		sub	sp, sp, #20
+ 1106              		.cfi_def_cfa_offset 24
+ 1107 0004 0292     		str	r2, [sp, #8]
+ 1108 0006 0193     		str	r3, [sp, #4]
+ 1109 0008 0346     		mov	r3, r0
+ 1110 000a 8DF80F30 		strb	r3, [sp, #15]
+ 1111 000e 0B46     		mov	r3, r1
+ 1112 0010 8DF80E30 		strb	r3, [sp, #14]
+ 395:libraries/zf_common/zf_common_debug.c ****     if(!pass)
+ 1113              		.loc 1 395 7
+ 1114 0014 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 1115 0018 002B     		cmp	r3, #0
+ 1116 001a 24D1     		bne	.L64
+ 396:libraries/zf_common/zf_common_debug.c ****     {
+ 397:libraries/zf_common/zf_common_debug.c ****         switch(output_level)
+ 1117              		.loc 1 397 9
+ 1118 001c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1119 0020 012B     		cmp	r3, #1
+ 1120 0022 19D0     		beq	.L58
+ 1121 0024 022B     		cmp	r3, #2
+ 1122 0026 20D1     		bne	.L65
+ 1123              	.LBB2:
+ 398:libraries/zf_common/zf_common_debug.c ****         {
+ 399:libraries/zf_common/zf_common_debug.c ****             case DEBUG_OUTPUT_LEVEL_ASSERT:
+ 400:libraries/zf_common/zf_common_debug.c ****             {
+ 401:libraries/zf_common/zf_common_debug.c ****                 static uint8 assert_nest_index = 0;
+ 402:libraries/zf_common/zf_common_debug.c **** 
+ 403:libraries/zf_common/zf_common_debug.c ****                 if(0 != assert_nest_index)
+ 1124              		.loc 1 403 22
+ 1125 0028 164B     		ldr	r3, .L66
+ 1126 002a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1127              		.loc 1 403 19
+ 1128 002c 002B     		cmp	r3, #0
+ 1129 002e 00D0     		beq	.L60
+ 1130              	.L61:
+ 404:libraries/zf_common/zf_common_debug.c ****                 {
+ 405:libraries/zf_common/zf_common_debug.c ****                     while(1);
+ 1131              		.loc 1 405 26 discriminator 1
+ 1132 0030 FEE7     		b	.L61
+ 1133              	.L60:
+ 406:libraries/zf_common/zf_common_debug.c ****                 }
+ 407:libraries/zf_common/zf_common_debug.c ****                 assert_nest_index ++;
+ 1134              		.loc 1 407 35
+ 1135 0032 144B     		ldr	r3, .L66
+ 1136 0034 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1137 0036 0133     		adds	r3, r3, #1
+ 1138 0038 DAB2     		uxtb	r2, r3
+ 1139 003a 124B     		ldr	r3, .L66
+ 1140 003c 1A70     		strb	r2, [r3]
+ 408:libraries/zf_common/zf_common_debug.c **** 
+ 409:libraries/zf_common/zf_common_debug.c ****                 debug_interrupt_protective_handler();
+ 1141              		.loc 1 409 17
+ 1142 003e FFF7FEFF 		bl	debug_interrupt_protective_handler
+ 410:libraries/zf_common/zf_common_debug.c ****                 debug_pwm_protective_handler();
+ 1143              		.loc 1 410 17
+ 1144 0042 FFF7FEFF 		bl	debug_pwm_protective_handler
+ 1145              	.L62:
+ 411:libraries/zf_common/zf_common_debug.c **** 
+ 412:libraries/zf_common/zf_common_debug.c ****                 while(1)
+ 413:libraries/zf_common/zf_common_debug.c ****                 {
+ 414:libraries/zf_common/zf_common_debug.c ****                     // 如果代码跳转到这里停住了
+ 415:libraries/zf_common/zf_common_debug.c ****                     // 一般你的函数参数传递出错了
+ 416:libraries/zf_common/zf_common_debug.c ****                     // 或者你自己调用的 zf_assert(x) 接口处报错了
+ 417:libraries/zf_common/zf_common_debug.c **** 
+ 418:libraries/zf_common/zf_common_debug.c ****                     // 如果调用了 debug_init 初始化了 log 输出
+ 419:libraries/zf_common/zf_common_debug.c ****                     // 就在对应串口输出去查看是哪个文件的哪一行报错
+ 420:libraries/zf_common/zf_common_debug.c **** 
+ 421:libraries/zf_common/zf_common_debug.c ****                     // 如果没有初始化 debug
+ 422:libraries/zf_common/zf_common_debug.c ****                     // 那就看看这个 file 的字符串值和 line 的行数
+ 423:libraries/zf_common/zf_common_debug.c ****                     // 那代表报错的文件路径名称和对应报错行数
+ 424:libraries/zf_common/zf_common_debug.c **** 
+ 425:libraries/zf_common/zf_common_debug.c ****                     // 再去调试看看是为什么参数出错
+ 426:libraries/zf_common/zf_common_debug.c **** 
+ 427:libraries/zf_common/zf_common_debug.c ****                     debug_output("Assert error", file, line, str);
+ 1146              		.loc 1 427 21 discriminator 1
+ 1147 0046 029B     		ldr	r3, [sp, #8]
+ 1148 0048 069A     		ldr	r2, [sp, #24]
+ 1149 004a 0199     		ldr	r1, [sp, #4]
+ 1150 004c 0E48     		ldr	r0, .L66+4
+ 1151 004e FFF7FEFF 		bl	debug_output
+ 428:libraries/zf_common/zf_common_debug.c ****                     debug_delay();
+ 1152              		.loc 1 428 21 discriminator 1
+ 1153 0052 FFF7FEFF 		bl	debug_delay
+ 427:libraries/zf_common/zf_common_debug.c ****                     debug_delay();
+ 1154              		.loc 1 427 21 discriminator 1
+ 1155 0056 F6E7     		b	.L62
+ 1156              	.L58:
+ 1157              	.LBE2:
+ 429:libraries/zf_common/zf_common_debug.c ****                 }
+ 430:libraries/zf_common/zf_common_debug.c ****             }break;
+ 431:libraries/zf_common/zf_common_debug.c ****             case DEBUG_OUTPUT_LEVEL_LOG:
+ 432:libraries/zf_common/zf_common_debug.c ****             {
+ 433:libraries/zf_common/zf_common_debug.c ****                 debug_output("Log message", file, line, str);
+ 1158              		.loc 1 433 17
+ 1159 0058 029B     		ldr	r3, [sp, #8]
+ 1160 005a 069A     		ldr	r2, [sp, #24]
+ 1161 005c 0199     		ldr	r1, [sp, #4]
+ 1162 005e 0B48     		ldr	r0, .L66+8
+ 1163 0060 FFF7FEFF 		bl	debug_output
+ 434:libraries/zf_common/zf_common_debug.c ****             }break;
+ 1164              		.loc 1 434 13
+ 1165 0064 02E0     		b	.L57
+ 1166              	.L64:
+ 435:libraries/zf_common/zf_common_debug.c ****             case DEBUG_OUTPUT_LEVEL_DISABLE:
+ 436:libraries/zf_common/zf_common_debug.c ****             default:
+ 437:libraries/zf_common/zf_common_debug.c ****             {
+ 438:libraries/zf_common/zf_common_debug.c ****             }break;
+ 439:libraries/zf_common/zf_common_debug.c ****         }
+ 440:libraries/zf_common/zf_common_debug.c ****     }
+ 1167              		.loc 1 440 5
+ 1168 0066 00BF     		nop
+ 1169 0068 00E0     		b	.L57
+ 1170              	.L65:
+ 438:libraries/zf_common/zf_common_debug.c ****         }
+ 1171              		.loc 1 438 13
+ 1172 006a 00BF     		nop
+ 1173              	.L57:
+ 441:libraries/zf_common/zf_common_debug.c ****     return !pass;
+ 1174              		.loc 1 441 12
+ 1175 006c 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 1176 0070 002B     		cmp	r3, #0
+ 1177 0072 0CBF     		ite	eq
+ 1178 0074 0123     		moveq	r3, #1
+ 1179 0076 0023     		movne	r3, #0
+ 1180 0078 DBB2     		uxtb	r3, r3
+ 442:libraries/zf_common/zf_common_debug.c **** }
+ 1181              		.loc 1 442 1
+ 1182 007a 1846     		mov	r0, r3
+ 1183 007c 05B0     		add	sp, sp, #20
+ 1184              		.cfi_def_cfa_offset 4
+ 1185              		@ sp needed
+ 1186 007e 5DF804FB 		ldr	pc, [sp], #4
+ 1187              	.L67:
+ 1188 0082 00BF     		.align	2
+ 1189              	.L66:
+ 1190 0084 00000000 		.word	assert_nest_index.0
+ 1191 0088 5C000000 		.word	.LC5
+ 1192 008c 6C000000 		.word	.LC6
+ 1193              		.cfi_endproc
+ 1194              	.LFE15:
+ 1196              		.section	.text.debug_read_ring_buffer,"ax",%progbits
+ 1197              		.align	1
+ 1198              		.p2align 4,,15
+ 1199              		.global	debug_read_ring_buffer
+ 1200              		.syntax unified
+ 1201              		.thumb
+ 1202              		.thumb_func
+ 1204              	debug_read_ring_buffer:
+ 1205              	.LFB16:
+ 443:libraries/zf_common/zf_common_debug.c **** 
+ 444:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 445:libraries/zf_common/zf_common_debug.c **** // 函数简介     读取 debug 环形缓冲区数据
+ 446:libraries/zf_common/zf_common_debug.c **** // 参数说明     *data               读出数据存放的数组指针
+ 447:libraries/zf_common/zf_common_debug.c **** // 参数说明     data_len            目标读出数据长度
+ 448:libraries/zf_common/zf_common_debug.c **** // 返回参数     uint32              实际读出长度
+ 449:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_read_ring_buffer(data, data_len);
+ 450:libraries/zf_common/zf_common_debug.c **** // 备注信息     本函数需要开启 DEBUG_UART_USE_INTERRUPT 宏定义 否则直接返回
+ 451:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 452:libraries/zf_common/zf_common_debug.c **** uint32 debug_read_ring_buffer (uint8 *data, uint32 data_len)
+ 453:libraries/zf_common/zf_common_debug.c **** {
+ 1206              		.loc 1 453 1
+ 1207              		.cfi_startproc
+ 1208              		@ args = 0, pretend = 0, frame = 8
+ 1209              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1210 0000 00B5     		push	{lr}
+ 1211              		.cfi_def_cfa_offset 4
+ 1212              		.cfi_offset 14, -4
+ 1213 0002 83B0     		sub	sp, sp, #12
+ 1214              		.cfi_def_cfa_offset 16
+ 1215 0004 0190     		str	r0, [sp, #4]
+ 1216 0006 0091     		str	r1, [sp]
+ 454:libraries/zf_common/zf_common_debug.c **** #if DEBUG_UART_USE_INTERRUPT                                                    // 条件编译 只
+ 455:libraries/zf_common/zf_common_debug.c ****     zf_fifo_read_buffer(&debug_uart_fifo, data, &data_len, FIFO_READ_WITH_CLEAN);
+ 1217              		.loc 1 455 5
+ 1218 0008 6A46     		mov	r2, sp
+ 1219 000a 0123     		movs	r3, #1
+ 1220 000c 0199     		ldr	r1, [sp, #4]
+ 1221 000e 0448     		ldr	r0, .L70
+ 1222 0010 FFF7FEFF 		bl	zf_fifo_read_buffer
+ 456:libraries/zf_common/zf_common_debug.c ****     return data_len;
+ 1223              		.loc 1 456 12
+ 1224 0014 009B     		ldr	r3, [sp]
+ 457:libraries/zf_common/zf_common_debug.c **** #else
+ 458:libraries/zf_common/zf_common_debug.c ****     return 0;
+ 459:libraries/zf_common/zf_common_debug.c **** #endif
+ 460:libraries/zf_common/zf_common_debug.c **** }
+ 1225              		.loc 1 460 1
+ 1226 0016 1846     		mov	r0, r3
+ 1227 0018 03B0     		add	sp, sp, #12
+ 1228              		.cfi_def_cfa_offset 4
+ 1229              		@ sp needed
+ 1230 001a 5DF804FB 		ldr	pc, [sp], #4
+ 1231              	.L71:
+ 1232 001e 00BF     		.align	2
+ 1233              	.L70:
+ 1234 0020 00000000 		.word	debug_uart_fifo
+ 1235              		.cfi_endproc
+ 1236              	.LFE16:
+ 1238              		.section	.text.debug_screen_init,"ax",%progbits
+ 1239              		.align	1
+ 1240              		.p2align 4,,15
+ 1241              		.global	debug_screen_init
+ 1242              		.syntax unified
+ 1243              		.thumb
+ 1244              		.thumb_func
+ 1246              	debug_screen_init:
+ 1247              	.LFB17:
+ 461:libraries/zf_common/zf_common_debug.c **** 
+ 462:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 463:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 输出绑定初始化
+ 464:libraries/zf_common/zf_common_debug.c **** // 参数说明     *obj                屏幕对象
+ 465:libraries/zf_common/zf_common_debug.c **** // 参数说明     dispaly_x           屏幕横轴长
+ 466:libraries/zf_common/zf_common_debug.c **** // 参数说明     dispaly_y           屏幕纵轴长
+ 467:libraries/zf_common/zf_common_debug.c **** // 参数说明     font_x              字体宽度
+ 468:libraries/zf_common/zf_common_debug.c **** // 参数说明     font_y              字体高度
+ 469:libraries/zf_common/zf_common_debug.c **** // 参数说明     output_screen       屏幕字符串输出接口
+ 470:libraries/zf_common/zf_common_debug.c **** // 参数说明     output_screen_clear 屏幕清空接口
+ 471:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 472:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_output_init(info);
+ 473:libraries/zf_common/zf_common_debug.c **** // 备注信息     这个函数一般不由用户调用
+ 474:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 475:libraries/zf_common/zf_common_debug.c **** void debug_screen_init (void *obj, uint16 dispaly_x, uint16 dispaly_y, uint8 font_x, uint8 font_y, 
+ 476:libraries/zf_common/zf_common_debug.c **** {
+ 1248              		.loc 1 476 1
+ 1249              		.cfi_startproc
+ 1250              		@ args = 12, pretend = 0, frame = 16
+ 1251              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1252              		@ link register save eliminated.
+ 1253 0000 84B0     		sub	sp, sp, #16
+ 1254              		.cfi_def_cfa_offset 16
+ 1255 0002 0390     		str	r0, [sp, #12]
+ 1256 0004 0846     		mov	r0, r1
+ 1257 0006 1146     		mov	r1, r2
+ 1258 0008 1A46     		mov	r2, r3
+ 1259 000a 0346     		mov	r3, r0	@ movhi
+ 1260 000c ADF80A30 		strh	r3, [sp, #10]	@ movhi
+ 1261 0010 0B46     		mov	r3, r1	@ movhi
+ 1262 0012 ADF80830 		strh	r3, [sp, #8]	@ movhi
+ 1263 0016 1346     		mov	r3, r2
+ 1264 0018 8DF80730 		strb	r3, [sp, #7]
+ 477:libraries/zf_common/zf_common_debug.c ****     do
+ 478:libraries/zf_common/zf_common_debug.c ****     {
+ 479:libraries/zf_common/zf_common_debug.c ****         if(NULL == obj)
+ 1265              		.loc 1 479 11
+ 1266 001c 039B     		ldr	r3, [sp, #12]
+ 1267 001e 002B     		cmp	r3, #0
+ 1268 0020 1CD0     		beq	.L75
+ 480:libraries/zf_common/zf_common_debug.c ****         {
+ 481:libraries/zf_common/zf_common_debug.c ****             break;
+ 482:libraries/zf_common/zf_common_debug.c ****         }
+ 483:libraries/zf_common/zf_common_debug.c **** 
+ 484:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.device_obj             = obj;
+ 1269              		.loc 1 484 49
+ 1270 0022 104A     		ldr	r2, .L77
+ 1271 0024 039B     		ldr	r3, [sp, #12]
+ 1272 0026 9360     		str	r3, [r2, #8]
+ 485:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.type_index             = DEBUG_OBJ_TYPE_SCREEN;
+ 1273              		.loc 1 485 49
+ 1274 0028 0E4B     		ldr	r3, .L77
+ 1275 002a 0322     		movs	r2, #3
+ 1276 002c 1A70     		strb	r2, [r3]
+ 486:libraries/zf_common/zf_common_debug.c **** 
+ 487:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.display_x_max          = dispaly_x;
+ 1277              		.loc 1 487 49
+ 1278 002e 0D4A     		ldr	r2, .L77
+ 1279 0030 BDF80A30 		ldrh	r3, [sp, #10]	@ movhi
+ 1280 0034 5380     		strh	r3, [r2, #2]	@ movhi
+ 488:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.display_y_max          = dispaly_y;
+ 1281              		.loc 1 488 49
+ 1282 0036 0B4A     		ldr	r2, .L77
+ 1283 0038 BDF80830 		ldrh	r3, [sp, #8]	@ movhi
+ 1284 003c 9380     		strh	r3, [r2, #4]	@ movhi
+ 489:libraries/zf_common/zf_common_debug.c **** 
+ 490:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.font_x_size            = font_x;
+ 1285              		.loc 1 490 49
+ 1286 003e 094A     		ldr	r2, .L77
+ 1287 0040 9DF80730 		ldrb	r3, [sp, #7]
+ 1288 0044 9371     		strb	r3, [r2, #6]
+ 491:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.font_y_size            = font_y;
+ 1289              		.loc 1 491 49
+ 1290 0046 074A     		ldr	r2, .L77
+ 1291 0048 9DF81030 		ldrb	r3, [sp, #16]
+ 1292 004c D371     		strb	r3, [r2, #7]
+ 492:libraries/zf_common/zf_common_debug.c **** 
+ 493:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_screen          = output_screen;
+ 1293              		.loc 1 493 49
+ 1294 004e 054A     		ldr	r2, .L77
+ 1295 0050 059B     		ldr	r3, [sp, #20]
+ 1296 0052 D360     		str	r3, [r2, #12]
+ 494:libraries/zf_common/zf_common_debug.c ****         debug_output_obj.output_screen_clear    = output_screen_clear;
+ 1297              		.loc 1 494 49
+ 1298 0054 034A     		ldr	r2, .L77
+ 1299 0056 069B     		ldr	r3, [sp, #24]
+ 1300 0058 1361     		str	r3, [r2, #16]
+ 495:libraries/zf_common/zf_common_debug.c ****     }while(0);
+ 496:libraries/zf_common/zf_common_debug.c **** }
+ 1301              		.loc 1 496 1
+ 1302 005a 00E0     		b	.L76
+ 1303              	.L75:
+ 481:libraries/zf_common/zf_common_debug.c ****         }
+ 1304              		.loc 1 481 13
+ 1305 005c 00BF     		nop
+ 1306              	.L76:
+ 1307              		.loc 1 496 1
+ 1308 005e 00BF     		nop
+ 1309 0060 04B0     		add	sp, sp, #16
+ 1310              		.cfi_def_cfa_offset 0
+ 1311              		@ sp needed
+ 1312 0062 7047     		bx	lr
+ 1313              	.L78:
+ 1314              		.align	2
+ 1315              	.L77:
+ 1316 0064 00000000 		.word	debug_output_obj
+ 1317              		.cfi_endproc
+ 1318              	.LFE17:
+ 1320              		.section	.text.debug_init,"ax",%progbits
+ 1321              		.align	1
+ 1322              		.p2align 4,,15
+ 1323              		.global	debug_init
+ 1324              		.syntax unified
+ 1325              		.thumb
+ 1326              		.thumb_func
+ 1328              	debug_init:
+ 1329              	.LFB18:
+ 497:libraries/zf_common/zf_common_debug.c **** 
+ 498:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 499:libraries/zf_common/zf_common_debug.c **** // 函数简介     debug 串口初始化
+ 500:libraries/zf_common/zf_common_debug.c **** // 参数说明     void
+ 501:libraries/zf_common/zf_common_debug.c **** // 返回参数     void
+ 502:libraries/zf_common/zf_common_debug.c **** // 使用示例     debug_init();
+ 503:libraries/zf_common/zf_common_debug.c **** // 备注信息     开源库示例默认调用 但默认禁用中断接收
+ 504:libraries/zf_common/zf_common_debug.c **** //-------------------------------------------------------------------------------------------------
+ 505:libraries/zf_common/zf_common_debug.c **** void debug_init (void)
+ 506:libraries/zf_common/zf_common_debug.c **** {
+ 1330              		.loc 1 506 1
+ 1331              		.cfi_startproc
+ 1332              		@ args = 0, pretend = 0, frame = 0
+ 1333              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1334 0000 08B5     		push	{r3, lr}
+ 1335              		.cfi_def_cfa_offset 8
+ 1336              		.cfi_offset 3, -8
+ 1337              		.cfi_offset 14, -4
+ 507:libraries/zf_common/zf_common_debug.c ****     debug_output_obj.type_index     = DEBUG_OBJ_TYPE_UART;
+ 1338              		.loc 1 507 37
+ 1339 0002 094B     		ldr	r3, .L80
+ 1340 0004 0122     		movs	r2, #1
+ 1341 0006 1A70     		strb	r2, [r3]
+ 508:libraries/zf_common/zf_common_debug.c ****     debug_output_obj.output_uart    = debug_uart_str_output_handler;
+ 1342              		.loc 1 508 37
+ 1343 0008 074B     		ldr	r3, .L80
+ 1344 000a 084A     		ldr	r2, .L80+4
+ 1345 000c DA60     		str	r2, [r3, #12]
+ 509:libraries/zf_common/zf_common_debug.c **** 
+ 510:libraries/zf_common/zf_common_debug.c **** #if DEBUG_UART_USE_INTERRUPT                                                    // 条件编译 只
+ 511:libraries/zf_common/zf_common_debug.c ****     zf_fifo_init(&debug_uart_fifo, FIFO_DATA_8BIT, debug_uart_buffer, DEBUG_RING_BUFFER_LEN);
+ 1346              		.loc 1 511 5
+ 1347 000e 4023     		movs	r3, #64
+ 1348 0010 074A     		ldr	r2, .L80+8
+ 1349 0012 0121     		movs	r1, #1
+ 1350 0014 0748     		ldr	r0, .L80+12
+ 1351 0016 FFF7FEFF 		bl	zf_fifo_init
+ 512:libraries/zf_common/zf_common_debug.c ****     debug_uart_init_handler(&debug_output_obj, debug_uart_interrupr_handler, &debug_uart_fifo);
+ 1352              		.loc 1 512 5
+ 1353 001a 064A     		ldr	r2, .L80+12
+ 1354 001c 0649     		ldr	r1, .L80+16
+ 1355 001e 0248     		ldr	r0, .L80
+ 1356 0020 FFF7FEFF 		bl	debug_uart_init_handler
+ 513:libraries/zf_common/zf_common_debug.c **** #else
+ 514:libraries/zf_common/zf_common_debug.c ****     debug_uart_init_handler(&debug_output_obj, debug_uart_interrupr_handler, NULL);
+ 515:libraries/zf_common/zf_common_debug.c **** #endif
+ 516:libraries/zf_common/zf_common_debug.c **** }
+ 1357              		.loc 1 516 1
+ 1358 0024 00BF     		nop
+ 1359 0026 08BD     		pop	{r3, pc}
+ 1360              	.L81:
+ 1361              		.align	2
+ 1362              	.L80:
+ 1363 0028 00000000 		.word	debug_output_obj
+ 1364 002c 00000000 		.word	debug_uart_str_output_handler
+ 1365 0030 00000000 		.word	debug_uart_buffer
+ 1366 0034 00000000 		.word	debug_uart_fifo
+ 1367 0038 00000000 		.word	debug_uart_interrupr_handler
+ 1368              		.cfi_endproc
+ 1369              	.LFE18:
+ 1371              		.section	.bss.assert_nest_index.0,"aw",%nobits
+ 1374              	assert_nest_index.0:
+ 1375 0000 00       		.space	1
+ 1376              		.text
+ 1377              	.Letext0:
+ 1378              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1379              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1380              		.file 4 "libraries/zf_common/zf_common_typedef.h"
+ 1381              		.file 5 "libraries/zf_common/zf_common_fifo.h"
+ 1382              		.file 6 "libraries/zf_common/zf_common_debug.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_common_debug.c
+D:\Users\TMP\ccTgcLbw.s:19     .bss.debug_output_obj:00000000 $d
+D:\Users\TMP\ccTgcLbw.s:22     .bss.debug_output_obj:00000000 debug_output_obj
+D:\Users\TMP\ccTgcLbw.s:25     .bss.debug_uart_buffer:00000000 $d
+D:\Users\TMP\ccTgcLbw.s:28     .bss.debug_uart_buffer:00000000 debug_uart_buffer
+D:\Users\TMP\ccTgcLbw.s:31     .data.debug_uart_fifo:00000000 $d
+D:\Users\TMP\ccTgcLbw.s:34     .data.debug_uart_fifo:00000000 debug_uart_fifo
+D:\Users\TMP\ccTgcLbw.s:43     .text._write:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:50     .text._write:00000000 _write
+D:\Users\TMP\ccTgcLbw.s:320    .text.debug_uart_transfer_handler:00000000 debug_uart_transfer_handler
+D:\Users\TMP\ccTgcLbw.s:83     .data.heap_base.1:00000000 $d
+D:\Users\TMP\ccTgcLbw.s:86     .data.heap_base.1:00000000 heap_base.1
+D:\Users\TMP\ccTgcLbw.s:89     .text._sbrk:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:96     .text._sbrk:00000000 _sbrk
+D:\Users\TMP\ccTgcLbw.s:150    .text._sbrk:00000040 $d
+D:\Users\TMP\ccTgcLbw.s:156    .text.debug_pwm_protective_handler:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:163    .text.debug_pwm_protective_handler:00000000 debug_pwm_protective_handler
+D:\Users\TMP\ccTgcLbw.s:177    .text.debug_interrupt_protective_handler:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:184    .text.debug_interrupt_protective_handler:00000000 debug_interrupt_protective_handler
+D:\Users\TMP\ccTgcLbw.s:198    .text.debug_uart_interrupr_handler:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:205    .text.debug_uart_interrupr_handler:00000000 debug_uart_interrupr_handler
+D:\Users\TMP\ccTgcLbw.s:226    .text.debug_uart_str_output_handler:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:233    .text.debug_uart_str_output_handler:00000000 debug_uart_str_output_handler
+D:\Users\TMP\ccTgcLbw.s:253    .text.debug_uart_write_buffer:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:260    .text.debug_uart_write_buffer:00000000 debug_uart_write_buffer
+D:\Users\TMP\ccTgcLbw.s:283    .text.debug_uart_read_buffer:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:290    .text.debug_uart_read_buffer:00000000 debug_uart_read_buffer
+D:\Users\TMP\ccTgcLbw.s:313    .text.debug_uart_transfer_handler:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:343    .text.debug_uart_init_handler:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:350    .text.debug_uart_init_handler:00000000 debug_uart_init_handler
+D:\Users\TMP\ccTgcLbw.s:372    .text.debug_delay:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:378    .text.debug_delay:00000000 debug_delay
+D:\Users\TMP\ccTgcLbw.s:436    .rodata:00000000 $d
+D:\Users\TMP\ccTgcLbw.s:452    .text.debug_output:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:458    .text.debug_output:00000000 debug_output
+D:\Users\TMP\ccTgcLbw.s:867    .text.debug_output:000002cc $d
+D:\Users\TMP\ccTgcLbw.s:873    .text.debug_output:000002dc $t
+D:\Users\TMP\ccTgcLbw.s:1075   .text.debug_output:00000454 $d
+D:\Users\TMP\ccTgcLbw.s:1089   .text.debug_message_handler:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:1096   .text.debug_message_handler:00000000 debug_message_handler
+D:\Users\TMP\ccTgcLbw.s:1190   .text.debug_message_handler:00000084 $d
+D:\Users\TMP\ccTgcLbw.s:1374   .bss.assert_nest_index.0:00000000 assert_nest_index.0
+D:\Users\TMP\ccTgcLbw.s:1197   .text.debug_read_ring_buffer:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:1204   .text.debug_read_ring_buffer:00000000 debug_read_ring_buffer
+D:\Users\TMP\ccTgcLbw.s:1234   .text.debug_read_ring_buffer:00000020 $d
+D:\Users\TMP\ccTgcLbw.s:1239   .text.debug_screen_init:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:1246   .text.debug_screen_init:00000000 debug_screen_init
+D:\Users\TMP\ccTgcLbw.s:1316   .text.debug_screen_init:00000064 $d
+D:\Users\TMP\ccTgcLbw.s:1321   .text.debug_init:00000000 $t
+D:\Users\TMP\ccTgcLbw.s:1328   .text.debug_init:00000000 debug_init
+D:\Users\TMP\ccTgcLbw.s:1363   .text.debug_init:00000028 $d
+D:\Users\TMP\ccTgcLbw.s:1375   .bss.assert_nest_index.0:00000000 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_fifo.h.114.cace62233bb13c2a4f57ef2746f514d9
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.zf_common_debug.h.33.6d362bbaa8a8ff23e6f5c0a30bf7361f
+                           .group:00000000 wm4.errno.h.2.ba016d646105af6cad23be83630b6a3f
+                           .group:00000000 wm4.errno.h.9.1ecd7b1049497a0ab61da0f6cbd4b0c6
+
+UNDEFINED SYMBOLS
+__heap_base__
+__errno
+__heap_end__
+strlen
+sprintf
+memset
+zf_fifo_read_buffer
+zf_fifo_init

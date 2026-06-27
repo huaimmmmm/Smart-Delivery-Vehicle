@@ -1,0 +1,1174 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_device_ips200.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.ips200_set_region,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	ips200_set_region:
+  26              	.LFB482:
+  27              		.file 1 "libraries/zf_device/zf_device_ips200.c"
+   1:libraries/zf_device/zf_device_ips200.c **** /**************************************************************************************************
+   2:libraries/zf_device/zf_device_ips200.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_device/zf_device_ips200.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_device/zf_device_ips200.c **** *
+   5:libraries/zf_device/zf_device_ips200.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_device/zf_device_ips200.c **** *
+   7:libraries/zf_device/zf_device_ips200.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_device/zf_device_ips200.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_device/zf_device_ips200.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_device/zf_device_ips200.c **** *
+  11:libraries/zf_device/zf_device_ips200.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_device/zf_device_ips200.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_device/zf_device_ips200.c **** * 更多细节请参见 GPL
+  14:libraries/zf_device/zf_device_ips200.c **** *
+  15:libraries/zf_device/zf_device_ips200.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_device/zf_device_ips200.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_device/zf_device_ips200.c **** *
+  18:libraries/zf_device/zf_device_ips200.c **** * 额外注明：
+  19:libraries/zf_device/zf_device_ips200.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_device/zf_device_ips200.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_device/zf_device_ips200.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_device/zf_device_ips200.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_device/zf_device_ips200.c **** *
+  24:libraries/zf_device/zf_device_ips200.c **** * 文件名称          zf_device_ips200
+  25:libraries/zf_device/zf_device_ips200.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_device/zf_device_ips200.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_device/zf_device_ips200.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_device/zf_device_ips200.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_device/zf_device_ips200.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_device/zf_device_ips200.c **** ***************************************************************************************************
+  31:libraries/zf_device/zf_device_ips200.c **** 
+  32:libraries/zf_device/zf_device_ips200.c **** /**************************************************************************************************
+  33:libraries/zf_device/zf_device_ips200.c **** * 接线定义          查看 zf_device_display_interface.h 中接口资源定义
+  34:libraries/zf_device/zf_device_ips200.c **** ***************************************************************************************************
+  35:libraries/zf_device/zf_device_ips200.c **** 
+  36:libraries/zf_device/zf_device_ips200.c **** // 自身头文件
+  37:libraries/zf_device/zf_device_ips200.c **** #include "zf_device_ips200.h"
+  38:libraries/zf_device/zf_device_ips200.c **** 
+  39:libraries/zf_device/zf_device_ips200.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改 这里不允许
+  40:libraries/zf_device/zf_device_ips200.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  41:libraries/zf_device/zf_device_ips200.c **** 
+  42:libraries/zf_device/zf_device_ips200.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  43:libraries/zf_device/zf_device_ips200.c **** 
+  44:libraries/zf_device/zf_device_ips200.c **** // 此处列举 本文件的所有函数声明 [ 其中包括宏定义函数 ] 这里不允许用�
+  45:libraries/zf_device/zf_device_ips200.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  46:libraries/zf_device/zf_device_ips200.c **** 
+  47:libraries/zf_device/zf_device_ips200.c **** //-------------------------------------------------------------------------------------------------
+  48:libraries/zf_device/zf_device_ips200.c **** // 函数简介     IPS200 设置显示区域
+  49:libraries/zf_device/zf_device_ips200.c **** // 参数说明     x1              起始x轴坐标
+  50:libraries/zf_device/zf_device_ips200.c **** // 参数说明     y1              起始y轴坐标
+  51:libraries/zf_device/zf_device_ips200.c **** // 参数说明     x2              结束x轴坐标
+  52:libraries/zf_device/zf_device_ips200.c **** // 参数说明     y2              结束y轴坐标
+  53:libraries/zf_device/zf_device_ips200.c **** // 返回参数     void
+  54:libraries/zf_device/zf_device_ips200.c **** // 使用示例     ips200_set_region(0, 0, ips200_x_max - 1, ips200_y_max - 1);
+  55:libraries/zf_device/zf_device_ips200.c **** // 备注信息     内部调用 用户无需关心
+  56:libraries/zf_device/zf_device_ips200.c **** //-------------------------------------------------------------------------------------------------
+  57:libraries/zf_device/zf_device_ips200.c **** static uint8 ips200_set_region (void *obj, uint16 x1, uint16 y1, uint16 x2, uint16 y2)
+  58:libraries/zf_device/zf_device_ips200.c **** {
+  28              		.loc 1 58 1
+  29              		.cfi_startproc
+  30              		@ args = 4, pretend = 0, frame = 24
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 00B5     		push	{lr}
+  33              		.cfi_def_cfa_offset 4
+  34              		.cfi_offset 14, -4
+  35 0002 87B0     		sub	sp, sp, #28
+  36              		.cfi_def_cfa_offset 32
+  37 0004 0390     		str	r0, [sp, #12]
+  38 0006 0846     		mov	r0, r1
+  39 0008 1146     		mov	r1, r2
+  40 000a 1A46     		mov	r2, r3
+  41 000c 0346     		mov	r3, r0	@ movhi
+  42 000e ADF80A30 		strh	r3, [sp, #10]	@ movhi
+  43 0012 0B46     		mov	r3, r1	@ movhi
+  44 0014 ADF80830 		strh	r3, [sp, #8]	@ movhi
+  45 0018 1346     		mov	r3, r2	@ movhi
+  46 001a ADF80630 		strh	r3, [sp, #6]	@ movhi
+  59:libraries/zf_device/zf_device_ips200.c **** 	ips200_operation_state_enum return_state = IPS200_ERROR_UNKNOW_ERROR;
+  47              		.loc 1 59 30
+  48 001e 0123     		movs	r3, #1
+  49 0020 8DF81730 		strb	r3, [sp, #23]
+  50              	.LBB2:
+  60:libraries/zf_device/zf_device_ips200.c **** 
+  61:libraries/zf_device/zf_device_ips200.c ****     do
+  62:libraries/zf_device/zf_device_ips200.c ****     {
+  63:libraries/zf_device/zf_device_ips200.c ****         // if(display_interface_assert(NULL != obj))
+  64:libraries/zf_device/zf_device_ips200.c ****         // {
+  65:libraries/zf_device/zf_device_ips200.c ****         //     return_state = IPS200_ERROR_OBJ_BUFFER_NULL;
+  66:libraries/zf_device/zf_device_ips200.c ****         //     break;
+  67:libraries/zf_device/zf_device_ips200.c ****         // }
+  68:libraries/zf_device/zf_device_ips200.c ****         display_interface_obj_struct *interface = (display_interface_obj_struct *)obj;
+  51              		.loc 1 68 39
+  52 0024 039B     		ldr	r3, [sp, #12]
+  53 0026 0493     		str	r3, [sp, #16]
+  69:libraries/zf_device/zf_device_ips200.c **** 
+  70:libraries/zf_device/zf_device_ips200.c ****         // if(display_interface_assert(x1 < interface->display_width_max))
+  71:libraries/zf_device/zf_device_ips200.c ****         // {
+  72:libraries/zf_device/zf_device_ips200.c ****         //     return_state = IPS200_ERROR_DISPLAY_ZONE_ERROR;
+  73:libraries/zf_device/zf_device_ips200.c ****         //     break;
+  74:libraries/zf_device/zf_device_ips200.c ****         // }
+  75:libraries/zf_device/zf_device_ips200.c ****         // if(display_interface_assert(x2 < interface->display_width_max))
+  76:libraries/zf_device/zf_device_ips200.c ****         // {
+  77:libraries/zf_device/zf_device_ips200.c ****         //     return_state = IPS200_ERROR_DISPLAY_ZONE_ERROR;
+  78:libraries/zf_device/zf_device_ips200.c ****         //     break;
+  79:libraries/zf_device/zf_device_ips200.c ****         // }
+  80:libraries/zf_device/zf_device_ips200.c ****         // if(display_interface_assert(y1 < interface->display_high_max))
+  81:libraries/zf_device/zf_device_ips200.c ****         // {
+  82:libraries/zf_device/zf_device_ips200.c ****         //     return_state = IPS200_ERROR_DISPLAY_ZONE_ERROR;
+  83:libraries/zf_device/zf_device_ips200.c ****         //     break;
+  84:libraries/zf_device/zf_device_ips200.c ****         // }
+  85:libraries/zf_device/zf_device_ips200.c ****         // if(display_interface_assert(y2 < interface->display_high_max))
+  86:libraries/zf_device/zf_device_ips200.c ****         // {
+  87:libraries/zf_device/zf_device_ips200.c ****         //     return_state = IPS200_ERROR_DISPLAY_ZONE_ERROR;
+  88:libraries/zf_device/zf_device_ips200.c ****         //     break;
+  89:libraries/zf_device/zf_device_ips200.c ****         // }
+  90:libraries/zf_device/zf_device_ips200.c **** 
+  91:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(interface, 0x2a);
+  54              		.loc 1 91 9
+  55 0028 2A21     		movs	r1, #42
+  56 002a 0498     		ldr	r0, [sp, #16]
+  57 002c FFF7FEFF 		bl	display_interface_write_command
+  92:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_16bit_data(interface, x1);
+  58              		.loc 1 92 9
+  59 0030 BDF80A30 		ldrh	r3, [sp, #10]
+  60 0034 1946     		mov	r1, r3
+  61 0036 0498     		ldr	r0, [sp, #16]
+  62 0038 FFF7FEFF 		bl	display_interface_write_16bit_data
+  93:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_16bit_data(interface, x2);
+  63              		.loc 1 93 9
+  64 003c BDF80630 		ldrh	r3, [sp, #6]
+  65 0040 1946     		mov	r1, r3
+  66 0042 0498     		ldr	r0, [sp, #16]
+  67 0044 FFF7FEFF 		bl	display_interface_write_16bit_data
+  94:libraries/zf_device/zf_device_ips200.c ****         
+  95:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(interface, 0x2b);
+  68              		.loc 1 95 9
+  69 0048 2B21     		movs	r1, #43
+  70 004a 0498     		ldr	r0, [sp, #16]
+  71 004c FFF7FEFF 		bl	display_interface_write_command
+  96:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_16bit_data(interface, y1);
+  72              		.loc 1 96 9
+  73 0050 BDF80830 		ldrh	r3, [sp, #8]
+  74 0054 1946     		mov	r1, r3
+  75 0056 0498     		ldr	r0, [sp, #16]
+  76 0058 FFF7FEFF 		bl	display_interface_write_16bit_data
+  97:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_16bit_data(interface, y2);
+  77              		.loc 1 97 9
+  78 005c BDF82030 		ldrh	r3, [sp, #32]
+  79 0060 1946     		mov	r1, r3
+  80 0062 0498     		ldr	r0, [sp, #16]
+  81 0064 FFF7FEFF 		bl	display_interface_write_16bit_data
+  98:libraries/zf_device/zf_device_ips200.c ****         
+  99:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(interface, 0x2c);
+  82              		.loc 1 99 9
+  83 0068 2C21     		movs	r1, #44
+  84 006a 0498     		ldr	r0, [sp, #16]
+  85 006c FFF7FEFF 		bl	display_interface_write_command
+ 100:libraries/zf_device/zf_device_ips200.c **** 
+ 101:libraries/zf_device/zf_device_ips200.c ****         return_state = IPS200_OPERATION_DONE;
+  86              		.loc 1 101 22
+  87 0070 0023     		movs	r3, #0
+  88 0072 8DF81730 		strb	r3, [sp, #23]
+  89              	.LBE2:
+ 102:libraries/zf_device/zf_device_ips200.c ****     }while(0);
+ 103:libraries/zf_device/zf_device_ips200.c **** 
+ 104:libraries/zf_device/zf_device_ips200.c ****     return return_state;
+  90              		.loc 1 104 12
+  91 0076 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 105:libraries/zf_device/zf_device_ips200.c **** }
+  92              		.loc 1 105 1
+  93 007a 1846     		mov	r0, r3
+  94 007c 07B0     		add	sp, sp, #28
+  95              		.cfi_def_cfa_offset 4
+  96              		@ sp needed
+  97 007e 5DF804FB 		ldr	pc, [sp], #4
+  98              		.cfi_endproc
+  99              	.LFE482:
+ 101 0082 00BF     		.section	.rodata
+ 102              		.align	2
+ 103              	.LC0:
+ 104 0000 6C696272 		.ascii	"libraries/zf_device/zf_device_ips200.c\000"
+ 104      61726965 
+ 104      732F7A66 
+ 104      5F646576 
+ 104      6963652F 
+ 105              		.section	.text.ips200_init,"ax",%progbits
+ 106              		.align	1
+ 107              		.p2align 4,,15
+ 108              		.global	ips200_init
+ 109              		.syntax unified
+ 110              		.thumb
+ 111              		.thumb_func
+ 113              	ips200_init:
+ 114              	.LFB483:
+ 106:libraries/zf_device/zf_device_ips200.c **** 
+ 107:libraries/zf_device/zf_device_ips200.c **** //-------------------------------------------------------------------------------------------------
+ 108:libraries/zf_device/zf_device_ips200.c **** // 函数简介     IPS200 液晶初始化
+ 109:libraries/zf_device/zf_device_ips200.c **** // 参数说明     type_select         两寸屏接口类型 (详见 zf_device_ips200.h 内 ips200
+ 110:libraries/zf_device/zf_device_ips200.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU660RB_OPERATION_DONE - 完成
+ 111:libraries/zf_device/zf_device_ips200.c **** // 使用示例     ips200_init(type_select);
+ 112:libraries/zf_device/zf_device_ips200.c **** // 备注信息     
+ 113:libraries/zf_device/zf_device_ips200.c **** //-------------------------------------------------------------------------------------------------
+ 114:libraries/zf_device/zf_device_ips200.c **** uint8 ips200_init (ips200_type_enum type_select)
+ 115:libraries/zf_device/zf_device_ips200.c **** {
+ 115              		.loc 1 115 1
+ 116              		.cfi_startproc
+ 117              		@ args = 0, pretend = 0, frame = 16
+ 118              		@ frame_needed = 0, uses_anonymous_args = 0
+ 119 0000 00B5     		push	{lr}
+ 120              		.cfi_def_cfa_offset 4
+ 121              		.cfi_offset 14, -4
+ 122 0002 8BB0     		sub	sp, sp, #44
+ 123              		.cfi_def_cfa_offset 48
+ 124 0004 0346     		mov	r3, r0
+ 125 0006 8DF81F30 		strb	r3, [sp, #31]
+ 116:libraries/zf_device/zf_device_ips200.c ****     display_interface_operation_state_enum return_state = DISPLAY_INTERFACE_ERROR_UNKNOW_ERROR;
+ 126              		.loc 1 116 44
+ 127 000a 0123     		movs	r3, #1
+ 128 000c 8DF82730 		strb	r3, [sp, #39]
+ 117:libraries/zf_device/zf_device_ips200.c **** 
+ 118:libraries/zf_device/zf_device_ips200.c ****     do
+ 119:libraries/zf_device/zf_device_ips200.c ****     {
+ 120:libraries/zf_device/zf_device_ips200.c ****         if(IPS200_TYPE_SPI == type_select)
+ 129              		.loc 1 120 11
+ 130 0010 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 131 0014 002B     		cmp	r3, #0
+ 132 0016 3BD1     		bne	.L4
+ 121:libraries/zf_device/zf_device_ips200.c ****         {
+ 122:libraries/zf_device/zf_device_ips200.c ****             if(display_interface_assert(!display_interface_spi_default_init(&display_interface_defa
+ 133              		.loc 1 122 16
+ 134 0018 ED23     		movs	r3, #237
+ 135 001a 0593     		str	r3, [sp, #20]
+ 136 001c EC23     		movs	r3, #236
+ 137 001e 0493     		str	r3, [sp, #16]
+ 138 0020 E123     		movs	r3, #225
+ 139 0022 0393     		str	r3, [sp, #12]
+ 140 0024 C623     		movs	r3, #198
+ 141 0026 0293     		str	r3, [sp, #8]
+ 142 0028 8A4B     		ldr	r3, .L23
+ 143 002a 0193     		str	r3, [sp, #4]
+ 144 002c 8A4B     		ldr	r3, .L23+4
+ 145 002e 0093     		str	r3, [sp]
+ 146 0030 8A4B     		ldr	r3, .L23+8
+ 147 0032 0022     		movs	r2, #0
+ 148 0034 0321     		movs	r1, #3
+ 149 0036 8A48     		ldr	r0, .L23+12
+ 150 0038 FFF7FEFF 		bl	display_interface_spi_init
+ 151 003c 0346     		mov	r3, r0
+ 152              		.loc 1 122 15
+ 153 003e 002B     		cmp	r3, #0
+ 154 0040 26D0     		beq	.L4
+ 155              		.loc 1 122 16 discriminator 1
+ 156 0042 ED23     		movs	r3, #237
+ 157 0044 0593     		str	r3, [sp, #20]
+ 158 0046 EC23     		movs	r3, #236
+ 159 0048 0493     		str	r3, [sp, #16]
+ 160 004a E123     		movs	r3, #225
+ 161 004c 0393     		str	r3, [sp, #12]
+ 162 004e C623     		movs	r3, #198
+ 163 0050 0293     		str	r3, [sp, #8]
+ 164 0052 804B     		ldr	r3, .L23
+ 165 0054 0193     		str	r3, [sp, #4]
+ 166 0056 804B     		ldr	r3, .L23+4
+ 167 0058 0093     		str	r3, [sp]
+ 168 005a 804B     		ldr	r3, .L23+8
+ 169 005c 0022     		movs	r2, #0
+ 170 005e 0321     		movs	r1, #3
+ 171 0060 7F48     		ldr	r0, .L23+12
+ 172 0062 FFF7FEFF 		bl	display_interface_spi_init
+ 173 0066 0346     		mov	r3, r0
+ 174 0068 002B     		cmp	r3, #0
+ 175 006a 0CBF     		ite	eq
+ 176 006c 0123     		moveq	r3, #1
+ 177 006e 0023     		movne	r3, #0
+ 178 0070 DBB2     		uxtb	r3, r3
+ 179 0072 1946     		mov	r1, r3
+ 180 0074 7A23     		movs	r3, #122
+ 181 0076 0093     		str	r3, [sp]
+ 182 0078 7A4B     		ldr	r3, .L23+16
+ 183 007a 0022     		movs	r2, #0
+ 184 007c 0220     		movs	r0, #2
+ 185 007e FFF7FEFF 		bl	debug_message_handler
+ 186 0082 0346     		mov	r3, r0
+ 187 0084 002B     		cmp	r3, #0
+ 188 0086 03D0     		beq	.L4
+ 123:libraries/zf_device/zf_device_ips200.c ****             {
+ 124:libraries/zf_device/zf_device_ips200.c ****                 return_state = DISPLAY_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 189              		.loc 1 124 30
+ 190 0088 2023     		movs	r3, #32
+ 191 008a 8DF82730 		strb	r3, [sp, #39]
+ 125:libraries/zf_device/zf_device_ips200.c ****                 break;
+ 192              		.loc 1 125 17
+ 193 008e 11E2     		b	.L5
+ 194              	.L4:
+ 126:libraries/zf_device/zf_device_ips200.c ****             }
+ 127:libraries/zf_device/zf_device_ips200.c ****         }
+ 128:libraries/zf_device/zf_device_ips200.c ****         else
+ 129:libraries/zf_device/zf_device_ips200.c ****         {
+ 130:libraries/zf_device/zf_device_ips200.c ****         }
+ 131:libraries/zf_device/zf_device_ips200.c ****         display_interface_default_obj.set_region = ips200_set_region;
+ 195              		.loc 1 131 50
+ 196 0090 734B     		ldr	r3, .L23+12
+ 197 0092 754A     		ldr	r2, .L23+20
+ 198 0094 9A61     		str	r2, [r3, #24]
+ 132:libraries/zf_device/zf_device_ips200.c **** 
+ 133:libraries/zf_device/zf_device_ips200.c ****         zf_gpio_high(display_interface_default_obj.spi_blk_pin);
+ 199              		.loc 1 133 9
+ 200 0096 724B     		ldr	r3, .L23+12
+ 201 0098 5B8A     		ldrh	r3, [r3, #18]
+ 202 009a 40F6FF72 		movw	r2, #4095
+ 203 009e 9342     		cmp	r3, r2
+ 204 00a0 19D0     		beq	.L6
+ 205              		.loc 1 133 9 is_stmt 0 discriminator 1
+ 206 00a2 6F4B     		ldr	r3, .L23+12
+ 207 00a4 5B8A     		ldrh	r3, [r3, #18]
+ 208 00a6 5B09     		lsrs	r3, r3, #5
+ 209 00a8 9BB2     		uxth	r3, r3
+ 210 00aa 1A46     		mov	r2, r3
+ 211 00ac 6F4B     		ldr	r3, .L23+24
+ 212 00ae 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 213 00b2 9969     		ldr	r1, [r3, #24]
+ 214 00b4 6A4B     		ldr	r3, .L23+12
+ 215 00b6 5B8A     		ldrh	r3, [r3, #18]
+ 216 00b8 03F01F03 		and	r3, r3, #31
+ 217 00bc 0122     		movs	r2, #1
+ 218 00be 9A40     		lsls	r2, r2, r3
+ 219 00c0 674B     		ldr	r3, .L23+12
+ 220 00c2 5B8A     		ldrh	r3, [r3, #18]
+ 221 00c4 5B09     		lsrs	r3, r3, #5
+ 222 00c6 9BB2     		uxth	r3, r3
+ 223 00c8 1846     		mov	r0, r3
+ 224 00ca 684B     		ldr	r3, .L23+24
+ 225 00cc 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 226 00d0 0A43     		orrs	r2, r2, r1
+ 227 00d2 9A61     		str	r2, [r3, #24]
+ 228 00d4 04E0     		b	.L7
+ 229              	.L6:
+ 230              		.loc 1 133 9 discriminator 2
+ 231 00d6 0022     		movs	r2, #0
+ 232 00d8 8521     		movs	r1, #133
+ 233 00da 6248     		ldr	r0, .L23+16
+ 234 00dc FFF7FEFF 		bl	zf_gpio_assert_handler
+ 235              	.L7:
+ 134:libraries/zf_device/zf_device_ips200.c ****         zf_gpio_low(display_interface_default_obj.spi_rst_pin);
+ 236              		.loc 1 134 9 is_stmt 1
+ 237 00e0 5F4B     		ldr	r3, .L23+12
+ 238 00e2 9B89     		ldrh	r3, [r3, #12]
+ 239 00e4 40F6FF72 		movw	r2, #4095
+ 240 00e8 9342     		cmp	r3, r2
+ 241 00ea 1AD0     		beq	.L8
+ 242              		.loc 1 134 9 is_stmt 0 discriminator 1
+ 243 00ec 5C4B     		ldr	r3, .L23+12
+ 244 00ee 9B89     		ldrh	r3, [r3, #12]
+ 245 00f0 5B09     		lsrs	r3, r3, #5
+ 246 00f2 9BB2     		uxth	r3, r3
+ 247 00f4 1A46     		mov	r2, r3
+ 248 00f6 5D4B     		ldr	r3, .L23+24
+ 249 00f8 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 250 00fc 9969     		ldr	r1, [r3, #24]
+ 251 00fe 584B     		ldr	r3, .L23+12
+ 252 0100 9B89     		ldrh	r3, [r3, #12]
+ 253 0102 03F01F03 		and	r3, r3, #31
+ 254 0106 4FF48032 		mov	r2, #65536
+ 255 010a 9A40     		lsls	r2, r2, r3
+ 256 010c 544B     		ldr	r3, .L23+12
+ 257 010e 9B89     		ldrh	r3, [r3, #12]
+ 258 0110 5B09     		lsrs	r3, r3, #5
+ 259 0112 9BB2     		uxth	r3, r3
+ 260 0114 1846     		mov	r0, r3
+ 261 0116 554B     		ldr	r3, .L23+24
+ 262 0118 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 263 011c 0A43     		orrs	r2, r2, r1
+ 264 011e 9A61     		str	r2, [r3, #24]
+ 265 0120 04E0     		b	.L9
+ 266              	.L8:
+ 267              		.loc 1 134 9 discriminator 2
+ 268 0122 0022     		movs	r2, #0
+ 269 0124 8621     		movs	r1, #134
+ 270 0126 4F48     		ldr	r0, .L23+16
+ 271 0128 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 272              	.L9:
+ 135:libraries/zf_device/zf_device_ips200.c ****         display_interface_delay_ms(5);
+ 273              		.loc 1 135 9 is_stmt 1
+ 274 012c 0520     		movs	r0, #5
+ 275 012e FFF7FEFF 		bl	zf_delay_ms
+ 136:libraries/zf_device/zf_device_ips200.c ****         zf_gpio_high(display_interface_default_obj.spi_rst_pin);
+ 276              		.loc 1 136 9
+ 277 0132 4B4B     		ldr	r3, .L23+12
+ 278 0134 9B89     		ldrh	r3, [r3, #12]
+ 279 0136 40F6FF72 		movw	r2, #4095
+ 280 013a 9342     		cmp	r3, r2
+ 281 013c 19D0     		beq	.L10
+ 282              		.loc 1 136 9 is_stmt 0 discriminator 1
+ 283 013e 484B     		ldr	r3, .L23+12
+ 284 0140 9B89     		ldrh	r3, [r3, #12]
+ 285 0142 5B09     		lsrs	r3, r3, #5
+ 286 0144 9BB2     		uxth	r3, r3
+ 287 0146 1A46     		mov	r2, r3
+ 288 0148 484B     		ldr	r3, .L23+24
+ 289 014a 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 290 014e 9969     		ldr	r1, [r3, #24]
+ 291 0150 434B     		ldr	r3, .L23+12
+ 292 0152 9B89     		ldrh	r3, [r3, #12]
+ 293 0154 03F01F03 		and	r3, r3, #31
+ 294 0158 0122     		movs	r2, #1
+ 295 015a 9A40     		lsls	r2, r2, r3
+ 296 015c 404B     		ldr	r3, .L23+12
+ 297 015e 9B89     		ldrh	r3, [r3, #12]
+ 298 0160 5B09     		lsrs	r3, r3, #5
+ 299 0162 9BB2     		uxth	r3, r3
+ 300 0164 1846     		mov	r0, r3
+ 301 0166 414B     		ldr	r3, .L23+24
+ 302 0168 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 303 016c 0A43     		orrs	r2, r2, r1
+ 304 016e 9A61     		str	r2, [r3, #24]
+ 305 0170 04E0     		b	.L11
+ 306              	.L10:
+ 307              		.loc 1 136 9 discriminator 2
+ 308 0172 0022     		movs	r2, #0
+ 309 0174 8821     		movs	r1, #136
+ 310 0176 3B48     		ldr	r0, .L23+16
+ 311 0178 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 312              	.L11:
+ 137:libraries/zf_device/zf_device_ips200.c ****         display_interface_delay_ms(120);
+ 313              		.loc 1 137 9 is_stmt 1
+ 314 017c 7820     		movs	r0, #120
+ 315 017e FFF7FEFF 		bl	zf_delay_ms
+ 138:libraries/zf_device/zf_device_ips200.c **** 
+ 139:libraries/zf_device/zf_device_ips200.c ****         if(DISPLAY_INTERFACE_TYPE_SPI == display_interface_default_obj.interface_type)
+ 316              		.loc 1 139 71
+ 317 0182 374B     		ldr	r3, .L23+12
+ 318 0184 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 319              		.loc 1 139 11
+ 320 0186 012B     		cmp	r3, #1
+ 321 0188 25D1     		bne	.L12
+ 140:libraries/zf_device/zf_device_ips200.c ****         {
+ 141:libraries/zf_device/zf_device_ips200.c ****             zf_gpio_low(display_interface_default_obj.spi_cs_pin);
+ 322              		.loc 1 141 13
+ 323 018a 354B     		ldr	r3, .L23+12
+ 324 018c 1B8A     		ldrh	r3, [r3, #16]
+ 325 018e 40F6FF72 		movw	r2, #4095
+ 326 0192 9342     		cmp	r3, r2
+ 327 0194 1AD0     		beq	.L13
+ 328              		.loc 1 141 13 is_stmt 0 discriminator 1
+ 329 0196 324B     		ldr	r3, .L23+12
+ 330 0198 1B8A     		ldrh	r3, [r3, #16]
+ 331 019a 5B09     		lsrs	r3, r3, #5
+ 332 019c 9BB2     		uxth	r3, r3
+ 333 019e 1A46     		mov	r2, r3
+ 334 01a0 324B     		ldr	r3, .L23+24
+ 335 01a2 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 336 01a6 9969     		ldr	r1, [r3, #24]
+ 337 01a8 2D4B     		ldr	r3, .L23+12
+ 338 01aa 1B8A     		ldrh	r3, [r3, #16]
+ 339 01ac 03F01F03 		and	r3, r3, #31
+ 340 01b0 4FF48032 		mov	r2, #65536
+ 341 01b4 9A40     		lsls	r2, r2, r3
+ 342 01b6 2A4B     		ldr	r3, .L23+12
+ 343 01b8 1B8A     		ldrh	r3, [r3, #16]
+ 344 01ba 5B09     		lsrs	r3, r3, #5
+ 345 01bc 9BB2     		uxth	r3, r3
+ 346 01be 1846     		mov	r0, r3
+ 347 01c0 2A4B     		ldr	r3, .L23+24
+ 348 01c2 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 349 01c6 0A43     		orrs	r2, r2, r1
+ 350 01c8 9A61     		str	r2, [r3, #24]
+ 351 01ca 04E0     		b	.L12
+ 352              	.L13:
+ 353              		.loc 1 141 13 discriminator 2
+ 354 01cc 0022     		movs	r2, #0
+ 355 01ce 8D21     		movs	r1, #141
+ 356 01d0 2448     		ldr	r0, .L23+16
+ 357 01d2 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 358              	.L12:
+ 142:libraries/zf_device/zf_device_ips200.c ****         }
+ 143:libraries/zf_device/zf_device_ips200.c **** 
+ 144:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0x11);
+ 359              		.loc 1 144 9 is_stmt 1
+ 360 01d6 1121     		movs	r1, #17
+ 361 01d8 2148     		ldr	r0, .L23+12
+ 362 01da FFF7FEFF 		bl	display_interface_write_command
+ 145:libraries/zf_device/zf_device_ips200.c ****         display_interface_delay_ms(120);
+ 363              		.loc 1 145 9
+ 364 01de 7820     		movs	r0, #120
+ 365 01e0 FFF7FEFF 		bl	zf_delay_ms
+ 146:libraries/zf_device/zf_device_ips200.c **** 
+ 147:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0x36);
+ 366              		.loc 1 147 9
+ 367 01e4 3621     		movs	r1, #54
+ 368 01e6 1E48     		ldr	r0, .L23+12
+ 369 01e8 FFF7FEFF 		bl	display_interface_write_command
+ 148:libraries/zf_device/zf_device_ips200.c ****         switch(display_interface_default_obj.dir_mode)
+ 370              		.loc 1 148 45
+ 371 01ec 1C4B     		ldr	r3, .L23+12
+ 372 01ee 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 373              		.loc 1 148 9
+ 374 01f0 032B     		cmp	r3, #3
+ 375 01f2 49D8     		bhi	.L14
+ 376 01f4 01A2     		adr	r2, .L16
+ 377 01f6 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 378 01fa 00BF     		.p2align 2
+ 379              	.L16:
+ 380 01fc 0D020000 		.word	.L19+1
+ 381 0200 25020000 		.word	.L18+1
+ 382 0204 3D020000 		.word	.L17+1
+ 383 0208 71020000 		.word	.L15+1
+ 384              		.p2align 1
+ 385              	.L19:
+ 149:libraries/zf_device/zf_device_ips200.c ****         {
+ 150:libraries/zf_device/zf_device_ips200.c ****             case DISPLAY_INTERFACE_DIR_PORTRAIT     :
+ 151:libraries/zf_device/zf_device_ips200.c ****             {
+ 152:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_width_max  = 240;
+ 386              		.loc 1 152 66
+ 387 020c 144B     		ldr	r3, .L23+12
+ 388 020e F022     		movs	r2, #240
+ 389 0210 9A82     		strh	r2, [r3, #20]	@ movhi
+ 153:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_high_max   = 320;
+ 390              		.loc 1 153 66
+ 391 0212 134B     		ldr	r3, .L23+12
+ 392 0214 4FF4A072 		mov	r2, #320
+ 393 0218 DA82     		strh	r2, [r3, #22]	@ movhi
+ 154:libraries/zf_device/zf_device_ips200.c ****                 display_interface_write_8bit_data(&display_interface_default_obj, 0x00);
+ 394              		.loc 1 154 17
+ 395 021a 0021     		movs	r1, #0
+ 396 021c 1048     		ldr	r0, .L23+12
+ 397 021e FFF7FEFF 		bl	display_interface_write_8bit_data
+ 155:libraries/zf_device/zf_device_ips200.c ****             }break;
+ 398              		.loc 1 155 13
+ 399 0222 31E0     		b	.L14
+ 400              	.L18:
+ 156:libraries/zf_device/zf_device_ips200.c ****             case DISPLAY_INTERFACE_DIR_PORTRAIT_180 :
+ 157:libraries/zf_device/zf_device_ips200.c ****             {
+ 158:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_width_max  = 240;
+ 401              		.loc 1 158 66
+ 402 0224 0E4B     		ldr	r3, .L23+12
+ 403 0226 F022     		movs	r2, #240
+ 404 0228 9A82     		strh	r2, [r3, #20]	@ movhi
+ 159:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_high_max   = 320;
+ 405              		.loc 1 159 66
+ 406 022a 0D4B     		ldr	r3, .L23+12
+ 407 022c 4FF4A072 		mov	r2, #320
+ 408 0230 DA82     		strh	r2, [r3, #22]	@ movhi
+ 160:libraries/zf_device/zf_device_ips200.c ****                 display_interface_write_8bit_data(&display_interface_default_obj, 0xC0);
+ 409              		.loc 1 160 17
+ 410 0232 C021     		movs	r1, #192
+ 411 0234 0A48     		ldr	r0, .L23+12
+ 412 0236 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 161:libraries/zf_device/zf_device_ips200.c ****             }break;
+ 413              		.loc 1 161 13
+ 414 023a 25E0     		b	.L14
+ 415              	.L17:
+ 162:libraries/zf_device/zf_device_ips200.c ****             case DISPLAY_INTERFACE_DIR_CROSSWISE    :
+ 163:libraries/zf_device/zf_device_ips200.c ****             {
+ 164:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_width_max  = 320;
+ 416              		.loc 1 164 66
+ 417 023c 084B     		ldr	r3, .L23+12
+ 418 023e 4FF4A072 		mov	r2, #320
+ 419 0242 9A82     		strh	r2, [r3, #20]	@ movhi
+ 165:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_high_max   = 240;
+ 420              		.loc 1 165 66
+ 421 0244 064B     		ldr	r3, .L23+12
+ 422 0246 F022     		movs	r2, #240
+ 423 0248 DA82     		strh	r2, [r3, #22]	@ movhi
+ 166:libraries/zf_device/zf_device_ips200.c ****                 display_interface_write_8bit_data(&display_interface_default_obj, 0x70);
+ 424              		.loc 1 166 17
+ 425 024a 7021     		movs	r1, #112
+ 426 024c 0448     		ldr	r0, .L23+12
+ 427 024e FFF7FEFF 		bl	display_interface_write_8bit_data
+ 167:libraries/zf_device/zf_device_ips200.c ****             }break;
+ 428              		.loc 1 167 13
+ 429 0252 19E0     		b	.L14
+ 430              	.L24:
+ 431              		.align	2
+ 432              	.L23:
+ 433 0254 C7500300 		.word	217287
+ 434 0258 C5500300 		.word	217285
+ 435 025c 80C3C901 		.word	30000000
+ 436 0260 00000000 		.word	display_interface_default_obj
+ 437 0264 00000000 		.word	.LC0
+ 438 0268 00000000 		.word	ips200_set_region
+ 439 026c 00000000 		.word	gpio_group_list
+ 440              	.L15:
+ 168:libraries/zf_device/zf_device_ips200.c ****             case DISPLAY_INTERFACE_DIR_CROSSWISE_180:
+ 169:libraries/zf_device/zf_device_ips200.c ****             {
+ 170:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_width_max  = 320;
+ 441              		.loc 1 170 66
+ 442 0270 934B     		ldr	r3, .L25
+ 443 0272 4FF4A072 		mov	r2, #320
+ 444 0276 9A82     		strh	r2, [r3, #20]	@ movhi
+ 171:libraries/zf_device/zf_device_ips200.c ****                 display_interface_default_obj.display_high_max   = 240;
+ 445              		.loc 1 171 66
+ 446 0278 914B     		ldr	r3, .L25
+ 447 027a F022     		movs	r2, #240
+ 448 027c DA82     		strh	r2, [r3, #22]	@ movhi
+ 172:libraries/zf_device/zf_device_ips200.c ****                 display_interface_write_8bit_data(&display_interface_default_obj, 0xA0);
+ 449              		.loc 1 172 17
+ 450 027e A021     		movs	r1, #160
+ 451 0280 8F48     		ldr	r0, .L25
+ 452 0282 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 173:libraries/zf_device/zf_device_ips200.c ****             }break;
+ 453              		.loc 1 173 13
+ 454 0286 00BF     		nop
+ 455              	.L14:
+ 174:libraries/zf_device/zf_device_ips200.c ****         }
+ 175:libraries/zf_device/zf_device_ips200.c **** 
+ 176:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0x3A);
+ 456              		.loc 1 176 9
+ 457 0288 3A21     		movs	r1, #58
+ 458 028a 8D48     		ldr	r0, .L25
+ 459 028c FFF7FEFF 		bl	display_interface_write_command
+ 177:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x05);
+ 460              		.loc 1 177 9
+ 461 0290 0521     		movs	r1, #5
+ 462 0292 8B48     		ldr	r0, .L25
+ 463 0294 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 178:libraries/zf_device/zf_device_ips200.c **** 
+ 179:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xB2);
+ 464              		.loc 1 179 9
+ 465 0298 B221     		movs	r1, #178
+ 466 029a 8948     		ldr	r0, .L25
+ 467 029c FFF7FEFF 		bl	display_interface_write_command
+ 180:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x0C);
+ 468              		.loc 1 180 9
+ 469 02a0 0C21     		movs	r1, #12
+ 470 02a2 8748     		ldr	r0, .L25
+ 471 02a4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 181:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x0C);
+ 472              		.loc 1 181 9
+ 473 02a8 0C21     		movs	r1, #12
+ 474 02aa 8548     		ldr	r0, .L25
+ 475 02ac FFF7FEFF 		bl	display_interface_write_8bit_data
+ 182:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x00);
+ 476              		.loc 1 182 9
+ 477 02b0 0021     		movs	r1, #0
+ 478 02b2 8348     		ldr	r0, .L25
+ 479 02b4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 183:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x33);
+ 480              		.loc 1 183 9
+ 481 02b8 3321     		movs	r1, #51
+ 482 02ba 8148     		ldr	r0, .L25
+ 483 02bc FFF7FEFF 		bl	display_interface_write_8bit_data
+ 184:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x33);
+ 484              		.loc 1 184 9
+ 485 02c0 3321     		movs	r1, #51
+ 486 02c2 7F48     		ldr	r0, .L25
+ 487 02c4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 185:libraries/zf_device/zf_device_ips200.c **** 
+ 186:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xB7);
+ 488              		.loc 1 186 9
+ 489 02c8 B721     		movs	r1, #183
+ 490 02ca 7D48     		ldr	r0, .L25
+ 491 02cc FFF7FEFF 		bl	display_interface_write_command
+ 187:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x35);
+ 492              		.loc 1 187 9
+ 493 02d0 3521     		movs	r1, #53
+ 494 02d2 7B48     		ldr	r0, .L25
+ 495 02d4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 188:libraries/zf_device/zf_device_ips200.c **** 
+ 189:libraries/zf_device/zf_device_ips200.c ****         // 32 Vcom=1.35V
+ 190:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xBB);
+ 496              		.loc 1 190 9
+ 497 02d8 BB21     		movs	r1, #187
+ 498 02da 7948     		ldr	r0, .L25
+ 499 02dc FFF7FEFF 		bl	display_interface_write_command
+ 191:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x29);
+ 500              		.loc 1 191 9
+ 501 02e0 2921     		movs	r1, #41
+ 502 02e2 7748     		ldr	r0, .L25
+ 503 02e4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 192:libraries/zf_device/zf_device_ips200.c **** 
+ 193:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xC2);
+ 504              		.loc 1 193 9
+ 505 02e8 C221     		movs	r1, #194
+ 506 02ea 7548     		ldr	r0, .L25
+ 507 02ec FFF7FEFF 		bl	display_interface_write_command
+ 194:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x01);
+ 508              		.loc 1 194 9
+ 509 02f0 0121     		movs	r1, #1
+ 510 02f2 7348     		ldr	r0, .L25
+ 511 02f4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 195:libraries/zf_device/zf_device_ips200.c **** 
+ 196:libraries/zf_device/zf_device_ips200.c ****         // GVDD=4.8V 
+ 197:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xC3);
+ 512              		.loc 1 197 9
+ 513 02f8 C321     		movs	r1, #195
+ 514 02fa 7148     		ldr	r0, .L25
+ 515 02fc FFF7FEFF 		bl	display_interface_write_command
+ 198:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x19);
+ 516              		.loc 1 198 9
+ 517 0300 1921     		movs	r1, #25
+ 518 0302 6F48     		ldr	r0, .L25
+ 519 0304 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 199:libraries/zf_device/zf_device_ips200.c **** 
+ 200:libraries/zf_device/zf_device_ips200.c ****         // VDV, 0x20:0v
+ 201:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xC4);
+ 520              		.loc 1 201 9
+ 521 0308 C421     		movs	r1, #196
+ 522 030a 6D48     		ldr	r0, .L25
+ 523 030c FFF7FEFF 		bl	display_interface_write_command
+ 202:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x20);
+ 524              		.loc 1 202 9
+ 525 0310 2021     		movs	r1, #32
+ 526 0312 6B48     		ldr	r0, .L25
+ 527 0314 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 203:libraries/zf_device/zf_device_ips200.c **** 
+ 204:libraries/zf_device/zf_device_ips200.c ****         // VCOM Offset Set
+ 205:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xC5);
+ 528              		.loc 1 205 9
+ 529 0318 C521     		movs	r1, #197
+ 530 031a 6948     		ldr	r0, .L25
+ 531 031c FFF7FEFF 		bl	display_interface_write_command
+ 206:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x1A);
+ 532              		.loc 1 206 9
+ 533 0320 1A21     		movs	r1, #26
+ 534 0322 6748     		ldr	r0, .L25
+ 535 0324 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 207:libraries/zf_device/zf_device_ips200.c **** 
+ 208:libraries/zf_device/zf_device_ips200.c ****         // 0x0F:60Hz
+ 209:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xC6);
+ 536              		.loc 1 209 9
+ 537 0328 C621     		movs	r1, #198
+ 538 032a 6548     		ldr	r0, .L25
+ 539 032c FFF7FEFF 		bl	display_interface_write_command
+ 210:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x01F);
+ 540              		.loc 1 210 9
+ 541 0330 1F21     		movs	r1, #31
+ 542 0332 6348     		ldr	r0, .L25
+ 543 0334 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 211:libraries/zf_device/zf_device_ips200.c **** 
+ 212:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xD0);
+ 544              		.loc 1 212 9
+ 545 0338 D021     		movs	r1, #208
+ 546 033a 6148     		ldr	r0, .L25
+ 547 033c FFF7FEFF 		bl	display_interface_write_command
+ 213:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0xA4);
+ 548              		.loc 1 213 9
+ 549 0340 A421     		movs	r1, #164
+ 550 0342 5F48     		ldr	r0, .L25
+ 551 0344 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 214:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0xA1);
+ 552              		.loc 1 214 9
+ 553 0348 A121     		movs	r1, #161
+ 554 034a 5D48     		ldr	r0, .L25
+ 555 034c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 215:libraries/zf_device/zf_device_ips200.c **** 
+ 216:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xE0);
+ 556              		.loc 1 216 9
+ 557 0350 E021     		movs	r1, #224
+ 558 0352 5B48     		ldr	r0, .L25
+ 559 0354 FFF7FEFF 		bl	display_interface_write_command
+ 217:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0xD0);
+ 560              		.loc 1 217 9
+ 561 0358 D021     		movs	r1, #208
+ 562 035a 5948     		ldr	r0, .L25
+ 563 035c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 218:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x08);
+ 564              		.loc 1 218 9
+ 565 0360 0821     		movs	r1, #8
+ 566 0362 5748     		ldr	r0, .L25
+ 567 0364 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 219:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x0E);
+ 568              		.loc 1 219 9
+ 569 0368 0E21     		movs	r1, #14
+ 570 036a 5548     		ldr	r0, .L25
+ 571 036c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 220:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x09);
+ 572              		.loc 1 220 9
+ 573 0370 0921     		movs	r1, #9
+ 574 0372 5348     		ldr	r0, .L25
+ 575 0374 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 221:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x09);
+ 576              		.loc 1 221 9
+ 577 0378 0921     		movs	r1, #9
+ 578 037a 5148     		ldr	r0, .L25
+ 579 037c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 222:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x05);
+ 580              		.loc 1 222 9
+ 581 0380 0521     		movs	r1, #5
+ 582 0382 4F48     		ldr	r0, .L25
+ 583 0384 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 223:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x31);
+ 584              		.loc 1 223 9
+ 585 0388 3121     		movs	r1, #49
+ 586 038a 4D48     		ldr	r0, .L25
+ 587 038c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 224:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x33);
+ 588              		.loc 1 224 9
+ 589 0390 3321     		movs	r1, #51
+ 590 0392 4B48     		ldr	r0, .L25
+ 591 0394 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 225:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x48);
+ 592              		.loc 1 225 9
+ 593 0398 4821     		movs	r1, #72
+ 594 039a 4948     		ldr	r0, .L25
+ 595 039c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 226:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x17);
+ 596              		.loc 1 226 9
+ 597 03a0 1721     		movs	r1, #23
+ 598 03a2 4748     		ldr	r0, .L25
+ 599 03a4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 227:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x14);
+ 600              		.loc 1 227 9
+ 601 03a8 1421     		movs	r1, #20
+ 602 03aa 4548     		ldr	r0, .L25
+ 603 03ac FFF7FEFF 		bl	display_interface_write_8bit_data
+ 228:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x15);
+ 604              		.loc 1 228 9
+ 605 03b0 1521     		movs	r1, #21
+ 606 03b2 4348     		ldr	r0, .L25
+ 607 03b4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 229:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x31);
+ 608              		.loc 1 229 9
+ 609 03b8 3121     		movs	r1, #49
+ 610 03ba 4148     		ldr	r0, .L25
+ 611 03bc FFF7FEFF 		bl	display_interface_write_8bit_data
+ 230:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x34);
+ 612              		.loc 1 230 9
+ 613 03c0 3421     		movs	r1, #52
+ 614 03c2 3F48     		ldr	r0, .L25
+ 615 03c4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 231:libraries/zf_device/zf_device_ips200.c **** 
+ 232:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0xE1);
+ 616              		.loc 1 232 9
+ 617 03c8 E121     		movs	r1, #225
+ 618 03ca 3D48     		ldr	r0, .L25
+ 619 03cc FFF7FEFF 		bl	display_interface_write_command
+ 233:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0xD0);
+ 620              		.loc 1 233 9
+ 621 03d0 D021     		movs	r1, #208
+ 622 03d2 3B48     		ldr	r0, .L25
+ 623 03d4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 234:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x08);
+ 624              		.loc 1 234 9
+ 625 03d8 0821     		movs	r1, #8
+ 626 03da 3948     		ldr	r0, .L25
+ 627 03dc FFF7FEFF 		bl	display_interface_write_8bit_data
+ 235:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x0E);
+ 628              		.loc 1 235 9
+ 629 03e0 0E21     		movs	r1, #14
+ 630 03e2 3748     		ldr	r0, .L25
+ 631 03e4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 236:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x09);
+ 632              		.loc 1 236 9
+ 633 03e8 0921     		movs	r1, #9
+ 634 03ea 3548     		ldr	r0, .L25
+ 635 03ec FFF7FEFF 		bl	display_interface_write_8bit_data
+ 237:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x09);
+ 636              		.loc 1 237 9
+ 637 03f0 0921     		movs	r1, #9
+ 638 03f2 3348     		ldr	r0, .L25
+ 639 03f4 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 238:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x15);
+ 640              		.loc 1 238 9
+ 641 03f8 1521     		movs	r1, #21
+ 642 03fa 3148     		ldr	r0, .L25
+ 643 03fc FFF7FEFF 		bl	display_interface_write_8bit_data
+ 239:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x31);
+ 644              		.loc 1 239 9
+ 645 0400 3121     		movs	r1, #49
+ 646 0402 2F48     		ldr	r0, .L25
+ 647 0404 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 240:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x33);
+ 648              		.loc 1 240 9
+ 649 0408 3321     		movs	r1, #51
+ 650 040a 2D48     		ldr	r0, .L25
+ 651 040c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 241:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x48);
+ 652              		.loc 1 241 9
+ 653 0410 4821     		movs	r1, #72
+ 654 0412 2B48     		ldr	r0, .L25
+ 655 0414 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 242:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x17);
+ 656              		.loc 1 242 9
+ 657 0418 1721     		movs	r1, #23
+ 658 041a 2948     		ldr	r0, .L25
+ 659 041c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 243:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x14);
+ 660              		.loc 1 243 9
+ 661 0420 1421     		movs	r1, #20
+ 662 0422 2748     		ldr	r0, .L25
+ 663 0424 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 244:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x15);
+ 664              		.loc 1 244 9
+ 665 0428 1521     		movs	r1, #21
+ 666 042a 2548     		ldr	r0, .L25
+ 667 042c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 245:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x31);
+ 668              		.loc 1 245 9
+ 669 0430 3121     		movs	r1, #49
+ 670 0432 2348     		ldr	r0, .L25
+ 671 0434 FFF7FEFF 		bl	display_interface_write_8bit_data
+ 246:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_8bit_data(&display_interface_default_obj, 0x34);
+ 672              		.loc 1 246 9
+ 673 0438 3421     		movs	r1, #52
+ 674 043a 2148     		ldr	r0, .L25
+ 675 043c FFF7FEFF 		bl	display_interface_write_8bit_data
+ 247:libraries/zf_device/zf_device_ips200.c **** 
+ 248:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0x21);
+ 676              		.loc 1 248 9
+ 677 0440 2121     		movs	r1, #33
+ 678 0442 1F48     		ldr	r0, .L25
+ 679 0444 FFF7FEFF 		bl	display_interface_write_command
+ 249:libraries/zf_device/zf_device_ips200.c **** 
+ 250:libraries/zf_device/zf_device_ips200.c ****         display_interface_write_command(&display_interface_default_obj, 0x29);
+ 680              		.loc 1 250 9
+ 681 0448 2921     		movs	r1, #41
+ 682 044a 1D48     		ldr	r0, .L25
+ 683 044c FFF7FEFF 		bl	display_interface_write_command
+ 251:libraries/zf_device/zf_device_ips200.c **** 
+ 252:libraries/zf_device/zf_device_ips200.c ****         if(DISPLAY_INTERFACE_TYPE_SPI == display_interface_default_obj.interface_type)
+ 684              		.loc 1 252 71
+ 685 0450 1B4B     		ldr	r3, .L25
+ 686 0452 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 687              		.loc 1 252 11
+ 688 0454 012B     		cmp	r3, #1
+ 689 0456 24D1     		bne	.L20
+ 253:libraries/zf_device/zf_device_ips200.c ****         {
+ 254:libraries/zf_device/zf_device_ips200.c ****             zf_gpio_high(display_interface_default_obj.spi_cs_pin);
+ 690              		.loc 1 254 13
+ 691 0458 194B     		ldr	r3, .L25
+ 692 045a 1B8A     		ldrh	r3, [r3, #16]
+ 693 045c 40F6FF72 		movw	r2, #4095
+ 694 0460 9342     		cmp	r3, r2
+ 695 0462 19D0     		beq	.L21
+ 696              		.loc 1 254 13 is_stmt 0 discriminator 1
+ 697 0464 164B     		ldr	r3, .L25
+ 698 0466 1B8A     		ldrh	r3, [r3, #16]
+ 699 0468 5B09     		lsrs	r3, r3, #5
+ 700 046a 9BB2     		uxth	r3, r3
+ 701 046c 1A46     		mov	r2, r3
+ 702 046e 154B     		ldr	r3, .L25+4
+ 703 0470 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 704 0474 9969     		ldr	r1, [r3, #24]
+ 705 0476 124B     		ldr	r3, .L25
+ 706 0478 1B8A     		ldrh	r3, [r3, #16]
+ 707 047a 03F01F03 		and	r3, r3, #31
+ 708 047e 0122     		movs	r2, #1
+ 709 0480 9A40     		lsls	r2, r2, r3
+ 710 0482 0F4B     		ldr	r3, .L25
+ 711 0484 1B8A     		ldrh	r3, [r3, #16]
+ 712 0486 5B09     		lsrs	r3, r3, #5
+ 713 0488 9BB2     		uxth	r3, r3
+ 714 048a 1846     		mov	r0, r3
+ 715 048c 0D4B     		ldr	r3, .L25+4
+ 716 048e 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 717 0492 0A43     		orrs	r2, r2, r1
+ 718 0494 9A61     		str	r2, [r3, #24]
+ 719 0496 04E0     		b	.L20
+ 720              	.L21:
+ 721              		.loc 1 254 13 discriminator 2
+ 722 0498 0022     		movs	r2, #0
+ 723 049a FE21     		movs	r1, #254
+ 724 049c 0A48     		ldr	r0, .L25+8
+ 725 049e FFF7FEFF 		bl	zf_gpio_assert_handler
+ 726              	.L20:
+ 255:libraries/zf_device/zf_device_ips200.c ****         }
+ 256:libraries/zf_device/zf_device_ips200.c **** 
+ 257:libraries/zf_device/zf_device_ips200.c ****         display_interface_clear(&display_interface_default_obj);
+ 727              		.loc 1 257 9 is_stmt 1
+ 728 04a2 0748     		ldr	r0, .L25
+ 729 04a4 FFF7FEFF 		bl	display_interface_clear
+ 258:libraries/zf_device/zf_device_ips200.c ****         display_interface_debug_init(&display_interface_default_obj);
+ 730              		.loc 1 258 9
+ 731 04a8 0548     		ldr	r0, .L25
+ 732 04aa FFF7FEFF 		bl	display_interface_debug_init
+ 259:libraries/zf_device/zf_device_ips200.c **** 
+ 260:libraries/zf_device/zf_device_ips200.c ****         return_state = DISPLAY_INTERFACE_OPERATION_DONE;
+ 733              		.loc 1 260 22
+ 734 04ae 0023     		movs	r3, #0
+ 735 04b0 8DF82730 		strb	r3, [sp, #39]
+ 736              	.L5:
+ 261:libraries/zf_device/zf_device_ips200.c ****     }while(0);
+ 262:libraries/zf_device/zf_device_ips200.c **** 
+ 263:libraries/zf_device/zf_device_ips200.c ****     return return_state;
+ 737              		.loc 1 263 12
+ 738 04b4 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 264:libraries/zf_device/zf_device_ips200.c **** }
+ 739              		.loc 1 264 1
+ 740 04b8 1846     		mov	r0, r3
+ 741 04ba 0BB0     		add	sp, sp, #44
+ 742              		.cfi_def_cfa_offset 4
+ 743              		@ sp needed
+ 744 04bc 5DF804FB 		ldr	pc, [sp], #4
+ 745              	.L26:
+ 746              		.align	2
+ 747              	.L25:
+ 748 04c0 00000000 		.word	display_interface_default_obj
+ 749 04c4 00000000 		.word	gpio_group_list
+ 750 04c8 00000000 		.word	.LC0
+ 751              		.cfi_endproc
+ 752              	.LFE483:
+ 754              		.text
+ 755              	.Letext0:
+ 756              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 757              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 758              		.file 4 "libraries/zf_common/zf_common_typedef.h"
+ 759              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_GPIO
+ 760              		.file 6 "libraries/zf_driver/zf_driver_gpio.h"
+ 761              		.file 7 "libraries/zf_driver/zf_driver_spi.h"
+ 762              		.file 8 "libraries/zf_device/zf_device_display_interface.h"
+ 763              		.file 9 "libraries/zf_device/zf_device_ips200.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_device_ips200.c
+D:\Users\TMP\ccMCQEFW.s:19     .text.ips200_set_region:00000000 $t
+D:\Users\TMP\ccMCQEFW.s:25     .text.ips200_set_region:00000000 ips200_set_region
+D:\Users\TMP\ccMCQEFW.s:102    .rodata:00000000 $d
+D:\Users\TMP\ccMCQEFW.s:106    .text.ips200_init:00000000 $t
+D:\Users\TMP\ccMCQEFW.s:113    .text.ips200_init:00000000 ips200_init
+D:\Users\TMP\ccMCQEFW.s:380    .text.ips200_init:000001fc $d
+D:\Users\TMP\ccMCQEFW.s:384    .text.ips200_init:0000020c $t
+D:\Users\TMP\ccMCQEFW.s:433    .text.ips200_init:00000254 $d
+D:\Users\TMP\ccMCQEFW.s:442    .text.ips200_init:00000270 $t
+D:\Users\TMP\ccMCQEFW.s:748    .text.ips200_init:000004c0 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.zf_common_debug.h.33.6d362bbaa8a8ff23e6f5c0a30bf7361f
+                           .group:00000000 wm4.zf_common_fifo.h.33.e14e643902e26e4e65437b5b20e82793
+                           .group:00000000 wm4.zf_common_function.h.33.02bbfb055e8ee322bc4f8b14ea195da2
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.saradc.h.25.e5a70aef9ec4fddf35f2b7cc0c9cf1bc
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_adc.h.64.349fb433626b42172b0e0fee038428ca
+                           .group:00000000 wm4.can.h.25.3cfccb6c630ada4f656cab597e231e58
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.zf_driver_can.h.67.fd10d2fa867eb54a54d4b57027d73a60
+                           .group:00000000 wm4.tim.h.25.6e7ad96569e77a70a68b9b4cc59f54f2
+                           .group:00000000 wm4.zf_driver_timer.h.33.8df253b6990d9861816977209fb11e90
+                           .group:00000000 wm4.zf_driver_encoder.h.57.7e32999f25354fac086ca226b0c630d4
+                           .group:00000000 wm4.exti.h.25.21597c35d9630b0985ce88d2c41f4ea4
+                           .group:00000000 wm4.zf_driver_exti.h.59.1b02b8083e5295ef5baaf83905d59395
+                           .group:00000000 wm4.ssd_types.h.29.b861f4e6d39d333f931bfc05b964cb1c
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.zf_driver_flash.h.59.db93fe574c35ea9e79030063fbb35a13
+                           .group:00000000 wm4.hrtim.h.25.1601aea9d4a0da1de8252dc444355251
+                           .group:00000000 wm4.zf_driver_hrtim.h.64.cd8d2bf3bf1c471ea59d9c61e4a721d7
+                           .group:00000000 wm4.zf_driver_interrupt.h.33.2c3660dcc36cb090bd75b8f180c14f27
+                           .group:00000000 wm4.zf_driver_pit.h.33.834ac720a62e09d5603a9557331e9049
+                           .group:00000000 wm4.zf_driver_pwm.h.33.7d80487064ca712231a453396685a551
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.zf_driver_soft_iic.h.33.9067bd298084134f63c61c075f95fa2b
+                           .group:00000000 wm4.zf_driver_soft_spi.h.33.a938287c023905d97cafe56e4be63674
+                           .group:00000000 wm4.zf_driver_spi.h.62.950b1f52ed365034df2907601137b455
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.zf_driver_uart.h.70.ffcf3694337ad0b4066179f1abd5d668
+                           .group:00000000 wm4.zf_device_display_interface.h.79.d8df25e52245efbd97fd6415c8db0a72
+                           .group:00000000 wm4.zf_device_ips200.h.83.0b4b489893cbf6946f85b148924fe2c9
+
+UNDEFINED SYMBOLS
+display_interface_write_command
+display_interface_write_16bit_data
+display_interface_spi_init
+debug_message_handler
+zf_gpio_assert_handler
+zf_delay_ms
+display_interface_write_8bit_data
+display_interface_default_obj
+gpio_group_list
+display_interface_clear
+display_interface_debug_init

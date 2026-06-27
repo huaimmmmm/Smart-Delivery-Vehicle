@@ -1,0 +1,3 @@
+HardwareBoard ZFEVB_SR5E1E3_Empty_Porject
+include "platform:/plugin/com.st.stellar.model.lib/lib/SR5E1/SR5E1.gpio_def"
+package E3

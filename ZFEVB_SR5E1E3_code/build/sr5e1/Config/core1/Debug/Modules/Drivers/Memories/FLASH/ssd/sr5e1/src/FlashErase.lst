@@ -1,0 +1,714 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"FlashErase.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.FlashErase,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.global	FlashErase
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	FlashErase:
+  27              	.LFB0:
+  28              		.file 1 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/
+   1:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** /****************************************************************************
+   2:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  *
+   3:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  *
+   5:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  * terms SLA0098 at www.st.com.
+   7:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  *
+   8:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  *
+  11:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  *
+  12:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****  *****************************************************************************/
+  13:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  14:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** /*************************************************************************
+  15:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                                                                       *
+  16:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *               Standard Software Driver for C55                        *
+  17:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                                                                       *
+  18:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * FILE NAME     : FlashErase.c                                          *
+  19:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * FUNCTION      : FlashErase                                            *
+  20:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * DESCRIPTION   : This function will erase selected blks.               *
+  21:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                   NOTE: The blks need to be unlocked first.           *
+  22:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                   We don't unlock blks in erase function to be        *
+  23:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                   consistent with customer usage, since otherwise it  *
+  24:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                   violates the original intention of block protection.*
+  25:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * PARAMETERS    : pSSDConfig - Flash driver configuration structure     *
+  26:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 eraseOption - erase option                            *
+  27:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 lowEnabledBlocks - selected Low Address Space block(s)*
+  28:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 midEnabledBlocks - selected Mid Address Space block(s)*
+  29:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 highEnabledBlocks - selected High Address Space       *
+  30:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                   block(s)                                            *
+  31:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 n256KEnabledBlocks - selected 256K Address Space      *
+  32:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                   block(s)                                            *
+  33:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * RETURN VALUES : C55_OK          - Erase passes                        *
+  34:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 C55_ERROR_BUSY  - Other HV operation in progress      *
+  35:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 C55_ERROR_ERASE_OPTION  - Invalid erase option        *
+  36:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                 C55_ERROR_FACTORY_OP  - Could not perform factory     *
+  37:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                   erase                                               *
+  38:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * DATE          : February 04, 2022                                     *
+  39:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * AUTHOR        : ...                                                   *
+  40:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** * E-mail        : ...                                                   *
+  41:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *                                                                       *
+  42:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *************************************************************************/
+  43:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  44:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** /******************************* CHANGES *********************************
+  45:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****   0.1.0   04.02.2022      G. Cuce       Initial version
+  46:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** *************************************************************************/
+  47:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  48:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  49:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  50:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** #include "ssd_types.h"
+  51:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** #include "ssd_C55.h"
+  52:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  53:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  54:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** UINT32 FlashErase ( PSSD_CONFIG pSSDConfig,
+  55:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                     UINT8 eraseOption,
+  56:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                     UINT32 lowBlockSelect,
+  57:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                     UINT32 midBlockSelect,
+  58:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                     UINT32 highBlockSelect,
+  59:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                     N256K_BLOCK_SEL n256KBlockSelect
+  60:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                     )
+  61:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** {
+  29              		.loc 1 61 1
+  30              		.cfi_startproc
+  31              		@ args = 12, pretend = 0, frame = 40
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 8AB0     		sub	sp, sp, #40
+  35              		.cfi_def_cfa_offset 40
+  36 0002 0390     		str	r0, [sp, #12]
+  37 0004 0192     		str	r2, [sp, #4]
+  38 0006 0093     		str	r3, [sp]
+  39 0008 0B46     		mov	r3, r1
+  40 000a 8DF80B30 		strb	r3, [sp, #11]
+  62:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     volatile UINT32 returnCode;     /* return code */
+  63:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  64:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     UINT32 c55RegBase;              /* base address of C55 registers */
+  65:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     UINT32 MCRAddress;              /* address of C55_MCR register */
+  66:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     UINT32 MCRValue;                /* content of C55_MCR register */
+  67:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     UINT32 interlockWriteAddress;   /* interlock write address */
+  68:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****    
+  69:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****    
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     c55RegBase = pSSDConfig->c55RegBase;
+  41              		.loc 1 70 16
+  42 000e 039B     		ldr	r3, [sp, #12]
+  43 0010 1B68     		ldr	r3, [r3]
+  44 0012 0793     		str	r3, [sp, #28]
+  71:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+  72:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     MCRAddress = c55RegBase + C55_MCR;
+  45              		.loc 1 72 16
+  46 0014 079B     		ldr	r3, [sp, #28]
+  47 0016 0693     		str	r3, [sp, #24]
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     MCRValue = C55_REG_READ (MCRAddress);
+  48              		.loc 1 74 16
+  49 0018 069B     		ldr	r3, [sp, #24]
+  50              		.loc 1 74 14
+  51 001a 1B68     		ldr	r3, [r3]
+  52 001c 0593     		str	r3, [sp, #20]
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     
+  76:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Initialize returnCode */
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     returnCode = C55_OK;
+  53              		.loc 1 77 16
+  54 001e 0023     		movs	r3, #0
+  55 0020 0493     		str	r3, [sp, #16]
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     
+  79:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Check for validity of erase option */
+  80:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     switch ( eraseOption )
+  56              		.loc 1 80 5
+  57 0022 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+  58 0026 012B     		cmp	r3, #1
+  59 0028 02DC     		bgt	.L2
+  60 002a 002B     		cmp	r3, #0
+  61 002c 04DA     		bge	.L3
+  62 002e 15E0     		b	.L4
+  63              	.L2:
+  64 0030 023B     		subs	r3, r3, #2
+  65 0032 012B     		cmp	r3, #1
+  66 0034 12D8     		bhi	.L4
+  67 0036 03E0     		b	.L22
+  68              	.L3:
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     {
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     case C55_ERASE_MAIN:
+  83:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     case C55_ERASE_MAIN_FERS:
+  84:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         interlockWriteAddress = pSSDConfig->mainArrayBase;
+  69              		.loc 1 84 31
+  70 0038 039B     		ldr	r3, [sp, #12]
+  71 003a 5B68     		ldr	r3, [r3, #4]
+  72 003c 0993     		str	r3, [sp, #36]
+  85:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         break;
+  73              		.loc 1 85 9
+  74 003e 11E0     		b	.L6
+  75              	.L22:
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     case C55_ERASE_UTEST:
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     case C55_ERASE_UTEST_FERS:
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         interlockWriteAddress = pSSDConfig->uTestArrayBase;
+  76              		.loc 1 89 31
+  77 0040 039B     		ldr	r3, [sp, #12]
+  78 0042 DB6B     		ldr	r3, [r3, #60]
+  79 0044 0993     		str	r3, [sp, #36]
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* Erase UTest requires no block to be selected */
+  91:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         lowBlockSelect = 0;
+  80              		.loc 1 91 24
+  81 0046 0023     		movs	r3, #0
+  82 0048 0193     		str	r3, [sp, #4]
+  92:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         midBlockSelect = 0;
+  83              		.loc 1 92 24
+  84 004a 0023     		movs	r3, #0
+  85 004c 0093     		str	r3, [sp]
+  93:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         highBlockSelect = 0;
+  86              		.loc 1 93 25
+  87 004e 0023     		movs	r3, #0
+  88 0050 0A93     		str	r3, [sp, #40]
+  94:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         n256KBlockSelect.first256KBlockSelect = 0;
+  89              		.loc 1 94 47
+  90 0052 0023     		movs	r3, #0
+  91 0054 0B93     		str	r3, [sp, #44]
+  95:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         n256KBlockSelect.second256KBlockSelect = 0;
+  92              		.loc 1 95 48
+  93 0056 0023     		movs	r3, #0
+  94 0058 0C93     		str	r3, [sp, #48]
+  96:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         break;
+  95              		.loc 1 96 9
+  96 005a 03E0     		b	.L6
+  97              	.L4:
+  97:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     
+  98:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     default:
+  99:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         returnCode = C55_ERROR_ERASE_OPTION;
+  98              		.loc 1 99 20
+  99 005c 4FF48043 		mov	r3, #16384
+ 100 0060 0493     		str	r3, [sp, #16]
+ 100:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         goto EXIT;
+ 101              		.loc 1 100 9
+ 102 0062 F8E0     		b	.L7
+ 103              	.L6:
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     }
+ 102:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 103:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Program and/or erase operation in progress */
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     if ( ( MCRValue & C55_MCR_PGM ) ||
+ 104              		.loc 1 104 21
+ 105 0064 059B     		ldr	r3, [sp, #20]
+ 106 0066 03F01003 		and	r3, r3, #16
+ 107              		.loc 1 104 8
+ 108 006a 002B     		cmp	r3, #0
+ 109 006c 09D1     		bne	.L8
+ 105:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****          ( (MCRValue & C55_MCR_ERS) && (MCRValue & (C55_MCR_EHV | C55_MCR_ESUS)) ) )
+ 110              		.loc 1 105 22 discriminator 1
+ 111 006e 059B     		ldr	r3, [sp, #20]
+ 112 0070 03F00403 		and	r3, r3, #4
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****          ( (MCRValue & C55_MCR_ERS) && (MCRValue & (C55_MCR_EHV | C55_MCR_ESUS)) ) )
+ 113              		.loc 1 104 37 discriminator 1
+ 114 0074 002B     		cmp	r3, #0
+ 115 0076 07D0     		beq	.L9
+ 116              		.loc 1 105 50
+ 117 0078 059B     		ldr	r3, [sp, #20]
+ 118 007a 03F00303 		and	r3, r3, #3
+ 119              		.loc 1 105 37
+ 120 007e 002B     		cmp	r3, #0
+ 121 0080 02D0     		beq	.L9
+ 122              	.L8:
+ 106:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     {
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         returnCode = C55_ERROR_BUSY;
+ 123              		.loc 1 107 20
+ 124 0082 0423     		movs	r3, #4
+ 125 0084 0493     		str	r3, [sp, #16]
+ 108:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         goto EXIT;
+ 126              		.loc 1 108 9
+ 127 0086 E6E0     		b	.L7
+ 128              	.L9:
+ 109:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     }
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Correct the block selection for the case we erase Main array */
+ 112:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     if ( C55_ERASE_MAIN == eraseOption || C55_ERASE_MAIN_FERS == eraseOption )
+ 129              		.loc 1 112 8
+ 130 0088 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 131 008c 002B     		cmp	r3, #0
+ 132 008e 04D0     		beq	.L10
+ 133              		.loc 1 112 40 discriminator 1
+ 134 0090 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 135 0094 012B     		cmp	r3, #1
+ 136 0096 40F08580 		bne	.L11
+ 137              	.L10:
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     {
+ 114:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* Mask off reserved bits for low address space */
+ 115:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         lowBlockSelect &= 0xFFFFFFFF >> (32 - C55_LOW_BLOCK_NUM(pSSDConfig) - 1  );
+ 138              		.loc 1 115 47
+ 139 009a 039B     		ldr	r3, [sp, #12]
+ 140 009c 9A68     		ldr	r2, [r3, #8]
+ 141 009e 039B     		ldr	r3, [sp, #12]
+ 142 00a0 DB68     		ldr	r3, [r3, #12]
+ 143 00a2 1A44     		add	r2, r2, r3
+ 144 00a4 039B     		ldr	r3, [sp, #12]
+ 145 00a6 1B69     		ldr	r3, [r3, #16]
+ 146 00a8 1A44     		add	r2, r2, r3
+ 147 00aa 039B     		ldr	r3, [sp, #12]
+ 148 00ac 5B69     		ldr	r3, [r3, #20]
+ 149 00ae 1344     		add	r3, r3, r2
+ 150              		.loc 1 115 77
+ 151 00b0 C3F11F03 		rsb	r3, r3, #31
+ 152              		.loc 1 115 38
+ 153 00b4 4FF0FF32 		mov	r2, #-1
+ 154 00b8 22FA03F3 		lsr	r3, r2, r3
+ 155              		.loc 1 115 24
+ 156 00bc 019A     		ldr	r2, [sp, #4]
+ 157 00be 1340     		ands	r3, r3, r2
+ 158 00c0 0193     		str	r3, [sp, #4]
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 117:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* Mask off reserved bits for mid address space */
+ 118:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         midBlockSelect &= 0xFFFFFFFF >> (32 - C55_MID_BLOCK_NUM(pSSDConfig));
+ 159              		.loc 1 118 47
+ 160 00c2 039B     		ldr	r3, [sp, #12]
+ 161 00c4 9A69     		ldr	r2, [r3, #24]
+ 162 00c6 039B     		ldr	r3, [sp, #12]
+ 163 00c8 DB69     		ldr	r3, [r3, #28]
+ 164 00ca 1A44     		add	r2, r2, r3
+ 165 00cc 039B     		ldr	r3, [sp, #12]
+ 166 00ce 1B6A     		ldr	r3, [r3, #32]
+ 167 00d0 1A44     		add	r2, r2, r3
+ 168 00d2 039B     		ldr	r3, [sp, #12]
+ 169 00d4 5B6A     		ldr	r3, [r3, #36]
+ 170 00d6 1344     		add	r3, r3, r2
+ 171              		.loc 1 118 45
+ 172 00d8 C3F12003 		rsb	r3, r3, #32
+ 173              		.loc 1 118 38
+ 174 00dc 4FF0FF32 		mov	r2, #-1
+ 175 00e0 22FA03F3 		lsr	r3, r2, r3
+ 176              		.loc 1 118 24
+ 177 00e4 009A     		ldr	r2, [sp]
+ 178 00e6 1340     		ands	r3, r3, r2
+ 179 00e8 0093     		str	r3, [sp]
+ 119:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 120:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* Mask off reserved bits for high address space */
+ 121:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         highBlockSelect &= 0xFFFFFFFF >> (32 - C55_HIGH_BLOCK_NUM(pSSDConfig));
+ 180              		.loc 1 121 48
+ 181 00ea 039B     		ldr	r3, [sp, #12]
+ 182 00ec 9A6A     		ldr	r2, [r3, #40]
+ 183 00ee 039B     		ldr	r3, [sp, #12]
+ 184 00f0 DB6A     		ldr	r3, [r3, #44]
+ 185 00f2 1A44     		add	r2, r2, r3
+ 186 00f4 039B     		ldr	r3, [sp, #12]
+ 187 00f6 1B6B     		ldr	r3, [r3, #48]
+ 188 00f8 1A44     		add	r2, r2, r3
+ 189 00fa 039B     		ldr	r3, [sp, #12]
+ 190 00fc 5B6B     		ldr	r3, [r3, #52]
+ 191 00fe 1344     		add	r3, r3, r2
+ 192              		.loc 1 121 46
+ 193 0100 C3F12003 		rsb	r3, r3, #32
+ 194              		.loc 1 121 39
+ 195 0104 4FF0FF32 		mov	r2, #-1
+ 196 0108 22FA03F3 		lsr	r3, r2, r3
+ 197              		.loc 1 121 25
+ 198 010c 0A9A     		ldr	r2, [sp, #40]
+ 199 010e 1340     		ands	r3, r3, r2
+ 200 0110 0A93     		str	r3, [sp, #40]
+ 122:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         
+ 123:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* Mask off reserved bits for 256K address space */
+ 124:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         if ( pSSDConfig->n256KBlockNum <= 32 )
+ 201              		.loc 1 124 24
+ 202 0112 039B     		ldr	r3, [sp, #12]
+ 203 0114 9B6B     		ldr	r3, [r3, #56]
+ 204              		.loc 1 124 12
+ 205 0116 202B     		cmp	r3, #32
+ 206 0118 0DD8     		bhi	.L12
+ 125:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         {
+ 126:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             n256KBlockSelect.first256KBlockSelect &=
+ 207              		.loc 1 126 51
+ 208 011a 0B9A     		ldr	r2, [sp, #44]
+ 127:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 0xFFFFFFFF >> (32 - pSSDConfig->n256KBlockNum);
+ 209              		.loc 1 127 47
+ 210 011c 039B     		ldr	r3, [sp, #12]
+ 211 011e 9B6B     		ldr	r3, [r3, #56]
+ 212              		.loc 1 127 35
+ 213 0120 C3F12003 		rsb	r3, r3, #32
+ 214              		.loc 1 127 28
+ 215 0124 4FF0FF31 		mov	r1, #-1
+ 216 0128 21FA03F3 		lsr	r3, r1, r3
+ 126:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 0xFFFFFFFF >> (32 - pSSDConfig->n256KBlockNum);
+ 217              		.loc 1 126 51
+ 218 012c 1340     		ands	r3, r3, r2
+ 219 012e 0B93     		str	r3, [sp, #44]
+ 128:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             n256KBlockSelect.second256KBlockSelect = 0;
+ 220              		.loc 1 128 52
+ 221 0130 0023     		movs	r3, #0
+ 222 0132 0C93     		str	r3, [sp, #48]
+ 223 0134 0CE0     		b	.L13
+ 224              	.L12:
+ 129:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         }
+ 130:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         else
+ 131:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         {
+ 132:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             n256KBlockSelect.first256KBlockSelect &= 0xFFFFFFFF;
+ 225              		.loc 1 132 51
+ 226 0136 0B9B     		ldr	r3, [sp, #44]
+ 227 0138 0B93     		str	r3, [sp, #44]
+ 133:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             n256KBlockSelect.second256KBlockSelect &=
+ 228              		.loc 1 133 52
+ 229 013a 0C9A     		ldr	r2, [sp, #48]
+ 134:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 0xFFFFFFFF >> (32 - (pSSDConfig->n256KBlockNum - 32));
+ 230              		.loc 1 134 48
+ 231 013c 039B     		ldr	r3, [sp, #12]
+ 232 013e 9B6B     		ldr	r3, [r3, #56]
+ 233              		.loc 1 134 35
+ 234 0140 C3F14003 		rsb	r3, r3, #64
+ 235              		.loc 1 134 28
+ 236 0144 4FF0FF31 		mov	r1, #-1
+ 237 0148 21FA03F3 		lsr	r3, r1, r3
+ 133:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             n256KBlockSelect.second256KBlockSelect &=
+ 238              		.loc 1 133 52
+ 239 014c 1340     		ands	r3, r3, r2
+ 240 014e 0C93     		str	r3, [sp, #48]
+ 241              	.L13:
+ 135:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         }
+ 136:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         
+ 137:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* No blocks to be selected for erase, just return */
+ 138:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         if ( !(lowBlockSelect | midBlockSelect | highBlockSelect |
+ 242              		.loc 1 138 31
+ 243 0150 019A     		ldr	r2, [sp, #4]
+ 244 0152 009B     		ldr	r3, [sp]
+ 245 0154 1A43     		orrs	r2, r2, r3
+ 246              		.loc 1 138 48
+ 247 0156 0A9B     		ldr	r3, [sp, #40]
+ 248 0158 1A43     		orrs	r2, r2, r3
+ 139:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 n256KBlockSelect.first256KBlockSelect |
+ 249              		.loc 1 139 33
+ 250 015a 0B9B     		ldr	r3, [sp, #44]
+ 138:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 n256KBlockSelect.first256KBlockSelect |
+ 251              		.loc 1 138 66
+ 252 015c 1A43     		orrs	r2, r2, r3
+ 140:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 n256KBlockSelect.second256KBlockSelect) )
+ 253              		.loc 1 140 33
+ 254 015e 0C9B     		ldr	r3, [sp, #48]
+ 139:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 n256KBlockSelect.first256KBlockSelect |
+ 255              		.loc 1 139 55
+ 256 0160 1343     		orrs	r3, r3, r2
+ 138:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****                 n256KBlockSelect.first256KBlockSelect |
+ 257              		.loc 1 138 12
+ 258 0162 002B     		cmp	r3, #0
+ 259 0164 76D0     		beq	.L23
+ 141:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         {
+ 142:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             /* Return with C55_OK */
+ 143:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             goto EXIT;
+ 144:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         }
+ 145:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         
+ 146:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* Set the block selection registers */
+ 147:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         C55_REG_WRITE (c55RegBase + C55_SEL0, (lowBlockSelect << 16) | midBlockSelect);
+ 260              		.loc 1 147 9
+ 261 0166 019B     		ldr	r3, [sp, #4]
+ 262 0168 1A04     		lsls	r2, r3, #16
+ 263 016a 079B     		ldr	r3, [sp, #28]
+ 264 016c 3833     		adds	r3, r3, #56
+ 265 016e 1946     		mov	r1, r3
+ 266 0170 009B     		ldr	r3, [sp]
+ 267 0172 1343     		orrs	r3, r3, r2
+ 268 0174 0B60     		str	r3, [r1]
+ 269              		.syntax unified
+ 270              	@ 147 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 271 0176 BFF35F8F 		dmb
+ 272              	@ 0 "" 2
+ 148:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         C55_REG_WRITE (c55RegBase + C55_SEL1, highBlockSelect);
+ 273              		.loc 1 148 9
+ 274              		.thumb
+ 275              		.syntax unified
+ 276 017a 079B     		ldr	r3, [sp, #28]
+ 277 017c 3C33     		adds	r3, r3, #60
+ 278 017e 1A46     		mov	r2, r3
+ 279 0180 0A9B     		ldr	r3, [sp, #40]
+ 280 0182 1360     		str	r3, [r2]
+ 281              		.syntax unified
+ 282              	@ 148 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 283 0184 BFF35F8F 		dmb
+ 284              	@ 0 "" 2
+ 149:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         C55_REG_WRITE (c55RegBase + C55_SEL2, n256KBlockSelect.first256KBlockSelect);
+ 285              		.loc 1 149 9
+ 286              		.thumb
+ 287              		.syntax unified
+ 288 0188 079B     		ldr	r3, [sp, #28]
+ 289 018a 4033     		adds	r3, r3, #64
+ 290 018c 1A46     		mov	r2, r3
+ 291 018e 0B9B     		ldr	r3, [sp, #44]
+ 292 0190 1360     		str	r3, [r2]
+ 293              		.syntax unified
+ 294              	@ 149 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 295 0192 BFF35F8F 		dmb
+ 296              	@ 0 "" 2
+ 150:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         C55_REG_WRITE (c55RegBase + C55_SEL3, n256KBlockSelect.second256KBlockSelect);
+ 297              		.loc 1 150 9
+ 298              		.thumb
+ 299              		.syntax unified
+ 300 0196 079B     		ldr	r3, [sp, #28]
+ 301 0198 4433     		adds	r3, r3, #68
+ 302 019a 1A46     		mov	r2, r3
+ 303 019c 0C9B     		ldr	r3, [sp, #48]
+ 304 019e 1360     		str	r3, [r2]
+ 305              		.syntax unified
+ 306              	@ 150 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 307 01a0 BFF35F8F 		dmb
+ 308              	@ 0 "" 2
+ 309              		.thumb
+ 310              		.syntax unified
+ 311              	.L11:
+ 151:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     }
+ 152:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 153:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Set MCR_ERS to start erase operation */
+ 154:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     C55_MCR_BIT_SET (MCRAddress, C55_MCR_ERS);
+ 312              		.loc 1 154 5
+ 313 01a4 069B     		ldr	r3, [sp, #24]
+ 314 01a6 1A68     		ldr	r2, [r3]
+ 315 01a8 324B     		ldr	r3, .L24
+ 316 01aa 1340     		ands	r3, r3, r2
+ 317 01ac 069A     		ldr	r2, [sp, #24]
+ 318 01ae 43F00403 		orr	r3, r3, #4
+ 319 01b2 1360     		str	r3, [r2]
+ 320              		.syntax unified
+ 321              	@ 154 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 322 01b4 BFF35F8F 		dmb
+ 323              	@ 0 "" 2
+ 324              	@ 154 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 325 01b8 BFF35F8F 		dmb
+ 326              	@ 0 "" 2
+ 155:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     if (0x0 == C55_REG_BIT_TEST(MCRAddress, C55_MCR_ERS))
+ 327              		.loc 1 155 16
+ 328              		.thumb
+ 329              		.syntax unified
+ 330 01bc 069B     		ldr	r3, [sp, #24]
+ 331 01be 1B68     		ldr	r3, [r3]
+ 332 01c0 03F00403 		and	r3, r3, #4
+ 333              		.loc 1 155 8
+ 334 01c4 002B     		cmp	r3, #0
+ 335 01c6 02D1     		bne	.L15
+ 156:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     {
+ 157:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         returnCode = C55_ERROR_ENABLE;
+ 336              		.loc 1 157 20
+ 337 01c8 0223     		movs	r3, #2
+ 338 01ca 0493     		str	r3, [sp, #16]
+ 158:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         goto EXIT;
+ 339              		.loc 1 158 9
+ 340 01cc 43E0     		b	.L7
+ 341              	.L15:
+ 159:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     }
+ 160:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 161:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* If factory erase is used, set bit MCR_FERS */
+ 162:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     if ( C55_ERASE_MAIN_FERS == eraseOption || C55_ERASE_UTEST_FERS == eraseOption )
+ 342              		.loc 1 162 8
+ 343 01ce 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 344 01d2 012B     		cmp	r3, #1
+ 345 01d4 03D0     		beq	.L16
+ 346              		.loc 1 162 45 discriminator 1
+ 347 01d6 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 348 01da 032B     		cmp	r3, #3
+ 349 01dc 1FD1     		bne	.L17
+ 350              	.L16:
+ 163:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     {
+ 164:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         C55_MCR_BIT_SET (MCRAddress, C55_MCR_FERS);
+ 351              		.loc 1 164 9
+ 352 01de 069B     		ldr	r3, [sp, #24]
+ 353 01e0 1A68     		ldr	r2, [r3]
+ 354 01e2 254B     		ldr	r3, .L24+4
+ 355 01e4 1340     		ands	r3, r3, r2
+ 356 01e6 069A     		ldr	r2, [sp, #24]
+ 357 01e8 43F08003 		orr	r3, r3, #128
+ 358 01ec 1360     		str	r3, [r2]
+ 359              		.syntax unified
+ 360              	@ 164 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 361 01ee BFF35F8F 		dmb
+ 362              	@ 0 "" 2
+ 363              	@ 164 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 364 01f2 BFF35F8F 		dmb
+ 365              	@ 0 "" 2
+ 165:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         
+ 166:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* Check for ability to do factory erase by testing the bit */
+ 167:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         if ( !(C55_REG_BIT_TEST(MCRAddress, C55_MCR_FERS) ))
+ 366              		.loc 1 167 16
+ 367              		.thumb
+ 368              		.syntax unified
+ 369 01f6 069B     		ldr	r3, [sp, #24]
+ 370 01f8 1B68     		ldr	r3, [r3]
+ 371 01fa 03F08003 		and	r3, r3, #128
+ 372              		.loc 1 167 12
+ 373 01fe 002B     		cmp	r3, #0
+ 374 0200 0DD1     		bne	.L17
+ 168:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         {
+ 169:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             /* Clear MCR_ERS */
+ 170:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             C55_MCR_BIT_CLEAR (MCRAddress, C55_MCR_ERS);
+ 375              		.loc 1 170 13
+ 376 0202 069B     		ldr	r3, [sp, #24]
+ 377 0204 1968     		ldr	r1, [r3]
+ 378 0206 069A     		ldr	r2, [sp, #24]
+ 379 0208 1A4B     		ldr	r3, .L24
+ 380 020a 0B40     		ands	r3, r3, r1
+ 381 020c 1360     		str	r3, [r2]
+ 382              		.syntax unified
+ 383              	@ 170 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 384 020e BFF35F8F 		dmb
+ 385              	@ 0 "" 2
+ 386              	@ 170 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 387 0212 BFF35F8F 		dmb
+ 388              	@ 0 "" 2
+ 171:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             
+ 172:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             returnCode = C55_ERROR_FACTORY_OP;
+ 389              		.loc 1 172 24
+ 390              		.thumb
+ 391              		.syntax unified
+ 392 0216 4FF40073 		mov	r3, #512
+ 393 021a 0493     		str	r3, [sp, #16]
+ 173:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****             goto EXIT;
+ 394              		.loc 1 173 13
+ 395 021c 1BE0     		b	.L7
+ 396              	.L17:
+ 174:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         }
+ 175:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     }
+ 176:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     
+ 177:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Interlock write */
+ 178:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     *( (VUINT32 *)interlockWriteAddress ) = 0xFFFFFFFF;
+ 397              		.loc 1 178 8
+ 398 021e 099B     		ldr	r3, [sp, #36]
+ 399              		.loc 1 178 43
+ 400 0220 4FF0FF32 		mov	r2, #-1
+ 401 0224 1A60     		str	r2, [r3]
+ 179:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 180:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     UINT32 i;
+ 181:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     for (i=0; i<0x100; i++) {
+ 402              		.loc 1 181 11
+ 403 0226 0023     		movs	r3, #0
+ 404 0228 0893     		str	r3, [sp, #32]
+ 405              		.loc 1 181 5
+ 406 022a 03E0     		b	.L18
+ 407              	.L19:
+ 182:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         asm volatile ( "nop" );
+ 408              		.loc 1 182 9 discriminator 3
+ 409              		.syntax unified
+ 410              	@ 182 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 411 022c 00BF     		nop
+ 412              	@ 0 "" 2
+ 181:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         asm volatile ( "nop" );
+ 413              		.loc 1 181 25 discriminator 3
+ 414              		.thumb
+ 415              		.syntax unified
+ 416 022e 089B     		ldr	r3, [sp, #32]
+ 417 0230 0133     		adds	r3, r3, #1
+ 418 0232 0893     		str	r3, [sp, #32]
+ 419              	.L18:
+ 181:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         asm volatile ( "nop" );
+ 420              		.loc 1 181 5 discriminator 1
+ 421 0234 089B     		ldr	r3, [sp, #32]
+ 422 0236 FF2B     		cmp	r3, #255
+ 423 0238 F8D9     		bls	.L19
+ 183:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     }
+ 184:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 185:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Write a 1 to MCR_EHV */
+ 186:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     C55_MCR_BIT_SET (MCRAddress, C55_MCR_EHV);
+ 424              		.loc 1 186 5
+ 425 023a 069B     		ldr	r3, [sp, #24]
+ 426 023c 1A68     		ldr	r2, [r3]
+ 427 023e 0F4B     		ldr	r3, .L24+8
+ 428 0240 1340     		ands	r3, r3, r2
+ 429 0242 069A     		ldr	r2, [sp, #24]
+ 430 0244 43F00103 		orr	r3, r3, #1
+ 431 0248 1360     		str	r3, [r2]
+ 432              		.syntax unified
+ 433              	@ 186 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 434 024a BFF35F8F 		dmb
+ 435              	@ 0 "" 2
+ 436              	@ 186 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 437 024e BFF35F8F 		dmb
+ 438              	@ 0 "" 2
+ 439              		.thumb
+ 440              		.syntax unified
+ 441 0252 00E0     		b	.L7
+ 442              	.L23:
+ 143:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         }
+ 443              		.loc 1 143 13
+ 444 0254 00BF     		nop
+ 445              	.L7:
+ 187:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 188:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     /* Return here, not wait until MCR_DONE is set */
+ 189:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 190:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** EXIT:
+ 191:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 192:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     if (pSSDConfig->BDMEnable)
+ 446              		.loc 1 192 19
+ 447 0256 039B     		ldr	r3, [sp, #12]
+ 448 0258 93F84830 		ldrb	r3, [r3, #72]	@ zero_extendqisi2
+ 449              		.loc 1 192 8
+ 450 025c 002B     		cmp	r3, #0
+ 451 025e 04D0     		beq	.L20
+ 193:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     {
+ 194:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         /* save the return code to R3 */
+ 195:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         ASM_KEYWORD(" mov r3, %0 " ::"r"(returnCode));
+ 452              		.loc 1 195 9
+ 453 0260 049B     		ldr	r3, [sp, #16]
+ 454              		.syntax unified
+ 455              	@ 195 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 456 0262 1B46     		 mov r3, r3 
+ 457              	@ 0 "" 2
+ 196:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         
+ 197:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         asm volatile ( "nop" );
+ 458              		.loc 1 197 9
+ 459              	@ 197 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 460 0264 00BF     		nop
+ 461              	@ 0 "" 2
+ 198:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         asm volatile ( "bkpt #0" );
+ 462              		.loc 1 198 9
+ 463              	@ 198 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 464 0266 00BE     		bkpt #0
+ 465              	@ 0 "" 2
+ 199:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****         asm volatile ( "nop" );
+ 466              		.loc 1 199 9
+ 467              	@ 199 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Fla
+ 468 0268 00BF     		nop
+ 469              	@ 0 "" 2
+ 470              		.thumb
+ 471              		.syntax unified
+ 472              	.L20:
+ 200:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 201:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     }
+ 202:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** 
+ 203:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c ****     return returnCode;
+ 473              		.loc 1 203 12
+ 474 026a 049B     		ldr	r3, [sp, #16]
+ 204:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\FlashErase.c **** }
+ 475              		.loc 1 204 1
+ 476 026c 1846     		mov	r0, r3
+ 477 026e 0AB0     		add	sp, sp, #40
+ 478              		.cfi_def_cfa_offset 0
+ 479              		@ sp needed
+ 480 0270 7047     		bx	lr
+ 481              	.L25:
+ 482 0272 00BF     		.align	2
+ 483              	.L24:
+ 484 0274 FB1FFFFF 		.word	-57349
+ 485 0278 7F1FFFFF 		.word	-57473
+ 486 027c FE1FFFFF 		.word	-57346
+ 487              		.cfi_endproc
+ 488              	.LFE0:
+ 490              		.text
+ 491              	.Letext0:
+ 492              		.file 2 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+ 493              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+DEFINED SYMBOLS
+                            *ABS*:00000000 FlashErase.c
+D:\Users\TMP\ccn3lzHS.s:19     .text.FlashErase:00000000 $t
+D:\Users\TMP\ccn3lzHS.s:26     .text.FlashErase:00000000 FlashErase
+D:\Users\TMP\ccn3lzHS.s:484    .text.FlashErase:00000274 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.ssd_types.h.29.f65f270075dc88598f2bc4634b2ba066
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+
+NO UNDEFINED SYMBOLS

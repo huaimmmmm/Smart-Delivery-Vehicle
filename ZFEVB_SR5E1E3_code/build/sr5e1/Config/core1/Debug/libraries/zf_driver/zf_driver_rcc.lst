@@ -1,0 +1,491 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_rcc.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	rcc_reset_register
+  19              		.section	.rodata.rcc_reset_register,"a"
+  20              		.align	2
+  23              	rcc_reset_register:
+  24 0000 50000044 		.word	1140850768
+  25 0004 54000044 		.word	1140850772
+  26 0008 58000044 		.word	1140850776
+  27 000c 5C000044 		.word	1140850780
+  28 0010 60000044 		.word	1140850784
+  29 0014 68000044 		.word	1140850792
+  30 0018 6C000044 		.word	1140850796
+  31              		.global	rcc_enable_register
+  32              		.section	.rodata.rcc_enable_register,"a"
+  33              		.align	2
+  36              	rcc_enable_register:
+  37 0000 70000044 		.word	1140850800
+  38 0004 74000044 		.word	1140850804
+  39 0008 78000044 		.word	1140850808
+  40 000c 7C000044 		.word	1140850812
+  41 0010 80000044 		.word	1140850816
+  42 0014 88000044 		.word	1140850824
+  43 0018 8C000044 		.word	1140850828
+  44              		.section	.text.zf_rcc_peripheral_reset,"ax",%progbits
+  45              		.align	1
+  46              		.p2align 4,,15
+  47              		.global	zf_rcc_peripheral_reset
+  48              		.syntax unified
+  49              		.thumb
+  50              		.thumb_func
+  52              	zf_rcc_peripheral_reset:
+  53              	.LFB149:
+  54              		.file 1 "libraries/zf_driver/zf_driver_rcc.c"
+   1:libraries/zf_driver/zf_driver_rcc.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_rcc.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_rcc.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_rcc.c **** *
+   5:libraries/zf_driver/zf_driver_rcc.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_rcc.c **** *
+   7:libraries/zf_driver/zf_driver_rcc.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_rcc.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_rcc.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_rcc.c **** *
+  11:libraries/zf_driver/zf_driver_rcc.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_rcc.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_rcc.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_rcc.c **** *
+  15:libraries/zf_driver/zf_driver_rcc.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_rcc.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_rcc.c **** *
+  18:libraries/zf_driver/zf_driver_rcc.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_rcc.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_rcc.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_rcc.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_rcc.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_rcc.c **** *
+  24:libraries/zf_driver/zf_driver_rcc.c **** * 文件名称          zf_driver_rcc
+  25:libraries/zf_driver/zf_driver_rcc.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_rcc.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_rcc.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_rcc.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_rcc.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_rcc.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_rcc.c **** 
+  32:libraries/zf_driver/zf_driver_rcc.c **** // 自身头文件
+  33:libraries/zf_driver/zf_driver_rcc.c **** #include "zf_driver_rcc.h"
+  34:libraries/zf_driver/zf_driver_rcc.c **** 
+  35:libraries/zf_driver/zf_driver_rcc.c **** // 此处定义 本文件用使用的模块管理数据 这里不允许用户修改 这里不允许
+  36:libraries/zf_driver/zf_driver_rcc.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  37:libraries/zf_driver/zf_driver_rcc.c **** __IO uint32* const rcc_reset_register [] = RCC_RESET_REGISTER_LIST ;
+  38:libraries/zf_driver/zf_driver_rcc.c **** __IO uint32* const rcc_enable_register[] = RCC_ENABLE_REGISTER_LIST;
+  39:libraries/zf_driver/zf_driver_rcc.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  40:libraries/zf_driver/zf_driver_rcc.c **** 
+  41:libraries/zf_driver/zf_driver_rcc.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  42:libraries/zf_driver/zf_driver_rcc.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  43:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  44:libraries/zf_driver/zf_driver_rcc.c **** // 函数简介     外设模块复位
+  45:libraries/zf_driver/zf_driver_rcc.c **** // 参数说明     rcc_index           外设时钟索引    (详见 zf_driver_rcc.h 内 zf_rcc_in
+  46:libraries/zf_driver/zf_driver_rcc.c **** // 返回参数     void
+  47:libraries/zf_driver/zf_driver_rcc.c **** // 使用示例     zf_rcc_peripheral_reset(rcc_index);
+  48:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  49:libraries/zf_driver/zf_driver_rcc.c **** void zf_rcc_peripheral_reset (zf_rcc_index_enum rcc_index)
+  50:libraries/zf_driver/zf_driver_rcc.c **** {
+  55              		.loc 1 50 1
+  56              		.cfi_startproc
+  57              		@ args = 0, pretend = 0, frame = 8
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		@ link register save eliminated.
+  60 0000 82B0     		sub	sp, sp, #8
+  61              		.cfi_def_cfa_offset 8
+  62 0002 0346     		mov	r3, r0
+  63 0004 ADF80630 		strh	r3, [sp, #6]	@ movhi
+  51:libraries/zf_driver/zf_driver_rcc.c ****     *rcc_reset_register[rcc_index & RCC_BUS_INDEX_MASK] |= (0x00000001 << ((rcc_index >> RCC_PERIPH
+  64              		.loc 1 51 35
+  65 0008 BDF80630 		ldrh	r3, [sp, #6]
+  66 000c 03F00F03 		and	r3, r3, #15
+  67              		.loc 1 51 24
+  68 0010 1A4A     		ldr	r2, .L2
+  69 0012 52F82330 		ldr	r3, [r2, r3, lsl #2]
+  70              		.loc 1 51 57
+  71 0016 1A68     		ldr	r2, [r3]
+  72              		.loc 1 51 119
+  73 0018 BDF80630 		ldrh	r3, [sp, #6]
+  74 001c 1B09     		lsrs	r3, r3, #4
+  75 001e 9BB2     		uxth	r3, r3
+  76 0020 03F01F03 		and	r3, r3, #31
+  77              		.loc 1 51 72
+  78 0024 0121     		movs	r1, #1
+  79 0026 01FA03F3 		lsl	r3, r1, r3
+  80 002a 1846     		mov	r0, r3
+  81              		.loc 1 51 35
+  82 002c BDF80630 		ldrh	r3, [sp, #6]
+  83 0030 03F00F03 		and	r3, r3, #15
+  84              		.loc 1 51 24
+  85 0034 1149     		ldr	r1, .L2
+  86 0036 51F82330 		ldr	r3, [r1, r3, lsl #2]
+  87              		.loc 1 51 57
+  88 003a 0243     		orrs	r2, r2, r0
+  89 003c 1A60     		str	r2, [r3]
+  52:libraries/zf_driver/zf_driver_rcc.c ****     *rcc_reset_register[rcc_index & RCC_BUS_INDEX_MASK] &= ~(0x00000001 << ((rcc_index >> RCC_PERIP
+  90              		.loc 1 52 35
+  91 003e BDF80630 		ldrh	r3, [sp, #6]
+  92 0042 03F00F03 		and	r3, r3, #15
+  93              		.loc 1 52 24
+  94 0046 0D4A     		ldr	r2, .L2
+  95 0048 52F82330 		ldr	r3, [r2, r3, lsl #2]
+  96              		.loc 1 52 57
+  97 004c 1A68     		ldr	r2, [r3]
+  98              		.loc 1 52 120
+  99 004e BDF80630 		ldrh	r3, [sp, #6]
+ 100 0052 1B09     		lsrs	r3, r3, #4
+ 101 0054 9BB2     		uxth	r3, r3
+ 102 0056 03F01F03 		and	r3, r3, #31
+ 103              		.loc 1 52 73
+ 104 005a 0121     		movs	r1, #1
+ 105 005c 01FA03F3 		lsl	r3, r1, r3
+ 106              		.loc 1 52 60
+ 107 0060 DB43     		mvns	r3, r3
+ 108 0062 1846     		mov	r0, r3
+ 109              		.loc 1 52 35
+ 110 0064 BDF80630 		ldrh	r3, [sp, #6]
+ 111 0068 03F00F03 		and	r3, r3, #15
+ 112              		.loc 1 52 24
+ 113 006c 0349     		ldr	r1, .L2
+ 114 006e 51F82330 		ldr	r3, [r1, r3, lsl #2]
+ 115              		.loc 1 52 57
+ 116 0072 0240     		ands	r2, r2, r0
+ 117 0074 1A60     		str	r2, [r3]
+  53:libraries/zf_driver/zf_driver_rcc.c **** }
+ 118              		.loc 1 53 1
+ 119 0076 00BF     		nop
+ 120 0078 02B0     		add	sp, sp, #8
+ 121              		.cfi_def_cfa_offset 0
+ 122              		@ sp needed
+ 123 007a 7047     		bx	lr
+ 124              	.L3:
+ 125              		.align	2
+ 126              	.L2:
+ 127 007c 00000000 		.word	rcc_reset_register
+ 128              		.cfi_endproc
+ 129              	.LFE149:
+ 131              		.section	.text.zf_rcc_clock_check,"ax",%progbits
+ 132              		.align	1
+ 133              		.p2align 4,,15
+ 134              		.global	zf_rcc_clock_check
+ 135              		.syntax unified
+ 136              		.thumb
+ 137              		.thumb_func
+ 139              	zf_rcc_clock_check:
+ 140              	.LFB150:
+  54:libraries/zf_driver/zf_driver_rcc.c **** 
+  55:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  56:libraries/zf_driver/zf_driver_rcc.c **** // 函数简介     外设时钟状态检查
+  57:libraries/zf_driver/zf_driver_rcc.c **** // 参数说明     rcc_index           外设时钟索引    (详见 zf_driver_rcc.h 内 zf_rcc_in
+  58:libraries/zf_driver/zf_driver_rcc.c **** // 返回参数     uint8               外设时钟状态
+  59:libraries/zf_driver/zf_driver_rcc.c **** // 使用示例     zf_rcc_clock_check(rcc_index);
+  60:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  61:libraries/zf_driver/zf_driver_rcc.c **** uint8 zf_rcc_clock_check (zf_rcc_index_enum rcc_index)
+  62:libraries/zf_driver/zf_driver_rcc.c **** {
+ 141              		.loc 1 62 1
+ 142              		.cfi_startproc
+ 143              		@ args = 0, pretend = 0, frame = 8
+ 144              		@ frame_needed = 0, uses_anonymous_args = 0
+ 145              		@ link register save eliminated.
+ 146 0000 82B0     		sub	sp, sp, #8
+ 147              		.cfi_def_cfa_offset 8
+ 148 0002 0346     		mov	r3, r0
+ 149 0004 ADF80630 		strh	r3, [sp, #6]	@ movhi
+  63:libraries/zf_driver/zf_driver_rcc.c ****     return (*rcc_enable_register[rcc_index & RCC_BUS_INDEX_MASK] & (0x00000001 << ((rcc_index >> RC
+ 150              		.loc 1 63 44
+ 151 0008 BDF80630 		ldrh	r3, [sp, #6]
+ 152 000c 03F00F03 		and	r3, r3, #15
+ 153              		.loc 1 63 33
+ 154 0010 0A4A     		ldr	r2, .L6
+ 155 0012 52F82330 		ldr	r3, [r2, r3, lsl #2]
+ 156              		.loc 1 63 13
+ 157 0016 1B68     		ldr	r3, [r3]
+ 158              		.loc 1 63 127
+ 159 0018 BDF80620 		ldrh	r2, [sp, #6]
+ 160 001c 1209     		lsrs	r2, r2, #4
+ 161 001e 92B2     		uxth	r2, r2
+ 162 0020 02F01F02 		and	r2, r2, #31
+ 163              		.loc 1 63 80
+ 164 0024 0121     		movs	r1, #1
+ 165 0026 01FA02F2 		lsl	r2, r1, r2
+ 166              		.loc 1 63 66
+ 167 002a 1340     		ands	r3, r3, r2
+ 168              		.loc 1 63 164
+ 169 002c 002B     		cmp	r3, #0
+ 170 002e 14BF     		ite	ne
+ 171 0030 0123     		movne	r3, #1
+ 172 0032 0023     		moveq	r3, #0
+ 173 0034 DBB2     		uxtb	r3, r3
+  64:libraries/zf_driver/zf_driver_rcc.c **** }
+ 174              		.loc 1 64 1
+ 175 0036 1846     		mov	r0, r3
+ 176 0038 02B0     		add	sp, sp, #8
+ 177              		.cfi_def_cfa_offset 0
+ 178              		@ sp needed
+ 179 003a 7047     		bx	lr
+ 180              	.L7:
+ 181              		.align	2
+ 182              	.L6:
+ 183 003c 00000000 		.word	rcc_enable_register
+ 184              		.cfi_endproc
+ 185              	.LFE150:
+ 187              		.section	.text.zf_rcc_clock_disable,"ax",%progbits
+ 188              		.align	1
+ 189              		.p2align 4,,15
+ 190              		.global	zf_rcc_clock_disable
+ 191              		.syntax unified
+ 192              		.thumb
+ 193              		.thumb_func
+ 195              	zf_rcc_clock_disable:
+ 196              	.LFB151:
+  65:libraries/zf_driver/zf_driver_rcc.c **** 
+  66:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  67:libraries/zf_driver/zf_driver_rcc.c **** // 函数简介     外设时钟禁止
+  68:libraries/zf_driver/zf_driver_rcc.c **** // 参数说明     rcc_index           外设时钟索引    (详见 zf_driver_rcc.h 内 zf_rcc_in
+  69:libraries/zf_driver/zf_driver_rcc.c **** // 返回参数     void
+  70:libraries/zf_driver/zf_driver_rcc.c **** // 使用示例     zf_rcc_clock_disable(rcc_index);
+  71:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  72:libraries/zf_driver/zf_driver_rcc.c **** void zf_rcc_clock_disable (zf_rcc_index_enum rcc_index)
+  73:libraries/zf_driver/zf_driver_rcc.c **** {
+ 197              		.loc 1 73 1
+ 198              		.cfi_startproc
+ 199              		@ args = 0, pretend = 0, frame = 8
+ 200              		@ frame_needed = 0, uses_anonymous_args = 0
+ 201              		@ link register save eliminated.
+ 202 0000 82B0     		sub	sp, sp, #8
+ 203              		.cfi_def_cfa_offset 8
+ 204 0002 0346     		mov	r3, r0
+ 205 0004 ADF80630 		strh	r3, [sp, #6]	@ movhi
+  74:libraries/zf_driver/zf_driver_rcc.c ****     *rcc_enable_register[rcc_index & RCC_BUS_INDEX_MASK] &= ~(0x00000001 << ((rcc_index >> RCC_PERI
+ 206              		.loc 1 74 36
+ 207 0008 BDF80630 		ldrh	r3, [sp, #6]
+ 208 000c 03F00F03 		and	r3, r3, #15
+ 209              		.loc 1 74 25
+ 210 0010 0D4A     		ldr	r2, .L9
+ 211 0012 52F82330 		ldr	r3, [r2, r3, lsl #2]
+ 212              		.loc 1 74 58
+ 213 0016 1A68     		ldr	r2, [r3]
+ 214              		.loc 1 74 121
+ 215 0018 BDF80630 		ldrh	r3, [sp, #6]
+ 216 001c 1B09     		lsrs	r3, r3, #4
+ 217 001e 9BB2     		uxth	r3, r3
+ 218 0020 03F01F03 		and	r3, r3, #31
+ 219              		.loc 1 74 74
+ 220 0024 0121     		movs	r1, #1
+ 221 0026 01FA03F3 		lsl	r3, r1, r3
+ 222              		.loc 1 74 61
+ 223 002a DB43     		mvns	r3, r3
+ 224 002c 1846     		mov	r0, r3
+ 225              		.loc 1 74 36
+ 226 002e BDF80630 		ldrh	r3, [sp, #6]
+ 227 0032 03F00F03 		and	r3, r3, #15
+ 228              		.loc 1 74 25
+ 229 0036 0449     		ldr	r1, .L9
+ 230 0038 51F82330 		ldr	r3, [r1, r3, lsl #2]
+ 231              		.loc 1 74 58
+ 232 003c 0240     		ands	r2, r2, r0
+ 233 003e 1A60     		str	r2, [r3]
+  75:libraries/zf_driver/zf_driver_rcc.c **** }
+ 234              		.loc 1 75 1
+ 235 0040 00BF     		nop
+ 236 0042 02B0     		add	sp, sp, #8
+ 237              		.cfi_def_cfa_offset 0
+ 238              		@ sp needed
+ 239 0044 7047     		bx	lr
+ 240              	.L10:
+ 241 0046 00BF     		.align	2
+ 242              	.L9:
+ 243 0048 00000000 		.word	rcc_enable_register
+ 244              		.cfi_endproc
+ 245              	.LFE151:
+ 247              		.section	.text.zf_rcc_clock_enable,"ax",%progbits
+ 248              		.align	1
+ 249              		.p2align 4,,15
+ 250              		.global	zf_rcc_clock_enable
+ 251              		.syntax unified
+ 252              		.thumb
+ 253              		.thumb_func
+ 255              	zf_rcc_clock_enable:
+ 256              	.LFB152:
+  76:libraries/zf_driver/zf_driver_rcc.c **** 
+  77:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  78:libraries/zf_driver/zf_driver_rcc.c **** // 函数简介     外设时钟使能
+  79:libraries/zf_driver/zf_driver_rcc.c **** // 参数说明     rcc_index           外设时钟索引    (详见 zf_driver_rcc.h 内 zf_rcc_in
+  80:libraries/zf_driver/zf_driver_rcc.c **** // 返回参数     void
+  81:libraries/zf_driver/zf_driver_rcc.c **** // 使用示例     zf_rcc_clock_enable(rcc_index);
+  82:libraries/zf_driver/zf_driver_rcc.c **** //-------------------------------------------------------------------------------------------------
+  83:libraries/zf_driver/zf_driver_rcc.c **** void zf_rcc_clock_enable (zf_rcc_index_enum rcc_index)
+  84:libraries/zf_driver/zf_driver_rcc.c **** {
+ 257              		.loc 1 84 1
+ 258              		.cfi_startproc
+ 259              		@ args = 0, pretend = 0, frame = 8
+ 260              		@ frame_needed = 0, uses_anonymous_args = 0
+ 261              		@ link register save eliminated.
+ 262 0000 82B0     		sub	sp, sp, #8
+ 263              		.cfi_def_cfa_offset 8
+ 264 0002 0346     		mov	r3, r0
+ 265 0004 ADF80630 		strh	r3, [sp, #6]	@ movhi
+  85:libraries/zf_driver/zf_driver_rcc.c ****     *rcc_enable_register[rcc_index & RCC_BUS_INDEX_MASK] |= (0x00000001 << ((rcc_index >> RCC_PERIP
+ 266              		.loc 1 85 36
+ 267 0008 BDF80630 		ldrh	r3, [sp, #6]
+ 268 000c 03F00F03 		and	r3, r3, #15
+ 269              		.loc 1 85 25
+ 270 0010 0C4A     		ldr	r2, .L12
+ 271 0012 52F82330 		ldr	r3, [r2, r3, lsl #2]
+ 272              		.loc 1 85 58
+ 273 0016 1A68     		ldr	r2, [r3]
+ 274              		.loc 1 85 120
+ 275 0018 BDF80630 		ldrh	r3, [sp, #6]
+ 276 001c 1B09     		lsrs	r3, r3, #4
+ 277 001e 9BB2     		uxth	r3, r3
+ 278 0020 03F01F03 		and	r3, r3, #31
+ 279              		.loc 1 85 73
+ 280 0024 0121     		movs	r1, #1
+ 281 0026 01FA03F3 		lsl	r3, r1, r3
+ 282 002a 1846     		mov	r0, r3
+ 283              		.loc 1 85 36
+ 284 002c BDF80630 		ldrh	r3, [sp, #6]
+ 285 0030 03F00F03 		and	r3, r3, #15
+ 286              		.loc 1 85 25
+ 287 0034 0349     		ldr	r1, .L12
+ 288 0036 51F82330 		ldr	r3, [r1, r3, lsl #2]
+ 289              		.loc 1 85 58
+ 290 003a 0243     		orrs	r2, r2, r0
+ 291 003c 1A60     		str	r2, [r3]
+  86:libraries/zf_driver/zf_driver_rcc.c **** }
+ 292              		.loc 1 86 1
+ 293 003e 00BF     		nop
+ 294 0040 02B0     		add	sp, sp, #8
+ 295              		.cfi_def_cfa_offset 0
+ 296              		@ sp needed
+ 297 0042 7047     		bx	lr
+ 298              	.L13:
+ 299              		.align	2
+ 300              	.L12:
+ 301 0044 00000000 		.word	rcc_enable_register
+ 302              		.cfi_endproc
+ 303              	.LFE152:
+ 305              		.text
+ 306              	.Letext0:
+ 307              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 308              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 309              		.file 4 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_RCC.
+ 310              		.file 5 "libraries/zf_common/zf_common_typedef.h"
+ 311              		.file 6 "libraries/zf_driver/zf_driver_rcc.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_rcc.c
+D:\Users\TMP\cc2bHSJg.s:23     .rodata.rcc_reset_register:00000000 rcc_reset_register
+D:\Users\TMP\cc2bHSJg.s:20     .rodata.rcc_reset_register:00000000 $d
+D:\Users\TMP\cc2bHSJg.s:36     .rodata.rcc_enable_register:00000000 rcc_enable_register
+D:\Users\TMP\cc2bHSJg.s:33     .rodata.rcc_enable_register:00000000 $d
+D:\Users\TMP\cc2bHSJg.s:45     .text.zf_rcc_peripheral_reset:00000000 $t
+D:\Users\TMP\cc2bHSJg.s:52     .text.zf_rcc_peripheral_reset:00000000 zf_rcc_peripheral_reset
+D:\Users\TMP\cc2bHSJg.s:127    .text.zf_rcc_peripheral_reset:0000007c $d
+D:\Users\TMP\cc2bHSJg.s:132    .text.zf_rcc_clock_check:00000000 $t
+D:\Users\TMP\cc2bHSJg.s:139    .text.zf_rcc_clock_check:00000000 zf_rcc_clock_check
+D:\Users\TMP\cc2bHSJg.s:183    .text.zf_rcc_clock_check:0000003c $d
+D:\Users\TMP\cc2bHSJg.s:188    .text.zf_rcc_clock_disable:00000000 $t
+D:\Users\TMP\cc2bHSJg.s:195    .text.zf_rcc_clock_disable:00000000 zf_rcc_clock_disable
+D:\Users\TMP\cc2bHSJg.s:243    .text.zf_rcc_clock_disable:00000048 $d
+D:\Users\TMP\cc2bHSJg.s:248    .text.zf_rcc_clock_enable:00000000 $t
+D:\Users\TMP\cc2bHSJg.s:255    .text.zf_rcc_clock_enable:00000000 zf_rcc_clock_enable
+D:\Users\TMP\cc2bHSJg.s:301    .text.zf_rcc_clock_enable:00000044 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.features.h.33.5bd1eea2d80518b50f7af0b5ce6750e0
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stddef.h.39.27677723d43e5b5a7afdf8d798429f1d
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.newlib.h.8.7cb3972cd43265932d4782d5eb589854
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_driver_rcc.h.54.1c46b1ebd7a3725ba2c571e38d76604b
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,3872 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_pwm.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	pwm_obj_list
+  19              		.section	.data.pwm_obj_list,"aw"
+  20              		.align	2
+  23              	pwm_obj_list:
+  24 0000 00000000 		.word	timer_obj_list
+  25 0004 FF0F     		.short	4095
+  26 0006 FF0F     		.short	4095
+  27 0008 FF0F     		.short	4095
+  28 000a FF0F     		.short	4095
+  29 000c FF0F     		.short	4095
+  30 000e FF0F     		.short	4095
+  31 0010 FF0F     		.short	4095
+  32 0012 FF0F     		.short	4095
+  33 0014 00000000 		.word	0
+  34 0018 00000000 		.word	0
+  35 001c 14000000 		.word	timer_obj_list+20
+  36 0020 FF0F     		.short	4095
+  37 0022 FF0F     		.short	4095
+  38 0024 FF0F     		.short	4095
+  39 0026 FF0F     		.short	4095
+  40 0028 FF0F     		.short	4095
+  41 002a FF0F     		.short	4095
+  42 002c FF0F     		.short	4095
+  43 002e FF0F     		.short	4095
+  44 0030 00000000 		.word	0
+  45 0034 00000000 		.word	0
+  46 0038 28000000 		.word	timer_obj_list+40
+  47 003c FF0F     		.short	4095
+  48 003e FF0F     		.short	4095
+  49 0040 FF0F     		.short	4095
+  50 0042 FF0F     		.short	4095
+  51 0044 FF0F     		.short	4095
+  52 0046 FF0F     		.short	4095
+  53 0048 FF0F     		.short	4095
+  54 004a FF0F     		.short	4095
+  55 004c 00000000 		.word	0
+  56 0050 00000000 		.word	0
+  57 0054 3C000000 		.word	timer_obj_list+60
+  58 0058 FF0F     		.short	4095
+  59 005a FF0F     		.short	4095
+  60 005c FF0F     		.short	4095
+  61 005e FF0F     		.short	4095
+  62 0060 FF0F     		.short	4095
+  63 0062 FF0F     		.short	4095
+  64 0064 FF0F     		.short	4095
+  65 0066 FF0F     		.short	4095
+  66 0068 00000000 		.word	0
+  67 006c 00000000 		.word	0
+  68 0070 50000000 		.word	timer_obj_list+80
+  69 0074 FF0F     		.short	4095
+  70 0076 FF0F     		.short	4095
+  71 0078 FF0F     		.short	4095
+  72 007a FF0F     		.short	4095
+  73 007c FF0F     		.short	4095
+  74 007e FF0F     		.short	4095
+  75 0080 FF0F     		.short	4095
+  76 0082 FF0F     		.short	4095
+  77 0084 00000000 		.word	0
+  78 0088 00000000 		.word	0
+  79 008c 64000000 		.word	timer_obj_list+100
+  80 0090 FF0F     		.short	4095
+  81 0092 FF0F     		.short	4095
+  82 0094 FF0F     		.short	4095
+  83 0096 FF0F     		.short	4095
+  84 0098 FF0F     		.short	4095
+  85 009a FF0F     		.short	4095
+  86 009c FF0F     		.short	4095
+  87 009e FF0F     		.short	4095
+  88 00a0 00000000 		.word	0
+  89 00a4 00000000 		.word	0
+  90 00a8 78000000 		.word	timer_obj_list+120
+  91 00ac FF0F     		.short	4095
+  92 00ae FF0F     		.short	4095
+  93 00b0 FF0F     		.short	4095
+  94 00b2 FF0F     		.short	4095
+  95 00b4 FF0F     		.short	4095
+  96 00b6 FF0F     		.short	4095
+  97 00b8 FF0F     		.short	4095
+  98 00ba FF0F     		.short	4095
+  99 00bc 00000000 		.word	0
+ 100 00c0 00000000 		.word	0
+ 101 00c4 8C000000 		.word	timer_obj_list+140
+ 102 00c8 FF0F     		.short	4095
+ 103 00ca FF0F     		.short	4095
+ 104 00cc FF0F     		.short	4095
+ 105 00ce FF0F     		.short	4095
+ 106 00d0 FF0F     		.short	4095
+ 107 00d2 FF0F     		.short	4095
+ 108 00d4 FF0F     		.short	4095
+ 109 00d6 FF0F     		.short	4095
+ 110 00d8 00000000 		.word	0
+ 111 00dc 00000000 		.word	0
+ 112              		.section	.rodata
+ 113              		.align	2
+ 114              	.LC0:
+ 115 0000 6C696272 		.ascii	"libraries/zf_driver/zf_driver_pwm.c\000"
+ 115      61726965 
+ 115      732F7A66 
+ 115      5F647269 
+ 115      7665722F 
+ 116              		.section	.text.zf_pwm_set_duty,"ax",%progbits
+ 117              		.align	1
+ 118              		.p2align 4,,15
+ 119              		.global	zf_pwm_set_duty
+ 120              		.syntax unified
+ 121              		.thumb
+ 122              		.thumb_func
+ 124              	zf_pwm_set_duty:
+ 125              	.LFB482:
+ 126              		.file 1 "libraries/zf_driver/zf_driver_pwm.c"
+   1:libraries/zf_driver/zf_driver_pwm.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_pwm.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_pwm.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_pwm.c **** *
+   5:libraries/zf_driver/zf_driver_pwm.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_pwm.c **** *
+   7:libraries/zf_driver/zf_driver_pwm.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_pwm.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_pwm.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_pwm.c **** *
+  11:libraries/zf_driver/zf_driver_pwm.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_pwm.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_pwm.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_pwm.c **** *
+  15:libraries/zf_driver/zf_driver_pwm.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_pwm.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_pwm.c **** *
+  18:libraries/zf_driver/zf_driver_pwm.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_pwm.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_pwm.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_pwm.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_pwm.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_pwm.c **** *
+  24:libraries/zf_driver/zf_driver_pwm.c **** * 文件名称          zf_driver_pwm
+  25:libraries/zf_driver/zf_driver_pwm.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_pwm.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_pwm.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_pwm.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_pwm.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_pwm.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_pwm.c **** 
+  32:libraries/zf_driver/zf_driver_pwm.c **** // zf_common 层引用
+  33:libraries/zf_driver/zf_driver_pwm.c **** #include "zf_common_debug.h"
+  34:libraries/zf_driver/zf_driver_pwm.c **** #include "zf_common_memory.h"
+  35:libraries/zf_driver/zf_driver_pwm.c **** 
+  36:libraries/zf_driver/zf_driver_pwm.c **** // 自身头文件
+  37:libraries/zf_driver/zf_driver_pwm.c **** #include "zf_driver_pwm.h"
+  38:libraries/zf_driver/zf_driver_pwm.c **** 
+  39:libraries/zf_driver/zf_driver_pwm.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  40:libraries/zf_driver/zf_driver_pwm.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  41:libraries/zf_driver/zf_driver_pwm.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  42:libraries/zf_driver/zf_driver_pwm.c **** 
+  43:libraries/zf_driver/zf_driver_pwm.c **** #define     PWM_CHANNEL_PIN_DEFAULT     \
+  44:libraries/zf_driver/zf_driver_pwm.c **** {   \
+  45:libraries/zf_driver/zf_driver_pwm.c ****     PIN_NULL,   PIN_NULL,   PIN_NULL,   PIN_NULL,\
+  46:libraries/zf_driver/zf_driver_pwm.c ****     PIN_NULL,   PIN_NULL,   PIN_NULL,   PIN_NULL,\
+  47:libraries/zf_driver/zf_driver_pwm.c **** }
+  48:libraries/zf_driver/zf_driver_pwm.c **** 
+  49:libraries/zf_driver/zf_driver_pwm.c **** AT_ZF_LIB_SECTION_START
+  50:libraries/zf_driver/zf_driver_pwm.c **** AT_ZF_LIB_SECTION zf_pwm_obj_struct pwm_obj_list[PWM_NUM_MAX] =
+  51:libraries/zf_driver/zf_driver_pwm.c **** {
+  52:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM1 ], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  53:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM8 ], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  54:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM2 ], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  55:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM5 ], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  56:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM3 ], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  57:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM4 ], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  58:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM15], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  59:libraries/zf_driver/zf_driver_pwm.c ****     {.timer_obj = &timer_obj_list[PWM_TIM16], .pin_list = PWM_CHANNEL_PIN_DEFAULT, .freq = 0, .conf
+  60:libraries/zf_driver/zf_driver_pwm.c **** };
+  61:libraries/zf_driver/zf_driver_pwm.c **** AT_ZF_LIB_SECTION_END
+  62:libraries/zf_driver/zf_driver_pwm.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  63:libraries/zf_driver/zf_driver_pwm.c **** 
+  64:libraries/zf_driver/zf_driver_pwm.c **** // 此处定义 本文件的外部重载函数 这里不允许用户修改
+  65:libraries/zf_driver/zf_driver_pwm.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  66:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+  67:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 更新占空比
+  68:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     pin                 选择 PWM 引脚   (详见 zf_driver_pwm.h 内 zf_pwm_posi
+  69:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     duty                设置占空比
+  70:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+  71:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_set_duty(pin, duty);
+  72:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     
+  73:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+  74:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_set_duty (zf_pwm_positive_channel_enum pin, const uint32 duty)
+  75:libraries/zf_driver/zf_driver_pwm.c **** {
+ 127              		.loc 1 75 1
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 16
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131 0000 00B5     		push	{lr}
+ 132              		.cfi_def_cfa_offset 4
+ 133              		.cfi_offset 14, -4
+ 134 0002 85B0     		sub	sp, sp, #20
+ 135              		.cfi_def_cfa_offset 24
+ 136 0004 0190     		str	r0, [sp, #4]
+ 137 0006 0091     		str	r1, [sp]
+  76:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 138              		.loc 1 76 33
+ 139 0008 0123     		movs	r3, #1
+ 140 000a 8DF80F30 		strb	r3, [sp, #15]
+ 141              	.LBB2:
+  77:libraries/zf_driver/zf_driver_pwm.c **** 
+  78:libraries/zf_driver/zf_driver_pwm.c ****     do
+  79:libraries/zf_driver/zf_driver_pwm.c ****     {
+  80:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_index_enum           pwm_index       = (zf_pwm_index_enum)((pin >> PWM_INDEX_OFFSET)
+ 142              		.loc 1 80 80
+ 143 000e 019B     		ldr	r3, [sp, #4]
+ 144 0010 1B0C     		lsrs	r3, r3, #16
+ 145              		.loc 1 80 55
+ 146 0012 DBB2     		uxtb	r3, r3
+ 147              		.loc 1 80 37
+ 148 0014 03F00F03 		and	r3, r3, #15
+ 149 0018 8DF80B30 		strb	r3, [sp, #11]
+  81:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_channel_index_enum   channel_index   = (zf_pwm_channel_index_enum)((pin >> PWM_CHANN
+ 150              		.loc 1 81 88
+ 151 001c 019B     		ldr	r3, [sp, #4]
+ 152 001e 1B0D     		lsrs	r3, r3, #20
+ 153              		.loc 1 81 55
+ 154 0020 DBB2     		uxtb	r3, r3
+ 155              		.loc 1 81 37
+ 156 0022 03F00F03 		and	r3, r3, #15
+ 157 0026 8DF80A30 		strb	r3, [sp, #10]
+  82:libraries/zf_driver/zf_driver_pwm.c **** 
+  83:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(PIN_NULL != pwm_obj_list[pwm_index].pin_list[channel_index]))
+ 158              		.loc 1 83 12
+ 159 002a 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 160 002e 9DF80A10 		ldrb	r1, [sp, #10]	@ zero_extendqisi2
+ 161 0032 5948     		ldr	r0, .L13
+ 162 0034 1346     		mov	r3, r2
+ 163 0036 DB00     		lsls	r3, r3, #3
+ 164 0038 9B1A     		subs	r3, r3, r2
+ 165 003a 5B00     		lsls	r3, r3, #1
+ 166 003c 0B44     		add	r3, r3, r1
+ 167 003e 5B00     		lsls	r3, r3, #1
+ 168 0040 0344     		add	r3, r3, r0
+ 169 0042 9B88     		ldrh	r3, [r3, #4]
+ 170              		.loc 1 83 11
+ 171 0044 40F6FF72 		movw	r2, #4095
+ 172 0048 9342     		cmp	r3, r2
+ 173 004a 0BD1     		bne	.L2
+ 174              		.loc 1 83 12 discriminator 1
+ 175 004c 0022     		movs	r2, #0
+ 176 004e 5321     		movs	r1, #83
+ 177 0050 5248     		ldr	r0, .L13+4
+ 178 0052 FFF7FEFF 		bl	zf_timer_assert_handler
+ 179 0056 0346     		mov	r3, r0
+ 180 0058 002B     		cmp	r3, #0
+ 181 005a 03D0     		beq	.L2
+  84:libraries/zf_driver/zf_driver_pwm.c ****         {
+  85:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明本通道没有初始化过 是不允许直接�
+  86:libraries/zf_driver/zf_driver_pwm.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+  87:libraries/zf_driver/zf_driver_pwm.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+  88:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_CHANNEL_NOT_INIT;                          // PWM 通道未初
+ 182              		.loc 1 88 26
+ 183 005c 2323     		movs	r3, #35
+ 184 005e 8DF80F30 		strb	r3, [sp, #15]
+  89:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 185              		.loc 1 89 13
+ 186 0062 92E0     		b	.L3
+ 187              	.L2:
+  90:libraries/zf_driver/zf_driver_pwm.c ****         }
+  91:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(PWM_DUTY_MAX >= duty))
+ 188              		.loc 1 91 11
+ 189 0064 009B     		ldr	r3, [sp]
+ 190 0066 42F21072 		movw	r2, #10000
+ 191 006a 9342     		cmp	r3, r2
+ 192 006c 0BD9     		bls	.L4
+ 193              		.loc 1 91 12 discriminator 1
+ 194 006e 0022     		movs	r2, #0
+ 195 0070 5B21     		movs	r1, #91
+ 196 0072 4A48     		ldr	r0, .L13+4
+ 197 0074 FFF7FEFF 		bl	zf_timer_assert_handler
+ 198 0078 0346     		mov	r3, r0
+ 199 007a 002B     		cmp	r3, #0
+ 200 007c 03D0     		beq	.L4
+  92:libraries/zf_driver/zf_driver_pwm.c ****         {
+  93:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明占空比超过了限定最大值
+  94:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_DUTY_ILLEGAL;                              // PWM 占空比值
+ 201              		.loc 1 94 26
+ 202 007e 2923     		movs	r3, #41
+ 203 0080 8DF80F30 		strb	r3, [sp, #15]
+  95:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 204              		.loc 1 95 13
+ 205 0084 81E0     		b	.L3
+ 206              	.L4:
+  96:libraries/zf_driver/zf_driver_pwm.c ****         }
+  97:libraries/zf_driver/zf_driver_pwm.c **** 
+  98:libraries/zf_driver/zf_driver_pwm.c ****         uint16 period_temp = pwm_obj_list[pwm_index].timer_obj->period;         // 获取自动重�
+ 207              		.loc 1 98 53
+ 208 0086 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 209 008a 4349     		ldr	r1, .L13
+ 210 008c 1346     		mov	r3, r2
+ 211 008e DB00     		lsls	r3, r3, #3
+ 212 0090 9B1A     		subs	r3, r3, r2
+ 213 0092 9B00     		lsls	r3, r3, #2
+ 214 0094 0B44     		add	r3, r3, r1
+ 215 0096 1B68     		ldr	r3, [r3]
+ 216              		.loc 1 98 63
+ 217 0098 DB68     		ldr	r3, [r3, #12]
+ 218              		.loc 1 98 16
+ 219 009a ADF80830 		strh	r3, [sp, #8]	@ movhi
+  99:libraries/zf_driver/zf_driver_pwm.c ****         uint16 match_temp = (uint16)(period_temp * ((float)duty / PWM_DUTY_MAX));   // 计算占空
+ 220              		.loc 1 99 50
+ 221 009e BDF80830 		ldrh	r3, [sp, #8]
+ 222 00a2 07EE903A 		vmov	s15, r3	@ int
+ 223 00a6 B8EEE77A 		vcvt.f32.s32	s14, s15
+ 224              		.loc 1 99 53
+ 225 00aa 009B     		ldr	r3, [sp]
+ 226 00ac 07EE903A 		vmov	s15, r3	@ int
+ 227 00b0 F8EE676A 		vcvt.f32.u32	s13, s15
+ 228              		.loc 1 99 65
+ 229 00b4 9FED3A6A 		vldr.32	s12, .L13+8
+ 230 00b8 C6EE867A 		vdiv.f32	s15, s13, s12
+ 231              		.loc 1 99 50
+ 232 00bc 67EE277A 		vmul.f32	s15, s14, s15
+ 233              		.loc 1 99 16
+ 234 00c0 FCEEE77A 		vcvt.u32.f32	s15, s15
+ 235 00c4 17EE903A 		vmov	r3, s15	@ int
+ 236 00c8 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 100:libraries/zf_driver/zf_driver_pwm.c ****         if(match_temp == period_temp)
+ 237              		.loc 1 100 11
+ 238 00cc BDF80C20 		ldrh	r2, [sp, #12]
+ 239 00d0 BDF80830 		ldrh	r3, [sp, #8]
+ 240 00d4 9A42     		cmp	r2, r3
+ 241 00d6 04D1     		bne	.L5
+ 101:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 102:libraries/zf_driver/zf_driver_pwm.c ****             match_temp +=1;
+ 242              		.loc 1 102 24
+ 243 00d8 BDF80C30 		ldrh	r3, [sp, #12]	@ movhi
+ 244 00dc 0133     		adds	r3, r3, #1
+ 245 00de ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 246              	.L5:
+ 103:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 104:libraries/zf_driver/zf_driver_pwm.c ****         switch(((pin >> PWM_CHANNEL_OFFSET) & PWM_CHANNEL_MASK))
+ 247              		.loc 1 104 22
+ 248 00e2 019B     		ldr	r3, [sp, #4]
+ 249 00e4 1B0D     		lsrs	r3, r3, #20
+ 250              		.loc 1 104 45
+ 251 00e6 03F00F03 		and	r3, r3, #15
+ 252              		.loc 1 104 9
+ 253 00ea 072B     		cmp	r3, #7
+ 254 00ec 4AD8     		bhi	.L6
+ 255 00ee 01A2     		adr	r2, .L8
+ 256 00f0 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 257              		.p2align 2
+ 258              	.L8:
+ 259 00f4 15010000 		.word	.L11+1
+ 260 00f8 31010000 		.word	.L10+1
+ 261 00fc 4D010000 		.word	.L9+1
+ 262 0100 69010000 		.word	.L7+1
+ 263 0104 15010000 		.word	.L11+1
+ 264 0108 31010000 		.word	.L10+1
+ 265 010c 4D010000 		.word	.L9+1
+ 266 0110 69010000 		.word	.L7+1
+ 267              		.p2align 1
+ 268              	.L11:
+ 105:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 106:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH1:
+ 107:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH1N:  pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCR1 = match_temp; break;
+ 269              		.loc 1 107 52
+ 270 0114 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 271 0118 1F49     		ldr	r1, .L13
+ 272 011a 1346     		mov	r3, r2
+ 273 011c DB00     		lsls	r3, r3, #3
+ 274 011e 9B1A     		subs	r3, r3, r2
+ 275 0120 9B00     		lsls	r3, r3, #2
+ 276 0122 0B44     		add	r3, r3, r1
+ 277 0124 1B68     		ldr	r3, [r3]
+ 278              		.loc 1 107 62
+ 279 0126 1B68     		ldr	r3, [r3]
+ 280              		.loc 1 107 78
+ 281 0128 BDF80C20 		ldrh	r2, [sp, #12]
+ 282 012c 5A63     		str	r2, [r3, #52]
+ 283              		.loc 1 107 13
+ 284 012e 29E0     		b	.L6
+ 285              	.L10:
+ 108:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH2:
+ 109:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH2N:  pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCR2 = match_temp; break;
+ 286              		.loc 1 109 52
+ 287 0130 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 288 0134 1849     		ldr	r1, .L13
+ 289 0136 1346     		mov	r3, r2
+ 290 0138 DB00     		lsls	r3, r3, #3
+ 291 013a 9B1A     		subs	r3, r3, r2
+ 292 013c 9B00     		lsls	r3, r3, #2
+ 293 013e 0B44     		add	r3, r3, r1
+ 294 0140 1B68     		ldr	r3, [r3]
+ 295              		.loc 1 109 62
+ 296 0142 1B68     		ldr	r3, [r3]
+ 297              		.loc 1 109 78
+ 298 0144 BDF80C20 		ldrh	r2, [sp, #12]
+ 299 0148 9A63     		str	r2, [r3, #56]
+ 300              		.loc 1 109 13
+ 301 014a 1BE0     		b	.L6
+ 302              	.L9:
+ 110:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH3:
+ 111:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH3N:  pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCR3 = match_temp; break;
+ 303              		.loc 1 111 52
+ 304 014c 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 305 0150 1149     		ldr	r1, .L13
+ 306 0152 1346     		mov	r3, r2
+ 307 0154 DB00     		lsls	r3, r3, #3
+ 308 0156 9B1A     		subs	r3, r3, r2
+ 309 0158 9B00     		lsls	r3, r3, #2
+ 310 015a 0B44     		add	r3, r3, r1
+ 311 015c 1B68     		ldr	r3, [r3]
+ 312              		.loc 1 111 62
+ 313 015e 1B68     		ldr	r3, [r3]
+ 314              		.loc 1 111 78
+ 315 0160 BDF80C20 		ldrh	r2, [sp, #12]
+ 316 0164 DA63     		str	r2, [r3, #60]
+ 317              		.loc 1 111 13
+ 318 0166 0DE0     		b	.L6
+ 319              	.L7:
+ 112:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH4:
+ 113:libraries/zf_driver/zf_driver_pwm.c ****             case PWM_CH4N:  pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCR4 = match_temp; break;
+ 320              		.loc 1 113 52
+ 321 0168 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 322 016c 0A49     		ldr	r1, .L13
+ 323 016e 1346     		mov	r3, r2
+ 324 0170 DB00     		lsls	r3, r3, #3
+ 325 0172 9B1A     		subs	r3, r3, r2
+ 326 0174 9B00     		lsls	r3, r3, #2
+ 327 0176 0B44     		add	r3, r3, r1
+ 328 0178 1B68     		ldr	r3, [r3]
+ 329              		.loc 1 113 62
+ 330 017a 1B68     		ldr	r3, [r3]
+ 331              		.loc 1 113 78
+ 332 017c BDF80C20 		ldrh	r2, [sp, #12]
+ 333 0180 1A64     		str	r2, [r3, #64]
+ 334              		.loc 1 113 13
+ 335 0182 00BF     		nop
+ 336              	.L6:
+ 114:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 115:libraries/zf_driver/zf_driver_pwm.c **** 
+ 116:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 337              		.loc 1 116 22
+ 338 0184 0023     		movs	r3, #0
+ 339 0186 8DF80F30 		strb	r3, [sp, #15]
+ 340              	.L3:
+ 341              	.LBE2:
+ 117:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 118:libraries/zf_driver/zf_driver_pwm.c **** 
+ 119:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 342              		.loc 1 119 12
+ 343 018a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 120:libraries/zf_driver/zf_driver_pwm.c **** }
+ 344              		.loc 1 120 1
+ 345 018e 1846     		mov	r0, r3
+ 346 0190 05B0     		add	sp, sp, #20
+ 347              		.cfi_def_cfa_offset 4
+ 348              		@ sp needed
+ 349 0192 5DF804FB 		ldr	pc, [sp], #4
+ 350              	.L14:
+ 351 0196 00BF     		.align	2
+ 352              	.L13:
+ 353 0198 00000000 		.word	pwm_obj_list
+ 354 019c 00000000 		.word	.LC0
+ 355 01a0 00401C46 		.word	1176256512
+ 356              		.cfi_endproc
+ 357              	.LFE482:
+ 359              		.section	.text.zf_pwm_set_freq,"ax",%progbits
+ 360              		.align	1
+ 361              		.p2align 4,,15
+ 362              		.global	zf_pwm_set_freq
+ 363              		.syntax unified
+ 364              		.thumb
+ 365              		.thumb_func
+ 367              	zf_pwm_set_freq:
+ 368              	.LFB483:
+ 121:libraries/zf_driver/zf_driver_pwm.c **** 
+ 122:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 123:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 模块设置频率
+ 124:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     pwm_index           选择 PWM 模块   (详见 zf_driver_pwm.h 内 zf_pwm_inde
+ 125:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     freq                设置频率 同个模块只有最后一次设置生效
+ 126:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+ 127:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_set_freq(pwm_index, freq);
+ 128:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     
+ 129:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 130:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_set_freq (zf_pwm_index_enum pwm_index, const uint32 freq)
+ 131:libraries/zf_driver/zf_driver_pwm.c **** {
+ 369              		.loc 1 131 1
+ 370              		.cfi_startproc
+ 371              		@ args = 0, pretend = 0, frame = 24
+ 372              		@ frame_needed = 0, uses_anonymous_args = 0
+ 373 0000 00B5     		push	{lr}
+ 374              		.cfi_def_cfa_offset 4
+ 375              		.cfi_offset 14, -4
+ 376 0002 87B0     		sub	sp, sp, #28
+ 377              		.cfi_def_cfa_offset 32
+ 378 0004 0346     		mov	r3, r0
+ 379 0006 0091     		str	r1, [sp]
+ 380 0008 8DF80730 		strb	r3, [sp, #7]
+ 132:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 381              		.loc 1 132 33
+ 382 000c 0123     		movs	r3, #1
+ 383 000e 8DF81730 		strb	r3, [sp, #23]
+ 384              	.LBB3:
+ 133:libraries/zf_driver/zf_driver_pwm.c **** 
+ 134:libraries/zf_driver/zf_driver_pwm.c ****     do
+ 135:libraries/zf_driver/zf_driver_pwm.c ****     {
+ 136:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(pwm_obj_list[pwm_index].freq))
+ 385              		.loc 1 136 12
+ 386 0012 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 387 0016 6849     		ldr	r1, .L22
+ 388 0018 1346     		mov	r3, r2
+ 389 001a DB00     		lsls	r3, r3, #3
+ 390 001c 9B1A     		subs	r3, r3, r2
+ 391 001e 9B00     		lsls	r3, r3, #2
+ 392 0020 0B44     		add	r3, r3, r1
+ 393 0022 1433     		adds	r3, r3, #20
+ 394 0024 1B68     		ldr	r3, [r3]
+ 395              		.loc 1 136 11
+ 396 0026 002B     		cmp	r3, #0
+ 397 0028 0BD1     		bne	.L16
+ 398              		.loc 1 136 12 discriminator 1
+ 399 002a 0022     		movs	r2, #0
+ 400 002c 8821     		movs	r1, #136
+ 401 002e 6348     		ldr	r0, .L22+4
+ 402 0030 FFF7FEFF 		bl	zf_timer_assert_handler
+ 403 0034 0346     		mov	r3, r0
+ 404 0036 002B     		cmp	r3, #0
+ 405 0038 03D0     		beq	.L16
+ 137:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 138:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 139:libraries/zf_driver/zf_driver_pwm.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 140:libraries/zf_driver/zf_driver_pwm.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 141:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_MODULE_NOT_INIT;                           // PWM 模块未初
+ 406              		.loc 1 141 26
+ 407 003a 2123     		movs	r3, #33
+ 408 003c 8DF81730 		strb	r3, [sp, #23]
+ 142:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 409              		.loc 1 142 13
+ 410 0040 B4E0     		b	.L17
+ 411              	.L16:
+ 143:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 144:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(freq))
+ 412              		.loc 1 144 11
+ 413 0042 009B     		ldr	r3, [sp]
+ 414 0044 002B     		cmp	r3, #0
+ 415 0046 0BD1     		bne	.L18
+ 416              		.loc 1 144 12 discriminator 1
+ 417 0048 0022     		movs	r2, #0
+ 418 004a 9021     		movs	r1, #144
+ 419 004c 5B48     		ldr	r0, .L22+4
+ 420 004e FFF7FEFF 		bl	zf_timer_assert_handler
+ 421 0052 0346     		mov	r3, r0
+ 422 0054 002B     		cmp	r3, #0
+ 423 0056 03D0     		beq	.L18
+ 145:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 146:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的频率为 0
+ 147:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_DUTY_ILLEGAL;                              // PWM 占空比值
+ 424              		.loc 1 147 26
+ 425 0058 2923     		movs	r3, #41
+ 426 005a 8DF81730 		strb	r3, [sp, #23]
+ 148:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 427              		.loc 1 148 13
+ 428 005e A5E0     		b	.L17
+ 429              	.L18:
+ 149:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 150:libraries/zf_driver/zf_driver_pwm.c **** 
+ 151:libraries/zf_driver/zf_driver_pwm.c ****         zf_timer_disable((zf_timer_index_enum)pwm_index);
+ 430              		.loc 1 151 9
+ 431 0060 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 432 0064 1846     		mov	r0, r3
+ 433 0066 FFF7FEFF 		bl	zf_timer_disable
+ 152:libraries/zf_driver/zf_driver_pwm.c **** 
+ 153:libraries/zf_driver/zf_driver_pwm.c ****         uint32 freq_temp    = (pwm_obj_list[pwm_index].alignment ? freq * 2 : freq);
+ 434              		.loc 1 153 55
+ 435 006a 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 436 006e 5249     		ldr	r1, .L22
+ 437 0070 1346     		mov	r3, r2
+ 438 0072 DB00     		lsls	r3, r3, #3
+ 439 0074 9B1A     		subs	r3, r3, r2
+ 440 0076 9B00     		lsls	r3, r3, #2
+ 441 0078 0B44     		add	r3, r3, r1
+ 442 007a 1833     		adds	r3, r3, #24
+ 443 007c 5B78     		ldrb	r3, [r3, #1]
+ 444 007e C3F34003 		ubfx	r3, r3, #1, #1
+ 445 0082 DBB2     		uxtb	r3, r3
+ 446              		.loc 1 153 77
+ 447 0084 002B     		cmp	r3, #0
+ 448 0086 02D0     		beq	.L19
+ 449              		.loc 1 153 77 is_stmt 0 discriminator 1
+ 450 0088 009B     		ldr	r3, [sp]
+ 451 008a 5B00     		lsls	r3, r3, #1
+ 452 008c 00E0     		b	.L20
+ 453              	.L19:
+ 454              		.loc 1 153 77 discriminator 2
+ 455 008e 009B     		ldr	r3, [sp]
+ 456              	.L20:
+ 457              		.loc 1 153 16 is_stmt 1 discriminator 4
+ 458 0090 0493     		str	r3, [sp, #16]
+ 154:libraries/zf_driver/zf_driver_pwm.c ****         uint16 freq_div     = ((pwm_obj_list[pwm_index].timer_obj->clock_input / freq_temp) >> 15);
+ 459              		.loc 1 154 56 discriminator 4
+ 460 0092 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 461 0096 4849     		ldr	r1, .L22
+ 462 0098 1346     		mov	r3, r2
+ 463 009a DB00     		lsls	r3, r3, #3
+ 464 009c 9B1A     		subs	r3, r3, r2
+ 465 009e 9B00     		lsls	r3, r3, #2
+ 466 00a0 0B44     		add	r3, r3, r1
+ 467 00a2 1B68     		ldr	r3, [r3]
+ 468              		.loc 1 154 66 discriminator 4
+ 469 00a4 5A68     		ldr	r2, [r3, #4]
+ 470              		.loc 1 154 80 discriminator 4
+ 471 00a6 049B     		ldr	r3, [sp, #16]
+ 472 00a8 B2FBF3F3 		udiv	r3, r2, r3
+ 473              		.loc 1 154 93 discriminator 4
+ 474 00ac DB0B     		lsrs	r3, r3, #15
+ 475              		.loc 1 154 16 discriminator 4
+ 476 00ae ADF80E30 		strh	r3, [sp, #14]	@ movhi
+ 155:libraries/zf_driver/zf_driver_pwm.c ****         uint16 period_temp  = (pwm_obj_list[pwm_index].timer_obj->clock_input / freq_temp / (freq_d
+ 477              		.loc 1 155 55 discriminator 4
+ 478 00b2 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 479 00b6 4049     		ldr	r1, .L22
+ 480 00b8 1346     		mov	r3, r2
+ 481 00ba DB00     		lsls	r3, r3, #3
+ 482 00bc 9B1A     		subs	r3, r3, r2
+ 483 00be 9B00     		lsls	r3, r3, #2
+ 484 00c0 0B44     		add	r3, r3, r1
+ 485 00c2 1B68     		ldr	r3, [r3]
+ 486              		.loc 1 155 65 discriminator 4
+ 487 00c4 5A68     		ldr	r2, [r3, #4]
+ 488              		.loc 1 155 79 discriminator 4
+ 489 00c6 049B     		ldr	r3, [sp, #16]
+ 490 00c8 B2FBF3F3 		udiv	r3, r2, r3
+ 491              		.loc 1 155 103 discriminator 4
+ 492 00cc BDF80E20 		ldrh	r2, [sp, #14]
+ 493 00d0 0132     		adds	r2, r2, #1
+ 494              		.loc 1 155 91 discriminator 4
+ 495 00d2 B3FBF2F3 		udiv	r3, r3, r2
+ 496              		.loc 1 155 16 discriminator 4
+ 497 00d6 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 156:libraries/zf_driver/zf_driver_pwm.c **** 
+ 157:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].freq                = pwm_obj_list[pwm_index].timer_obj->clock_inpu
+ 498              		.loc 1 157 78 discriminator 4
+ 499 00da 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 500 00de 3649     		ldr	r1, .L22
+ 501 00e0 1346     		mov	r3, r2
+ 502 00e2 DB00     		lsls	r3, r3, #3
+ 503 00e4 9B1A     		subs	r3, r3, r2
+ 504 00e6 9B00     		lsls	r3, r3, #2
+ 505 00e8 0B44     		add	r3, r3, r1
+ 506 00ea 1B68     		ldr	r3, [r3]
+ 507              		.loc 1 157 88 discriminator 4
+ 508 00ec 5B68     		ldr	r3, [r3, #4]
+ 509              		.loc 1 157 114 discriminator 4
+ 510 00ee BDF80E20 		ldrh	r2, [sp, #14]
+ 511 00f2 0132     		adds	r2, r2, #1
+ 512              		.loc 1 157 102 discriminator 4
+ 513 00f4 B3FBF2F1 		udiv	r1, r3, r2
+ 514              		.loc 1 157 119 discriminator 4
+ 515 00f8 BDF80C30 		ldrh	r3, [sp, #12]
+ 516              		.loc 1 157 32 discriminator 4
+ 517 00fc 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 518              		.loc 1 157 119 discriminator 4
+ 519 0100 B1FBF3F1 		udiv	r1, r1, r3
+ 520              		.loc 1 157 53 discriminator 4
+ 521 0104 2C48     		ldr	r0, .L22
+ 522 0106 1346     		mov	r3, r2
+ 523 0108 DB00     		lsls	r3, r3, #3
+ 524 010a 9B1A     		subs	r3, r3, r2
+ 525 010c 9B00     		lsls	r3, r3, #2
+ 526 010e 0344     		add	r3, r3, r0
+ 527 0110 1433     		adds	r3, r3, #20
+ 528 0112 1960     		str	r1, [r3]
+ 158:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->div      = (freq_div + 1);
+ 529              		.loc 1 158 65 discriminator 4
+ 530 0114 BDF80E30 		ldrh	r3, [sp, #14]
+ 531 0118 581C     		adds	r0, r3, #1
+ 532              		.loc 1 158 32 discriminator 4
+ 533 011a 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 534 011e 2649     		ldr	r1, .L22
+ 535 0120 1346     		mov	r3, r2
+ 536 0122 DB00     		lsls	r3, r3, #3
+ 537 0124 9B1A     		subs	r3, r3, r2
+ 538 0126 9B00     		lsls	r3, r3, #2
+ 539 0128 0B44     		add	r3, r3, r1
+ 540 012a 1B68     		ldr	r3, [r3]
+ 541              		.loc 1 158 65 discriminator 4
+ 542 012c 0246     		mov	r2, r0
+ 543              		.loc 1 158 53 discriminator 4
+ 544 012e 9A60     		str	r2, [r3, #8]
+ 159:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->period   = period_temp - 1;
+ 545              		.loc 1 159 67 discriminator 4
+ 546 0130 BDF80C30 		ldrh	r3, [sp, #12]
+ 547 0134 581E     		subs	r0, r3, #1
+ 548              		.loc 1 159 32 discriminator 4
+ 549 0136 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 550 013a 1F49     		ldr	r1, .L22
+ 551 013c 1346     		mov	r3, r2
+ 552 013e DB00     		lsls	r3, r3, #3
+ 553 0140 9B1A     		subs	r3, r3, r2
+ 554 0142 9B00     		lsls	r3, r3, #2
+ 555 0144 0B44     		add	r3, r3, r1
+ 556 0146 1B68     		ldr	r3, [r3]
+ 557              		.loc 1 159 67 discriminator 4
+ 558 0148 0246     		mov	r2, r0
+ 559              		.loc 1 159 53 discriminator 4
+ 560 014a DA60     		str	r2, [r3, #12]
+ 160:libraries/zf_driver/zf_driver_pwm.c **** 
+ 161:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->PSC = freq_div;
+ 561              		.loc 1 161 32 discriminator 4
+ 562 014c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 563 0150 1949     		ldr	r1, .L22
+ 564 0152 1346     		mov	r3, r2
+ 565 0154 DB00     		lsls	r3, r3, #3
+ 566 0156 9B1A     		subs	r3, r3, r2
+ 567 0158 9B00     		lsls	r3, r3, #2
+ 568 015a 0B44     		add	r3, r3, r1
+ 569 015c 1B68     		ldr	r3, [r3]
+ 570              		.loc 1 161 42 discriminator 4
+ 571 015e 1B68     		ldr	r3, [r3]
+ 572              		.loc 1 161 57 discriminator 4
+ 573 0160 BDF80E20 		ldrh	r2, [sp, #14]
+ 574 0164 9A62     		str	r2, [r3, #40]
+ 162:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->ARR = period_temp - 1;
+ 575              		.loc 1 162 71 discriminator 4
+ 576 0166 BDF80C30 		ldrh	r3, [sp, #12]
+ 577 016a 581E     		subs	r0, r3, #1
+ 578              		.loc 1 162 32 discriminator 4
+ 579 016c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 580 0170 1149     		ldr	r1, .L22
+ 581 0172 1346     		mov	r3, r2
+ 582 0174 DB00     		lsls	r3, r3, #3
+ 583 0176 9B1A     		subs	r3, r3, r2
+ 584 0178 9B00     		lsls	r3, r3, #2
+ 585 017a 0B44     		add	r3, r3, r1
+ 586 017c 1B68     		ldr	r3, [r3]
+ 587              		.loc 1 162 42 discriminator 4
+ 588 017e 1B68     		ldr	r3, [r3]
+ 589              		.loc 1 162 71 discriminator 4
+ 590 0180 0246     		mov	r2, r0
+ 591              		.loc 1 162 57 discriminator 4
+ 592 0182 DA62     		str	r2, [r3, #44]
+ 163:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->CNT = 0;
+ 593              		.loc 1 163 32 discriminator 4
+ 594 0184 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 595 0188 0B49     		ldr	r1, .L22
+ 596 018a 1346     		mov	r3, r2
+ 597 018c DB00     		lsls	r3, r3, #3
+ 598 018e 9B1A     		subs	r3, r3, r2
+ 599 0190 9B00     		lsls	r3, r3, #2
+ 600 0192 0B44     		add	r3, r3, r1
+ 601 0194 1B68     		ldr	r3, [r3]
+ 602              		.loc 1 163 42 discriminator 4
+ 603 0196 1B68     		ldr	r3, [r3]
+ 604              		.loc 1 163 57 discriminator 4
+ 605 0198 0022     		movs	r2, #0
+ 606 019a 5A62     		str	r2, [r3, #36]
+ 164:libraries/zf_driver/zf_driver_pwm.c **** 
+ 165:libraries/zf_driver/zf_driver_pwm.c ****         zf_timer_enable((zf_timer_index_enum)pwm_index);
+ 607              		.loc 1 165 9 discriminator 4
+ 608 019c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 609 01a0 1846     		mov	r0, r3
+ 610 01a2 FFF7FEFF 		bl	zf_timer_enable
+ 166:libraries/zf_driver/zf_driver_pwm.c **** 
+ 167:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 611              		.loc 1 167 22 discriminator 4
+ 612 01a6 0023     		movs	r3, #0
+ 613 01a8 8DF81730 		strb	r3, [sp, #23]
+ 614              	.L17:
+ 615              	.LBE3:
+ 168:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 169:libraries/zf_driver/zf_driver_pwm.c **** 
+ 170:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 616              		.loc 1 170 12
+ 617 01ac 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 171:libraries/zf_driver/zf_driver_pwm.c **** }
+ 618              		.loc 1 171 1
+ 619 01b0 1846     		mov	r0, r3
+ 620 01b2 07B0     		add	sp, sp, #28
+ 621              		.cfi_def_cfa_offset 4
+ 622              		@ sp needed
+ 623 01b4 5DF804FB 		ldr	pc, [sp], #4
+ 624              	.L23:
+ 625              		.align	2
+ 626              	.L22:
+ 627 01b8 00000000 		.word	pwm_obj_list
+ 628 01bc 00000000 		.word	.LC0
+ 629              		.cfi_endproc
+ 630              	.LFE483:
+ 632              		.section	.text.zf_pwm_complementary_deinit,"ax",%progbits
+ 633              		.align	1
+ 634              		.p2align 4,,15
+ 635              		.global	zf_pwm_complementary_deinit
+ 636              		.syntax unified
+ 637              		.thumb
+ 638              		.thumb_func
+ 640              	zf_pwm_complementary_deinit:
+ 641              	.LFB484:
+ 172:libraries/zf_driver/zf_driver_pwm.c **** 
+ 173:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 174:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 注销互补初始化
+ 175:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     positive_pin        选择 PWM 引脚   (详见 zf_driver_pwm.h 内 zf_pwm_posi
+ 176:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     negative_pin        选择 PWM 引脚   (详见 zf_driver_pwm.h 内 zf_pwm_nega
+ 177:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+ 178:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_complementary_deinit(positive_pin, negative_pin);
+ 179:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     必须先调用 zf_pwm_module_init 先初始化模块
+ 180:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 181:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_complementary_deinit (zf_pwm_positive_channel_enum positive_pin, zf_pwm_negative_chann
+ 182:libraries/zf_driver/zf_driver_pwm.c **** {
+ 642              		.loc 1 182 1
+ 643              		.cfi_startproc
+ 644              		@ args = 0, pretend = 0, frame = 24
+ 645              		@ frame_needed = 0, uses_anonymous_args = 0
+ 646 0000 00B5     		push	{lr}
+ 647              		.cfi_def_cfa_offset 4
+ 648              		.cfi_offset 14, -4
+ 649 0002 87B0     		sub	sp, sp, #28
+ 650              		.cfi_def_cfa_offset 32
+ 651 0004 0190     		str	r0, [sp, #4]
+ 652 0006 0091     		str	r1, [sp]
+ 183:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 653              		.loc 1 183 33
+ 654 0008 0123     		movs	r3, #1
+ 655 000a 8DF81730 		strb	r3, [sp, #23]
+ 656              	.LBB4:
+ 184:libraries/zf_driver/zf_driver_pwm.c **** 
+ 185:libraries/zf_driver/zf_driver_pwm.c ****     do
+ 186:libraries/zf_driver/zf_driver_pwm.c ****     {
+ 187:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_index_enum           positive_pwm_index      = (zf_pwm_index_enum)((positive_pin >> 
+ 657              		.loc 1 187 97
+ 658 000e 019B     		ldr	r3, [sp, #4]
+ 659 0010 1B0C     		lsrs	r3, r3, #16
+ 660              		.loc 1 187 63
+ 661 0012 DBB2     		uxtb	r3, r3
+ 662              		.loc 1 187 37
+ 663 0014 03F00F03 		and	r3, r3, #15
+ 664 0018 8DF81630 		strb	r3, [sp, #22]
+ 188:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_channel_index_enum   positive_channel_index  = (zf_pwm_channel_index_enum)((positive
+ 665              		.loc 1 188 105
+ 666 001c 019B     		ldr	r3, [sp, #4]
+ 667 001e 1B0D     		lsrs	r3, r3, #20
+ 668              		.loc 1 188 63
+ 669 0020 DBB2     		uxtb	r3, r3
+ 670              		.loc 1 188 37
+ 671 0022 03F00F03 		and	r3, r3, #15
+ 672 0026 8DF81530 		strb	r3, [sp, #21]
+ 189:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_index_enum           negative_pwm_index      = (zf_pwm_index_enum)((negative_pin >> 
+ 673              		.loc 1 189 97
+ 674 002a 009B     		ldr	r3, [sp]
+ 675 002c 1B0C     		lsrs	r3, r3, #16
+ 676              		.loc 1 189 63
+ 677 002e DBB2     		uxtb	r3, r3
+ 678              		.loc 1 189 37
+ 679 0030 03F00F03 		and	r3, r3, #15
+ 680 0034 8DF81430 		strb	r3, [sp, #20]
+ 190:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_channel_index_enum   negative_channel_index  = (zf_pwm_channel_index_enum)((negative
+ 681              		.loc 1 190 105
+ 682 0038 009B     		ldr	r3, [sp]
+ 683 003a 1B0D     		lsrs	r3, r3, #20
+ 684              		.loc 1 190 63
+ 685 003c DBB2     		uxtb	r3, r3
+ 686              		.loc 1 190 37
+ 687 003e 03F00F03 		and	r3, r3, #15
+ 688 0042 8DF81330 		strb	r3, [sp, #19]
+ 191:libraries/zf_driver/zf_driver_pwm.c **** 
+ 192:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(positive_pwm_index == negative_pwm_index))
+ 689              		.loc 1 192 11
+ 690 0046 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 691 004a 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 692 004e 9A42     		cmp	r2, r3
+ 693 0050 0BD0     		beq	.L25
+ 694              		.loc 1 192 12 discriminator 1
+ 695 0052 0022     		movs	r2, #0
+ 696 0054 C021     		movs	r1, #192
+ 697 0056 B748     		ldr	r0, .L33
+ 698 0058 FFF7FEFF 		bl	zf_timer_assert_handler
+ 699 005c 0346     		mov	r3, r0
+ 700 005e 002B     		cmp	r3, #0
+ 701 0060 03D0     		beq	.L25
+ 193:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 194:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的互补引脚不属于同一个模块
+ 195:libraries/zf_driver/zf_driver_pwm.c ****             // 不是同一个模块的通道怎么能互补？
+ 196:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_MOUDLE_MISMATCH;
+ 702              		.loc 1 196 26
+ 703 0062 2523     		movs	r3, #37
+ 704 0064 8DF81730 		strb	r3, [sp, #23]
+ 197:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 705              		.loc 1 197 13
+ 706 0068 5DE1     		b	.L26
+ 707              	.L25:
+ 198:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 199:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(positive_channel_index == (negative_channel_index - 4)))
+ 708              		.loc 1 199 12
+ 709 006a 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 710 006e 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+ 711 0072 043B     		subs	r3, r3, #4
+ 712              		.loc 1 199 11
+ 713 0074 9A42     		cmp	r2, r3
+ 714 0076 0BD0     		beq	.L27
+ 715              		.loc 1 199 12 discriminator 1
+ 716 0078 0022     		movs	r2, #0
+ 717 007a C721     		movs	r1, #199
+ 718 007c AD48     		ldr	r0, .L33
+ 719 007e FFF7FEFF 		bl	zf_timer_assert_handler
+ 720 0082 0346     		mov	r3, r0
+ 721 0084 002B     		cmp	r3, #0
+ 722 0086 03D0     		beq	.L27
+ 200:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 201:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的互补引脚不属于同一个通道
+ 202:libraries/zf_driver/zf_driver_pwm.c ****             // 不是同一个模块的通道怎么能互补？
+ 203:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_COMPLEMENTARY_MISMATCH;
+ 723              		.loc 1 203 26
+ 724 0088 2623     		movs	r3, #38
+ 725 008a 8DF81730 		strb	r3, [sp, #23]
+ 204:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 726              		.loc 1 204 13
+ 727 008e 4AE1     		b	.L26
+ 728              	.L27:
+ 205:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 206:libraries/zf_driver/zf_driver_pwm.c **** 
+ 207:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(
+ 729              		.loc 1 207 12
+ 730 0090 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 731 0094 A849     		ldr	r1, .L33+4
+ 732 0096 1346     		mov	r3, r2
+ 733 0098 DB00     		lsls	r3, r3, #3
+ 734 009a 9B1A     		subs	r3, r3, r2
+ 735 009c 9B00     		lsls	r3, r3, #2
+ 736 009e 0B44     		add	r3, r3, r1
+ 737 00a0 1833     		adds	r3, r3, #24
+ 738 00a2 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 739 00a4 1A46     		mov	r2, r3
+ 740 00a6 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 741 00aa 42FA03F3 		asr	r3, r2, r3
+ 742 00ae 03F00103 		and	r3, r3, #1
+ 743              		.loc 1 207 11
+ 744 00b2 002B     		cmp	r3, #0
+ 745 00b4 12D0     		beq	.L28
+ 746              		.loc 1 207 12 discriminator 2
+ 747 00b6 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 748 00ba 9F49     		ldr	r1, .L33+4
+ 749 00bc 1346     		mov	r3, r2
+ 750 00be DB00     		lsls	r3, r3, #3
+ 751 00c0 9B1A     		subs	r3, r3, r2
+ 752 00c2 9B00     		lsls	r3, r3, #2
+ 753 00c4 0B44     		add	r3, r3, r1
+ 754 00c6 1833     		adds	r3, r3, #24
+ 755 00c8 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 756 00ca 1A46     		mov	r2, r3
+ 757 00cc 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+ 758 00d0 42FA03F3 		asr	r3, r2, r3
+ 759 00d4 03F00103 		and	r3, r3, #1
+ 760 00d8 002B     		cmp	r3, #0
+ 761 00da 0BD1     		bne	.L29
+ 762              	.L28:
+ 763              		.loc 1 207 12 is_stmt 0 discriminator 3
+ 764 00dc 0022     		movs	r2, #0
+ 765 00de CF21     		movs	r1, #207
+ 766 00e0 9448     		ldr	r0, .L33
+ 767 00e2 FFF7FEFF 		bl	zf_timer_assert_handler
+ 768 00e6 0346     		mov	r3, r0
+ 769 00e8 002B     		cmp	r3, #0
+ 770 00ea 03D0     		beq	.L29
+ 208:libraries/zf_driver/zf_driver_pwm.c ****                 pwm_obj_list[positive_pwm_index].channel_state & (0x01 << positive_channel_index)
+ 209:libraries/zf_driver/zf_driver_pwm.c ****             &&  pwm_obj_list[negative_pwm_index].channel_state & (0x01 << negative_channel_index)))
+ 210:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 211:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的互补引脚 未曾初始化过
+ 212:libraries/zf_driver/zf_driver_pwm.c ****             // 不是同一个模块的通道怎么能互补？
+ 213:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_COMPLEMENTARY_NOT_INIT;
+ 771              		.loc 1 213 26 is_stmt 1
+ 772 00ec 2423     		movs	r3, #36
+ 773 00ee 8DF81730 		strb	r3, [sp, #23]
+ 214:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 774              		.loc 1 214 13
+ 775 00f2 18E1     		b	.L26
+ 776              	.L29:
+ 215:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 216:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(
+ 777              		.loc 1 216 12
+ 778 00f4 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 779 00f8 9DF81510 		ldrb	r1, [sp, #21]	@ zero_extendqisi2
+ 780 00fc 8E48     		ldr	r0, .L33+4
+ 781 00fe 1346     		mov	r3, r2
+ 782 0100 DB00     		lsls	r3, r3, #3
+ 783 0102 9B1A     		subs	r3, r3, r2
+ 784 0104 5B00     		lsls	r3, r3, #1
+ 785 0106 0B44     		add	r3, r3, r1
+ 786 0108 5B00     		lsls	r3, r3, #1
+ 787 010a 0344     		add	r3, r3, r0
+ 788 010c 9B88     		ldrh	r3, [r3, #4]
+ 789 010e 1A46     		mov	r2, r3
+ 790 0110 019B     		ldr	r3, [sp, #4]
+ 791 0112 9BB2     		uxth	r3, r3
+ 792 0114 C3F30B03 		ubfx	r3, r3, #0, #12
+ 793              		.loc 1 216 11
+ 794 0118 9A42     		cmp	r2, r3
+ 795 011a 0BD0     		beq	.L30
+ 796              		.loc 1 216 12 discriminator 1
+ 797 011c 0022     		movs	r2, #0
+ 798 011e D821     		movs	r1, #216
+ 799 0120 8448     		ldr	r0, .L33
+ 800 0122 FFF7FEFF 		bl	zf_timer_assert_handler
+ 801 0126 0346     		mov	r3, r0
+ 802 0128 002B     		cmp	r3, #0
+ 803 012a 03D0     		beq	.L30
+ 217:libraries/zf_driver/zf_driver_pwm.c ****                 pwm_obj_list[positive_pwm_index].pin_list[positive_channel_index]
+ 218:libraries/zf_driver/zf_driver_pwm.c ****             == (zf_gpio_pin_enum)(positive_pin & PWM_PIN_INDEX_MASK)))
+ 219:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 220:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的引脚 与之前初始化的引脚不�
+ 221:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_PIN_MISMATCH;
+ 804              		.loc 1 221 26
+ 805 012c 2723     		movs	r3, #39
+ 806 012e 8DF81730 		strb	r3, [sp, #23]
+ 222:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 807              		.loc 1 222 13
+ 808 0132 F8E0     		b	.L26
+ 809              	.L30:
+ 223:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 224:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(
+ 810              		.loc 1 224 12
+ 811 0134 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 812 0138 9DF81310 		ldrb	r1, [sp, #19]	@ zero_extendqisi2
+ 813 013c 7E48     		ldr	r0, .L33+4
+ 814 013e 1346     		mov	r3, r2
+ 815 0140 DB00     		lsls	r3, r3, #3
+ 816 0142 9B1A     		subs	r3, r3, r2
+ 817 0144 5B00     		lsls	r3, r3, #1
+ 818 0146 0B44     		add	r3, r3, r1
+ 819 0148 5B00     		lsls	r3, r3, #1
+ 820 014a 0344     		add	r3, r3, r0
+ 821 014c 9B88     		ldrh	r3, [r3, #4]
+ 822 014e 1A46     		mov	r2, r3
+ 823 0150 009B     		ldr	r3, [sp]
+ 824 0152 9BB2     		uxth	r3, r3
+ 825 0154 C3F30B03 		ubfx	r3, r3, #0, #12
+ 826              		.loc 1 224 11
+ 827 0158 9A42     		cmp	r2, r3
+ 828 015a 0BD0     		beq	.L31
+ 829              		.loc 1 224 12 discriminator 1
+ 830 015c 0022     		movs	r2, #0
+ 831 015e E021     		movs	r1, #224
+ 832 0160 7448     		ldr	r0, .L33
+ 833 0162 FFF7FEFF 		bl	zf_timer_assert_handler
+ 834 0166 0346     		mov	r3, r0
+ 835 0168 002B     		cmp	r3, #0
+ 836 016a 03D0     		beq	.L31
+ 225:libraries/zf_driver/zf_driver_pwm.c ****                 pwm_obj_list[negative_pwm_index].pin_list[negative_channel_index]
+ 226:libraries/zf_driver/zf_driver_pwm.c ****             == (zf_gpio_pin_enum)(negative_pin & PWM_PIN_INDEX_MASK)))
+ 227:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 228:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的引脚 与之前初始化的引脚不�
+ 229:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_PIN_MISMATCH;
+ 837              		.loc 1 229 26
+ 838 016c 2723     		movs	r3, #39
+ 839 016e 8DF81730 		strb	r3, [sp, #23]
+ 230:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 840              		.loc 1 230 13
+ 841 0172 D8E0     		b	.L26
+ 842              	.L31:
+ 231:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 232:libraries/zf_driver/zf_driver_pwm.c **** 
+ 233:libraries/zf_driver/zf_driver_pwm.c ****         uint32 register_temp = 0;
+ 843              		.loc 1 233 16
+ 844 0174 0023     		movs	r3, #0
+ 845 0176 0393     		str	r3, [sp, #12]
+ 234:libraries/zf_driver/zf_driver_pwm.c **** 
+ 235:libraries/zf_driver/zf_driver_pwm.c ****         register_temp = pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCER;
+ 846              		.loc 1 235 57
+ 847 0178 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 848 017c 6E49     		ldr	r1, .L33+4
+ 849 017e 1346     		mov	r3, r2
+ 850 0180 DB00     		lsls	r3, r3, #3
+ 851 0182 9B1A     		subs	r3, r3, r2
+ 852 0184 9B00     		lsls	r3, r3, #2
+ 853 0186 0B44     		add	r3, r3, r1
+ 854 0188 1B68     		ldr	r3, [r3]
+ 855              		.loc 1 235 67
+ 856 018a 1B68     		ldr	r3, [r3]
+ 857              		.loc 1 235 23
+ 858 018c 1B6A     		ldr	r3, [r3, #32]
+ 859 018e 0393     		str	r3, [sp, #12]
+ 236:libraries/zf_driver/zf_driver_pwm.c ****         register_temp &= ~(TIM_CCER_CC1E << (positive_channel_index / 2 * 4 + positive_channel_inde
+ 860              		.loc 1 236 69
+ 861 0190 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 862 0194 5B08     		lsrs	r3, r3, #1
+ 863 0196 DBB2     		uxtb	r3, r3
+ 864              		.loc 1 236 77
+ 865 0198 5B00     		lsls	r3, r3, #1
+ 866              		.loc 1 236 102
+ 867 019a 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 868 019e 9208     		lsrs	r2, r2, #2
+ 869 01a0 D2B2     		uxtb	r2, r2
+ 870              		.loc 1 236 77
+ 871 01a2 1344     		add	r3, r3, r2
+ 872 01a4 5B00     		lsls	r3, r3, #1
+ 873              		.loc 1 236 42
+ 874 01a6 0122     		movs	r2, #1
+ 875 01a8 02FA03F3 		lsl	r3, r2, r3
+ 876              		.loc 1 236 26
+ 877 01ac DB43     		mvns	r3, r3
+ 878              		.loc 1 236 23
+ 879 01ae 039A     		ldr	r2, [sp, #12]
+ 880 01b0 1340     		ands	r3, r3, r2
+ 881 01b2 0393     		str	r3, [sp, #12]
+ 237:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCER = register_temp;
+ 882              		.loc 1 237 41
+ 883 01b4 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 884 01b8 5F49     		ldr	r1, .L33+4
+ 885 01ba 1346     		mov	r3, r2
+ 886 01bc DB00     		lsls	r3, r3, #3
+ 887 01be 9B1A     		subs	r3, r3, r2
+ 888 01c0 9B00     		lsls	r3, r3, #2
+ 889 01c2 0B44     		add	r3, r3, r1
+ 890 01c4 1B68     		ldr	r3, [r3]
+ 891              		.loc 1 237 51
+ 892 01c6 1B68     		ldr	r3, [r3]
+ 893              		.loc 1 237 67
+ 894 01c8 039A     		ldr	r2, [sp, #12]
+ 895 01ca 1A62     		str	r2, [r3, #32]
+ 238:libraries/zf_driver/zf_driver_pwm.c **** 
+ 239:libraries/zf_driver/zf_driver_pwm.c ****         zf_gpio_deinit(pwm_obj_list[positive_pwm_index].pin_list[positive_channel_index]);
+ 896              		.loc 1 239 9
+ 897 01cc 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 898 01d0 9DF81510 		ldrb	r1, [sp, #21]	@ zero_extendqisi2
+ 899 01d4 5848     		ldr	r0, .L33+4
+ 900 01d6 1346     		mov	r3, r2
+ 901 01d8 DB00     		lsls	r3, r3, #3
+ 902 01da 9B1A     		subs	r3, r3, r2
+ 903 01dc 5B00     		lsls	r3, r3, #1
+ 904 01de 0B44     		add	r3, r3, r1
+ 905 01e0 5B00     		lsls	r3, r3, #1
+ 906 01e2 0344     		add	r3, r3, r0
+ 907 01e4 9B88     		ldrh	r3, [r3, #4]
+ 908 01e6 1846     		mov	r0, r3
+ 909 01e8 FFF7FEFF 		bl	zf_gpio_deinit
+ 240:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[positive_pwm_index].pin_list[positive_channel_index] = PIN_NULL;
+ 910              		.loc 1 240 50
+ 911 01ec 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 912 01f0 9DF81510 		ldrb	r1, [sp, #21]	@ zero_extendqisi2
+ 913              		.loc 1 240 75
+ 914 01f4 5048     		ldr	r0, .L33+4
+ 915 01f6 1346     		mov	r3, r2
+ 916 01f8 DB00     		lsls	r3, r3, #3
+ 917 01fa 9B1A     		subs	r3, r3, r2
+ 918 01fc 5B00     		lsls	r3, r3, #1
+ 919 01fe 0B44     		add	r3, r3, r1
+ 920 0200 5B00     		lsls	r3, r3, #1
+ 921 0202 0344     		add	r3, r3, r0
+ 922 0204 40F6FF72 		movw	r2, #4095
+ 923 0208 9A80     		strh	r2, [r3, #4]	@ movhi
+ 241:libraries/zf_driver/zf_driver_pwm.c **** 
+ 242:libraries/zf_driver/zf_driver_pwm.c ****         register_temp = pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCER;
+ 924              		.loc 1 242 57
+ 925 020a 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 926 020e 4A49     		ldr	r1, .L33+4
+ 927 0210 1346     		mov	r3, r2
+ 928 0212 DB00     		lsls	r3, r3, #3
+ 929 0214 9B1A     		subs	r3, r3, r2
+ 930 0216 9B00     		lsls	r3, r3, #2
+ 931 0218 0B44     		add	r3, r3, r1
+ 932 021a 1B68     		ldr	r3, [r3]
+ 933              		.loc 1 242 67
+ 934 021c 1B68     		ldr	r3, [r3]
+ 935              		.loc 1 242 23
+ 936 021e 1B6A     		ldr	r3, [r3, #32]
+ 937 0220 0393     		str	r3, [sp, #12]
+ 243:libraries/zf_driver/zf_driver_pwm.c ****         register_temp &= ~(TIM_CCER_CC1E << (negative_channel_index / 2 * 4 + negative_channel_inde
+ 938              		.loc 1 243 69
+ 939 0222 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+ 940 0226 5B08     		lsrs	r3, r3, #1
+ 941 0228 DBB2     		uxtb	r3, r3
+ 942              		.loc 1 243 77
+ 943 022a 5B00     		lsls	r3, r3, #1
+ 944              		.loc 1 243 102
+ 945 022c 9DF81320 		ldrb	r2, [sp, #19]	@ zero_extendqisi2
+ 946 0230 9208     		lsrs	r2, r2, #2
+ 947 0232 D2B2     		uxtb	r2, r2
+ 948              		.loc 1 243 77
+ 949 0234 1344     		add	r3, r3, r2
+ 950 0236 5B00     		lsls	r3, r3, #1
+ 951              		.loc 1 243 42
+ 952 0238 0122     		movs	r2, #1
+ 953 023a 02FA03F3 		lsl	r3, r2, r3
+ 954              		.loc 1 243 26
+ 955 023e DB43     		mvns	r3, r3
+ 956              		.loc 1 243 23
+ 957 0240 039A     		ldr	r2, [sp, #12]
+ 958 0242 1340     		ands	r3, r3, r2
+ 959 0244 0393     		str	r3, [sp, #12]
+ 244:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCER = register_temp;
+ 960              		.loc 1 244 41
+ 961 0246 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 962 024a 3B49     		ldr	r1, .L33+4
+ 963 024c 1346     		mov	r3, r2
+ 964 024e DB00     		lsls	r3, r3, #3
+ 965 0250 9B1A     		subs	r3, r3, r2
+ 966 0252 9B00     		lsls	r3, r3, #2
+ 967 0254 0B44     		add	r3, r3, r1
+ 968 0256 1B68     		ldr	r3, [r3]
+ 969              		.loc 1 244 51
+ 970 0258 1B68     		ldr	r3, [r3]
+ 971              		.loc 1 244 67
+ 972 025a 039A     		ldr	r2, [sp, #12]
+ 973 025c 1A62     		str	r2, [r3, #32]
+ 245:libraries/zf_driver/zf_driver_pwm.c **** 
+ 246:libraries/zf_driver/zf_driver_pwm.c ****         zf_gpio_deinit(pwm_obj_list[negative_pwm_index].pin_list[negative_channel_index]);
+ 974              		.loc 1 246 9
+ 975 025e 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 976 0262 9DF81310 		ldrb	r1, [sp, #19]	@ zero_extendqisi2
+ 977 0266 3448     		ldr	r0, .L33+4
+ 978 0268 1346     		mov	r3, r2
+ 979 026a DB00     		lsls	r3, r3, #3
+ 980 026c 9B1A     		subs	r3, r3, r2
+ 981 026e 5B00     		lsls	r3, r3, #1
+ 982 0270 0B44     		add	r3, r3, r1
+ 983 0272 5B00     		lsls	r3, r3, #1
+ 984 0274 0344     		add	r3, r3, r0
+ 985 0276 9B88     		ldrh	r3, [r3, #4]
+ 986 0278 1846     		mov	r0, r3
+ 987 027a FFF7FEFF 		bl	zf_gpio_deinit
+ 247:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[negative_pwm_index].pin_list[negative_channel_index] = PIN_NULL;
+ 988              		.loc 1 247 50
+ 989 027e 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 990 0282 9DF81310 		ldrb	r1, [sp, #19]	@ zero_extendqisi2
+ 991              		.loc 1 247 75
+ 992 0286 2C48     		ldr	r0, .L33+4
+ 993 0288 1346     		mov	r3, r2
+ 994 028a DB00     		lsls	r3, r3, #3
+ 995 028c 9B1A     		subs	r3, r3, r2
+ 996 028e 5B00     		lsls	r3, r3, #1
+ 997 0290 0B44     		add	r3, r3, r1
+ 998 0292 5B00     		lsls	r3, r3, #1
+ 999 0294 0344     		add	r3, r3, r0
+ 1000 0296 40F6FF72 		movw	r2, #4095
+ 1001 029a 9A80     		strh	r2, [r3, #4]	@ movhi
+ 248:libraries/zf_driver/zf_driver_pwm.c **** 
+ 249:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[positive_pwm_index].channel_state &= ~(0x01 << positive_channel_index);
+ 1002              		.loc 1 249 56
+ 1003 029c 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 1004 02a0 2549     		ldr	r1, .L33+4
+ 1005 02a2 1346     		mov	r3, r2
+ 1006 02a4 DB00     		lsls	r3, r3, #3
+ 1007 02a6 9B1A     		subs	r3, r3, r2
+ 1008 02a8 9B00     		lsls	r3, r3, #2
+ 1009 02aa 0B44     		add	r3, r3, r1
+ 1010 02ac 1833     		adds	r3, r3, #24
+ 1011 02ae 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1012 02b0 5AB2     		sxtb	r2, r3
+ 1013              		.loc 1 249 66
+ 1014 02b2 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 1015 02b6 0121     		movs	r1, #1
+ 1016 02b8 01FA03F3 		lsl	r3, r1, r3
+ 1017              		.loc 1 249 56
+ 1018 02bc 5BB2     		sxtb	r3, r3
+ 1019 02be DB43     		mvns	r3, r3
+ 1020 02c0 5BB2     		sxtb	r3, r3
+ 1021 02c2 1340     		ands	r3, r3, r2
+ 1022 02c4 5BB2     		sxtb	r3, r3
+ 1023 02c6 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 1024 02ca D8B2     		uxtb	r0, r3
+ 1025 02cc 1A49     		ldr	r1, .L33+4
+ 1026 02ce 1346     		mov	r3, r2
+ 1027 02d0 DB00     		lsls	r3, r3, #3
+ 1028 02d2 9B1A     		subs	r3, r3, r2
+ 1029 02d4 9B00     		lsls	r3, r3, #2
+ 1030 02d6 0B44     		add	r3, r3, r1
+ 1031 02d8 1833     		adds	r3, r3, #24
+ 1032 02da 0246     		mov	r2, r0
+ 1033 02dc 1A70     		strb	r2, [r3]
+ 250:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[negative_pwm_index].channel_state &= ~(0x01 << negative_channel_index);
+ 1034              		.loc 1 250 56
+ 1035 02de 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 1036 02e2 1549     		ldr	r1, .L33+4
+ 1037 02e4 1346     		mov	r3, r2
+ 1038 02e6 DB00     		lsls	r3, r3, #3
+ 1039 02e8 9B1A     		subs	r3, r3, r2
+ 1040 02ea 9B00     		lsls	r3, r3, #2
+ 1041 02ec 0B44     		add	r3, r3, r1
+ 1042 02ee 1833     		adds	r3, r3, #24
+ 1043 02f0 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1044 02f2 5AB2     		sxtb	r2, r3
+ 1045              		.loc 1 250 66
+ 1046 02f4 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+ 1047 02f8 0121     		movs	r1, #1
+ 1048 02fa 01FA03F3 		lsl	r3, r1, r3
+ 1049              		.loc 1 250 56
+ 1050 02fe 5BB2     		sxtb	r3, r3
+ 1051 0300 DB43     		mvns	r3, r3
+ 1052 0302 5BB2     		sxtb	r3, r3
+ 1053 0304 1340     		ands	r3, r3, r2
+ 1054 0306 5BB2     		sxtb	r3, r3
+ 1055 0308 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 1056 030c D8B2     		uxtb	r0, r3
+ 1057 030e 0A49     		ldr	r1, .L33+4
+ 1058 0310 1346     		mov	r3, r2
+ 1059 0312 DB00     		lsls	r3, r3, #3
+ 1060 0314 9B1A     		subs	r3, r3, r2
+ 1061 0316 9B00     		lsls	r3, r3, #2
+ 1062 0318 0B44     		add	r3, r3, r1
+ 1063 031a 1833     		adds	r3, r3, #24
+ 1064 031c 0246     		mov	r2, r0
+ 1065 031e 1A70     		strb	r2, [r3]
+ 251:libraries/zf_driver/zf_driver_pwm.c **** 
+ 252:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 1066              		.loc 1 252 22
+ 1067 0320 0023     		movs	r3, #0
+ 1068 0322 8DF81730 		strb	r3, [sp, #23]
+ 1069              	.L26:
+ 1070              	.LBE4:
+ 253:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 254:libraries/zf_driver/zf_driver_pwm.c **** 
+ 255:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 1071              		.loc 1 255 12
+ 1072 0326 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 256:libraries/zf_driver/zf_driver_pwm.c **** }
+ 1073              		.loc 1 256 1
+ 1074 032a 1846     		mov	r0, r3
+ 1075 032c 07B0     		add	sp, sp, #28
+ 1076              		.cfi_def_cfa_offset 4
+ 1077              		@ sp needed
+ 1078 032e 5DF804FB 		ldr	pc, [sp], #4
+ 1079              	.L34:
+ 1080 0332 00BF     		.align	2
+ 1081              	.L33:
+ 1082 0334 00000000 		.word	.LC0
+ 1083 0338 00000000 		.word	pwm_obj_list
+ 1084              		.cfi_endproc
+ 1085              	.LFE484:
+ 1087              		.section	.text.zf_pwm_channel_deinit,"ax",%progbits
+ 1088              		.align	1
+ 1089              		.p2align 4,,15
+ 1090              		.global	zf_pwm_channel_deinit
+ 1091              		.syntax unified
+ 1092              		.thumb
+ 1093              		.thumb_func
+ 1095              	zf_pwm_channel_deinit:
+ 1096              	.LFB485:
+ 257:libraries/zf_driver/zf_driver_pwm.c **** 
+ 258:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 259:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 通道销初始化
+ 260:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     pin                 选择 PWM 引脚   (详见 zf_driver_pwm.h 内 zf_pwm_posi
+ 261:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+ 262:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_channel_deinit(pin);
+ 263:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     
+ 264:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 265:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_channel_deinit (zf_pwm_positive_channel_enum pin)
+ 266:libraries/zf_driver/zf_driver_pwm.c **** {
+ 1097              		.loc 1 266 1
+ 1098              		.cfi_startproc
+ 1099              		@ args = 0, pretend = 0, frame = 16
+ 1100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1101 0000 00B5     		push	{lr}
+ 1102              		.cfi_def_cfa_offset 4
+ 1103              		.cfi_offset 14, -4
+ 1104 0002 85B0     		sub	sp, sp, #20
+ 1105              		.cfi_def_cfa_offset 24
+ 1106 0004 0190     		str	r0, [sp, #4]
+ 267:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 1107              		.loc 1 267 33
+ 1108 0006 0123     		movs	r3, #1
+ 1109 0008 8DF80F30 		strb	r3, [sp, #15]
+ 1110              	.LBB5:
+ 268:libraries/zf_driver/zf_driver_pwm.c **** 
+ 269:libraries/zf_driver/zf_driver_pwm.c ****     do
+ 270:libraries/zf_driver/zf_driver_pwm.c ****     {
+ 271:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_index_enum           pwm_index       = (zf_pwm_index_enum)((pin >> PWM_INDEX_OFFSET)
+ 1111              		.loc 1 271 80
+ 1112 000c 019B     		ldr	r3, [sp, #4]
+ 1113 000e 1B0C     		lsrs	r3, r3, #16
+ 1114              		.loc 1 271 55
+ 1115 0010 DBB2     		uxtb	r3, r3
+ 1116              		.loc 1 271 37
+ 1117 0012 03F00F03 		and	r3, r3, #15
+ 1118 0016 8DF80E30 		strb	r3, [sp, #14]
+ 272:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_channel_index_enum   channel_index   = (zf_pwm_channel_index_enum)((pin >> PWM_CHANN
+ 1119              		.loc 1 272 88
+ 1120 001a 019B     		ldr	r3, [sp, #4]
+ 1121 001c 1B0D     		lsrs	r3, r3, #20
+ 1122              		.loc 1 272 55
+ 1123 001e DBB2     		uxtb	r3, r3
+ 1124              		.loc 1 272 37
+ 1125 0020 03F00F03 		and	r3, r3, #15
+ 1126 0024 8DF80D30 		strb	r3, [sp, #13]
+ 273:libraries/zf_driver/zf_driver_pwm.c **** 
+ 274:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(PIN_NULL != pwm_obj_list[pwm_index].pin_list[channel_index]))
+ 1127              		.loc 1 274 12
+ 1128 0028 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1129 002c 9DF80D10 		ldrb	r1, [sp, #13]	@ zero_extendqisi2
+ 1130 0030 4748     		ldr	r0, .L39
+ 1131 0032 1346     		mov	r3, r2
+ 1132 0034 DB00     		lsls	r3, r3, #3
+ 1133 0036 9B1A     		subs	r3, r3, r2
+ 1134 0038 5B00     		lsls	r3, r3, #1
+ 1135 003a 0B44     		add	r3, r3, r1
+ 1136 003c 5B00     		lsls	r3, r3, #1
+ 1137 003e 0344     		add	r3, r3, r0
+ 1138 0040 9B88     		ldrh	r3, [r3, #4]
+ 1139              		.loc 1 274 11
+ 1140 0042 40F6FF72 		movw	r2, #4095
+ 1141 0046 9342     		cmp	r3, r2
+ 1142 0048 0CD1     		bne	.L36
+ 1143              		.loc 1 274 12 discriminator 1
+ 1144 004a 0022     		movs	r2, #0
+ 1145 004c 4FF48971 		mov	r1, #274
+ 1146 0050 4048     		ldr	r0, .L39+4
+ 1147 0052 FFF7FEFF 		bl	zf_timer_assert_handler
+ 1148 0056 0346     		mov	r3, r0
+ 1149 0058 002B     		cmp	r3, #0
+ 1150 005a 03D0     		beq	.L36
+ 275:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 276:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明本通道没有初始化过 是不允许直接�
+ 277:libraries/zf_driver/zf_driver_pwm.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 278:libraries/zf_driver/zf_driver_pwm.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 279:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_CHANNEL_NOT_INIT;                          // PWM 通道未初
+ 1151              		.loc 1 279 26
+ 1152 005c 2323     		movs	r3, #35
+ 1153 005e 8DF80F30 		strb	r3, [sp, #15]
+ 280:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1154              		.loc 1 280 13
+ 1155 0062 6EE0     		b	.L37
+ 1156              	.L36:
+ 281:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 282:libraries/zf_driver/zf_driver_pwm.c **** 
+ 283:libraries/zf_driver/zf_driver_pwm.c ****         uint32 register_temp = 0;
+ 1157              		.loc 1 283 16
+ 1158 0064 0023     		movs	r3, #0
+ 1159 0066 0293     		str	r3, [sp, #8]
+ 284:libraries/zf_driver/zf_driver_pwm.c ****         register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCER;
+ 1160              		.loc 1 284 48
+ 1161 0068 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1162 006c 3849     		ldr	r1, .L39
+ 1163 006e 1346     		mov	r3, r2
+ 1164 0070 DB00     		lsls	r3, r3, #3
+ 1165 0072 9B1A     		subs	r3, r3, r2
+ 1166 0074 9B00     		lsls	r3, r3, #2
+ 1167 0076 0B44     		add	r3, r3, r1
+ 1168 0078 1B68     		ldr	r3, [r3]
+ 1169              		.loc 1 284 58
+ 1170 007a 1B68     		ldr	r3, [r3]
+ 1171              		.loc 1 284 23
+ 1172 007c 1B6A     		ldr	r3, [r3, #32]
+ 1173 007e 0293     		str	r3, [sp, #8]
+ 285:libraries/zf_driver/zf_driver_pwm.c ****         register_temp &= ~(TIM_CCER_CC1E << (channel_index / 2 * 4 + channel_index / 4 * 2));
+ 1174              		.loc 1 285 60
+ 1175 0080 9DF80D30 		ldrb	r3, [sp, #13]	@ zero_extendqisi2
+ 1176 0084 5B08     		lsrs	r3, r3, #1
+ 1177 0086 DBB2     		uxtb	r3, r3
+ 1178              		.loc 1 285 68
+ 1179 0088 5B00     		lsls	r3, r3, #1
+ 1180              		.loc 1 285 84
+ 1181 008a 9DF80D20 		ldrb	r2, [sp, #13]	@ zero_extendqisi2
+ 1182 008e 9208     		lsrs	r2, r2, #2
+ 1183 0090 D2B2     		uxtb	r2, r2
+ 1184              		.loc 1 285 68
+ 1185 0092 1344     		add	r3, r3, r2
+ 1186 0094 5B00     		lsls	r3, r3, #1
+ 1187              		.loc 1 285 42
+ 1188 0096 0122     		movs	r2, #1
+ 1189 0098 02FA03F3 		lsl	r3, r2, r3
+ 1190              		.loc 1 285 26
+ 1191 009c DB43     		mvns	r3, r3
+ 1192              		.loc 1 285 23
+ 1193 009e 029A     		ldr	r2, [sp, #8]
+ 1194 00a0 1340     		ands	r3, r3, r2
+ 1195 00a2 0293     		str	r3, [sp, #8]
+ 286:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCER = register_temp;
+ 1196              		.loc 1 286 32
+ 1197 00a4 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1198 00a8 2949     		ldr	r1, .L39
+ 1199 00aa 1346     		mov	r3, r2
+ 1200 00ac DB00     		lsls	r3, r3, #3
+ 1201 00ae 9B1A     		subs	r3, r3, r2
+ 1202 00b0 9B00     		lsls	r3, r3, #2
+ 1203 00b2 0B44     		add	r3, r3, r1
+ 1204 00b4 1B68     		ldr	r3, [r3]
+ 1205              		.loc 1 286 42
+ 1206 00b6 1B68     		ldr	r3, [r3]
+ 1207              		.loc 1 286 58
+ 1208 00b8 029A     		ldr	r2, [sp, #8]
+ 1209 00ba 1A62     		str	r2, [r3, #32]
+ 287:libraries/zf_driver/zf_driver_pwm.c **** 
+ 288:libraries/zf_driver/zf_driver_pwm.c ****         zf_gpio_deinit(pwm_obj_list[pwm_index].pin_list[channel_index]);
+ 1210              		.loc 1 288 9
+ 1211 00bc 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1212 00c0 9DF80D10 		ldrb	r1, [sp, #13]	@ zero_extendqisi2
+ 1213 00c4 2248     		ldr	r0, .L39
+ 1214 00c6 1346     		mov	r3, r2
+ 1215 00c8 DB00     		lsls	r3, r3, #3
+ 1216 00ca 9B1A     		subs	r3, r3, r2
+ 1217 00cc 5B00     		lsls	r3, r3, #1
+ 1218 00ce 0B44     		add	r3, r3, r1
+ 1219 00d0 5B00     		lsls	r3, r3, #1
+ 1220 00d2 0344     		add	r3, r3, r0
+ 1221 00d4 9B88     		ldrh	r3, [r3, #4]
+ 1222 00d6 1846     		mov	r0, r3
+ 1223 00d8 FFF7FEFF 		bl	zf_gpio_deinit
+ 289:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].pin_list[channel_index] = PIN_NULL;
+ 1224              		.loc 1 289 41
+ 1225 00dc 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1226 00e0 9DF80D10 		ldrb	r1, [sp, #13]	@ zero_extendqisi2
+ 1227              		.loc 1 289 57
+ 1228 00e4 1A48     		ldr	r0, .L39
+ 1229 00e6 1346     		mov	r3, r2
+ 1230 00e8 DB00     		lsls	r3, r3, #3
+ 1231 00ea 9B1A     		subs	r3, r3, r2
+ 1232 00ec 5B00     		lsls	r3, r3, #1
+ 1233 00ee 0B44     		add	r3, r3, r1
+ 1234 00f0 5B00     		lsls	r3, r3, #1
+ 1235 00f2 0344     		add	r3, r3, r0
+ 1236 00f4 40F6FF72 		movw	r2, #4095
+ 1237 00f8 9A80     		strh	r2, [r3, #4]	@ movhi
+ 290:libraries/zf_driver/zf_driver_pwm.c **** 
+ 291:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].channel_state &= ~(0x01 << channel_index);
+ 1238              		.loc 1 291 47
+ 1239 00fa 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1240 00fe 1449     		ldr	r1, .L39
+ 1241 0100 1346     		mov	r3, r2
+ 1242 0102 DB00     		lsls	r3, r3, #3
+ 1243 0104 9B1A     		subs	r3, r3, r2
+ 1244 0106 9B00     		lsls	r3, r3, #2
+ 1245 0108 0B44     		add	r3, r3, r1
+ 1246 010a 1833     		adds	r3, r3, #24
+ 1247 010c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1248 010e 5AB2     		sxtb	r2, r3
+ 1249              		.loc 1 291 57
+ 1250 0110 9DF80D30 		ldrb	r3, [sp, #13]	@ zero_extendqisi2
+ 1251 0114 0121     		movs	r1, #1
+ 1252 0116 01FA03F3 		lsl	r3, r1, r3
+ 1253              		.loc 1 291 47
+ 1254 011a 5BB2     		sxtb	r3, r3
+ 1255 011c DB43     		mvns	r3, r3
+ 1256 011e 5BB2     		sxtb	r3, r3
+ 1257 0120 1340     		ands	r3, r3, r2
+ 1258 0122 5BB2     		sxtb	r3, r3
+ 1259 0124 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1260 0128 D8B2     		uxtb	r0, r3
+ 1261 012a 0949     		ldr	r1, .L39
+ 1262 012c 1346     		mov	r3, r2
+ 1263 012e DB00     		lsls	r3, r3, #3
+ 1264 0130 9B1A     		subs	r3, r3, r2
+ 1265 0132 9B00     		lsls	r3, r3, #2
+ 1266 0134 0B44     		add	r3, r3, r1
+ 1267 0136 1833     		adds	r3, r3, #24
+ 1268 0138 0246     		mov	r2, r0
+ 1269 013a 1A70     		strb	r2, [r3]
+ 292:libraries/zf_driver/zf_driver_pwm.c **** 
+ 293:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 1270              		.loc 1 293 22
+ 1271 013c 0023     		movs	r3, #0
+ 1272 013e 8DF80F30 		strb	r3, [sp, #15]
+ 1273              	.L37:
+ 1274              	.LBE5:
+ 294:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 295:libraries/zf_driver/zf_driver_pwm.c **** 
+ 296:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 1275              		.loc 1 296 12
+ 1276 0142 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 297:libraries/zf_driver/zf_driver_pwm.c **** }
+ 1277              		.loc 1 297 1
+ 1278 0146 1846     		mov	r0, r3
+ 1279 0148 05B0     		add	sp, sp, #20
+ 1280              		.cfi_def_cfa_offset 4
+ 1281              		@ sp needed
+ 1282 014a 5DF804FB 		ldr	pc, [sp], #4
+ 1283              	.L40:
+ 1284 014e 00BF     		.align	2
+ 1285              	.L39:
+ 1286 0150 00000000 		.word	pwm_obj_list
+ 1287 0154 00000000 		.word	.LC0
+ 1288              		.cfi_endproc
+ 1289              	.LFE485:
+ 1291              		.section	.text.zf_pwm_module_deinit,"ax",%progbits
+ 1292              		.align	1
+ 1293              		.p2align 4,,15
+ 1294              		.global	zf_pwm_module_deinit
+ 1295              		.syntax unified
+ 1296              		.thumb
+ 1297              		.thumb_func
+ 1299              	zf_pwm_module_deinit:
+ 1300              	.LFB486:
+ 298:libraries/zf_driver/zf_driver_pwm.c **** 
+ 299:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 300:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 模块注销初始化
+ 301:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     pwm_index           选择 PWM 模块   (详见 zf_driver_pwm.h 内 zf_pwm_inde
+ 302:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+ 303:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_module_deinit(pwm_index);
+ 304:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     模块注销初始化会连带注销当前模块下所有引脚
+ 305:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 306:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_module_deinit (zf_pwm_index_enum pwm_index)
+ 307:libraries/zf_driver/zf_driver_pwm.c **** {
+ 1301              		.loc 1 307 1
+ 1302              		.cfi_startproc
+ 1303              		@ args = 0, pretend = 0, frame = 16
+ 1304              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1305 0000 00B5     		push	{lr}
+ 1306              		.cfi_def_cfa_offset 4
+ 1307              		.cfi_offset 14, -4
+ 1308 0002 85B0     		sub	sp, sp, #20
+ 1309              		.cfi_def_cfa_offset 24
+ 1310 0004 0346     		mov	r3, r0
+ 1311 0006 8DF80730 		strb	r3, [sp, #7]
+ 308:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 1312              		.loc 1 308 33
+ 1313 000a 0123     		movs	r3, #1
+ 1314 000c 8DF80F30 		strb	r3, [sp, #15]
+ 309:libraries/zf_driver/zf_driver_pwm.c **** 
+ 310:libraries/zf_driver/zf_driver_pwm.c ****     do
+ 311:libraries/zf_driver/zf_driver_pwm.c ****     {
+ 312:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(pwm_obj_list[pwm_index].freq))
+ 1315              		.loc 1 312 12
+ 1316 0010 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1317 0014 5B49     		ldr	r1, .L48
+ 1318 0016 1346     		mov	r3, r2
+ 1319 0018 DB00     		lsls	r3, r3, #3
+ 1320 001a 9B1A     		subs	r3, r3, r2
+ 1321 001c 9B00     		lsls	r3, r3, #2
+ 1322 001e 0B44     		add	r3, r3, r1
+ 1323 0020 1433     		adds	r3, r3, #20
+ 1324 0022 1B68     		ldr	r3, [r3]
+ 1325              		.loc 1 312 11
+ 1326 0024 002B     		cmp	r3, #0
+ 1327 0026 0CD1     		bne	.L42
+ 1328              		.loc 1 312 12 discriminator 1
+ 1329 0028 0022     		movs	r2, #0
+ 1330 002a 4FF49C71 		mov	r1, #312
+ 1331 002e 5648     		ldr	r0, .L48+4
+ 1332 0030 FFF7FEFF 		bl	zf_timer_assert_handler
+ 1333 0034 0346     		mov	r3, r0
+ 1334 0036 002B     		cmp	r3, #0
+ 1335 0038 03D0     		beq	.L42
+ 313:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 314:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 315:libraries/zf_driver/zf_driver_pwm.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 316:libraries/zf_driver/zf_driver_pwm.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 317:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_MODULE_NOT_INIT;                           // PWM 模块未初
+ 1336              		.loc 1 317 26
+ 1337 003a 2123     		movs	r3, #33
+ 1338 003c 8DF80F30 		strb	r3, [sp, #15]
+ 318:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1339              		.loc 1 318 13
+ 1340 0040 99E0     		b	.L43
+ 1341              	.L42:
+ 1342              	.LBB6:
+ 319:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 320:libraries/zf_driver/zf_driver_pwm.c **** 
+ 321:libraries/zf_driver/zf_driver_pwm.c ****         for(zf_pwm_channel_index_enum i = PWM_CH1; i <= PWM_CH4N; i ++)
+ 1343              		.loc 1 321 39
+ 1344 0042 0023     		movs	r3, #0
+ 1345 0044 8DF80E30 		strb	r3, [sp, #14]
+ 1346              		.loc 1 321 9
+ 1347 0048 60E0     		b	.L44
+ 1348              	.L46:
+ 322:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 323:libraries/zf_driver/zf_driver_pwm.c ****             if(PIN_NULL != pwm_obj_list[pwm_index].pin_list[i])
+ 1349              		.loc 1 323 60
+ 1350 004a 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1351 004e 9DF80E10 		ldrb	r1, [sp, #14]	@ zero_extendqisi2
+ 1352 0052 4C48     		ldr	r0, .L48
+ 1353 0054 1346     		mov	r3, r2
+ 1354 0056 DB00     		lsls	r3, r3, #3
+ 1355 0058 9B1A     		subs	r3, r3, r2
+ 1356 005a 5B00     		lsls	r3, r3, #1
+ 1357 005c 0B44     		add	r3, r3, r1
+ 1358 005e 5B00     		lsls	r3, r3, #1
+ 1359 0060 0344     		add	r3, r3, r0
+ 1360 0062 9B88     		ldrh	r3, [r3, #4]
+ 1361              		.loc 1 323 15
+ 1362 0064 40F6FF72 		movw	r2, #4095
+ 1363 0068 9342     		cmp	r3, r2
+ 1364 006a 4AD0     		beq	.L45
+ 1365              	.LBB7:
+ 324:libraries/zf_driver/zf_driver_pwm.c ****             {
+ 325:libraries/zf_driver/zf_driver_pwm.c ****                 uint32 register_temp = 0;
+ 1366              		.loc 1 325 24
+ 1367 006c 0023     		movs	r3, #0
+ 1368 006e 0293     		str	r3, [sp, #8]
+ 326:libraries/zf_driver/zf_driver_pwm.c ****                 register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCER;
+ 1369              		.loc 1 326 56
+ 1370 0070 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1371 0074 4349     		ldr	r1, .L48
+ 1372 0076 1346     		mov	r3, r2
+ 1373 0078 DB00     		lsls	r3, r3, #3
+ 1374 007a 9B1A     		subs	r3, r3, r2
+ 1375 007c 9B00     		lsls	r3, r3, #2
+ 1376 007e 0B44     		add	r3, r3, r1
+ 1377 0080 1B68     		ldr	r3, [r3]
+ 1378              		.loc 1 326 66
+ 1379 0082 1B68     		ldr	r3, [r3]
+ 1380              		.loc 1 326 31
+ 1381 0084 1B6A     		ldr	r3, [r3, #32]
+ 1382 0086 0293     		str	r3, [sp, #8]
+ 327:libraries/zf_driver/zf_driver_pwm.c ****                 register_temp &= ~(TIM_CCER_CC1E << (i / 2 * 4 + i / 4 * 2));
+ 1383              		.loc 1 327 56
+ 1384 0088 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 1385 008c 5B08     		lsrs	r3, r3, #1
+ 1386 008e DBB2     		uxtb	r3, r3
+ 1387              		.loc 1 327 64
+ 1388 0090 5B00     		lsls	r3, r3, #1
+ 1389              		.loc 1 327 68
+ 1390 0092 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 1391 0096 9208     		lsrs	r2, r2, #2
+ 1392 0098 D2B2     		uxtb	r2, r2
+ 1393              		.loc 1 327 64
+ 1394 009a 1344     		add	r3, r3, r2
+ 1395 009c 5B00     		lsls	r3, r3, #1
+ 1396              		.loc 1 327 50
+ 1397 009e 0122     		movs	r2, #1
+ 1398 00a0 02FA03F3 		lsl	r3, r2, r3
+ 1399              		.loc 1 327 34
+ 1400 00a4 DB43     		mvns	r3, r3
+ 1401              		.loc 1 327 31
+ 1402 00a6 029A     		ldr	r2, [sp, #8]
+ 1403 00a8 1340     		ands	r3, r3, r2
+ 1404 00aa 0293     		str	r3, [sp, #8]
+ 328:libraries/zf_driver/zf_driver_pwm.c ****                 pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCER = register_temp;
+ 1405              		.loc 1 328 40
+ 1406 00ac 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1407 00b0 3449     		ldr	r1, .L48
+ 1408 00b2 1346     		mov	r3, r2
+ 1409 00b4 DB00     		lsls	r3, r3, #3
+ 1410 00b6 9B1A     		subs	r3, r3, r2
+ 1411 00b8 9B00     		lsls	r3, r3, #2
+ 1412 00ba 0B44     		add	r3, r3, r1
+ 1413 00bc 1B68     		ldr	r3, [r3]
+ 1414              		.loc 1 328 50
+ 1415 00be 1B68     		ldr	r3, [r3]
+ 1416              		.loc 1 328 66
+ 1417 00c0 029A     		ldr	r2, [sp, #8]
+ 1418 00c2 1A62     		str	r2, [r3, #32]
+ 329:libraries/zf_driver/zf_driver_pwm.c ****                 zf_gpio_deinit(pwm_obj_list[pwm_index].pin_list[i]);
+ 1419              		.loc 1 329 17
+ 1420 00c4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1421 00c8 9DF80E10 		ldrb	r1, [sp, #14]	@ zero_extendqisi2
+ 1422 00cc 2D48     		ldr	r0, .L48
+ 1423 00ce 1346     		mov	r3, r2
+ 1424 00d0 DB00     		lsls	r3, r3, #3
+ 1425 00d2 9B1A     		subs	r3, r3, r2
+ 1426 00d4 5B00     		lsls	r3, r3, #1
+ 1427 00d6 0B44     		add	r3, r3, r1
+ 1428 00d8 5B00     		lsls	r3, r3, #1
+ 1429 00da 0344     		add	r3, r3, r0
+ 1430 00dc 9B88     		ldrh	r3, [r3, #4]
+ 1431 00de 1846     		mov	r0, r3
+ 1432 00e0 FFF7FEFF 		bl	zf_gpio_deinit
+ 330:libraries/zf_driver/zf_driver_pwm.c ****                 pwm_obj_list[pwm_index].pin_list[i] = PIN_NULL;
+ 1433              		.loc 1 330 49
+ 1434 00e4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1435 00e8 9DF80E10 		ldrb	r1, [sp, #14]	@ zero_extendqisi2
+ 1436              		.loc 1 330 53
+ 1437 00ec 2548     		ldr	r0, .L48
+ 1438 00ee 1346     		mov	r3, r2
+ 1439 00f0 DB00     		lsls	r3, r3, #3
+ 1440 00f2 9B1A     		subs	r3, r3, r2
+ 1441 00f4 5B00     		lsls	r3, r3, #1
+ 1442 00f6 0B44     		add	r3, r3, r1
+ 1443 00f8 5B00     		lsls	r3, r3, #1
+ 1444 00fa 0344     		add	r3, r3, r0
+ 1445 00fc 40F6FF72 		movw	r2, #4095
+ 1446 0100 9A80     		strh	r2, [r3, #4]	@ movhi
+ 1447              	.L45:
+ 1448              	.LBE7:
+ 321:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 1449              		.loc 1 321 69 discriminator 2
+ 1450 0102 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 1451 0106 0133     		adds	r3, r3, #1
+ 1452 0108 8DF80E30 		strb	r3, [sp, #14]
+ 1453              	.L44:
+ 321:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 1454              		.loc 1 321 9 discriminator 1
+ 1455 010c 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 1456 0110 072B     		cmp	r3, #7
+ 1457 0112 9AD9     		bls	.L46
+ 1458              	.LBE6:
+ 331:libraries/zf_driver/zf_driver_pwm.c ****             }
+ 332:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 333:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].config_info = 0;
+ 1459              		.loc 1 333 32
+ 1460 0114 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1461              		.loc 1 333 45
+ 1462 0118 1A49     		ldr	r1, .L48
+ 1463 011a 1346     		mov	r3, r2
+ 1464 011c DB00     		lsls	r3, r3, #3
+ 1465 011e 9B1A     		subs	r3, r3, r2
+ 1466 0120 9B00     		lsls	r3, r3, #2
+ 1467 0122 0B44     		add	r3, r3, r1
+ 1468 0124 1833     		adds	r3, r3, #24
+ 1469 0126 0022     		movs	r2, #0
+ 1470 0128 1A60     		str	r2, [r3]
+ 334:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].self_index  = pwm_index;
+ 1471              		.loc 1 334 32
+ 1472 012a 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1473              		.loc 1 334 45
+ 1474 012e 9DF80730 		ldrb	r3, [sp, #7]
+ 1475 0132 03F03F03 		and	r3, r3, #63
+ 1476 0136 D9B2     		uxtb	r1, r3
+ 1477 0138 1248     		ldr	r0, .L48
+ 1478 013a 1346     		mov	r3, r2
+ 1479 013c DB00     		lsls	r3, r3, #3
+ 1480 013e 9B1A     		subs	r3, r3, r2
+ 1481 0140 9B00     		lsls	r3, r3, #2
+ 1482 0142 0344     		add	r3, r3, r0
+ 1483 0144 03F11802 		add	r2, r3, #24
+ 1484 0148 5378     		ldrb	r3, [r2, #1]
+ 1485 014a 61F38703 		bfi	r3, r1, #2, #6
+ 1486 014e 5370     		strb	r3, [r2, #1]
+ 335:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].freq        = 0;
+ 1487              		.loc 1 335 32
+ 1488 0150 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 1489              		.loc 1 335 45
+ 1490 0154 0B49     		ldr	r1, .L48
+ 1491 0156 1346     		mov	r3, r2
+ 1492 0158 DB00     		lsls	r3, r3, #3
+ 1493 015a 9B1A     		subs	r3, r3, r2
+ 1494 015c 9B00     		lsls	r3, r3, #2
+ 1495 015e 0B44     		add	r3, r3, r1
+ 1496 0160 1433     		adds	r3, r3, #20
+ 1497 0162 0022     		movs	r2, #0
+ 1498 0164 1A60     		str	r2, [r3]
+ 336:libraries/zf_driver/zf_driver_pwm.c ****         zf_timer_deinit((zf_timer_index_enum)pwm_index);
+ 1499              		.loc 1 336 9
+ 1500 0166 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1501 016a 1846     		mov	r0, r3
+ 1502 016c FFF7FEFF 		bl	zf_timer_deinit
+ 337:libraries/zf_driver/zf_driver_pwm.c **** 
+ 338:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 1503              		.loc 1 338 22
+ 1504 0170 0023     		movs	r3, #0
+ 1505 0172 8DF80F30 		strb	r3, [sp, #15]
+ 1506              	.L43:
+ 339:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 340:libraries/zf_driver/zf_driver_pwm.c **** 
+ 341:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 1507              		.loc 1 341 12
+ 1508 0176 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 342:libraries/zf_driver/zf_driver_pwm.c **** }
+ 1509              		.loc 1 342 1
+ 1510 017a 1846     		mov	r0, r3
+ 1511 017c 05B0     		add	sp, sp, #20
+ 1512              		.cfi_def_cfa_offset 4
+ 1513              		@ sp needed
+ 1514 017e 5DF804FB 		ldr	pc, [sp], #4
+ 1515              	.L49:
+ 1516 0182 00BF     		.align	2
+ 1517              	.L48:
+ 1518 0184 00000000 		.word	pwm_obj_list
+ 1519 0188 00000000 		.word	.LC0
+ 1520              		.cfi_endproc
+ 1521              	.LFE486:
+ 1523              		.section	.text.zf_pwm_complementary_init,"ax",%progbits
+ 1524              		.align	1
+ 1525              		.p2align 4,,15
+ 1526              		.global	zf_pwm_complementary_init
+ 1527              		.syntax unified
+ 1528              		.thumb
+ 1529              		.thumb_func
+ 1531              	zf_pwm_complementary_init:
+ 1532              	.LFB487:
+ 343:libraries/zf_driver/zf_driver_pwm.c **** 
+ 344:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 345:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 互补初始化
+ 346:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     positive_pin        选择 PWM 引脚   (详见 zf_driver_pwm.h 内 zf_pwm_posi
+ 347:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     negative_pin        选择 PWM 引脚   (详见 zf_driver_pwm.h 内 zf_pwm_nega
+ 348:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     duty                设置占空比
+ 349:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+ 350:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_complementary_init(positive_pin, negative_pin, duty);
+ 351:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     必须先调用 zf_pwm_module_init 先初始化模块
+ 352:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 353:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_complementary_init (zf_pwm_positive_channel_enum positive_pin, zf_pwm_negative_channel
+ 354:libraries/zf_driver/zf_driver_pwm.c **** {
+ 1533              		.loc 1 354 1
+ 1534              		.cfi_startproc
+ 1535              		@ args = 0, pretend = 0, frame = 32
+ 1536              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1537 0000 10B5     		push	{r4, lr}
+ 1538              		.cfi_def_cfa_offset 8
+ 1539              		.cfi_offset 4, -8
+ 1540              		.cfi_offset 14, -4
+ 1541 0002 88B0     		sub	sp, sp, #32
+ 1542              		.cfi_def_cfa_offset 40
+ 1543 0004 0390     		str	r0, [sp, #12]
+ 1544 0006 0291     		str	r1, [sp, #8]
+ 1545 0008 0192     		str	r2, [sp, #4]
+ 355:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 1546              		.loc 1 355 33
+ 1547 000a 0123     		movs	r3, #1
+ 1548 000c 8DF81F30 		strb	r3, [sp, #31]
+ 1549              	.LBB8:
+ 356:libraries/zf_driver/zf_driver_pwm.c **** 
+ 357:libraries/zf_driver/zf_driver_pwm.c ****     do
+ 358:libraries/zf_driver/zf_driver_pwm.c ****     {
+ 359:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_index_enum           positive_pwm_index      = (zf_pwm_index_enum)((positive_pin >> 
+ 1550              		.loc 1 359 97
+ 1551 0010 039B     		ldr	r3, [sp, #12]
+ 1552 0012 1B0C     		lsrs	r3, r3, #16
+ 1553              		.loc 1 359 63
+ 1554 0014 DBB2     		uxtb	r3, r3
+ 1555              		.loc 1 359 37
+ 1556 0016 03F00F03 		and	r3, r3, #15
+ 1557 001a 8DF81730 		strb	r3, [sp, #23]
+ 360:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_channel_index_enum   positive_channel_index  = (zf_pwm_channel_index_enum)((positive
+ 1558              		.loc 1 360 105
+ 1559 001e 039B     		ldr	r3, [sp, #12]
+ 1560 0020 1B0D     		lsrs	r3, r3, #20
+ 1561              		.loc 1 360 63
+ 1562 0022 DBB2     		uxtb	r3, r3
+ 1563              		.loc 1 360 37
+ 1564 0024 03F00F03 		and	r3, r3, #15
+ 1565 0028 8DF81630 		strb	r3, [sp, #22]
+ 361:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_index_enum           negative_pwm_index      = (zf_pwm_index_enum)((negative_pin >> 
+ 1566              		.loc 1 361 97
+ 1567 002c 029B     		ldr	r3, [sp, #8]
+ 1568 002e 1B0C     		lsrs	r3, r3, #16
+ 1569              		.loc 1 361 63
+ 1570 0030 DBB2     		uxtb	r3, r3
+ 1571              		.loc 1 361 37
+ 1572 0032 03F00F03 		and	r3, r3, #15
+ 1573 0036 8DF81530 		strb	r3, [sp, #21]
+ 362:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_channel_index_enum   negative_channel_index  = (zf_pwm_channel_index_enum)((negative
+ 1574              		.loc 1 362 105
+ 1575 003a 029B     		ldr	r3, [sp, #8]
+ 1576 003c 1B0D     		lsrs	r3, r3, #20
+ 1577              		.loc 1 362 63
+ 1578 003e DBB2     		uxtb	r3, r3
+ 1579              		.loc 1 362 37
+ 1580 0040 03F00F03 		and	r3, r3, #15
+ 1581 0044 8DF81430 		strb	r3, [sp, #20]
+ 363:libraries/zf_driver/zf_driver_pwm.c **** 
+ 364:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(positive_pwm_index == negative_pwm_index))
+ 1582              		.loc 1 364 11
+ 1583 0048 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1584 004c 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 1585 0050 9A42     		cmp	r2, r3
+ 1586 0052 0CD0     		beq	.L51
+ 1587              		.loc 1 364 12 discriminator 1
+ 1588 0054 0022     		movs	r2, #0
+ 1589 0056 4FF4B671 		mov	r1, #364
+ 1590 005a AC48     		ldr	r0, .L72
+ 1591 005c FFF7FEFF 		bl	zf_timer_assert_handler
+ 1592 0060 0346     		mov	r3, r0
+ 1593 0062 002B     		cmp	r3, #0
+ 1594 0064 03D0     		beq	.L51
+ 365:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 366:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的互补引脚不属于同一个模块
+ 367:libraries/zf_driver/zf_driver_pwm.c ****             // 不是同一个模块的通道怎么能互补？
+ 368:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_MOUDLE_MISMATCH;
+ 1595              		.loc 1 368 26
+ 1596 0066 2523     		movs	r3, #37
+ 1597 0068 8DF81F30 		strb	r3, [sp, #31]
+ 369:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1598              		.loc 1 369 13
+ 1599 006c 45E2     		b	.L52
+ 1600              	.L51:
+ 370:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 371:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(positive_channel_index == (negative_channel_index - 4)))
+ 1601              		.loc 1 371 12
+ 1602 006e 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 1603 0072 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 1604 0076 043B     		subs	r3, r3, #4
+ 1605              		.loc 1 371 11
+ 1606 0078 9A42     		cmp	r2, r3
+ 1607 007a 0CD0     		beq	.L53
+ 1608              		.loc 1 371 12 discriminator 1
+ 1609 007c 0022     		movs	r2, #0
+ 1610 007e 40F27311 		movw	r1, #371
+ 1611 0082 A248     		ldr	r0, .L72
+ 1612 0084 FFF7FEFF 		bl	zf_timer_assert_handler
+ 1613 0088 0346     		mov	r3, r0
+ 1614 008a 002B     		cmp	r3, #0
+ 1615 008c 03D0     		beq	.L53
+ 372:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 373:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的互补引脚不属于同一个通道
+ 374:libraries/zf_driver/zf_driver_pwm.c ****             // 不是同一个模块的通道怎么能互补？
+ 375:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_COMPLEMENTARY_MISMATCH;
+ 1616              		.loc 1 375 26
+ 1617 008e 2623     		movs	r3, #38
+ 1618 0090 8DF81F30 		strb	r3, [sp, #31]
+ 376:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1619              		.loc 1 376 13
+ 1620 0094 31E2     		b	.L52
+ 1621              	.L53:
+ 377:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 378:libraries/zf_driver/zf_driver_pwm.c **** 
+ 379:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(pwm_obj_list[positive_pwm_index].freq))
+ 1622              		.loc 1 379 12
+ 1623 0096 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1624 009a 9D49     		ldr	r1, .L72+4
+ 1625 009c 1346     		mov	r3, r2
+ 1626 009e DB00     		lsls	r3, r3, #3
+ 1627 00a0 9B1A     		subs	r3, r3, r2
+ 1628 00a2 9B00     		lsls	r3, r3, #2
+ 1629 00a4 0B44     		add	r3, r3, r1
+ 1630 00a6 1433     		adds	r3, r3, #20
+ 1631 00a8 1B68     		ldr	r3, [r3]
+ 1632              		.loc 1 379 11
+ 1633 00aa 002B     		cmp	r3, #0
+ 1634 00ac 0CD1     		bne	.L54
+ 1635              		.loc 1 379 12 discriminator 1
+ 1636 00ae 0022     		movs	r2, #0
+ 1637 00b0 40F27B11 		movw	r1, #379
+ 1638 00b4 9548     		ldr	r0, .L72
+ 1639 00b6 FFF7FEFF 		bl	zf_timer_assert_handler
+ 1640 00ba 0346     		mov	r3, r0
+ 1641 00bc 002B     		cmp	r3, #0
+ 1642 00be 03D0     		beq	.L54
+ 380:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 381:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 382:libraries/zf_driver/zf_driver_pwm.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 383:libraries/zf_driver/zf_driver_pwm.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 384:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_MODULE_NOT_INIT;
+ 1643              		.loc 1 384 26
+ 1644 00c0 2123     		movs	r3, #33
+ 1645 00c2 8DF81F30 		strb	r3, [sp, #31]
+ 385:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1646              		.loc 1 385 13
+ 1647 00c6 18E2     		b	.L52
+ 1648              	.L54:
+ 386:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 387:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(
+ 1649              		.loc 1 387 12
+ 1650 00c8 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1651 00cc 9049     		ldr	r1, .L72+4
+ 1652 00ce 1346     		mov	r3, r2
+ 1653 00d0 DB00     		lsls	r3, r3, #3
+ 1654 00d2 9B1A     		subs	r3, r3, r2
+ 1655 00d4 9B00     		lsls	r3, r3, #2
+ 1656 00d6 0B44     		add	r3, r3, r1
+ 1657 00d8 1833     		adds	r3, r3, #24
+ 1658 00da 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1659 00dc 1A46     		mov	r2, r3
+ 1660 00de 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1661 00e2 42FA03F3 		asr	r3, r2, r3
+ 1662 00e6 03F00103 		and	r3, r3, #1
+ 1663              		.loc 1 387 11
+ 1664 00ea 002B     		cmp	r3, #0
+ 1665 00ec 0CD0     		beq	.L55
+ 1666              		.loc 1 387 12 discriminator 1
+ 1667 00ee 0022     		movs	r2, #0
+ 1668 00f0 40F28311 		movw	r1, #387
+ 1669 00f4 8548     		ldr	r0, .L72
+ 1670 00f6 FFF7FEFF 		bl	zf_timer_assert_handler
+ 1671 00fa 0346     		mov	r3, r0
+ 1672 00fc 002B     		cmp	r3, #0
+ 1673 00fe 03D0     		beq	.L55
+ 388:libraries/zf_driver/zf_driver_pwm.c ****             !(      pwm_obj_list[positive_pwm_index].channel_state
+ 389:libraries/zf_driver/zf_driver_pwm.c ****                 &   (0x01 << positive_channel_index))))
+ 390:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 391:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明引脚所在通道已经被初始化过 不能�
+ 392:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_CHANNEL_OCCUPIED;
+ 1674              		.loc 1 392 26
+ 1675 0100 2223     		movs	r3, #34
+ 1676 0102 8DF81F30 		strb	r3, [sp, #31]
+ 393:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1677              		.loc 1 393 13
+ 1678 0106 F8E1     		b	.L52
+ 1679              	.L55:
+ 394:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 395:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(
+ 1680              		.loc 1 395 12
+ 1681 0108 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 1682 010c 8049     		ldr	r1, .L72+4
+ 1683 010e 1346     		mov	r3, r2
+ 1684 0110 DB00     		lsls	r3, r3, #3
+ 1685 0112 9B1A     		subs	r3, r3, r2
+ 1686 0114 9B00     		lsls	r3, r3, #2
+ 1687 0116 0B44     		add	r3, r3, r1
+ 1688 0118 1833     		adds	r3, r3, #24
+ 1689 011a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1690 011c 1A46     		mov	r2, r3
+ 1691 011e 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 1692 0122 42FA03F3 		asr	r3, r2, r3
+ 1693 0126 03F00103 		and	r3, r3, #1
+ 1694              		.loc 1 395 11
+ 1695 012a 002B     		cmp	r3, #0
+ 1696 012c 0CD0     		beq	.L56
+ 1697              		.loc 1 395 12 discriminator 1
+ 1698 012e 0022     		movs	r2, #0
+ 1699 0130 40F28B11 		movw	r1, #395
+ 1700 0134 7548     		ldr	r0, .L72
+ 1701 0136 FFF7FEFF 		bl	zf_timer_assert_handler
+ 1702 013a 0346     		mov	r3, r0
+ 1703 013c 002B     		cmp	r3, #0
+ 1704 013e 03D0     		beq	.L56
+ 396:libraries/zf_driver/zf_driver_pwm.c ****             !(      pwm_obj_list[negative_pwm_index].channel_state
+ 397:libraries/zf_driver/zf_driver_pwm.c ****                 &   (0x01 << negative_channel_index))))
+ 398:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 399:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明引脚所在通道已经被初始化过 不能�
+ 400:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_CHANNEL_OCCUPIED;
+ 1705              		.loc 1 400 26
+ 1706 0140 2223     		movs	r3, #34
+ 1707 0142 8DF81F30 		strb	r3, [sp, #31]
+ 401:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1708              		.loc 1 401 13
+ 1709 0146 D8E1     		b	.L52
+ 1710              	.L56:
+ 402:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 403:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(PWM_DUTY_MAX >= duty))
+ 1711              		.loc 1 403 11
+ 1712 0148 019B     		ldr	r3, [sp, #4]
+ 1713 014a 42F21072 		movw	r2, #10000
+ 1714 014e 9342     		cmp	r3, r2
+ 1715 0150 0CD9     		bls	.L57
+ 1716              		.loc 1 403 12 discriminator 1
+ 1717 0152 0022     		movs	r2, #0
+ 1718 0154 40F29311 		movw	r1, #403
+ 1719 0158 6C48     		ldr	r0, .L72
+ 1720 015a FFF7FEFF 		bl	zf_timer_assert_handler
+ 1721 015e 0346     		mov	r3, r0
+ 1722 0160 002B     		cmp	r3, #0
+ 1723 0162 03D0     		beq	.L57
+ 404:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 405:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明占空比超过了限定最大值
+ 406:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_DUTY_ILLEGAL;                              // PWM 占空比值
+ 1724              		.loc 1 406 26
+ 1725 0164 2923     		movs	r3, #41
+ 1726 0166 8DF81F30 		strb	r3, [sp, #31]
+ 407:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 1727              		.loc 1 407 13
+ 1728 016a C6E1     		b	.L52
+ 1729              	.L57:
+ 408:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 409:libraries/zf_driver/zf_driver_pwm.c **** 
+ 410:libraries/zf_driver/zf_driver_pwm.c ****         uint32 register_temp = 0;
+ 1730              		.loc 1 410 16
+ 1731 016c 0023     		movs	r3, #0
+ 1732 016e 0693     		str	r3, [sp, #24]
+ 411:libraries/zf_driver/zf_driver_pwm.c **** 
+ 412:libraries/zf_driver/zf_driver_pwm.c ****         (       (positive_channel_index % 4 > PWM_CH2)
+ 1733              		.loc 1 412 45
+ 1734 0170 9DF81630 		ldrb	r3, [sp, #22]
+ 1735 0174 03F00203 		and	r3, r3, #2
+ 1736 0178 DBB2     		uxtb	r3, r3
+ 413:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 414:libraries/zf_driver/zf_driver_pwm.c ****             :   (register_temp = pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR1));
+ 1737              		.loc 1 414 13
+ 1738 017a 002B     		cmp	r3, #0
+ 1739 017c 0CD0     		beq	.L58
+ 413:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 1740              		.loc 1 413 66 discriminator 1
+ 1741 017e 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1742 0182 6349     		ldr	r1, .L72+4
+ 1743 0184 1346     		mov	r3, r2
+ 1744 0186 DB00     		lsls	r3, r3, #3
+ 1745 0188 9B1A     		subs	r3, r3, r2
+ 1746 018a 9B00     		lsls	r3, r3, #2
+ 1747 018c 0B44     		add	r3, r3, r1
+ 1748 018e 1B68     		ldr	r3, [r3]
+ 413:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 1749              		.loc 1 413 76 discriminator 1
+ 1750 0190 1B68     		ldr	r3, [r3]
+ 413:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 1751              		.loc 1 413 32 discriminator 1
+ 1752 0192 DB69     		ldr	r3, [r3, #28]
+ 1753 0194 0693     		str	r3, [sp, #24]
+ 1754 0196 0BE0     		b	.L59
+ 1755              	.L58:
+ 1756              		.loc 1 414 66 discriminator 2
+ 1757 0198 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1758 019c 5C49     		ldr	r1, .L72+4
+ 1759 019e 1346     		mov	r3, r2
+ 1760 01a0 DB00     		lsls	r3, r3, #3
+ 1761 01a2 9B1A     		subs	r3, r3, r2
+ 1762 01a4 9B00     		lsls	r3, r3, #2
+ 1763 01a6 0B44     		add	r3, r3, r1
+ 1764 01a8 1B68     		ldr	r3, [r3]
+ 1765              		.loc 1 414 76 discriminator 2
+ 1766 01aa 1B68     		ldr	r3, [r3]
+ 1767              		.loc 1 414 32 discriminator 2
+ 1768 01ac 9B69     		ldr	r3, [r3, #24]
+ 1769 01ae 0693     		str	r3, [sp, #24]
+ 1770              	.L59:
+ 415:libraries/zf_driver/zf_driver_pwm.c ****         register_temp &= ~(TIM_CCMR1_CC1S                           << ((positive_channel_index % 2
+ 1771              		.loc 1 415 97
+ 1772 01b0 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1773 01b4 03F00103 		and	r3, r3, #1
+ 1774              		.loc 1 415 102
+ 1775 01b8 DB00     		lsls	r3, r3, #3
+ 1776              		.loc 1 415 69
+ 1777 01ba 0322     		movs	r2, #3
+ 1778 01bc 02FA03F3 		lsl	r3, r2, r3
+ 1779              		.loc 1 415 26
+ 1780 01c0 DB43     		mvns	r3, r3
+ 1781              		.loc 1 415 23
+ 1782 01c2 069A     		ldr	r2, [sp, #24]
+ 1783 01c4 1340     		ands	r3, r3, r2
+ 1784 01c6 0693     		str	r3, [sp, #24]
+ 416:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  ((TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2)    << ((positive_channel_index % 2
+ 1785              		.loc 1 416 97
+ 1786 01c8 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1787 01cc 03F00103 		and	r3, r3, #1
+ 1788              		.loc 1 416 102
+ 1789 01d0 DB00     		lsls	r3, r3, #3
+ 1790              		.loc 1 416 69
+ 1791 01d2 6022     		movs	r2, #96
+ 1792 01d4 02FA03F3 		lsl	r3, r2, r3
+ 1793              		.loc 1 416 23
+ 1794 01d8 069A     		ldr	r2, [sp, #24]
+ 1795 01da 1343     		orrs	r3, r3, r2
+ 1796 01dc 0693     		str	r3, [sp, #24]
+ 417:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  (TIM_CCMR1_OC1PE                          << ((positive_channel_index % 2
+ 1797              		.loc 1 417 97
+ 1798 01de 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1799 01e2 03F00103 		and	r3, r3, #1
+ 1800              		.loc 1 417 102
+ 1801 01e6 DB00     		lsls	r3, r3, #3
+ 1802              		.loc 1 417 69
+ 1803 01e8 0822     		movs	r2, #8
+ 1804 01ea 02FA03F3 		lsl	r3, r2, r3
+ 1805              		.loc 1 417 23
+ 1806 01ee 069A     		ldr	r2, [sp, #24]
+ 1807 01f0 1343     		orrs	r3, r3, r2
+ 1808 01f2 0693     		str	r3, [sp, #24]
+ 418:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  (TIM_CCMR1_OC1CE                          << ((positive_channel_index % 2
+ 1809              		.loc 1 418 97
+ 1810 01f4 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 1811 01f8 03F00103 		and	r3, r3, #1
+ 1812              		.loc 1 418 102
+ 1813 01fc DB00     		lsls	r3, r3, #3
+ 1814              		.loc 1 418 69
+ 1815 01fe 8022     		movs	r2, #128
+ 1816 0200 02FA03F3 		lsl	r3, r2, r3
+ 1817              		.loc 1 418 23
+ 1818 0204 069A     		ldr	r2, [sp, #24]
+ 1819 0206 1343     		orrs	r3, r3, r2
+ 1820 0208 0693     		str	r3, [sp, #24]
+ 419:libraries/zf_driver/zf_driver_pwm.c ****         (       (positive_channel_index % 4 > PWM_CH2)
+ 1821              		.loc 1 419 45
+ 1822 020a 9DF81630 		ldrb	r3, [sp, #22]
+ 1823 020e 03F00203 		and	r3, r3, #2
+ 1824 0212 DBB2     		uxtb	r3, r3
+ 420:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 421:libraries/zf_driver/zf_driver_pwm.c ****             :   (pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR1 = register_temp));
+ 1825              		.loc 1 421 13
+ 1826 0214 002B     		cmp	r3, #0
+ 1827 0216 0CD0     		beq	.L60
+ 420:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 1828              		.loc 1 420 50 discriminator 1
+ 1829 0218 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1830 021c 3C49     		ldr	r1, .L72+4
+ 1831 021e 1346     		mov	r3, r2
+ 1832 0220 DB00     		lsls	r3, r3, #3
+ 1833 0222 9B1A     		subs	r3, r3, r2
+ 1834 0224 9B00     		lsls	r3, r3, #2
+ 1835 0226 0B44     		add	r3, r3, r1
+ 1836 0228 1B68     		ldr	r3, [r3]
+ 420:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 1837              		.loc 1 420 60 discriminator 1
+ 1838 022a 1B68     		ldr	r3, [r3]
+ 420:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 1839              		.loc 1 420 77 discriminator 1
+ 1840 022c 069A     		ldr	r2, [sp, #24]
+ 1841 022e DA61     		str	r2, [r3, #28]
+ 1842 0230 0BE0     		b	.L61
+ 1843              	.L60:
+ 1844              		.loc 1 421 50 discriminator 2
+ 1845 0232 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1846 0236 3649     		ldr	r1, .L72+4
+ 1847 0238 1346     		mov	r3, r2
+ 1848 023a DB00     		lsls	r3, r3, #3
+ 1849 023c 9B1A     		subs	r3, r3, r2
+ 1850 023e 9B00     		lsls	r3, r3, #2
+ 1851 0240 0B44     		add	r3, r3, r1
+ 1852 0242 1B68     		ldr	r3, [r3]
+ 1853              		.loc 1 421 60 discriminator 2
+ 1854 0244 1B68     		ldr	r3, [r3]
+ 1855              		.loc 1 421 77 discriminator 2
+ 1856 0246 069A     		ldr	r2, [sp, #24]
+ 1857 0248 9A61     		str	r2, [r3, #24]
+ 1858              	.L61:
+ 422:libraries/zf_driver/zf_driver_pwm.c **** 
+ 423:libraries/zf_driver/zf_driver_pwm.c ****         (       (negative_channel_index % 4 > PWM_CH2)
+ 1859              		.loc 1 423 45
+ 1860 024a 9DF81430 		ldrb	r3, [sp, #20]
+ 1861 024e 03F00203 		and	r3, r3, #2
+ 1862 0252 DBB2     		uxtb	r3, r3
+ 424:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 425:libraries/zf_driver/zf_driver_pwm.c ****             :   (register_temp = pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR1));
+ 1863              		.loc 1 425 13
+ 1864 0254 002B     		cmp	r3, #0
+ 1865 0256 0CD0     		beq	.L62
+ 424:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 1866              		.loc 1 424 66 discriminator 1
+ 1867 0258 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 1868 025c 2C49     		ldr	r1, .L72+4
+ 1869 025e 1346     		mov	r3, r2
+ 1870 0260 DB00     		lsls	r3, r3, #3
+ 1871 0262 9B1A     		subs	r3, r3, r2
+ 1872 0264 9B00     		lsls	r3, r3, #2
+ 1873 0266 0B44     		add	r3, r3, r1
+ 1874 0268 1B68     		ldr	r3, [r3]
+ 424:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 1875              		.loc 1 424 76 discriminator 1
+ 1876 026a 1B68     		ldr	r3, [r3]
+ 424:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2)
+ 1877              		.loc 1 424 32 discriminator 1
+ 1878 026c DB69     		ldr	r3, [r3, #28]
+ 1879 026e 0693     		str	r3, [sp, #24]
+ 1880 0270 0BE0     		b	.L63
+ 1881              	.L62:
+ 1882              		.loc 1 425 66 discriminator 2
+ 1883 0272 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 1884 0276 2649     		ldr	r1, .L72+4
+ 1885 0278 1346     		mov	r3, r2
+ 1886 027a DB00     		lsls	r3, r3, #3
+ 1887 027c 9B1A     		subs	r3, r3, r2
+ 1888 027e 9B00     		lsls	r3, r3, #2
+ 1889 0280 0B44     		add	r3, r3, r1
+ 1890 0282 1B68     		ldr	r3, [r3]
+ 1891              		.loc 1 425 76 discriminator 2
+ 1892 0284 1B68     		ldr	r3, [r3]
+ 1893              		.loc 1 425 32 discriminator 2
+ 1894 0286 9B69     		ldr	r3, [r3, #24]
+ 1895 0288 0693     		str	r3, [sp, #24]
+ 1896              	.L63:
+ 426:libraries/zf_driver/zf_driver_pwm.c ****         register_temp &= ~(TIM_CCMR1_CC1S                           << ((negative_channel_index % 2
+ 1897              		.loc 1 426 97
+ 1898 028a 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 1899 028e 03F00103 		and	r3, r3, #1
+ 1900              		.loc 1 426 102
+ 1901 0292 DB00     		lsls	r3, r3, #3
+ 1902              		.loc 1 426 69
+ 1903 0294 0322     		movs	r2, #3
+ 1904 0296 02FA03F3 		lsl	r3, r2, r3
+ 1905              		.loc 1 426 26
+ 1906 029a DB43     		mvns	r3, r3
+ 1907              		.loc 1 426 23
+ 1908 029c 069A     		ldr	r2, [sp, #24]
+ 1909 029e 1340     		ands	r3, r3, r2
+ 1910 02a0 0693     		str	r3, [sp, #24]
+ 427:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  ((TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2)    << ((negative_channel_index % 2
+ 1911              		.loc 1 427 97
+ 1912 02a2 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 1913 02a6 03F00103 		and	r3, r3, #1
+ 1914              		.loc 1 427 102
+ 1915 02aa DB00     		lsls	r3, r3, #3
+ 1916              		.loc 1 427 69
+ 1917 02ac 6022     		movs	r2, #96
+ 1918 02ae 02FA03F3 		lsl	r3, r2, r3
+ 1919              		.loc 1 427 23
+ 1920 02b2 069A     		ldr	r2, [sp, #24]
+ 1921 02b4 1343     		orrs	r3, r3, r2
+ 1922 02b6 0693     		str	r3, [sp, #24]
+ 428:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  (TIM_CCMR1_OC1PE                          << ((negative_channel_index % 2
+ 1923              		.loc 1 428 97
+ 1924 02b8 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 1925 02bc 03F00103 		and	r3, r3, #1
+ 1926              		.loc 1 428 102
+ 1927 02c0 DB00     		lsls	r3, r3, #3
+ 1928              		.loc 1 428 69
+ 1929 02c2 0822     		movs	r2, #8
+ 1930 02c4 02FA03F3 		lsl	r3, r2, r3
+ 1931              		.loc 1 428 23
+ 1932 02c8 069A     		ldr	r2, [sp, #24]
+ 1933 02ca 1343     		orrs	r3, r3, r2
+ 1934 02cc 0693     		str	r3, [sp, #24]
+ 429:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  (TIM_CCMR1_OC1CE                          << ((negative_channel_index % 2
+ 1935              		.loc 1 429 97
+ 1936 02ce 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 1937 02d2 03F00103 		and	r3, r3, #1
+ 1938              		.loc 1 429 102
+ 1939 02d6 DB00     		lsls	r3, r3, #3
+ 1940              		.loc 1 429 69
+ 1941 02d8 8022     		movs	r2, #128
+ 1942 02da 02FA03F3 		lsl	r3, r2, r3
+ 1943              		.loc 1 429 23
+ 1944 02de 069A     		ldr	r2, [sp, #24]
+ 1945 02e0 1343     		orrs	r3, r3, r2
+ 1946 02e2 0693     		str	r3, [sp, #24]
+ 430:libraries/zf_driver/zf_driver_pwm.c ****         (       (negative_channel_index % 4 > PWM_CH2)
+ 1947              		.loc 1 430 45
+ 1948 02e4 9DF81430 		ldrb	r3, [sp, #20]
+ 1949 02e8 03F00203 		and	r3, r3, #2
+ 1950 02ec DBB2     		uxtb	r3, r3
+ 431:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 432:libraries/zf_driver/zf_driver_pwm.c ****             :   (pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR1 = register_temp));
+ 1951              		.loc 1 432 13
+ 1952 02ee 002B     		cmp	r3, #0
+ 1953 02f0 10D0     		beq	.L64
+ 431:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 1954              		.loc 1 431 50 discriminator 1
+ 1955 02f2 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 1956 02f6 0649     		ldr	r1, .L72+4
+ 1957 02f8 1346     		mov	r3, r2
+ 1958 02fa DB00     		lsls	r3, r3, #3
+ 1959 02fc 9B1A     		subs	r3, r3, r2
+ 1960 02fe 9B00     		lsls	r3, r3, #2
+ 1961 0300 0B44     		add	r3, r3, r1
+ 1962 0302 1B68     		ldr	r3, [r3]
+ 431:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 1963              		.loc 1 431 60 discriminator 1
+ 1964 0304 1B68     		ldr	r3, [r3]
+ 431:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[negative_pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 1965              		.loc 1 431 77 discriminator 1
+ 1966 0306 069A     		ldr	r2, [sp, #24]
+ 1967 0308 DA61     		str	r2, [r3, #28]
+ 1968 030a 0FE0     		b	.L65
+ 1969              	.L73:
+ 1970              		.align	2
+ 1971              	.L72:
+ 1972 030c 00000000 		.word	.LC0
+ 1973 0310 00000000 		.word	pwm_obj_list
+ 1974              	.L64:
+ 1975              		.loc 1 432 50 discriminator 2
+ 1976 0314 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 1977 0318 7A49     		ldr	r1, .L74
+ 1978 031a 1346     		mov	r3, r2
+ 1979 031c DB00     		lsls	r3, r3, #3
+ 1980 031e 9B1A     		subs	r3, r3, r2
+ 1981 0320 9B00     		lsls	r3, r3, #2
+ 1982 0322 0B44     		add	r3, r3, r1
+ 1983 0324 1B68     		ldr	r3, [r3]
+ 1984              		.loc 1 432 60 discriminator 2
+ 1985 0326 1B68     		ldr	r3, [r3]
+ 1986              		.loc 1 432 77 discriminator 2
+ 1987 0328 069A     		ldr	r2, [sp, #24]
+ 1988 032a 9A61     		str	r2, [r3, #24]
+ 1989              	.L65:
+ 433:libraries/zf_driver/zf_driver_pwm.c **** 
+ 434:libraries/zf_driver/zf_driver_pwm.c **** 
+ 435:libraries/zf_driver/zf_driver_pwm.c ****         register_temp = pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCER;
+ 1990              		.loc 1 435 57
+ 1991 032c 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 1992 0330 7449     		ldr	r1, .L74
+ 1993 0332 1346     		mov	r3, r2
+ 1994 0334 DB00     		lsls	r3, r3, #3
+ 1995 0336 9B1A     		subs	r3, r3, r2
+ 1996 0338 9B00     		lsls	r3, r3, #2
+ 1997 033a 0B44     		add	r3, r3, r1
+ 1998 033c 1B68     		ldr	r3, [r3]
+ 1999              		.loc 1 435 67
+ 2000 033e 1B68     		ldr	r3, [r3]
+ 2001              		.loc 1 435 23
+ 2002 0340 1B6A     		ldr	r3, [r3, #32]
+ 2003 0342 0693     		str	r3, [sp, #24]
+ 436:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |= (TIM_CCER_CC1E << (positive_channel_index % 4 * 4 + positive_channel_index
+ 2004              		.loc 1 436 68
+ 2005 0344 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 2006 0348 03F00303 		and	r3, r3, #3
+ 2007              		.loc 1 436 76
+ 2008 034c 5B00     		lsls	r3, r3, #1
+ 2009              		.loc 1 436 101
+ 2010 034e 9DF81620 		ldrb	r2, [sp, #22]	@ zero_extendqisi2
+ 2011 0352 9208     		lsrs	r2, r2, #2
+ 2012 0354 D2B2     		uxtb	r2, r2
+ 2013              		.loc 1 436 76
+ 2014 0356 1344     		add	r3, r3, r2
+ 2015 0358 5B00     		lsls	r3, r3, #1
+ 2016              		.loc 1 436 41
+ 2017 035a 0122     		movs	r2, #1
+ 2018 035c 02FA03F3 		lsl	r3, r2, r3
+ 2019              		.loc 1 436 23
+ 2020 0360 069A     		ldr	r2, [sp, #24]
+ 2021 0362 1343     		orrs	r3, r3, r2
+ 2022 0364 0693     		str	r3, [sp, #24]
+ 437:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |= (TIM_CCER_CC1E << (negative_channel_index % 4 * 4 + negative_channel_index
+ 2023              		.loc 1 437 68
+ 2024 0366 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 2025 036a 03F00303 		and	r3, r3, #3
+ 2026              		.loc 1 437 76
+ 2027 036e 5B00     		lsls	r3, r3, #1
+ 2028              		.loc 1 437 101
+ 2029 0370 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 2030 0374 9208     		lsrs	r2, r2, #2
+ 2031 0376 D2B2     		uxtb	r2, r2
+ 2032              		.loc 1 437 76
+ 2033 0378 1344     		add	r3, r3, r2
+ 2034 037a 5B00     		lsls	r3, r3, #1
+ 2035              		.loc 1 437 41
+ 2036 037c 0122     		movs	r2, #1
+ 2037 037e 02FA03F3 		lsl	r3, r2, r3
+ 2038              		.loc 1 437 23
+ 2039 0382 069A     		ldr	r2, [sp, #24]
+ 2040 0384 1343     		orrs	r3, r3, r2
+ 2041 0386 0693     		str	r3, [sp, #24]
+ 438:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->CCER = register_temp;
+ 2042              		.loc 1 438 41
+ 2043 0388 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 2044 038c 5D49     		ldr	r1, .L74
+ 2045 038e 1346     		mov	r3, r2
+ 2046 0390 DB00     		lsls	r3, r3, #3
+ 2047 0392 9B1A     		subs	r3, r3, r2
+ 2048 0394 9B00     		lsls	r3, r3, #2
+ 2049 0396 0B44     		add	r3, r3, r1
+ 2050 0398 1B68     		ldr	r3, [r3]
+ 2051              		.loc 1 438 51
+ 2052 039a 1B68     		ldr	r3, [r3]
+ 2053              		.loc 1 438 67
+ 2054 039c 069A     		ldr	r2, [sp, #24]
+ 2055 039e 1A62     		str	r2, [r3, #32]
+ 439:libraries/zf_driver/zf_driver_pwm.c **** 
+ 440:libraries/zf_driver/zf_driver_pwm.c ****         switch(positive_pwm_index)
+ 2056              		.loc 1 440 9
+ 2057 03a0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 2058 03a4 012B     		cmp	r3, #1
+ 2059 03a6 02DC     		bgt	.L66
+ 2060 03a8 002B     		cmp	r3, #0
+ 2061 03aa 03DA     		bge	.L67
+ 441:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 442:libraries/zf_driver/zf_driver_pwm.c ****             default:        break;
+ 2062              		.loc 1 442 13
+ 2063 03ac 1BE0     		b	.L71
+ 2064              	.L66:
+ 2065 03ae 063B     		subs	r3, r3, #6
+ 440:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 2066              		.loc 1 440 9
+ 2067 03b0 012B     		cmp	r3, #1
+ 2068 03b2 18D8     		bhi	.L71
+ 2069              	.L67:
+ 443:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_1 :
+ 444:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_8 :
+ 445:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_15:
+ 446:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_16:    pwm_obj_list[positive_pwm_index].timer_obj->tim_ptr->BDTR |= TIM_BDTR_M
+ 2070              		.loc 1 446 61
+ 2071 03b4 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 2072 03b8 5249     		ldr	r1, .L74
+ 2073 03ba 1346     		mov	r3, r2
+ 2074 03bc DB00     		lsls	r3, r3, #3
+ 2075 03be 9B1A     		subs	r3, r3, r2
+ 2076 03c0 9B00     		lsls	r3, r3, #2
+ 2077 03c2 0B44     		add	r3, r3, r1
+ 2078 03c4 1B68     		ldr	r3, [r3]
+ 2079              		.loc 1 446 71
+ 2080 03c6 1B68     		ldr	r3, [r3]
+ 2081              		.loc 1 446 87
+ 2082 03c8 596C     		ldr	r1, [r3, #68]
+ 2083              		.loc 1 446 61
+ 2084 03ca 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 2085 03ce 4D48     		ldr	r0, .L74
+ 2086 03d0 1346     		mov	r3, r2
+ 2087 03d2 DB00     		lsls	r3, r3, #3
+ 2088 03d4 9B1A     		subs	r3, r3, r2
+ 2089 03d6 9B00     		lsls	r3, r3, #2
+ 2090 03d8 0344     		add	r3, r3, r0
+ 2091 03da 1B68     		ldr	r3, [r3]
+ 2092              		.loc 1 446 71
+ 2093 03dc 1B68     		ldr	r3, [r3]
+ 2094              		.loc 1 446 87
+ 2095 03de 41F40042 		orr	r2, r1, #32768
+ 2096 03e2 5A64     		str	r2, [r3, #68]
+ 2097              		.loc 1 446 13
+ 2098 03e4 00E0     		b	.L69
+ 2099              	.L71:
+ 442:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_1 :
+ 2100              		.loc 1 442 13
+ 2101 03e6 00BF     		nop
+ 2102              	.L69:
+ 447:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 448:libraries/zf_driver/zf_driver_pwm.c **** 
+ 449:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[positive_pwm_index].channel_state |= (0x01 << positive_channel_index);
+ 2103              		.loc 1 449 56
+ 2104 03e8 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 2105 03ec 4549     		ldr	r1, .L74
+ 2106 03ee 1346     		mov	r3, r2
+ 2107 03f0 DB00     		lsls	r3, r3, #3
+ 2108 03f2 9B1A     		subs	r3, r3, r2
+ 2109 03f4 9B00     		lsls	r3, r3, #2
+ 2110 03f6 0B44     		add	r3, r3, r1
+ 2111 03f8 1833     		adds	r3, r3, #24
+ 2112 03fa 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 2113 03fc 5AB2     		sxtb	r2, r3
+ 2114              		.loc 1 449 65
+ 2115 03fe 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 2116 0402 0121     		movs	r1, #1
+ 2117 0404 01FA03F3 		lsl	r3, r1, r3
+ 2118              		.loc 1 449 56
+ 2119 0408 5BB2     		sxtb	r3, r3
+ 2120 040a 1343     		orrs	r3, r3, r2
+ 2121 040c 5BB2     		sxtb	r3, r3
+ 2122 040e 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 2123 0412 D8B2     		uxtb	r0, r3
+ 2124 0414 3B49     		ldr	r1, .L74
+ 2125 0416 1346     		mov	r3, r2
+ 2126 0418 DB00     		lsls	r3, r3, #3
+ 2127 041a 9B1A     		subs	r3, r3, r2
+ 2128 041c 9B00     		lsls	r3, r3, #2
+ 2129 041e 0B44     		add	r3, r3, r1
+ 2130 0420 1833     		adds	r3, r3, #24
+ 2131 0422 0246     		mov	r2, r0
+ 2132 0424 1A70     		strb	r2, [r3]
+ 450:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[negative_pwm_index].channel_state |= (0x01 << negative_channel_index);
+ 2133              		.loc 1 450 56
+ 2134 0426 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 2135 042a 3649     		ldr	r1, .L74
+ 2136 042c 1346     		mov	r3, r2
+ 2137 042e DB00     		lsls	r3, r3, #3
+ 2138 0430 9B1A     		subs	r3, r3, r2
+ 2139 0432 9B00     		lsls	r3, r3, #2
+ 2140 0434 0B44     		add	r3, r3, r1
+ 2141 0436 1833     		adds	r3, r3, #24
+ 2142 0438 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 2143 043a 5AB2     		sxtb	r2, r3
+ 2144              		.loc 1 450 65
+ 2145 043c 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 2146 0440 0121     		movs	r1, #1
+ 2147 0442 01FA03F3 		lsl	r3, r1, r3
+ 2148              		.loc 1 450 56
+ 2149 0446 5BB2     		sxtb	r3, r3
+ 2150 0448 1343     		orrs	r3, r3, r2
+ 2151 044a 5BB2     		sxtb	r3, r3
+ 2152 044c 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 2153 0450 D8B2     		uxtb	r0, r3
+ 2154 0452 2C49     		ldr	r1, .L74
+ 2155 0454 1346     		mov	r3, r2
+ 2156 0456 DB00     		lsls	r3, r3, #3
+ 2157 0458 9B1A     		subs	r3, r3, r2
+ 2158 045a 9B00     		lsls	r3, r3, #2
+ 2159 045c 0B44     		add	r3, r3, r1
+ 2160 045e 1833     		adds	r3, r3, #24
+ 2161 0460 0246     		mov	r2, r0
+ 2162 0462 1A70     		strb	r2, [r3]
+ 451:libraries/zf_driver/zf_driver_pwm.c **** 
+ 452:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[positive_pwm_index].pin_list[positive_channel_index] = (zf_gpio_pin_enum)(posi
+ 2163              		.loc 1 452 77
+ 2164 0464 039B     		ldr	r3, [sp, #12]
+ 2165 0466 9BB2     		uxth	r3, r3
+ 2166              		.loc 1 452 50
+ 2167 0468 9DF81720 		ldrb	r2, [sp, #23]	@ zero_extendqisi2
+ 2168 046c 9DF81610 		ldrb	r1, [sp, #22]	@ zero_extendqisi2
+ 2169              		.loc 1 452 109
+ 2170 0470 C3F30B03 		ubfx	r3, r3, #0, #12
+ 2171 0474 9CB2     		uxth	r4, r3
+ 2172              		.loc 1 452 75
+ 2173 0476 2348     		ldr	r0, .L74
+ 2174 0478 1346     		mov	r3, r2
+ 2175 047a DB00     		lsls	r3, r3, #3
+ 2176 047c 9B1A     		subs	r3, r3, r2
+ 2177 047e 5B00     		lsls	r3, r3, #1
+ 2178 0480 0B44     		add	r3, r3, r1
+ 2179 0482 5B00     		lsls	r3, r3, #1
+ 2180 0484 0344     		add	r3, r3, r0
+ 2181 0486 2246     		mov	r2, r4	@ movhi
+ 2182 0488 9A80     		strh	r2, [r3, #4]	@ movhi
+ 453:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[negative_pwm_index].pin_list[negative_channel_index] = (zf_gpio_pin_enum)(nega
+ 2183              		.loc 1 453 77
+ 2184 048a 029B     		ldr	r3, [sp, #8]
+ 2185 048c 9BB2     		uxth	r3, r3
+ 2186              		.loc 1 453 50
+ 2187 048e 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 2188 0492 9DF81410 		ldrb	r1, [sp, #20]	@ zero_extendqisi2
+ 2189              		.loc 1 453 109
+ 2190 0496 C3F30B03 		ubfx	r3, r3, #0, #12
+ 2191 049a 9CB2     		uxth	r4, r3
+ 2192              		.loc 1 453 75
+ 2193 049c 1948     		ldr	r0, .L74
+ 2194 049e 1346     		mov	r3, r2
+ 2195 04a0 DB00     		lsls	r3, r3, #3
+ 2196 04a2 9B1A     		subs	r3, r3, r2
+ 2197 04a4 5B00     		lsls	r3, r3, #1
+ 2198 04a6 0B44     		add	r3, r3, r1
+ 2199 04a8 5B00     		lsls	r3, r3, #1
+ 2200 04aa 0344     		add	r3, r3, r0
+ 2201 04ac 2246     		mov	r2, r4	@ movhi
+ 2202 04ae 9A80     		strh	r2, [r3, #4]	@ movhi
+ 454:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_set_duty(positive_pin, duty);
+ 2203              		.loc 1 454 9
+ 2204 04b0 0199     		ldr	r1, [sp, #4]
+ 2205 04b2 0398     		ldr	r0, [sp, #12]
+ 2206 04b4 FFF7FEFF 		bl	zf_pwm_set_duty
+ 455:libraries/zf_driver/zf_driver_pwm.c ****         zf_afio_init(
+ 2207              		.loc 1 455 9
+ 2208 04b8 039B     		ldr	r3, [sp, #12]
+ 2209 04ba 9BB2     		uxth	r3, r3
+ 456:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(positive_pin & PWM_PIN_INDEX_MASK),
+ 2210              		.loc 1 456 45
+ 2211 04bc C3F30B03 		ubfx	r3, r3, #0, #12
+ 2212 04c0 98B2     		uxth	r0, r3
+ 457:libraries/zf_driver/zf_driver_pwm.c ****             GPO_AF_PUSH_PULL,
+ 458:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_af_enum)((positive_pin >> PWM_PIN_AF_OFFSET) & PWM_PIN_AF_MASK));
+ 2213              		.loc 1 458 45
+ 2214 04c2 039B     		ldr	r3, [sp, #12]
+ 2215 04c4 1B0B     		lsrs	r3, r3, #12
+ 455:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(positive_pin & PWM_PIN_INDEX_MASK),
+ 2216              		.loc 1 455 9
+ 2217 04c6 DBB2     		uxtb	r3, r3
+ 2218              		.loc 1 458 67
+ 2219 04c8 03F00F03 		and	r3, r3, #15
+ 2220 04cc DBB2     		uxtb	r3, r3
+ 455:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(positive_pin & PWM_PIN_INDEX_MASK),
+ 2221              		.loc 1 455 9
+ 2222 04ce 1A46     		mov	r2, r3
+ 2223 04d0 1221     		movs	r1, #18
+ 2224 04d2 FFF7FEFF 		bl	zf_afio_init
+ 459:libraries/zf_driver/zf_driver_pwm.c ****         zf_afio_init(
+ 2225              		.loc 1 459 9
+ 2226 04d6 029B     		ldr	r3, [sp, #8]
+ 2227 04d8 9BB2     		uxth	r3, r3
+ 460:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(negative_pin & PWM_PIN_INDEX_MASK),
+ 2228              		.loc 1 460 45
+ 2229 04da C3F30B03 		ubfx	r3, r3, #0, #12
+ 2230 04de 98B2     		uxth	r0, r3
+ 461:libraries/zf_driver/zf_driver_pwm.c ****             GPO_AF_PUSH_PULL,
+ 462:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_af_enum)((negative_pin >> PWM_PIN_AF_OFFSET) & PWM_PIN_AF_MASK));
+ 2231              		.loc 1 462 45
+ 2232 04e0 029B     		ldr	r3, [sp, #8]
+ 2233 04e2 1B0B     		lsrs	r3, r3, #12
+ 459:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(negative_pin & PWM_PIN_INDEX_MASK),
+ 2234              		.loc 1 459 9
+ 2235 04e4 DBB2     		uxtb	r3, r3
+ 2236              		.loc 1 462 67
+ 2237 04e6 03F00F03 		and	r3, r3, #15
+ 2238 04ea DBB2     		uxtb	r3, r3
+ 459:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(negative_pin & PWM_PIN_INDEX_MASK),
+ 2239              		.loc 1 459 9
+ 2240 04ec 1A46     		mov	r2, r3
+ 2241 04ee 1221     		movs	r1, #18
+ 2242 04f0 FFF7FEFF 		bl	zf_afio_init
+ 463:libraries/zf_driver/zf_driver_pwm.c **** 
+ 464:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 2243              		.loc 1 464 22
+ 2244 04f4 0023     		movs	r3, #0
+ 2245 04f6 8DF81F30 		strb	r3, [sp, #31]
+ 2246              	.L52:
+ 2247              	.LBE8:
+ 465:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 466:libraries/zf_driver/zf_driver_pwm.c **** 
+ 467:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 2248              		.loc 1 467 12
+ 2249 04fa 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 468:libraries/zf_driver/zf_driver_pwm.c **** }
+ 2250              		.loc 1 468 1
+ 2251 04fe 1846     		mov	r0, r3
+ 2252 0500 08B0     		add	sp, sp, #32
+ 2253              		.cfi_def_cfa_offset 8
+ 2254              		@ sp needed
+ 2255 0502 10BD     		pop	{r4, pc}
+ 2256              	.L75:
+ 2257              		.align	2
+ 2258              	.L74:
+ 2259 0504 00000000 		.word	pwm_obj_list
+ 2260              		.cfi_endproc
+ 2261              	.LFE487:
+ 2263              		.section	.text.zf_pwm_channel_init,"ax",%progbits
+ 2264              		.align	1
+ 2265              		.p2align 4,,15
+ 2266              		.global	zf_pwm_channel_init
+ 2267              		.syntax unified
+ 2268              		.thumb
+ 2269              		.thumb_func
+ 2271              	zf_pwm_channel_init:
+ 2272              	.LFB488:
+ 469:libraries/zf_driver/zf_driver_pwm.c **** 
+ 470:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 471:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 通道初始化
+ 472:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     pin                 选择 PWM 引脚   (详见 zf_driver_pwm.h 内 zf_pwm_posi
+ 473:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     duty                设置占空比
+ 474:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+ 475:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_channel_init(pin, duty);
+ 476:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     必须先调用 zf_pwm_module_init 先初始化模块
+ 477:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 478:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_channel_init (zf_pwm_positive_channel_enum pin, const uint32 duty)
+ 479:libraries/zf_driver/zf_driver_pwm.c **** {
+ 2273              		.loc 1 479 1
+ 2274              		.cfi_startproc
+ 2275              		@ args = 0, pretend = 0, frame = 24
+ 2276              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2277 0000 10B5     		push	{r4, lr}
+ 2278              		.cfi_def_cfa_offset 8
+ 2279              		.cfi_offset 4, -8
+ 2280              		.cfi_offset 14, -4
+ 2281 0002 86B0     		sub	sp, sp, #24
+ 2282              		.cfi_def_cfa_offset 32
+ 2283 0004 0190     		str	r0, [sp, #4]
+ 2284 0006 0091     		str	r1, [sp]
+ 480:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 2285              		.loc 1 480 33
+ 2286 0008 0123     		movs	r3, #1
+ 2287 000a 8DF81730 		strb	r3, [sp, #23]
+ 2288              	.LBB9:
+ 481:libraries/zf_driver/zf_driver_pwm.c **** 
+ 482:libraries/zf_driver/zf_driver_pwm.c ****     do
+ 483:libraries/zf_driver/zf_driver_pwm.c ****     {
+ 484:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_index_enum           pwm_index       = (zf_pwm_index_enum)((pin >> PWM_INDEX_OFFSET)
+ 2289              		.loc 1 484 80
+ 2290 000e 019B     		ldr	r3, [sp, #4]
+ 2291 0010 1B0C     		lsrs	r3, r3, #16
+ 2292              		.loc 1 484 55
+ 2293 0012 DBB2     		uxtb	r3, r3
+ 2294              		.loc 1 484 37
+ 2295 0014 03F00F03 		and	r3, r3, #15
+ 2296 0018 8DF80F30 		strb	r3, [sp, #15]
+ 485:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_channel_index_enum   channel_index   = (zf_pwm_channel_index_enum)((pin >> PWM_CHANN
+ 2297              		.loc 1 485 88
+ 2298 001c 019B     		ldr	r3, [sp, #4]
+ 2299 001e 1B0D     		lsrs	r3, r3, #20
+ 2300              		.loc 1 485 55
+ 2301 0020 DBB2     		uxtb	r3, r3
+ 2302              		.loc 1 485 37
+ 2303 0022 03F00F03 		and	r3, r3, #15
+ 2304 0026 8DF80E30 		strb	r3, [sp, #14]
+ 486:libraries/zf_driver/zf_driver_pwm.c **** 
+ 487:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(pwm_obj_list[pwm_index].freq))
+ 2305              		.loc 1 487 12
+ 2306 002a 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2307 002e A849     		ldr	r1, .L91
+ 2308 0030 1346     		mov	r3, r2
+ 2309 0032 DB00     		lsls	r3, r3, #3
+ 2310 0034 9B1A     		subs	r3, r3, r2
+ 2311 0036 9B00     		lsls	r3, r3, #2
+ 2312 0038 0B44     		add	r3, r3, r1
+ 2313 003a 1433     		adds	r3, r3, #20
+ 2314 003c 1B68     		ldr	r3, [r3]
+ 2315              		.loc 1 487 11
+ 2316 003e 002B     		cmp	r3, #0
+ 2317 0040 0CD1     		bne	.L77
+ 2318              		.loc 1 487 12 discriminator 1
+ 2319 0042 0022     		movs	r2, #0
+ 2320 0044 40F2E711 		movw	r1, #487
+ 2321 0048 A248     		ldr	r0, .L91+4
+ 2322 004a FFF7FEFF 		bl	zf_timer_assert_handler
+ 2323 004e 0346     		mov	r3, r0
+ 2324 0050 002B     		cmp	r3, #0
+ 2325 0052 03D0     		beq	.L77
+ 488:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 489:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 490:libraries/zf_driver/zf_driver_pwm.c ****             // 未初始化模块很可能没有开启模块时钟或者没有使能模块
+ 491:libraries/zf_driver/zf_driver_pwm.c ****             // 对于部分单片机没有使能模块直接操作会导致总线异常或者硬件
+ 492:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_MODULE_NOT_INIT;
+ 2326              		.loc 1 492 26
+ 2327 0054 2123     		movs	r3, #33
+ 2328 0056 8DF81730 		strb	r3, [sp, #23]
+ 493:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 2329              		.loc 1 493 13
+ 2330 005a 34E1     		b	.L78
+ 2331              	.L77:
+ 494:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 495:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(
+ 2332              		.loc 1 495 12
+ 2333 005c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2334 0060 9B49     		ldr	r1, .L91
+ 2335 0062 1346     		mov	r3, r2
+ 2336 0064 DB00     		lsls	r3, r3, #3
+ 2337 0066 9B1A     		subs	r3, r3, r2
+ 2338 0068 9B00     		lsls	r3, r3, #2
+ 2339 006a 0B44     		add	r3, r3, r1
+ 2340 006c 1833     		adds	r3, r3, #24
+ 2341 006e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 2342 0070 1A46     		mov	r2, r3
+ 2343 0072 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2344 0076 42FA03F3 		asr	r3, r2, r3
+ 2345 007a 03F00103 		and	r3, r3, #1
+ 2346              		.loc 1 495 11
+ 2347 007e 002B     		cmp	r3, #0
+ 2348 0080 0BD0     		beq	.L79
+ 2349              		.loc 1 495 12 discriminator 1
+ 2350 0082 0022     		movs	r2, #0
+ 2351 0084 40F2EF11 		movw	r1, #495
+ 2352 0088 9248     		ldr	r0, .L91+4
+ 2353 008a FFF7FEFF 		bl	zf_timer_assert_handler
+ 2354 008e 0346     		mov	r3, r0
+ 2355 0090 002B     		cmp	r3, #0
+ 2356 0092 02D0     		beq	.L79
+ 496:libraries/zf_driver/zf_driver_pwm.c ****             !(      pwm_obj_list[pwm_index].channel_state
+ 497:libraries/zf_driver/zf_driver_pwm.c ****                 &   (0x01 << channel_index))))
+ 498:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 499:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明引脚所在通道已经被初始化过 不能�
+ 500:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_CHANNEL_OCCUPIED;
+ 2357              		.loc 1 500 26
+ 2358 0094 2223     		movs	r3, #34
+ 2359 0096 8DF81730 		strb	r3, [sp, #23]
+ 2360              	.L79:
+ 501:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 502:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(PWM_DUTY_MAX >= duty))
+ 2361              		.loc 1 502 11
+ 2362 009a 009B     		ldr	r3, [sp]
+ 2363 009c 42F21072 		movw	r2, #10000
+ 2364 00a0 9342     		cmp	r3, r2
+ 2365 00a2 0CD9     		bls	.L80
+ 2366              		.loc 1 502 12 discriminator 1
+ 2367 00a4 0022     		movs	r2, #0
+ 2368 00a6 4FF4FB71 		mov	r1, #502
+ 2369 00aa 8A48     		ldr	r0, .L91+4
+ 2370 00ac FFF7FEFF 		bl	zf_timer_assert_handler
+ 2371 00b0 0346     		mov	r3, r0
+ 2372 00b2 002B     		cmp	r3, #0
+ 2373 00b4 03D0     		beq	.L80
+ 503:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 504:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明占空比超过了限定最大值
+ 505:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_DUTY_ILLEGAL;                              // PWM 占空比值
+ 2374              		.loc 1 505 26
+ 2375 00b6 2923     		movs	r3, #41
+ 2376 00b8 8DF81730 		strb	r3, [sp, #23]
+ 506:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 2377              		.loc 1 506 13
+ 2378 00bc 03E1     		b	.L78
+ 2379              	.L80:
+ 507:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 508:libraries/zf_driver/zf_driver_pwm.c **** 
+ 509:libraries/zf_driver/zf_driver_pwm.c ****         uint32 register_temp = 0;
+ 2380              		.loc 1 509 16
+ 2381 00be 0023     		movs	r3, #0
+ 2382 00c0 0493     		str	r3, [sp, #16]
+ 510:libraries/zf_driver/zf_driver_pwm.c ****         (       (channel_index % 4 > PWM_CH2)
+ 2383              		.loc 1 510 36
+ 2384 00c2 9DF80E30 		ldrb	r3, [sp, #14]
+ 2385 00c6 03F00203 		and	r3, r3, #2
+ 2386 00ca DBB2     		uxtb	r3, r3
+ 511:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2)
+ 512:libraries/zf_driver/zf_driver_pwm.c ****             :   (register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR1));
+ 2387              		.loc 1 512 13
+ 2388 00cc 002B     		cmp	r3, #0
+ 2389 00ce 0CD0     		beq	.L81
+ 511:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2)
+ 2390              		.loc 1 511 57 discriminator 1
+ 2391 00d0 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2392 00d4 7E49     		ldr	r1, .L91
+ 2393 00d6 1346     		mov	r3, r2
+ 2394 00d8 DB00     		lsls	r3, r3, #3
+ 2395 00da 9B1A     		subs	r3, r3, r2
+ 2396 00dc 9B00     		lsls	r3, r3, #2
+ 2397 00de 0B44     		add	r3, r3, r1
+ 2398 00e0 1B68     		ldr	r3, [r3]
+ 511:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2)
+ 2399              		.loc 1 511 67 discriminator 1
+ 2400 00e2 1B68     		ldr	r3, [r3]
+ 511:libraries/zf_driver/zf_driver_pwm.c ****             ?   (register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2)
+ 2401              		.loc 1 511 32 discriminator 1
+ 2402 00e4 DB69     		ldr	r3, [r3, #28]
+ 2403 00e6 0493     		str	r3, [sp, #16]
+ 2404 00e8 0BE0     		b	.L82
+ 2405              	.L81:
+ 2406              		.loc 1 512 57 discriminator 2
+ 2407 00ea 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2408 00ee 7849     		ldr	r1, .L91
+ 2409 00f0 1346     		mov	r3, r2
+ 2410 00f2 DB00     		lsls	r3, r3, #3
+ 2411 00f4 9B1A     		subs	r3, r3, r2
+ 2412 00f6 9B00     		lsls	r3, r3, #2
+ 2413 00f8 0B44     		add	r3, r3, r1
+ 2414 00fa 1B68     		ldr	r3, [r3]
+ 2415              		.loc 1 512 67 discriminator 2
+ 2416 00fc 1B68     		ldr	r3, [r3]
+ 2417              		.loc 1 512 32 discriminator 2
+ 2418 00fe 9B69     		ldr	r3, [r3, #24]
+ 2419 0100 0493     		str	r3, [sp, #16]
+ 2420              	.L82:
+ 513:libraries/zf_driver/zf_driver_pwm.c ****         register_temp &= ~(TIM_CCMR1_CC1S                           << ((channel_index % 2) * 8));
+ 2421              		.loc 1 513 88
+ 2422 0102 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2423 0106 03F00103 		and	r3, r3, #1
+ 2424              		.loc 1 513 93
+ 2425 010a DB00     		lsls	r3, r3, #3
+ 2426              		.loc 1 513 69
+ 2427 010c 0322     		movs	r2, #3
+ 2428 010e 02FA03F3 		lsl	r3, r2, r3
+ 2429              		.loc 1 513 26
+ 2430 0112 DB43     		mvns	r3, r3
+ 2431              		.loc 1 513 23
+ 2432 0114 049A     		ldr	r2, [sp, #16]
+ 2433 0116 1340     		ands	r3, r3, r2
+ 2434 0118 0493     		str	r3, [sp, #16]
+ 514:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  ((TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2)    << ((channel_index % 2) * 8));
+ 2435              		.loc 1 514 88
+ 2436 011a 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2437 011e 03F00103 		and	r3, r3, #1
+ 2438              		.loc 1 514 93
+ 2439 0122 DB00     		lsls	r3, r3, #3
+ 2440              		.loc 1 514 69
+ 2441 0124 6022     		movs	r2, #96
+ 2442 0126 02FA03F3 		lsl	r3, r2, r3
+ 2443              		.loc 1 514 23
+ 2444 012a 049A     		ldr	r2, [sp, #16]
+ 2445 012c 1343     		orrs	r3, r3, r2
+ 2446 012e 0493     		str	r3, [sp, #16]
+ 515:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  (TIM_CCMR1_OC1PE                          << ((channel_index % 2) * 8));
+ 2447              		.loc 1 515 88
+ 2448 0130 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2449 0134 03F00103 		and	r3, r3, #1
+ 2450              		.loc 1 515 93
+ 2451 0138 DB00     		lsls	r3, r3, #3
+ 2452              		.loc 1 515 69
+ 2453 013a 0822     		movs	r2, #8
+ 2454 013c 02FA03F3 		lsl	r3, r2, r3
+ 2455              		.loc 1 515 23
+ 2456 0140 049A     		ldr	r2, [sp, #16]
+ 2457 0142 1343     		orrs	r3, r3, r2
+ 2458 0144 0493     		str	r3, [sp, #16]
+ 516:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  (TIM_CCMR1_OC1CE                          << ((channel_index % 2) * 8));
+ 2459              		.loc 1 516 88
+ 2460 0146 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2461 014a 03F00103 		and	r3, r3, #1
+ 2462              		.loc 1 516 93
+ 2463 014e DB00     		lsls	r3, r3, #3
+ 2464              		.loc 1 516 69
+ 2465 0150 8022     		movs	r2, #128
+ 2466 0152 02FA03F3 		lsl	r3, r2, r3
+ 2467              		.loc 1 516 23
+ 2468 0156 049A     		ldr	r2, [sp, #16]
+ 2469 0158 1343     		orrs	r3, r3, r2
+ 2470 015a 0493     		str	r3, [sp, #16]
+ 517:libraries/zf_driver/zf_driver_pwm.c ****         (       (channel_index % 4 > PWM_CH2)
+ 2471              		.loc 1 517 36
+ 2472 015c 9DF80E30 		ldrb	r3, [sp, #14]
+ 2473 0160 03F00203 		and	r3, r3, #2
+ 2474 0164 DBB2     		uxtb	r3, r3
+ 518:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 519:libraries/zf_driver/zf_driver_pwm.c ****             :   (pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR1 = register_temp));
+ 2475              		.loc 1 519 13
+ 2476 0166 002B     		cmp	r3, #0
+ 2477 0168 0CD0     		beq	.L83
+ 518:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 2478              		.loc 1 518 41 discriminator 1
+ 2479 016a 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2480 016e 5849     		ldr	r1, .L91
+ 2481 0170 1346     		mov	r3, r2
+ 2482 0172 DB00     		lsls	r3, r3, #3
+ 2483 0174 9B1A     		subs	r3, r3, r2
+ 2484 0176 9B00     		lsls	r3, r3, #2
+ 2485 0178 0B44     		add	r3, r3, r1
+ 2486 017a 1B68     		ldr	r3, [r3]
+ 518:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 2487              		.loc 1 518 51 discriminator 1
+ 2488 017c 1B68     		ldr	r3, [r3]
+ 518:libraries/zf_driver/zf_driver_pwm.c ****             ?   (pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCMR2 = register_temp)
+ 2489              		.loc 1 518 68 discriminator 1
+ 2490 017e 049A     		ldr	r2, [sp, #16]
+ 2491 0180 DA61     		str	r2, [r3, #28]
+ 2492 0182 0BE0     		b	.L84
+ 2493              	.L83:
+ 2494              		.loc 1 519 41 discriminator 2
+ 2495 0184 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2496 0188 5149     		ldr	r1, .L91
+ 2497 018a 1346     		mov	r3, r2
+ 2498 018c DB00     		lsls	r3, r3, #3
+ 2499 018e 9B1A     		subs	r3, r3, r2
+ 2500 0190 9B00     		lsls	r3, r3, #2
+ 2501 0192 0B44     		add	r3, r3, r1
+ 2502 0194 1B68     		ldr	r3, [r3]
+ 2503              		.loc 1 519 51 discriminator 2
+ 2504 0196 1B68     		ldr	r3, [r3]
+ 2505              		.loc 1 519 68 discriminator 2
+ 2506 0198 049A     		ldr	r2, [sp, #16]
+ 2507 019a 9A61     		str	r2, [r3, #24]
+ 2508              	.L84:
+ 520:libraries/zf_driver/zf_driver_pwm.c **** 
+ 521:libraries/zf_driver/zf_driver_pwm.c ****         register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCER;
+ 2509              		.loc 1 521 48
+ 2510 019c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2511 01a0 4B49     		ldr	r1, .L91
+ 2512 01a2 1346     		mov	r3, r2
+ 2513 01a4 DB00     		lsls	r3, r3, #3
+ 2514 01a6 9B1A     		subs	r3, r3, r2
+ 2515 01a8 9B00     		lsls	r3, r3, #2
+ 2516 01aa 0B44     		add	r3, r3, r1
+ 2517 01ac 1B68     		ldr	r3, [r3]
+ 2518              		.loc 1 521 58
+ 2519 01ae 1B68     		ldr	r3, [r3]
+ 2520              		.loc 1 521 23
+ 2521 01b0 1B6A     		ldr	r3, [r3, #32]
+ 2522 01b2 0493     		str	r3, [sp, #16]
+ 522:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |= (TIM_CCER_CC1E << (channel_index % 4 * 4 + channel_index / 4 * 2));
+ 2523              		.loc 1 522 59
+ 2524 01b4 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2525 01b8 03F00303 		and	r3, r3, #3
+ 2526              		.loc 1 522 67
+ 2527 01bc 5B00     		lsls	r3, r3, #1
+ 2528              		.loc 1 522 83
+ 2529 01be 9DF80E20 		ldrb	r2, [sp, #14]	@ zero_extendqisi2
+ 2530 01c2 9208     		lsrs	r2, r2, #2
+ 2531 01c4 D2B2     		uxtb	r2, r2
+ 2532              		.loc 1 522 67
+ 2533 01c6 1344     		add	r3, r3, r2
+ 2534 01c8 5B00     		lsls	r3, r3, #1
+ 2535              		.loc 1 522 41
+ 2536 01ca 0122     		movs	r2, #1
+ 2537 01cc 02FA03F3 		lsl	r3, r2, r3
+ 2538              		.loc 1 522 23
+ 2539 01d0 049A     		ldr	r2, [sp, #16]
+ 2540 01d2 1343     		orrs	r3, r3, r2
+ 2541 01d4 0493     		str	r3, [sp, #16]
+ 523:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->CCER = register_temp;
+ 2542              		.loc 1 523 32
+ 2543 01d6 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2544 01da 3D49     		ldr	r1, .L91
+ 2545 01dc 1346     		mov	r3, r2
+ 2546 01de DB00     		lsls	r3, r3, #3
+ 2547 01e0 9B1A     		subs	r3, r3, r2
+ 2548 01e2 9B00     		lsls	r3, r3, #2
+ 2549 01e4 0B44     		add	r3, r3, r1
+ 2550 01e6 1B68     		ldr	r3, [r3]
+ 2551              		.loc 1 523 42
+ 2552 01e8 1B68     		ldr	r3, [r3]
+ 2553              		.loc 1 523 58
+ 2554 01ea 049A     		ldr	r2, [sp, #16]
+ 2555 01ec 1A62     		str	r2, [r3, #32]
+ 524:libraries/zf_driver/zf_driver_pwm.c **** 
+ 525:libraries/zf_driver/zf_driver_pwm.c ****         switch(pwm_index)
+ 2556              		.loc 1 525 9
+ 2557 01ee 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 2558 01f2 012B     		cmp	r3, #1
+ 2559 01f4 02DC     		bgt	.L85
+ 2560 01f6 002B     		cmp	r3, #0
+ 2561 01f8 03DA     		bge	.L86
+ 526:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 527:libraries/zf_driver/zf_driver_pwm.c ****             default:        break;
+ 2562              		.loc 1 527 13
+ 2563 01fa 1BE0     		b	.L90
+ 2564              	.L85:
+ 2565 01fc 063B     		subs	r3, r3, #6
+ 525:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 2566              		.loc 1 525 9
+ 2567 01fe 012B     		cmp	r3, #1
+ 2568 0200 18D8     		bhi	.L90
+ 2569              	.L86:
+ 528:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_1 :
+ 529:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_8 :
+ 530:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_15:
+ 531:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_16:    pwm_obj_list[pwm_index].timer_obj->tim_ptr->BDTR |= TIM_BDTR_MOE;   bre
+ 2570              		.loc 1 531 52
+ 2571 0202 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2572 0206 3249     		ldr	r1, .L91
+ 2573 0208 1346     		mov	r3, r2
+ 2574 020a DB00     		lsls	r3, r3, #3
+ 2575 020c 9B1A     		subs	r3, r3, r2
+ 2576 020e 9B00     		lsls	r3, r3, #2
+ 2577 0210 0B44     		add	r3, r3, r1
+ 2578 0212 1B68     		ldr	r3, [r3]
+ 2579              		.loc 1 531 62
+ 2580 0214 1B68     		ldr	r3, [r3]
+ 2581              		.loc 1 531 78
+ 2582 0216 596C     		ldr	r1, [r3, #68]
+ 2583              		.loc 1 531 52
+ 2584 0218 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2585 021c 2C48     		ldr	r0, .L91
+ 2586 021e 1346     		mov	r3, r2
+ 2587 0220 DB00     		lsls	r3, r3, #3
+ 2588 0222 9B1A     		subs	r3, r3, r2
+ 2589 0224 9B00     		lsls	r3, r3, #2
+ 2590 0226 0344     		add	r3, r3, r0
+ 2591 0228 1B68     		ldr	r3, [r3]
+ 2592              		.loc 1 531 62
+ 2593 022a 1B68     		ldr	r3, [r3]
+ 2594              		.loc 1 531 78
+ 2595 022c 41F40042 		orr	r2, r1, #32768
+ 2596 0230 5A64     		str	r2, [r3, #68]
+ 2597              		.loc 1 531 13
+ 2598 0232 00E0     		b	.L88
+ 2599              	.L90:
+ 527:libraries/zf_driver/zf_driver_pwm.c ****             case TIM_1 :
+ 2600              		.loc 1 527 13
+ 2601 0234 00BF     		nop
+ 2602              	.L88:
+ 532:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 533:libraries/zf_driver/zf_driver_pwm.c **** 
+ 534:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].channel_state |= (0x01 << channel_index);
+ 2603              		.loc 1 534 47
+ 2604 0236 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2605 023a 2549     		ldr	r1, .L91
+ 2606 023c 1346     		mov	r3, r2
+ 2607 023e DB00     		lsls	r3, r3, #3
+ 2608 0240 9B1A     		subs	r3, r3, r2
+ 2609 0242 9B00     		lsls	r3, r3, #2
+ 2610 0244 0B44     		add	r3, r3, r1
+ 2611 0246 1833     		adds	r3, r3, #24
+ 2612 0248 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 2613 024a 5AB2     		sxtb	r2, r3
+ 2614              		.loc 1 534 56
+ 2615 024c 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+ 2616 0250 0121     		movs	r1, #1
+ 2617 0252 01FA03F3 		lsl	r3, r1, r3
+ 2618              		.loc 1 534 47
+ 2619 0256 5BB2     		sxtb	r3, r3
+ 2620 0258 1343     		orrs	r3, r3, r2
+ 2621 025a 5BB2     		sxtb	r3, r3
+ 2622 025c 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2623 0260 D8B2     		uxtb	r0, r3
+ 2624 0262 1B49     		ldr	r1, .L91
+ 2625 0264 1346     		mov	r3, r2
+ 2626 0266 DB00     		lsls	r3, r3, #3
+ 2627 0268 9B1A     		subs	r3, r3, r2
+ 2628 026a 9B00     		lsls	r3, r3, #2
+ 2629 026c 0B44     		add	r3, r3, r1
+ 2630 026e 1833     		adds	r3, r3, #24
+ 2631 0270 0246     		mov	r2, r0
+ 2632 0272 1A70     		strb	r2, [r3]
+ 535:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].pin_list[channel_index] = (zf_gpio_pin_enum)(pin & PWM_PIN_INDEX_MA
+ 2633              		.loc 1 535 59
+ 2634 0274 019B     		ldr	r3, [sp, #4]
+ 2635 0276 9BB2     		uxth	r3, r3
+ 2636              		.loc 1 535 41
+ 2637 0278 9DF80F20 		ldrb	r2, [sp, #15]	@ zero_extendqisi2
+ 2638 027c 9DF80E10 		ldrb	r1, [sp, #14]	@ zero_extendqisi2
+ 2639              		.loc 1 535 82
+ 2640 0280 C3F30B03 		ubfx	r3, r3, #0, #12
+ 2641 0284 9CB2     		uxth	r4, r3
+ 2642              		.loc 1 535 57
+ 2643 0286 1248     		ldr	r0, .L91
+ 2644 0288 1346     		mov	r3, r2
+ 2645 028a DB00     		lsls	r3, r3, #3
+ 2646 028c 9B1A     		subs	r3, r3, r2
+ 2647 028e 5B00     		lsls	r3, r3, #1
+ 2648 0290 0B44     		add	r3, r3, r1
+ 2649 0292 5B00     		lsls	r3, r3, #1
+ 2650 0294 0344     		add	r3, r3, r0
+ 2651 0296 2246     		mov	r2, r4	@ movhi
+ 2652 0298 9A80     		strh	r2, [r3, #4]	@ movhi
+ 536:libraries/zf_driver/zf_driver_pwm.c ****         zf_pwm_set_duty(pin, duty);
+ 2653              		.loc 1 536 9
+ 2654 029a 0099     		ldr	r1, [sp]
+ 2655 029c 0198     		ldr	r0, [sp, #4]
+ 2656 029e FFF7FEFF 		bl	zf_pwm_set_duty
+ 537:libraries/zf_driver/zf_driver_pwm.c ****         zf_afio_init(
+ 2657              		.loc 1 537 9
+ 2658 02a2 019B     		ldr	r3, [sp, #4]
+ 2659 02a4 9BB2     		uxth	r3, r3
+ 538:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(pin & PWM_PIN_INDEX_MASK),
+ 2660              		.loc 1 538 36
+ 2661 02a6 C3F30B03 		ubfx	r3, r3, #0, #12
+ 2662 02aa 98B2     		uxth	r0, r3
+ 539:libraries/zf_driver/zf_driver_pwm.c ****             GPO_AF_PUSH_PULL,
+ 540:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_af_enum)((pin >> PWM_PIN_AF_OFFSET) & PWM_PIN_AF_MASK));
+ 2663              		.loc 1 540 36
+ 2664 02ac 019B     		ldr	r3, [sp, #4]
+ 2665 02ae 1B0B     		lsrs	r3, r3, #12
+ 537:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(pin & PWM_PIN_INDEX_MASK),
+ 2666              		.loc 1 537 9
+ 2667 02b0 DBB2     		uxtb	r3, r3
+ 2668              		.loc 1 540 58
+ 2669 02b2 03F00F03 		and	r3, r3, #15
+ 2670 02b6 DBB2     		uxtb	r3, r3
+ 537:libraries/zf_driver/zf_driver_pwm.c ****             (zf_gpio_pin_enum)(pin & PWM_PIN_INDEX_MASK),
+ 2671              		.loc 1 537 9
+ 2672 02b8 1A46     		mov	r2, r3
+ 2673 02ba 1221     		movs	r1, #18
+ 2674 02bc FFF7FEFF 		bl	zf_afio_init
+ 541:libraries/zf_driver/zf_driver_pwm.c **** 
+ 542:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 2675              		.loc 1 542 22
+ 2676 02c0 0023     		movs	r3, #0
+ 2677 02c2 8DF81730 		strb	r3, [sp, #23]
+ 2678              	.L78:
+ 2679              	.LBE9:
+ 543:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 544:libraries/zf_driver/zf_driver_pwm.c **** 
+ 545:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 2680              		.loc 1 545 12
+ 2681 02c6 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 546:libraries/zf_driver/zf_driver_pwm.c **** }
+ 2682              		.loc 1 546 1
+ 2683 02ca 1846     		mov	r0, r3
+ 2684 02cc 06B0     		add	sp, sp, #24
+ 2685              		.cfi_def_cfa_offset 8
+ 2686              		@ sp needed
+ 2687 02ce 10BD     		pop	{r4, pc}
+ 2688              	.L92:
+ 2689              		.align	2
+ 2690              	.L91:
+ 2691 02d0 00000000 		.word	pwm_obj_list
+ 2692 02d4 00000000 		.word	.LC0
+ 2693              		.cfi_endproc
+ 2694              	.LFE488:
+ 2696              		.section	.text.zf_pwm_module_init,"ax",%progbits
+ 2697              		.align	1
+ 2698              		.p2align 4,,15
+ 2699              		.global	zf_pwm_module_init
+ 2700              		.syntax unified
+ 2701              		.thumb
+ 2702              		.thumb_func
+ 2704              	zf_pwm_module_init:
+ 2705              	.LFB489:
+ 547:libraries/zf_driver/zf_driver_pwm.c **** 
+ 548:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 549:libraries/zf_driver/zf_driver_pwm.c **** // 函数简介     PWM 模块初始化
+ 550:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     pwm_index           选择 PWM 模块   (详见 zf_driver_pwm.h 内 zf_pwm_inde
+ 551:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     mode                PWM 对齐模式    (详见 zf_driver_pwm.h 内 zf_pwm_alig
+ 552:libraries/zf_driver/zf_driver_pwm.c **** // 参数说明     freq                设置频率 同个模块只有最后一次设置生效
+ 553:libraries/zf_driver/zf_driver_pwm.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / ENCODER_OPERATION_DONE - 完成 
+ 554:libraries/zf_driver/zf_driver_pwm.c **** // 使用示例     zf_pwm_module_init(pwm_index, mode, freq);
+ 555:libraries/zf_driver/zf_driver_pwm.c **** // 备注信息     
+ 556:libraries/zf_driver/zf_driver_pwm.c **** //-------------------------------------------------------------------------------------------------
+ 557:libraries/zf_driver/zf_driver_pwm.c **** uint8 zf_pwm_module_init (zf_pwm_index_enum pwm_index, zf_pwm_alignment_enum mode, const uint32 fre
+ 558:libraries/zf_driver/zf_driver_pwm.c **** {
+ 2706              		.loc 1 558 1
+ 2707              		.cfi_startproc
+ 2708              		@ args = 0, pretend = 0, frame = 24
+ 2709              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2710 0000 00B5     		push	{lr}
+ 2711              		.cfi_def_cfa_offset 4
+ 2712              		.cfi_offset 14, -4
+ 2713 0002 87B0     		sub	sp, sp, #28
+ 2714              		.cfi_def_cfa_offset 32
+ 2715 0004 0346     		mov	r3, r0
+ 2716 0006 0092     		str	r2, [sp]
+ 2717 0008 8DF80730 		strb	r3, [sp, #7]
+ 2718 000c 0B46     		mov	r3, r1
+ 2719 000e 8DF80630 		strb	r3, [sp, #6]
+ 559:libraries/zf_driver/zf_driver_pwm.c ****     zf_pwm_operation_state_enum return_state = PWM_ERROR_UNKNOW;
+ 2720              		.loc 1 559 33
+ 2721 0012 0123     		movs	r3, #1
+ 2722 0014 8DF81730 		strb	r3, [sp, #23]
+ 2723              	.LBB10:
+ 560:libraries/zf_driver/zf_driver_pwm.c **** 
+ 561:libraries/zf_driver/zf_driver_pwm.c ****     do
+ 562:libraries/zf_driver/zf_driver_pwm.c ****     {
+ 563:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(!zf_timer_funciton_check(                              // 检查 模块是
+ 2724              		.loc 1 563 12
+ 2725 0018 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2726 001c 0321     		movs	r1, #3
+ 2727 001e 1846     		mov	r0, r3
+ 2728 0020 FFF7FEFF 		bl	zf_timer_funciton_check
+ 2729 0024 0346     		mov	r3, r0
+ 2730              		.loc 1 563 11
+ 2731 0026 002B     		cmp	r3, #0
+ 2732 0028 0CD0     		beq	.L94
+ 2733              		.loc 1 563 12 discriminator 1
+ 2734 002a 0022     		movs	r2, #0
+ 2735 002c 40F23321 		movw	r1, #563
+ 2736 0030 9E48     		ldr	r0, .L103
+ 2737 0032 FFF7FEFF 		bl	zf_timer_assert_handler
+ 2738 0036 0346     		mov	r3, r0
+ 2739 0038 002B     		cmp	r3, #0
+ 2740 003a 03D0     		beq	.L94
+ 564:libraries/zf_driver/zf_driver_pwm.c ****                 (zf_timer_index_enum)pwm_index,                                 // 当前模块
+ 565:libraries/zf_driver/zf_driver_pwm.c ****                 TIMER_FUNCTION_PWM)))                                           // 编码器功能�
+ 566:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 567:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明 PWM 所依赖的 TIMER 已经被占用
+ 568:libraries/zf_driver/zf_driver_pwm.c ****             // PWM 索引对应 TIMER 索引
+ 569:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_DEPENDS_TIMER_OCCUPIED;
+ 2741              		.loc 1 569 26
+ 2742 003c 2A23     		movs	r3, #42
+ 2743 003e 8DF81730 		strb	r3, [sp, #23]
+ 570:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 2744              		.loc 1 570 13
+ 2745 0042 2CE1     		b	.L95
+ 2746              	.L94:
+ 571:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 572:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(!pwm_obj_list[pwm_index].freq))
+ 2747              		.loc 1 572 12
+ 2748 0044 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2749 0048 9949     		ldr	r1, .L103+4
+ 2750 004a 1346     		mov	r3, r2
+ 2751 004c DB00     		lsls	r3, r3, #3
+ 2752 004e 9B1A     		subs	r3, r3, r2
+ 2753 0050 9B00     		lsls	r3, r3, #2
+ 2754 0052 0B44     		add	r3, r3, r1
+ 2755 0054 1433     		adds	r3, r3, #20
+ 2756 0056 1B68     		ldr	r3, [r3]
+ 2757              		.loc 1 572 11
+ 2758 0058 002B     		cmp	r3, #0
+ 2759 005a 0CD0     		beq	.L96
+ 2760              		.loc 1 572 12 discriminator 1
+ 2761 005c 0022     		movs	r2, #0
+ 2762 005e 4FF40F71 		mov	r1, #572
+ 2763 0062 9248     		ldr	r0, .L103
+ 2764 0064 FFF7FEFF 		bl	zf_timer_assert_handler
+ 2765 0068 0346     		mov	r3, r0
+ 2766 006a 002B     		cmp	r3, #0
+ 2767 006c 03D0     		beq	.L96
+ 573:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 574:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明本模块已经被初始化过一次 重复初�
+ 575:libraries/zf_driver/zf_driver_pwm.c ****             // 否则应当先注销初始化之后再重新初始化
+ 576:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_MODULE_OCCUPIED;
+ 2768              		.loc 1 576 26
+ 2769 006e 2023     		movs	r3, #32
+ 2770 0070 8DF81730 		strb	r3, [sp, #23]
+ 577:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 2771              		.loc 1 577 13
+ 2772 0074 13E1     		b	.L95
+ 2773              	.L96:
+ 578:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 579:libraries/zf_driver/zf_driver_pwm.c ****         if(zf_pwm_assert(freq))
+ 2774              		.loc 1 579 11
+ 2775 0076 009B     		ldr	r3, [sp]
+ 2776 0078 002B     		cmp	r3, #0
+ 2777 007a 0CD1     		bne	.L97
+ 2778              		.loc 1 579 12 discriminator 1
+ 2779 007c 0022     		movs	r2, #0
+ 2780 007e 40F24321 		movw	r1, #579
+ 2781 0082 8A48     		ldr	r0, .L103
+ 2782 0084 FFF7FEFF 		bl	zf_timer_assert_handler
+ 2783 0088 0346     		mov	r3, r0
+ 2784 008a 002B     		cmp	r3, #0
+ 2785 008c 03D0     		beq	.L97
+ 580:libraries/zf_driver/zf_driver_pwm.c ****         {
+ 581:libraries/zf_driver/zf_driver_pwm.c ****             // 此处如果断言报错 那么证明输入的频率为 0
+ 582:libraries/zf_driver/zf_driver_pwm.c ****             return_state = PWM_ERROR_DUTY_ILLEGAL;                              // PWM 占空比值
+ 2786              		.loc 1 582 26
+ 2787 008e 2923     		movs	r3, #41
+ 2788 0090 8DF81730 		strb	r3, [sp, #23]
+ 583:libraries/zf_driver/zf_driver_pwm.c ****             break;
+ 2789              		.loc 1 583 13
+ 2790 0094 03E1     		b	.L95
+ 2791              	.L97:
+ 584:libraries/zf_driver/zf_driver_pwm.c ****         }
+ 585:libraries/zf_driver/zf_driver_pwm.c **** 
+ 586:libraries/zf_driver/zf_driver_pwm.c ****         uint32 freq_temp    = (mode ? freq * 2 : freq);
+ 2792              		.loc 1 586 48
+ 2793 0096 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 2794 009a 002B     		cmp	r3, #0
+ 2795 009c 02D0     		beq	.L98
+ 2796              		.loc 1 586 48 is_stmt 0 discriminator 1
+ 2797 009e 009B     		ldr	r3, [sp]
+ 2798 00a0 5B00     		lsls	r3, r3, #1
+ 2799 00a2 00E0     		b	.L99
+ 2800              	.L98:
+ 2801              		.loc 1 586 48 discriminator 2
+ 2802 00a4 009B     		ldr	r3, [sp]
+ 2803              	.L99:
+ 2804              		.loc 1 586 16 is_stmt 1 discriminator 4
+ 2805 00a6 0493     		str	r3, [sp, #16]
+ 587:libraries/zf_driver/zf_driver_pwm.c ****         uint16 freq_div     = ((pwm_obj_list[pwm_index].timer_obj->clock_input / freq_temp) >> 15);
+ 2806              		.loc 1 587 56 discriminator 4
+ 2807 00a8 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2808 00ac 8049     		ldr	r1, .L103+4
+ 2809 00ae 1346     		mov	r3, r2
+ 2810 00b0 DB00     		lsls	r3, r3, #3
+ 2811 00b2 9B1A     		subs	r3, r3, r2
+ 2812 00b4 9B00     		lsls	r3, r3, #2
+ 2813 00b6 0B44     		add	r3, r3, r1
+ 2814 00b8 1B68     		ldr	r3, [r3]
+ 2815              		.loc 1 587 66 discriminator 4
+ 2816 00ba 5A68     		ldr	r2, [r3, #4]
+ 2817              		.loc 1 587 80 discriminator 4
+ 2818 00bc 049B     		ldr	r3, [sp, #16]
+ 2819 00be B2FBF3F3 		udiv	r3, r2, r3
+ 2820              		.loc 1 587 93 discriminator 4
+ 2821 00c2 DB0B     		lsrs	r3, r3, #15
+ 2822              		.loc 1 587 16 discriminator 4
+ 2823 00c4 ADF80E30 		strh	r3, [sp, #14]	@ movhi
+ 588:libraries/zf_driver/zf_driver_pwm.c ****         uint16 period_temp  = (pwm_obj_list[pwm_index].timer_obj->clock_input / freq_temp / (freq_d
+ 2824              		.loc 1 588 55 discriminator 4
+ 2825 00c8 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2826 00cc 7849     		ldr	r1, .L103+4
+ 2827 00ce 1346     		mov	r3, r2
+ 2828 00d0 DB00     		lsls	r3, r3, #3
+ 2829 00d2 9B1A     		subs	r3, r3, r2
+ 2830 00d4 9B00     		lsls	r3, r3, #2
+ 2831 00d6 0B44     		add	r3, r3, r1
+ 2832 00d8 1B68     		ldr	r3, [r3]
+ 2833              		.loc 1 588 65 discriminator 4
+ 2834 00da 5A68     		ldr	r2, [r3, #4]
+ 2835              		.loc 1 588 79 discriminator 4
+ 2836 00dc 049B     		ldr	r3, [sp, #16]
+ 2837 00de B2FBF3F3 		udiv	r3, r2, r3
+ 2838              		.loc 1 588 103 discriminator 4
+ 2839 00e2 BDF80E20 		ldrh	r2, [sp, #14]
+ 2840 00e6 0132     		adds	r2, r2, #1
+ 2841              		.loc 1 588 91 discriminator 4
+ 2842 00e8 B3FBF2F3 		udiv	r3, r3, r2
+ 2843              		.loc 1 588 16 discriminator 4
+ 2844 00ec ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 589:libraries/zf_driver/zf_driver_pwm.c ****         zf_timer_clock_enable((zf_timer_index_enum)pwm_index);
+ 2845              		.loc 1 589 9 discriminator 4
+ 2846 00f0 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2847 00f4 1846     		mov	r0, r3
+ 2848 00f6 FFF7FEFF 		bl	zf_timer_clock_enable
+ 590:libraries/zf_driver/zf_driver_pwm.c **** 
+ 591:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].enable              = ZF_ENABLE;
+ 2849              		.loc 1 591 32 discriminator 4
+ 2850 00fa 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2851              		.loc 1 591 53 discriminator 4
+ 2852 00fe 6C49     		ldr	r1, .L103+4
+ 2853 0100 1346     		mov	r3, r2
+ 2854 0102 DB00     		lsls	r3, r3, #3
+ 2855 0104 9B1A     		subs	r3, r3, r2
+ 2856 0106 9B00     		lsls	r3, r3, #2
+ 2857 0108 0B44     		add	r3, r3, r1
+ 2858 010a 03F11802 		add	r2, r3, #24
+ 2859 010e 5378     		ldrb	r3, [r2, #1]
+ 2860 0110 43F00103 		orr	r3, r3, #1
+ 2861 0114 5370     		strb	r3, [r2, #1]
+ 592:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].self_index          = pwm_index;
+ 2862              		.loc 1 592 32 discriminator 4
+ 2863 0116 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2864              		.loc 1 592 53 discriminator 4
+ 2865 011a 9DF80730 		ldrb	r3, [sp, #7]
+ 2866 011e 03F03F03 		and	r3, r3, #63
+ 2867 0122 D9B2     		uxtb	r1, r3
+ 2868 0124 6248     		ldr	r0, .L103+4
+ 2869 0126 1346     		mov	r3, r2
+ 2870 0128 DB00     		lsls	r3, r3, #3
+ 2871 012a 9B1A     		subs	r3, r3, r2
+ 2872 012c 9B00     		lsls	r3, r3, #2
+ 2873 012e 0344     		add	r3, r3, r0
+ 2874 0130 03F11802 		add	r2, r3, #24
+ 2875 0134 5378     		ldrb	r3, [r2, #1]
+ 2876 0136 61F38703 		bfi	r3, r1, #2, #6
+ 2877 013a 5370     		strb	r3, [r2, #1]
+ 593:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].alignment           = mode;
+ 2878              		.loc 1 593 32 discriminator 4
+ 2879 013c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2880              		.loc 1 593 53 discriminator 4
+ 2881 0140 9DF80630 		ldrb	r3, [sp, #6]
+ 2882 0144 03F00103 		and	r3, r3, #1
+ 2883 0148 D9B2     		uxtb	r1, r3
+ 2884 014a 5948     		ldr	r0, .L103+4
+ 2885 014c 1346     		mov	r3, r2
+ 2886 014e DB00     		lsls	r3, r3, #3
+ 2887 0150 9B1A     		subs	r3, r3, r2
+ 2888 0152 9B00     		lsls	r3, r3, #2
+ 2889 0154 0344     		add	r3, r3, r0
+ 2890 0156 03F11802 		add	r2, r3, #24
+ 2891 015a 5378     		ldrb	r3, [r2, #1]
+ 2892 015c 61F34103 		bfi	r3, r1, #1, #1
+ 2893 0160 5370     		strb	r3, [r2, #1]
+ 594:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].freq                = pwm_obj_list[pwm_index].timer_obj->clock_inpu
+ 2894              		.loc 1 594 78 discriminator 4
+ 2895 0162 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2896 0166 5249     		ldr	r1, .L103+4
+ 2897 0168 1346     		mov	r3, r2
+ 2898 016a DB00     		lsls	r3, r3, #3
+ 2899 016c 9B1A     		subs	r3, r3, r2
+ 2900 016e 9B00     		lsls	r3, r3, #2
+ 2901 0170 0B44     		add	r3, r3, r1
+ 2902 0172 1B68     		ldr	r3, [r3]
+ 2903              		.loc 1 594 88 discriminator 4
+ 2904 0174 5B68     		ldr	r3, [r3, #4]
+ 2905              		.loc 1 594 114 discriminator 4
+ 2906 0176 BDF80E20 		ldrh	r2, [sp, #14]
+ 2907 017a 0132     		adds	r2, r2, #1
+ 2908              		.loc 1 594 102 discriminator 4
+ 2909 017c B3FBF2F1 		udiv	r1, r3, r2
+ 2910              		.loc 1 594 119 discriminator 4
+ 2911 0180 BDF80C30 		ldrh	r3, [sp, #12]
+ 2912              		.loc 1 594 32 discriminator 4
+ 2913 0184 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2914              		.loc 1 594 119 discriminator 4
+ 2915 0188 B1FBF3F1 		udiv	r1, r1, r3
+ 2916              		.loc 1 594 53 discriminator 4
+ 2917 018c 4848     		ldr	r0, .L103+4
+ 2918 018e 1346     		mov	r3, r2
+ 2919 0190 DB00     		lsls	r3, r3, #3
+ 2920 0192 9B1A     		subs	r3, r3, r2
+ 2921 0194 9B00     		lsls	r3, r3, #2
+ 2922 0196 0344     		add	r3, r3, r0
+ 2923 0198 1433     		adds	r3, r3, #20
+ 2924 019a 1960     		str	r1, [r3]
+ 595:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->div      = (freq_div + 1);
+ 2925              		.loc 1 595 65 discriminator 4
+ 2926 019c BDF80E30 		ldrh	r3, [sp, #14]
+ 2927 01a0 581C     		adds	r0, r3, #1
+ 2928              		.loc 1 595 32 discriminator 4
+ 2929 01a2 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2930 01a6 4249     		ldr	r1, .L103+4
+ 2931 01a8 1346     		mov	r3, r2
+ 2932 01aa DB00     		lsls	r3, r3, #3
+ 2933 01ac 9B1A     		subs	r3, r3, r2
+ 2934 01ae 9B00     		lsls	r3, r3, #2
+ 2935 01b0 0B44     		add	r3, r3, r1
+ 2936 01b2 1B68     		ldr	r3, [r3]
+ 2937              		.loc 1 595 65 discriminator 4
+ 2938 01b4 0246     		mov	r2, r0
+ 2939              		.loc 1 595 53 discriminator 4
+ 2940 01b6 9A60     		str	r2, [r3, #8]
+ 596:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->period   = period_temp - 1;
+ 2941              		.loc 1 596 67 discriminator 4
+ 2942 01b8 BDF80C30 		ldrh	r3, [sp, #12]
+ 2943 01bc 581E     		subs	r0, r3, #1
+ 2944              		.loc 1 596 32 discriminator 4
+ 2945 01be 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2946 01c2 3B49     		ldr	r1, .L103+4
+ 2947 01c4 1346     		mov	r3, r2
+ 2948 01c6 DB00     		lsls	r3, r3, #3
+ 2949 01c8 9B1A     		subs	r3, r3, r2
+ 2950 01ca 9B00     		lsls	r3, r3, #2
+ 2951 01cc 0B44     		add	r3, r3, r1
+ 2952 01ce 1B68     		ldr	r3, [r3]
+ 2953              		.loc 1 596 67 discriminator 4
+ 2954 01d0 0246     		mov	r2, r0
+ 2955              		.loc 1 596 53 discriminator 4
+ 2956 01d2 DA60     		str	r2, [r3, #12]
+ 597:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->mode     = 3;
+ 2957              		.loc 1 597 32 discriminator 4
+ 2958 01d4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2959 01d8 3549     		ldr	r1, .L103+4
+ 2960 01da 1346     		mov	r3, r2
+ 2961 01dc DB00     		lsls	r3, r3, #3
+ 2962 01de 9B1A     		subs	r3, r3, r2
+ 2963 01e0 9B00     		lsls	r3, r3, #2
+ 2964 01e2 0B44     		add	r3, r3, r1
+ 2965 01e4 1A68     		ldr	r2, [r3]
+ 2966              		.loc 1 597 53 discriminator 4
+ 2967 01e6 137C     		ldrb	r3, [r2, #16]
+ 2968 01e8 43F03003 		orr	r3, r3, #48
+ 2969 01ec 1374     		strb	r3, [r2, #16]
+ 598:libraries/zf_driver/zf_driver_pwm.c **** 
+ 599:libraries/zf_driver/zf_driver_pwm.c ****         uint32 register_temp = 0;
+ 2970              		.loc 1 599 16 discriminator 4
+ 2971 01ee 0023     		movs	r3, #0
+ 2972 01f0 0293     		str	r3, [sp, #8]
+ 600:libraries/zf_driver/zf_driver_pwm.c ****         register_temp = pwm_obj_list[pwm_index].timer_obj->tim_ptr->CR1;
+ 2973              		.loc 1 600 48 discriminator 4
+ 2974 01f2 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 2975 01f6 2E49     		ldr	r1, .L103+4
+ 2976 01f8 1346     		mov	r3, r2
+ 2977 01fa DB00     		lsls	r3, r3, #3
+ 2978 01fc 9B1A     		subs	r3, r3, r2
+ 2979 01fe 9B00     		lsls	r3, r3, #2
+ 2980 0200 0B44     		add	r3, r3, r1
+ 2981 0202 1B68     		ldr	r3, [r3]
+ 2982              		.loc 1 600 58 discriminator 4
+ 2983 0204 1B68     		ldr	r3, [r3]
+ 2984              		.loc 1 600 23 discriminator 4
+ 2985 0206 1B68     		ldr	r3, [r3]
+ 2986 0208 0293     		str	r3, [sp, #8]
+ 601:libraries/zf_driver/zf_driver_pwm.c ****         register_temp &= ~(TIM_CR1_CMS_Msk);
+ 2987              		.loc 1 601 23 discriminator 4
+ 2988 020a 029B     		ldr	r3, [sp, #8]
+ 2989 020c 23F06003 		bic	r3, r3, #96
+ 2990 0210 0293     		str	r3, [sp, #8]
+ 602:libraries/zf_driver/zf_driver_pwm.c ****         register_temp |=  (mode ? TIM_CR1_CMS_Msk : 0);
+ 2991              		.loc 1 602 51 discriminator 4
+ 2992 0212 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 2993 0216 002B     		cmp	r3, #0
+ 2994 0218 01D0     		beq	.L100
+ 2995              		.loc 1 602 51 is_stmt 0 discriminator 1
+ 2996 021a 6023     		movs	r3, #96
+ 2997 021c 00E0     		b	.L101
+ 2998              	.L100:
+ 2999              		.loc 1 602 51 discriminator 2
+ 3000 021e 0023     		movs	r3, #0
+ 3001              	.L101:
+ 3002              		.loc 1 602 23 is_stmt 1 discriminator 4
+ 3003 0220 029A     		ldr	r2, [sp, #8]
+ 3004 0222 1343     		orrs	r3, r3, r2
+ 3005 0224 0293     		str	r3, [sp, #8]
+ 603:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->CR1 = register_temp;
+ 3006              		.loc 1 603 32 discriminator 4
+ 3007 0226 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 3008 022a 2149     		ldr	r1, .L103+4
+ 3009 022c 1346     		mov	r3, r2
+ 3010 022e DB00     		lsls	r3, r3, #3
+ 3011 0230 9B1A     		subs	r3, r3, r2
+ 3012 0232 9B00     		lsls	r3, r3, #2
+ 3013 0234 0B44     		add	r3, r3, r1
+ 3014 0236 1B68     		ldr	r3, [r3]
+ 3015              		.loc 1 603 42 discriminator 4
+ 3016 0238 1B68     		ldr	r3, [r3]
+ 3017              		.loc 1 603 57 discriminator 4
+ 3018 023a 029A     		ldr	r2, [sp, #8]
+ 3019 023c 1A60     		str	r2, [r3]
+ 604:libraries/zf_driver/zf_driver_pwm.c **** 
+ 605:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->PSC = freq_div;
+ 3020              		.loc 1 605 32 discriminator 4
+ 3021 023e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 3022 0242 1B49     		ldr	r1, .L103+4
+ 3023 0244 1346     		mov	r3, r2
+ 3024 0246 DB00     		lsls	r3, r3, #3
+ 3025 0248 9B1A     		subs	r3, r3, r2
+ 3026 024a 9B00     		lsls	r3, r3, #2
+ 3027 024c 0B44     		add	r3, r3, r1
+ 3028 024e 1B68     		ldr	r3, [r3]
+ 3029              		.loc 1 605 42 discriminator 4
+ 3030 0250 1B68     		ldr	r3, [r3]
+ 3031              		.loc 1 605 57 discriminator 4
+ 3032 0252 BDF80E20 		ldrh	r2, [sp, #14]
+ 3033 0256 9A62     		str	r2, [r3, #40]
+ 606:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->ARR = period_temp - 1;
+ 3034              		.loc 1 606 71 discriminator 4
+ 3035 0258 BDF80C30 		ldrh	r3, [sp, #12]
+ 3036 025c 581E     		subs	r0, r3, #1
+ 3037              		.loc 1 606 32 discriminator 4
+ 3038 025e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 3039 0262 1349     		ldr	r1, .L103+4
+ 3040 0264 1346     		mov	r3, r2
+ 3041 0266 DB00     		lsls	r3, r3, #3
+ 3042 0268 9B1A     		subs	r3, r3, r2
+ 3043 026a 9B00     		lsls	r3, r3, #2
+ 3044 026c 0B44     		add	r3, r3, r1
+ 3045 026e 1B68     		ldr	r3, [r3]
+ 3046              		.loc 1 606 42 discriminator 4
+ 3047 0270 1B68     		ldr	r3, [r3]
+ 3048              		.loc 1 606 71 discriminator 4
+ 3049 0272 0246     		mov	r2, r0
+ 3050              		.loc 1 606 57 discriminator 4
+ 3051 0274 DA62     		str	r2, [r3, #44]
+ 607:libraries/zf_driver/zf_driver_pwm.c ****         pwm_obj_list[pwm_index].timer_obj->tim_ptr->CNT = 0;
+ 3052              		.loc 1 607 32 discriminator 4
+ 3053 0276 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 3054 027a 0D49     		ldr	r1, .L103+4
+ 3055 027c 1346     		mov	r3, r2
+ 3056 027e DB00     		lsls	r3, r3, #3
+ 3057 0280 9B1A     		subs	r3, r3, r2
+ 3058 0282 9B00     		lsls	r3, r3, #2
+ 3059 0284 0B44     		add	r3, r3, r1
+ 3060 0286 1B68     		ldr	r3, [r3]
+ 3061              		.loc 1 607 42 discriminator 4
+ 3062 0288 1B68     		ldr	r3, [r3]
+ 3063              		.loc 1 607 57 discriminator 4
+ 3064 028a 0022     		movs	r2, #0
+ 3065 028c 5A62     		str	r2, [r3, #36]
+ 608:libraries/zf_driver/zf_driver_pwm.c **** 
+ 609:libraries/zf_driver/zf_driver_pwm.c ****         zf_timer_enable((zf_timer_index_enum)pwm_index);
+ 3066              		.loc 1 609 9 discriminator 4
+ 3067 028e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 3068 0292 1846     		mov	r0, r3
+ 3069 0294 FFF7FEFF 		bl	zf_timer_enable
+ 610:libraries/zf_driver/zf_driver_pwm.c **** 
+ 611:libraries/zf_driver/zf_driver_pwm.c ****         return_state = PWM_OPERATION_DONE;
+ 3070              		.loc 1 611 22 discriminator 4
+ 3071 0298 0023     		movs	r3, #0
+ 3072 029a 8DF81730 		strb	r3, [sp, #23]
+ 3073              	.L95:
+ 3074              	.LBE10:
+ 612:libraries/zf_driver/zf_driver_pwm.c ****     }while(0);
+ 613:libraries/zf_driver/zf_driver_pwm.c **** 
+ 614:libraries/zf_driver/zf_driver_pwm.c ****     return return_state;
+ 3075              		.loc 1 614 12
+ 3076 029e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 615:libraries/zf_driver/zf_driver_pwm.c **** }
+ 3077              		.loc 1 615 1
+ 3078 02a2 1846     		mov	r0, r3
+ 3079 02a4 07B0     		add	sp, sp, #28
+ 3080              		.cfi_def_cfa_offset 4
+ 3081              		@ sp needed
+ 3082 02a6 5DF804FB 		ldr	pc, [sp], #4
+ 3083              	.L104:
+ 3084 02aa 00BF     		.align	2
+ 3085              	.L103:
+ 3086 02ac 00000000 		.word	.LC0
+ 3087 02b0 00000000 		.word	pwm_obj_list
+ 3088              		.cfi_endproc
+ 3089              	.LFE489:
+ 3091              		.text
+ 3092              	.Letext0:
+ 3093              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 3094              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 3095              		.file 4 "libraries/zf_common/zf_common_typedef.h"
+ 3096              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_TIM.
+ 3097              		.file 6 "libraries/zf_driver/zf_driver_timer.h"
+ 3098              		.file 7 "libraries/zf_driver/zf_driver_gpio.h"
+ 3099              		.file 8 "libraries/zf_driver/zf_driver_pwm.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_pwm.c
+D:\Users\TMP\ccAfk8pa.s:23     .data.pwm_obj_list:00000000 pwm_obj_list
+D:\Users\TMP\ccAfk8pa.s:20     .data.pwm_obj_list:00000000 $d
+D:\Users\TMP\ccAfk8pa.s:113    .rodata:00000000 $d
+D:\Users\TMP\ccAfk8pa.s:117    .text.zf_pwm_set_duty:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:124    .text.zf_pwm_set_duty:00000000 zf_pwm_set_duty
+D:\Users\TMP\ccAfk8pa.s:259    .text.zf_pwm_set_duty:000000f4 $d
+D:\Users\TMP\ccAfk8pa.s:267    .text.zf_pwm_set_duty:00000114 $t
+D:\Users\TMP\ccAfk8pa.s:353    .text.zf_pwm_set_duty:00000198 $d
+D:\Users\TMP\ccAfk8pa.s:360    .text.zf_pwm_set_freq:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:367    .text.zf_pwm_set_freq:00000000 zf_pwm_set_freq
+D:\Users\TMP\ccAfk8pa.s:627    .text.zf_pwm_set_freq:000001b8 $d
+D:\Users\TMP\ccAfk8pa.s:633    .text.zf_pwm_complementary_deinit:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:640    .text.zf_pwm_complementary_deinit:00000000 zf_pwm_complementary_deinit
+D:\Users\TMP\ccAfk8pa.s:1082   .text.zf_pwm_complementary_deinit:00000334 $d
+D:\Users\TMP\ccAfk8pa.s:1088   .text.zf_pwm_channel_deinit:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:1095   .text.zf_pwm_channel_deinit:00000000 zf_pwm_channel_deinit
+D:\Users\TMP\ccAfk8pa.s:1286   .text.zf_pwm_channel_deinit:00000150 $d
+D:\Users\TMP\ccAfk8pa.s:1292   .text.zf_pwm_module_deinit:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:1299   .text.zf_pwm_module_deinit:00000000 zf_pwm_module_deinit
+D:\Users\TMP\ccAfk8pa.s:1518   .text.zf_pwm_module_deinit:00000184 $d
+D:\Users\TMP\ccAfk8pa.s:1524   .text.zf_pwm_complementary_init:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:1531   .text.zf_pwm_complementary_init:00000000 zf_pwm_complementary_init
+D:\Users\TMP\ccAfk8pa.s:1972   .text.zf_pwm_complementary_init:0000030c $d
+D:\Users\TMP\ccAfk8pa.s:1976   .text.zf_pwm_complementary_init:00000314 $t
+D:\Users\TMP\ccAfk8pa.s:2259   .text.zf_pwm_complementary_init:00000504 $d
+D:\Users\TMP\ccAfk8pa.s:2264   .text.zf_pwm_channel_init:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:2271   .text.zf_pwm_channel_init:00000000 zf_pwm_channel_init
+D:\Users\TMP\ccAfk8pa.s:2691   .text.zf_pwm_channel_init:000002d0 $d
+D:\Users\TMP\ccAfk8pa.s:2697   .text.zf_pwm_module_init:00000000 $t
+D:\Users\TMP\ccAfk8pa.s:2704   .text.zf_pwm_module_init:00000000 zf_pwm_module_init
+D:\Users\TMP\ccAfk8pa.s:3086   .text.zf_pwm_module_init:000002ac $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.tim.h.38.17cf4faae34c60f6b8dea94a5275cf03
+                           .group:00000000 wm4.zf_driver_timer.h.33.8df253b6990d9861816977209fb11e90
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_pwm.h.61.e454021a7b3a05964f6296733f3e2dd1
+
+UNDEFINED SYMBOLS
+timer_obj_list
+zf_timer_assert_handler
+zf_timer_disable
+zf_timer_enable
+zf_gpio_deinit
+zf_timer_deinit
+zf_afio_init
+zf_timer_funciton_check
+zf_timer_clock_enable

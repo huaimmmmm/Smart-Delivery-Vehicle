@@ -1,0 +1,349 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"ProgramVerify.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.ProgramVerify,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.global	ProgramVerify
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	ProgramVerify:
+  27              	.LFB0:
+  28              		.file 1 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/
+   1:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** /****************************************************************************
+   2:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  *
+   3:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  *
+   5:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  * terms SLA0098 at www.st.com.
+   7:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  *
+   8:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  *
+  11:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  *
+  12:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****  *****************************************************************************/
+  13:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  14:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** /*************************************************************************
+  15:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                                                                       *
+  16:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *               Standard Software Driver for C55                        *
+  17:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                                                                       *
+  18:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * FILE NAME     : ProgramVerify.c                                       *
+  19:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * FUNCTION      : ProgramVerify                                         *
+  20:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * DESCRIPTION   : This function will verify programmed data in          *
+  21:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                   specified flash range.                              *
+  22:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * PARAMETERS    : pSSDConfig - Flash driver configuration structure     *
+  23:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 dest - start flash addr to be programmed              *
+  24:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 size - number of bytes to be programmed               *
+  25:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                   (need to be word-aligned)                           *
+  26:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 source - start RAM addr for source data               *
+  27:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                   (need to be word-aligned)                           *
+  28:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 pFailedAddress - pointer to first failing address     *
+  29:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 pFailedData - pointer to first failing actual data    *
+  30:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 pFailedSource - pointer to first failing expected data*
+  31:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * RETURN        : C55_OK           - passes                             *
+  32:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 C55_ERROR_VERIFY - failed verify                      *
+  33:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                 C55_ERROR_ALIGNMENT - Invalid alignment               *
+  34:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * DATE          : February 04, 2022                                     *
+  35:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * AUTHOR        : ...                                                   *
+  36:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** * E-mail        : ...                                                   *
+  37:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *                                                                       *
+  38:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *************************************************************************/
+  39:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  40:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** /******************************* CHANGES *********************************
+  41:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****   0.1.0   04.02.2022      G. Cuce       Initial versio
+  42:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** *************************************************************************/
+  43:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  44:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** #include "ssd_types.h"
+  45:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** #include "ssd_C55.h"
+  46:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** #include "ssd_C55_internal.h"
+  47:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  48:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  49:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** UINT32 ProgramVerify ( PSSD_CONFIG pSSDConfig,
+  50:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****                        UINT32 dest,
+  51:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****                        UINT32 size,
+  52:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****                        UINT32 source,
+  53:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****                        UINT32 *pFailedAddress,
+  54:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****                        UINT32 *pFailedData,
+  55:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****                        UINT32 *pFailedSource,
+  56:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****                        PCONTEXT_DATA pCtxData )
+  57:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** {
+  29              		.loc 1 57 1
+  30              		.cfi_startproc
+  31              		@ args = 16, pretend = 0, frame = 32
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 88B0     		sub	sp, sp, #32
+  35              		.cfi_def_cfa_offset 32
+  36 0002 0390     		str	r0, [sp, #12]
+  37 0004 0291     		str	r1, [sp, #8]
+  38 0006 0192     		str	r2, [sp, #4]
+  39 0008 0093     		str	r3, [sp]
+  58:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     volatile UINT32 returnCode;     /* return code */
+  59:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  60:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     UINT32 destIndex;               /* destination address index */
+  61:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     volatile UINT32 temp;
+  62:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  63:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     returnCode = C55_OK;
+  40              		.loc 1 63 16
+  41 000a 0023     		movs	r3, #0
+  42 000c 0693     		str	r3, [sp, #24]
+  64:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     
+  65:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     /* Check alignments */
+  66:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     if ( ((dest | size | source) % C55_WORD_SIZE) != 0 )
+  43              		.loc 1 66 17
+  44 000e 029A     		ldr	r2, [sp, #8]
+  45 0010 019B     		ldr	r3, [sp, #4]
+  46 0012 1A43     		orrs	r2, r2, r3
+  47              		.loc 1 66 24
+  48 0014 009B     		ldr	r3, [sp]
+  49 0016 1343     		orrs	r3, r3, r2
+  50              		.loc 1 66 34
+  51 0018 03F00303 		and	r3, r3, #3
+  52              		.loc 1 66 8
+  53 001c 002B     		cmp	r3, #0
+  54 001e 02D0     		beq	.L2
+  67:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+  68:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         returnCode = C55_ERROR_ALIGNMENT;
+  55              		.loc 1 68 20
+  56 0020 0123     		movs	r3, #1
+  57 0022 0693     		str	r3, [sp, #24]
+  69:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         goto EXIT;
+  58              		.loc 1 69 9
+  59 0024 45E0     		b	.L3
+  60              	.L2:
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     }
+  71:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  72:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     /* Anything to check */
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     if ( 0 == size )
+  61              		.loc 1 73 8
+  62 0026 019B     		ldr	r3, [sp, #4]
+  63 0028 002B     		cmp	r3, #0
+  64 002a 41D0     		beq	.L11
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         goto EXIT;
+  76:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     }
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     /* Number of words needs to be verified */
+  79:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     temp = size / C55_WORD_SIZE;
+  65              		.loc 1 79 17
+  66 002c 019B     		ldr	r3, [sp, #4]
+  67 002e 9B08     		lsrs	r3, r3, #2
+  68              		.loc 1 79 10
+  69 0030 0593     		str	r3, [sp, #20]
+  80:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     /* In each verify cycle, we take up to a certain words */
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     if ( temp >= NUM_WORDS_PROGRAM_VERIFY_CYCLE )
+  70              		.loc 1 82 15
+  71 0032 059B     		ldr	r3, [sp, #20]
+  72              		.loc 1 82 8
+  73 0034 4F2B     		cmp	r3, #79
+  74 0036 01D9     		bls	.L5
+  83:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+  84:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         temp = NUM_WORDS_PROGRAM_VERIFY_CYCLE;
+  75              		.loc 1 84 14
+  76 0038 5023     		movs	r3, #80
+  77 003a 0593     		str	r3, [sp, #20]
+  78              	.L5:
+  85:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     }
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     /* Word by word verify */
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     for ( destIndex = 0; destIndex < temp; destIndex++ )
+  79              		.loc 1 88 21
+  80 003c 0023     		movs	r3, #0
+  81 003e 0793     		str	r3, [sp, #28]
+  82              		.loc 1 88 5
+  83 0040 1CE0     		b	.L6
+  84              	.L8:
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         if ( *(VUINT32 *)dest != *(VUINT32 *)source )
+  85              		.loc 1 90 15
+  86 0042 029B     		ldr	r3, [sp, #8]
+  87              		.loc 1 90 14
+  88 0044 1A68     		ldr	r2, [r3]
+  89              		.loc 1 90 35
+  90 0046 009B     		ldr	r3, [sp]
+  91              		.loc 1 90 34
+  92 0048 1B68     		ldr	r3, [r3]
+  93              		.loc 1 90 12
+  94 004a 9A42     		cmp	r2, r3
+  95 004c 0DD0     		beq	.L7
+  91:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         {
+  92:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****             returnCode = C55_ERROR_VERIFY;
+  96              		.loc 1 92 24
+  97 004e 4023     		movs	r3, #64
+  98 0050 0693     		str	r3, [sp, #24]
+  93:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****             *pFailedAddress = dest;
+  99              		.loc 1 93 29
+ 100 0052 089B     		ldr	r3, [sp, #32]
+ 101 0054 029A     		ldr	r2, [sp, #8]
+ 102 0056 1A60     		str	r2, [r3]
+  94:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****             *pFailedData = *(VUINT32 *)dest;
+ 103              		.loc 1 94 29
+ 104 0058 029B     		ldr	r3, [sp, #8]
+ 105              		.loc 1 94 28
+ 106 005a 1A68     		ldr	r2, [r3]
+ 107              		.loc 1 94 26
+ 108 005c 099B     		ldr	r3, [sp, #36]
+ 109 005e 1A60     		str	r2, [r3]
+  95:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****             *pFailedSource = *(VUINT32 *)source;
+ 110              		.loc 1 95 31
+ 111 0060 009B     		ldr	r3, [sp]
+ 112              		.loc 1 95 30
+ 113 0062 1A68     		ldr	r2, [r3]
+ 114              		.loc 1 95 28
+ 115 0064 0A9B     		ldr	r3, [sp, #40]
+ 116 0066 1A60     		str	r2, [r3]
+  96:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****             goto EXIT;
+ 117              		.loc 1 96 13
+ 118 0068 23E0     		b	.L3
+ 119              	.L7:
+  97:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         }
+  98:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+  99:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         dest += C55_WORD_SIZE;
+ 120              		.loc 1 99 14 discriminator 2
+ 121 006a 029B     		ldr	r3, [sp, #8]
+ 122 006c 0433     		adds	r3, r3, #4
+ 123 006e 0293     		str	r3, [sp, #8]
+ 100:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         source += C55_WORD_SIZE;
+ 124              		.loc 1 100 16 discriminator 2
+ 125 0070 009B     		ldr	r3, [sp]
+ 126 0072 0433     		adds	r3, r3, #4
+ 127 0074 0093     		str	r3, [sp]
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+ 128              		.loc 1 88 53 discriminator 2
+ 129 0076 079B     		ldr	r3, [sp, #28]
+ 130 0078 0133     		adds	r3, r3, #1
+ 131 007a 0793     		str	r3, [sp, #28]
+ 132              	.L6:
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+ 133              		.loc 1 88 36 discriminator 1
+ 134 007c 059B     		ldr	r3, [sp, #20]
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+ 135              		.loc 1 88 5 discriminator 1
+ 136 007e 079A     		ldr	r2, [sp, #28]
+ 137 0080 9A42     		cmp	r2, r3
+ 138 0082 DED3     		bcc	.L8
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     }
+ 102:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     
+ 103:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     /* Update the context data */
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     pCtxData->dest = dest;
+ 139              		.loc 1 104 20
+ 140 0084 0B9B     		ldr	r3, [sp, #44]
+ 141 0086 029A     		ldr	r2, [sp, #8]
+ 142 0088 1A60     		str	r2, [r3]
+ 105:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     pCtxData->size = size - temp * C55_WORD_SIZE;
+ 143              		.loc 1 105 34
+ 144 008a 059B     		ldr	r3, [sp, #20]
+ 145 008c 9B00     		lsls	r3, r3, #2
+ 146              		.loc 1 105 27
+ 147 008e 019A     		ldr	r2, [sp, #4]
+ 148 0090 D21A     		subs	r2, r2, r3
+ 149              		.loc 1 105 20
+ 150 0092 0B9B     		ldr	r3, [sp, #44]
+ 151 0094 5A60     		str	r2, [r3, #4]
+ 106:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     pCtxData->source = source;
+ 152              		.loc 1 106 22
+ 153 0096 0B9B     		ldr	r3, [sp, #44]
+ 154 0098 009A     		ldr	r2, [sp]
+ 155 009a 9A60     		str	r2, [r3, #8]
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     pCtxData->pFailedAddress = pFailedAddress;
+ 156              		.loc 1 107 30
+ 157 009c 0B9B     		ldr	r3, [sp, #44]
+ 158 009e 089A     		ldr	r2, [sp, #32]
+ 159 00a0 DA60     		str	r2, [r3, #12]
+ 108:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     pCtxData->pFailedData = pFailedData;
+ 160              		.loc 1 108 27
+ 161 00a2 0B9B     		ldr	r3, [sp, #44]
+ 162 00a4 099A     		ldr	r2, [sp, #36]
+ 163 00a6 1A61     		str	r2, [r3, #16]
+ 109:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     pCtxData->pFailedSource = pFailedSource;
+ 164              		.loc 1 109 29
+ 165 00a8 0B9B     		ldr	r3, [sp, #44]
+ 166 00aa 0A9A     		ldr	r2, [sp, #40]
+ 167 00ac 5A61     		str	r2, [r3, #20]
+ 168 00ae 00E0     		b	.L3
+ 169              	.L11:
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     }
+ 170              		.loc 1 75 9
+ 171 00b0 00BF     		nop
+ 172              	.L3:
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** EXIT:
+ 112:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     if (pSSDConfig->BDMEnable)
+ 173              		.loc 1 112 19
+ 174 00b2 039B     		ldr	r3, [sp, #12]
+ 175 00b4 93F84830 		ldrb	r3, [r3, #72]	@ zero_extendqisi2
+ 176              		.loc 1 112 8
+ 177 00b8 002B     		cmp	r3, #0
+ 178 00ba 04D0     		beq	.L9
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     {
+ 114:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         /* save the return code to R3 */
+ 115:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         ASM_KEYWORD(" mov r3, %0 " ::"r"(returnCode));
+ 179              		.loc 1 115 9
+ 180 00bc 069B     		ldr	r3, [sp, #24]
+ 181              		.syntax unified
+ 182              	@ 115 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Pro
+ 183 00be 1B46     		 mov r3, r3 
+ 184              	@ 0 "" 2
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         
+ 117:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         asm volatile ( "nop" );
+ 185              		.loc 1 117 9
+ 186              	@ 117 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Pro
+ 187 00c0 00BF     		nop
+ 188              	@ 0 "" 2
+ 118:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         asm volatile ( "bkpt #0" );
+ 189              		.loc 1 118 9
+ 190              	@ 118 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Pro
+ 191 00c2 00BE     		bkpt #0
+ 192              	@ 0 "" 2
+ 119:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****         asm volatile ( "nop" );
+ 193              		.loc 1 119 9
+ 194              	@ 119 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Pro
+ 195 00c4 00BF     		nop
+ 196              	@ 0 "" 2
+ 197              		.thumb
+ 198              		.syntax unified
+ 199              	.L9:
+ 120:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     }
+ 121:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** 
+ 122:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c ****     return returnCode;
+ 200              		.loc 1 122 12
+ 201 00c6 069B     		ldr	r3, [sp, #24]
+ 123:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\ProgramVerify.c **** }
+ 202              		.loc 1 123 1
+ 203 00c8 1846     		mov	r0, r3
+ 204 00ca 08B0     		add	sp, sp, #32
+ 205              		.cfi_def_cfa_offset 0
+ 206              		@ sp needed
+ 207 00cc 7047     		bx	lr
+ 208              		.cfi_endproc
+ 209              	.LFE0:
+ 211 00ce 00BF     		.text
+ 212              	.Letext0:
+ 213              		.file 2 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+ 214              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+DEFINED SYMBOLS
+                            *ABS*:00000000 ProgramVerify.c
+D:\Users\TMP\ccVacq6R.s:19     .text.ProgramVerify:00000000 $t
+D:\Users\TMP\ccVacq6R.s:26     .text.ProgramVerify:00000000 ProgramVerify
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.ssd_types.h.29.f65f270075dc88598f2bc4634b2ba066
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.ssd_C55_internal.h.29.1a4d39bf6721f834026b4f5e5340cfd8
+
+NO UNDEFINED SYMBOLS

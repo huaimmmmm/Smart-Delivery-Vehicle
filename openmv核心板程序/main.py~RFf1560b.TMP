@@ -1,0 +1,176 @@
+import sensor, image, time, ustruct
+from pyb import UART
+
+# ==========================================
+# 1. 硬件与通信初始化
+# ==========================================
+uart = UART(3, 115200)
+
+# ==========================================
+# 2. 核心参数设置
+# ==========================================
+RED_THRESHOLD = (7, 100, 5, 40, -128, 75)
+K_FACTOR = 1400
+DEAD_ZONE = 12
+
+last_x_error = 0
+last_y_error = 0
+
+# 人脸识别参数
+NUM_SUBJECTS = 1                             # 图像库中不同人数
+NUM_SUBJECTS_IMGS = 20                       # 每人有几张样本图片
+name_list = ['未知', 'VIP客户']              # 对应人的名字 (下标1是s1)
+
+# 系统状态机
+# 0=追击红块, 1=抬头人脸核验, 2=任务彻底完成(躺平)
+system_mode = 0
+arrive_counter = 0
+
+# 核验倒计时变量
+verify_wait = 0
+
+# ==========================================
+# 3. 摄像头初始化 (初始为追击模式)
+# ==========================================
+sensor.reset()
+sensor.set_pixformat(sensor.RGB565)
+sensor.set_framesize(sensor.QQVGA)
+sensor.skip_frames(time=2000)
+sensor.set_auto_whitebal(False)
+sensor.set_auto_gain(False)
+clock = time.clock()
+
+def find_max(blobs):
+    max_size = 0
+    max_blob = None
+    for blob in blobs:
+        if blob.pixels() > max_size:
+            max_blob = blob
+            max_size = blob.pixels()
+    return max_blob
+
+def send_vision_data(target_type, x_err, y_err, distance):
+    x_err = int(max(-128, min(127, x_err)))
+    y_err = int(max(-128, min(127, y_err)))
+    distance = int(max(0, min(255, distance)))
+
+    checksum = (target_type + (x_err & 0xFF) + (y_err & 0xFF) + distance + 0x00) & 0xFF
+    packet = ustruct.pack("<BBBbbBBB", 0xFF, 0xFE, target_type, x_err, y_err, distance, 0x00, checksum)
+    uart.write(packet)
+
+# ==========================================
+# 4. 主循环
+# ==========================================
+print_counter = 0
+
+while True:
+    clock.tick()
+    img = sensor.snapshot()
+
+    # ----------------------------------------------------
+    # 模式 0：追击红色目标
+    # ----------------------------------------------------
+    if system_mode == 0:
+        blobs = img.find_blobs([RED_THRESHOLD], pixels_threshold=50, area_threshold=50, merge=True)
+
+        if blobs:
+            max_blob = find_max(blobs)
+            img.draw_rectangle(max_blob.rect(), color=(0, 255, 0))
+            img.draw_cross(max_blob.cx(), max_blob.cy(), color=(0, 255, 0))
+
+            raw_x_error = max_blob.cx() - 80
+            raw_y_error = max_blob.cy() - 60
+
+            if abs(raw_x_error) < DEAD_ZONE: raw_x_error = 0
+            if abs(raw_y_error) < DEAD_ZONE: raw_y_error = 0
+
+            smooth_x_error = int((last_x_error * 0.3) + (raw_x_error * 0.7))
+            smooth_y_error = int((last_y_error * 0.3) + (raw_y_error * 0.7))
+            last_x_error, last_y_error = smooth_x_error, smooth_y_error
+
+            Lm = (max_blob.w() + max_blob.h()) / 2
+            distance_cm = int(K_FACTOR / Lm) if Lm > 0 else 255
+
+            if 20 <= distance_cm <= 40 and raw_x_error == 0:
+                arrive_counter += 1
+                if arrive_counter >= 25:
+                    print(">>> 驻车成功！切换人脸核验模式 <<<")
+                    send_vision_data(2, 0, 0, distance_cm) # 命令主板停车抬头
+
+                    sensor.set_pixformat(sensor.GRAYSCALE)
+                    sensor.set_framesize(sensor.B128X128)
+                    sensor.set_windowing((92,112))
+                    sensor.skip_frames(10)
+
+                    system_mode = 1
+                    verify_wait = 0
+                    continue
+            else:
+                arrive_counter = 0
+
+            send_vision_data(1, smooth_x_error, smooth_y_error, distance_cm)
+
+            print_counter += 1
+            if print_counter >= 5:
+                print("【追击】 距:%dcm | X:%d" % (distance_cm, smooth_x_error))
+                print_counter = 0
+        else:
+            last_x_error, last_y_error = 0, 0
+            arrive_counter = 0
+            send_vision_data(0, 0, 0, 0)
+
+    # ----------------------------------------------------
+    # 模式 1：无级联版强行 LBP 人脸核验
+    # ----------------------------------------------------
+    elif system_mode == 1:
+        if verify_wait < 20:
+            verify_wait += 1
+            send_vision_data(2, 0, 0, 0) # 保持抬头姿势
+            if verify_wait % 5 == 0:
+                print("请注视摄像头，正在扫描...")
+            time.sleep_ms(100)
+
+        else:
+            print("开始 LBP 特征比对...")
+            d0 = img.find_lbp((0, 0, img.width(), img.height()))
+
+            pmin = 999999
+            match_num = 0
+
+            for s in range(1, NUM_SUBJECTS + 1):
+                dist = 0
+                for i in range(1, NUM_SUBJECTS_IMGS + 1):
+                    try:
+                        img_ref = image.Image("ZLTech/s%d/%d.pgm" % (s, i))
+                        d1 = img_ref.find_lbp((0, 0, img_ref.width(), img_ref.height()))
+                        dist += image.match_descriptor(d0, d1)
+                    except:
+                        pass
+
+                avg_dist = dist / NUM_SUBJECTS_IMGS
+                print("S%d 差异度: %d" % (s, avg_dist))
+
+                if avg_dist < pmin:
+                    pmin = avg_dist
+                    match_num = s
+
+            if pmin < 9500:
+                print("【核验成功】 身份: %s，任务圆满结束！" % name_list[match_num])
+
+                # 【修改核心 1】：发送终极指令 4 给主板，宣告任务彻底完成
+                send_vision_data(4, 0, 0, 0)
+
+                # 【修改核心 2】：切入“躺平”模式，不再干活了
+                system_mode = 2
+            else:
+                print("【核验失败】 不是目标客户，重新扫描。")
+                send_vision_data(2, 0, 0, 0)
+                verify_wait = 0
+
+    # ----------------------------------------------------
+    # 模式 2：任务彻底结束 (躺平模式)
+    # ----------------------------------------------------
+    elif system_mode == 2:
+        # 什么也不做，就静静地发呆，或者可以发指令 4 确保主板也消停
+        send_vision_data(4, 0, 0, 0)
+        time.sleep_ms(500) # 降低功耗

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.st.stellar.component.sr5e1.clocktree:Clock xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:com.st.stellar.component.sr5e1.clocktree="http://com.st.stellar.component.sr5e1.clocktree" name="clock_cfg" wizard="com.st.stellar.wizard.clocktree.sr5e1" SDADC_SEL="PLL0PHI" ADC_SEL="XOSC" FDCAN_SEL="XOSC" I2S_SEL="PLL0PHI" I2C_SEL="PLL0PHI" UART_SEL="PLL0PHI" SDADCDIV="4"/>

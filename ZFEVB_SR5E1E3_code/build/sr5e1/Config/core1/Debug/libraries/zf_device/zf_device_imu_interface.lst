@@ -1,0 +1,1873 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_device_imu_interface.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	imu_interface_default_obj
+  19              		.section	.data.imu_interface_default_obj,"aw"
+  20              		.align	2
+  23              	imu_interface_default_obj:
+  24 0000 00       		.byte	0
+  25 0001 00       		.byte	0
+  26 0002 6700     		.short	103
+  27              		.section	.rodata
+  28              		.align	2
+  29              	.LC0:
+  30 0000 6C696272 		.ascii	"libraries/zf_device/zf_device_imu_interface.c\000"
+  30      61726965 
+  30      732F7A66 
+  30      5F646576 
+  30      6963652F 
+  31              		.section	.text.imu_interface_write_8bit_register,"ax",%progbits
+  32              		.align	1
+  33              		.p2align 4,,15
+  34              		.global	imu_interface_write_8bit_register
+  35              		.syntax unified
+  36              		.thumb
+  37              		.thumb_func
+  39              	imu_interface_write_8bit_register:
+  40              	.LFB482:
+  41              		.file 1 "libraries/zf_device/zf_device_imu_interface.c"
+   1:libraries/zf_device/zf_device_imu_interface.c **** /**************************************************************************************************
+   2:libraries/zf_device/zf_device_imu_interface.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_device/zf_device_imu_interface.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_device/zf_device_imu_interface.c **** *
+   5:libraries/zf_device/zf_device_imu_interface.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_device/zf_device_imu_interface.c **** *
+   7:libraries/zf_device/zf_device_imu_interface.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_device/zf_device_imu_interface.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_device/zf_device_imu_interface.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_device/zf_device_imu_interface.c **** *
+  11:libraries/zf_device/zf_device_imu_interface.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_device/zf_device_imu_interface.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_device/zf_device_imu_interface.c **** * 更多细节请参见 GPL
+  14:libraries/zf_device/zf_device_imu_interface.c **** *
+  15:libraries/zf_device/zf_device_imu_interface.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_device/zf_device_imu_interface.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_device/zf_device_imu_interface.c **** *
+  18:libraries/zf_device/zf_device_imu_interface.c **** * 额外注明：
+  19:libraries/zf_device/zf_device_imu_interface.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_device/zf_device_imu_interface.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_device/zf_device_imu_interface.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_device/zf_device_imu_interface.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_device/zf_device_imu_interface.c **** *
+  24:libraries/zf_device/zf_device_imu_interface.c **** * 文件名称          zf_device_imu_interface
+  25:libraries/zf_device/zf_device_imu_interface.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_device/zf_device_imu_interface.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_device/zf_device_imu_interface.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_device/zf_device_imu_interface.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_device/zf_device_imu_interface.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_device/zf_device_imu_interface.c **** ***************************************************************************************************
+  31:libraries/zf_device/zf_device_imu_interface.c **** 
+  32:libraries/zf_device/zf_device_imu_interface.c **** /**************************************************************************************************
+  33:libraries/zf_device/zf_device_imu_interface.c **** * 本文件的作用是方便 IMU 的任意平台适配
+  34:libraries/zf_device/zf_device_imu_interface.c **** * 内容为将 IMU 相关的接口进行解耦整合
+  35:libraries/zf_device/zf_device_imu_interface.c **** * 在移植到新的平台时 只需要实现了本文件的接口
+  36:libraries/zf_device/zf_device_imu_interface.c **** * 就可以直接适配 SeekFree 所有的 V4 库 IMU 器件
+  37:libraries/zf_device/zf_device_imu_interface.c **** ***************************************************************************************************
+  38:libraries/zf_device/zf_device_imu_interface.c **** 
+  39:libraries/zf_device/zf_device_imu_interface.c **** // 自身头文件
+  40:libraries/zf_device/zf_device_imu_interface.c **** #include "zf_device_imu_interface.h"
+  41:libraries/zf_device/zf_device_imu_interface.c **** 
+  42:libraries/zf_device/zf_device_imu_interface.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改 这里不允许
+  43:libraries/zf_device/zf_device_imu_interface.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  44:libraries/zf_device/zf_device_imu_interface.c **** AT_ZF_LIB_SECTION_START
+  45:libraries/zf_device/zf_device_imu_interface.c **** AT_ZF_LIB_SECTION imu_interface_obj_struct imu_interface_default_obj = 
+  46:libraries/zf_device/zf_device_imu_interface.c **** {
+  47:libraries/zf_device/zf_device_imu_interface.c ****     .interface_type         = IMU_INTERFACE_TYPE_UNKNOW,
+  48:libraries/zf_device/zf_device_imu_interface.c ****     .communication_index    = 0,
+  49:libraries/zf_device/zf_device_imu_interface.c ****     .spi_cs_pin             = IMU_INTERFACE_CS_PIN
+  50:libraries/zf_device/zf_device_imu_interface.c **** };
+  51:libraries/zf_device/zf_device_imu_interface.c **** AT_ZF_LIB_SECTION_END
+  52:libraries/zf_device/zf_device_imu_interface.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  53:libraries/zf_device/zf_device_imu_interface.c **** 
+  54:libraries/zf_device/zf_device_imu_interface.c **** // 此处定义 IMU 相关的接口实现 这里允许用户修改
+  55:libraries/zf_device/zf_device_imu_interface.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  56:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+  57:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 断言处理
+  58:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *file               文件路径
+  59:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     line                报错行
+  60:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *tips               输出信息
+  61:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / GPIO_OPERATION_DONE - 完成 其
+  62:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     zf_spi_assert_handler(file, line, tips);
+  63:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息
+  64:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+  65:libraries/zf_device/zf_device_imu_interface.c **** #if IMU_INTERFACE_USE_ZF_COMMON_DEBUG
+  66:libraries/zf_device/zf_device_imu_interface.c **** #else
+  67:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_assert_handler (char *file, int line, char *tips)
+  68:libraries/zf_device/zf_device_imu_interface.c **** {
+  69:libraries/zf_device/zf_device_imu_interface.c ****     printf("\r\n IMU OPERATION ASSERT!\r\n");
+  70:libraries/zf_device/zf_device_imu_interface.c ****     printf("\r\n file: %s.\r\n", file);
+  71:libraries/zf_device/zf_device_imu_interface.c ****     printf("\r\n line: %d.\r\n", line);
+  72:libraries/zf_device/zf_device_imu_interface.c ****     if(NULL != tips)
+  73:libraries/zf_device/zf_device_imu_interface.c ****     {
+  74:libraries/zf_device/zf_device_imu_interface.c ****         printf("\r\n tips: %s.\r\n", tips);
+  75:libraries/zf_device/zf_device_imu_interface.c ****     }
+  76:libraries/zf_device/zf_device_imu_interface.c ****     while(1);
+  77:libraries/zf_device/zf_device_imu_interface.c ****     return ZF_ERROR;
+  78:libraries/zf_device/zf_device_imu_interface.c **** }
+  79:libraries/zf_device/zf_device_imu_interface.c **** #endif
+  80:libraries/zf_device/zf_device_imu_interface.c **** 
+  81:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+  82:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 延时
+  83:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     ms              毫秒数
+  84:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     void
+  85:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_delay_ms(ms);
+  86:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     
+  87:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+  88:libraries/zf_device/zf_device_imu_interface.c **** #if IMU_INTERFACE_USE_ZF_DIRVER_DELAY
+  89:libraries/zf_device/zf_device_imu_interface.c **** #else
+  90:libraries/zf_device/zf_device_imu_interface.c **** void imu_interface_delay_ms (uint32 ms)
+  91:libraries/zf_device/zf_device_imu_interface.c **** {
+  92:libraries/zf_device/zf_device_imu_interface.c ****     for(uint32 loop_count1 = ms    ; loop_count1 --; )
+  93:libraries/zf_device/zf_device_imu_interface.c ****     for(uint32 loop_count2 = 0xFFFF; loop_count2 --; );
+  94:libraries/zf_device/zf_device_imu_interface.c **** }
+  95:libraries/zf_device/zf_device_imu_interface.c **** #endif
+  96:libraries/zf_device/zf_device_imu_interface.c **** 
+  97:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+  98:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 写寄存器 8bit
+  99:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMU 系列通用的接口对象
+ 100:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     addr                IIC 器件地址 非 IIC 器件就填 0
+ 101:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     reg                 寄存器地址
+ 102:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     data                数据
+ 103:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 104:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_write_8bit_register(interface, addr, reg, data);
+ 105:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 106:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 107:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_write_8bit_register (imu_interface_obj_struct *interface, uint8 addr, uint8 reg
+ 108:libraries/zf_device/zf_device_imu_interface.c **** {
+  42              		.loc 1 108 1
+  43              		.cfi_startproc
+  44              		@ args = 0, pretend = 0, frame = 16
+  45              		@ frame_needed = 0, uses_anonymous_args = 0
+  46 0000 00B5     		push	{lr}
+  47              		.cfi_def_cfa_offset 4
+  48              		.cfi_offset 14, -4
+  49 0002 87B0     		sub	sp, sp, #28
+  50              		.cfi_def_cfa_offset 32
+  51 0004 0390     		str	r0, [sp, #12]
+  52 0006 0846     		mov	r0, r1
+  53 0008 1146     		mov	r1, r2
+  54 000a 1A46     		mov	r2, r3
+  55 000c 0346     		mov	r3, r0
+  56 000e 8DF80B30 		strb	r3, [sp, #11]
+  57 0012 0B46     		mov	r3, r1
+  58 0014 8DF80A30 		strb	r3, [sp, #10]
+  59 0018 1346     		mov	r3, r2
+  60 001a 8DF80930 		strb	r3, [sp, #9]
+ 109:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+  61              		.loc 1 109 41
+  62 001e 0123     		movs	r3, #1
+  63 0020 8DF81730 		strb	r3, [sp, #23]
+ 110:libraries/zf_device/zf_device_imu_interface.c **** 
+ 111:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 112:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 113:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+  64              		.loc 1 113 11
+  65 0024 039B     		ldr	r3, [sp, #12]
+  66 0026 002B     		cmp	r3, #0
+  67 0028 03D1     		bne	.L2
+ 114:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 115:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+  68              		.loc 1 115 26
+  69 002a 2323     		movs	r3, #35
+  70 002c 8DF81730 		strb	r3, [sp, #23]
+ 116:libraries/zf_device/zf_device_imu_interface.c ****             break;
+  71              		.loc 1 116 13
+  72 0030 78E0     		b	.L3
+  73              	.L2:
+ 117:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 118:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+  74              		.loc 1 118 50
+  75 0032 039B     		ldr	r3, [sp, #12]
+  76 0034 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  77              		.loc 1 118 11
+  78 0036 002B     		cmp	r3, #0
+  79 0038 03D1     		bne	.L4
+ 119:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 120:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+  80              		.loc 1 120 26
+  81 003a 2123     		movs	r3, #33
+  82 003c 8DF81730 		strb	r3, [sp, #23]
+ 121:libraries/zf_device/zf_device_imu_interface.c ****             break;
+  83              		.loc 1 121 13
+  84 0040 70E0     		b	.L3
+  85              	.L4:
+ 122:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 123:libraries/zf_device/zf_device_imu_interface.c **** 
+ 124:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+  86              		.loc 1 124 22
+  87 0042 0023     		movs	r3, #0
+  88 0044 8DF81730 		strb	r3, [sp, #23]
+ 125:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_SPI == interface->interface_type)
+  89              		.loc 1 125 47
+  90 0048 039B     		ldr	r3, [sp, #12]
+  91 004a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  92              		.loc 1 125 11
+  93 004c 012B     		cmp	r3, #1
+  94 004e 5BD1     		bne	.L5
+ 126:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 127:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+  95              		.loc 1 127 13
+  96 0050 039B     		ldr	r3, [sp, #12]
+  97 0052 5B88     		ldrh	r3, [r3, #2]
+  98 0054 40F6FF72 		movw	r2, #4095
+  99 0058 9342     		cmp	r3, r2
+ 100 005a 1AD0     		beq	.L6
+ 101              		.loc 1 127 13 is_stmt 0 discriminator 1
+ 102 005c 039B     		ldr	r3, [sp, #12]
+ 103 005e 5B88     		ldrh	r3, [r3, #2]
+ 104 0060 5B09     		lsrs	r3, r3, #5
+ 105 0062 9BB2     		uxth	r3, r3
+ 106 0064 1A46     		mov	r2, r3
+ 107 0066 324B     		ldr	r3, .L10
+ 108 0068 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 109 006c 9969     		ldr	r1, [r3, #24]
+ 110 006e 039B     		ldr	r3, [sp, #12]
+ 111 0070 5B88     		ldrh	r3, [r3, #2]
+ 112 0072 03F01F03 		and	r3, r3, #31
+ 113 0076 4FF48032 		mov	r2, #65536
+ 114 007a 9A40     		lsls	r2, r2, r3
+ 115 007c 039B     		ldr	r3, [sp, #12]
+ 116 007e 5B88     		ldrh	r3, [r3, #2]
+ 117 0080 5B09     		lsrs	r3, r3, #5
+ 118 0082 9BB2     		uxth	r3, r3
+ 119 0084 1846     		mov	r0, r3
+ 120 0086 2A4B     		ldr	r3, .L10
+ 121 0088 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 122 008c 0A43     		orrs	r2, r2, r1
+ 123 008e 9A61     		str	r2, [r3, #24]
+ 124 0090 04E0     		b	.L7
+ 125              	.L6:
+ 126              		.loc 1 127 13 discriminator 2
+ 127 0092 0022     		movs	r2, #0
+ 128 0094 7F21     		movs	r1, #127
+ 129 0096 2748     		ldr	r0, .L10+4
+ 130 0098 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 131              	.L7:
+ 128:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, &reg , NULL, 1);
+ 132              		.loc 1 128 13 is_stmt 1
+ 133 009c 039B     		ldr	r3, [sp, #12]
+ 134 009e 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 135 00a0 0DF10A01 		add	r1, sp, #10
+ 136 00a4 0123     		movs	r3, #1
+ 137 00a6 0022     		movs	r2, #0
+ 138 00a8 FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 129:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, &data, NULL, 1);
+ 139              		.loc 1 129 13
+ 140 00ac 039B     		ldr	r3, [sp, #12]
+ 141 00ae 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 142 00b0 0DF10901 		add	r1, sp, #9
+ 143 00b4 0123     		movs	r3, #1
+ 144 00b6 0022     		movs	r2, #0
+ 145 00b8 FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 130:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 146              		.loc 1 130 13
+ 147 00bc 039B     		ldr	r3, [sp, #12]
+ 148 00be 5B88     		ldrh	r3, [r3, #2]
+ 149 00c0 40F6FF72 		movw	r2, #4095
+ 150 00c4 9342     		cmp	r3, r2
+ 151 00c6 19D0     		beq	.L8
+ 152              		.loc 1 130 13 is_stmt 0 discriminator 1
+ 153 00c8 039B     		ldr	r3, [sp, #12]
+ 154 00ca 5B88     		ldrh	r3, [r3, #2]
+ 155 00cc 5B09     		lsrs	r3, r3, #5
+ 156 00ce 9BB2     		uxth	r3, r3
+ 157 00d0 1A46     		mov	r2, r3
+ 158 00d2 174B     		ldr	r3, .L10
+ 159 00d4 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 160 00d8 9969     		ldr	r1, [r3, #24]
+ 161 00da 039B     		ldr	r3, [sp, #12]
+ 162 00dc 5B88     		ldrh	r3, [r3, #2]
+ 163 00de 03F01F03 		and	r3, r3, #31
+ 164 00e2 0122     		movs	r2, #1
+ 165 00e4 9A40     		lsls	r2, r2, r3
+ 166 00e6 039B     		ldr	r3, [sp, #12]
+ 167 00e8 5B88     		ldrh	r3, [r3, #2]
+ 168 00ea 5B09     		lsrs	r3, r3, #5
+ 169 00ec 9BB2     		uxth	r3, r3
+ 170 00ee 1846     		mov	r0, r3
+ 171 00f0 0F4B     		ldr	r3, .L10
+ 172 00f2 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 173 00f6 0A43     		orrs	r2, r2, r1
+ 174 00f8 9A61     		str	r2, [r3, #24]
+ 175 00fa 13E0     		b	.L3
+ 176              	.L8:
+ 177              		.loc 1 130 13 discriminator 2
+ 178 00fc 0022     		movs	r2, #0
+ 179 00fe 8221     		movs	r1, #130
+ 180 0100 0C48     		ldr	r0, .L10+4
+ 181 0102 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 182 0106 0DE0     		b	.L3
+ 183              	.L5:
+ 131:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 132:libraries/zf_device/zf_device_imu_interface.c ****         else
+ 133:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 134:libraries/zf_device/zf_device_imu_interface.c ****             zf_soft_iic_write_8bit_splicing_array(interface->soft_iic_index, addr, &reg, 1, &data, 
+ 184              		.loc 1 134 13 is_stmt 1
+ 185 0108 039B     		ldr	r3, [sp, #12]
+ 186 010a 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 187 010c 0DF10A02 		add	r2, sp, #10
+ 188 0110 9DF80B10 		ldrb	r1, [sp, #11]	@ zero_extendqisi2
+ 189 0114 0123     		movs	r3, #1
+ 190 0116 0193     		str	r3, [sp, #4]
+ 191 0118 0DF10903 		add	r3, sp, #9
+ 192 011c 0093     		str	r3, [sp]
+ 193 011e 0123     		movs	r3, #1
+ 194 0120 FFF7FEFF 		bl	zf_soft_iic_write_8bit_splicing_array
+ 195              	.L3:
+ 135:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 136:libraries/zf_device/zf_device_imu_interface.c **** 
+ 137:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 138:libraries/zf_device/zf_device_imu_interface.c **** 
+ 139:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 196              		.loc 1 139 12
+ 197 0124 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 140:libraries/zf_device/zf_device_imu_interface.c **** }
+ 198              		.loc 1 140 1
+ 199 0128 1846     		mov	r0, r3
+ 200 012a 07B0     		add	sp, sp, #28
+ 201              		.cfi_def_cfa_offset 4
+ 202              		@ sp needed
+ 203 012c 5DF804FB 		ldr	pc, [sp], #4
+ 204              	.L11:
+ 205              		.align	2
+ 206              	.L10:
+ 207 0130 00000000 		.word	gpio_group_list
+ 208 0134 00000000 		.word	.LC0
+ 209              		.cfi_endproc
+ 210              	.LFE482:
+ 212              		.section	.text.imu_interface_write_8bit_registers,"ax",%progbits
+ 213              		.align	1
+ 214              		.p2align 4,,15
+ 215              		.global	imu_interface_write_8bit_registers
+ 216              		.syntax unified
+ 217              		.thumb
+ 218              		.thumb_func
+ 220              	imu_interface_write_8bit_registers:
+ 221              	.LFB483:
+ 141:libraries/zf_device/zf_device_imu_interface.c **** 
+ 142:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 143:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 写寄存器 8bit
+ 144:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMUxx 系列通用的接口对象
+ 145:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     addr                IIC 器件地址 SPI 通信时这个参数会被忽略
+ 146:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     reg                 寄存器地址
+ 147:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *data               数据缓冲区
+ 148:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     len                 数据长度
+ 149:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 150:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_write_8bit_registers(interface, addr, reg, data, len);
+ 151:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 152:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 153:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_write_8bit_registers (imu_interface_obj_struct *interface, uint8 addr, uint8 re
+ 154:libraries/zf_device/zf_device_imu_interface.c **** {
+ 222              		.loc 1 154 1
+ 223              		.cfi_startproc
+ 224              		@ args = 4, pretend = 0, frame = 24
+ 225              		@ frame_needed = 0, uses_anonymous_args = 0
+ 226 0000 00B5     		push	{lr}
+ 227              		.cfi_def_cfa_offset 4
+ 228              		.cfi_offset 14, -4
+ 229 0002 89B0     		sub	sp, sp, #36
+ 230              		.cfi_def_cfa_offset 40
+ 231 0004 0590     		str	r0, [sp, #20]
+ 232 0006 0393     		str	r3, [sp, #12]
+ 233 0008 0B46     		mov	r3, r1
+ 234 000a 8DF81330 		strb	r3, [sp, #19]
+ 235 000e 1346     		mov	r3, r2
+ 236 0010 8DF81230 		strb	r3, [sp, #18]
+ 155:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+ 237              		.loc 1 155 41
+ 238 0014 0123     		movs	r3, #1
+ 239 0016 8DF81F30 		strb	r3, [sp, #31]
+ 156:libraries/zf_device/zf_device_imu_interface.c **** 
+ 157:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 158:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 159:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+ 240              		.loc 1 159 11
+ 241 001a 059B     		ldr	r3, [sp, #20]
+ 242 001c 002B     		cmp	r3, #0
+ 243 001e 03D1     		bne	.L13
+ 160:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 161:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+ 244              		.loc 1 161 26
+ 245 0020 2323     		movs	r3, #35
+ 246 0022 8DF81F30 		strb	r3, [sp, #31]
+ 162:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 247              		.loc 1 162 13
+ 248 0026 7DE0     		b	.L14
+ 249              	.L13:
+ 163:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 164:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == data)
+ 250              		.loc 1 164 11
+ 251 0028 039B     		ldr	r3, [sp, #12]
+ 252 002a 002B     		cmp	r3, #0
+ 253 002c 03D1     		bne	.L15
+ 165:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 166:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 254              		.loc 1 166 26
+ 255 002e 2423     		movs	r3, #36
+ 256 0030 8DF81F30 		strb	r3, [sp, #31]
+ 167:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 257              		.loc 1 167 13
+ 258 0034 76E0     		b	.L14
+ 259              	.L15:
+ 168:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 169:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 260              		.loc 1 169 50
+ 261 0036 059B     		ldr	r3, [sp, #20]
+ 262 0038 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 263              		.loc 1 169 11
+ 264 003a 002B     		cmp	r3, #0
+ 265 003c 03D1     		bne	.L16
+ 170:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 171:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 266              		.loc 1 171 26
+ 267 003e 2123     		movs	r3, #33
+ 268 0040 8DF81F30 		strb	r3, [sp, #31]
+ 172:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 269              		.loc 1 172 13
+ 270 0044 6EE0     		b	.L14
+ 271              	.L16:
+ 173:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 174:libraries/zf_device/zf_device_imu_interface.c **** 
+ 175:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+ 272              		.loc 1 175 22
+ 273 0046 0023     		movs	r3, #0
+ 274 0048 8DF81F30 		strb	r3, [sp, #31]
+ 176:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_SPI == interface->interface_type)
+ 275              		.loc 1 176 47
+ 276 004c 059B     		ldr	r3, [sp, #20]
+ 277 004e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 278              		.loc 1 176 11
+ 279 0050 012B     		cmp	r3, #1
+ 280 0052 5AD1     		bne	.L17
+ 177:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 178:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+ 281              		.loc 1 178 13
+ 282 0054 059B     		ldr	r3, [sp, #20]
+ 283 0056 5B88     		ldrh	r3, [r3, #2]
+ 284 0058 40F6FF72 		movw	r2, #4095
+ 285 005c 9342     		cmp	r3, r2
+ 286 005e 1AD0     		beq	.L18
+ 287              		.loc 1 178 13 is_stmt 0 discriminator 1
+ 288 0060 059B     		ldr	r3, [sp, #20]
+ 289 0062 5B88     		ldrh	r3, [r3, #2]
+ 290 0064 5B09     		lsrs	r3, r3, #5
+ 291 0066 9BB2     		uxth	r3, r3
+ 292 0068 1A46     		mov	r2, r3
+ 293 006a 314B     		ldr	r3, .L22
+ 294 006c 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 295 0070 9969     		ldr	r1, [r3, #24]
+ 296 0072 059B     		ldr	r3, [sp, #20]
+ 297 0074 5B88     		ldrh	r3, [r3, #2]
+ 298 0076 03F01F03 		and	r3, r3, #31
+ 299 007a 4FF48032 		mov	r2, #65536
+ 300 007e 9A40     		lsls	r2, r2, r3
+ 301 0080 059B     		ldr	r3, [sp, #20]
+ 302 0082 5B88     		ldrh	r3, [r3, #2]
+ 303 0084 5B09     		lsrs	r3, r3, #5
+ 304 0086 9BB2     		uxth	r3, r3
+ 305 0088 1846     		mov	r0, r3
+ 306 008a 294B     		ldr	r3, .L22
+ 307 008c 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 308 0090 0A43     		orrs	r2, r2, r1
+ 309 0092 9A61     		str	r2, [r3, #24]
+ 310 0094 04E0     		b	.L19
+ 311              	.L18:
+ 312              		.loc 1 178 13 discriminator 2
+ 313 0096 0022     		movs	r2, #0
+ 314 0098 B221     		movs	r1, #178
+ 315 009a 2648     		ldr	r0, .L22+4
+ 316 009c FFF7FEFF 		bl	zf_gpio_assert_handler
+ 317              	.L19:
+ 179:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, &reg , NULL, 1);
+ 318              		.loc 1 179 13 is_stmt 1
+ 319 00a0 059B     		ldr	r3, [sp, #20]
+ 320 00a2 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 321 00a4 0DF11201 		add	r1, sp, #18
+ 322 00a8 0123     		movs	r3, #1
+ 323 00aa 0022     		movs	r2, #0
+ 324 00ac FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 180:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, data, NULL, len);
+ 325              		.loc 1 180 13
+ 326 00b0 059B     		ldr	r3, [sp, #20]
+ 327 00b2 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 328 00b4 0A9B     		ldr	r3, [sp, #40]
+ 329 00b6 0022     		movs	r2, #0
+ 330 00b8 0399     		ldr	r1, [sp, #12]
+ 331 00ba FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 181:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 332              		.loc 1 181 13
+ 333 00be 059B     		ldr	r3, [sp, #20]
+ 334 00c0 5B88     		ldrh	r3, [r3, #2]
+ 335 00c2 40F6FF72 		movw	r2, #4095
+ 336 00c6 9342     		cmp	r3, r2
+ 337 00c8 19D0     		beq	.L20
+ 338              		.loc 1 181 13 is_stmt 0 discriminator 1
+ 339 00ca 059B     		ldr	r3, [sp, #20]
+ 340 00cc 5B88     		ldrh	r3, [r3, #2]
+ 341 00ce 5B09     		lsrs	r3, r3, #5
+ 342 00d0 9BB2     		uxth	r3, r3
+ 343 00d2 1A46     		mov	r2, r3
+ 344 00d4 164B     		ldr	r3, .L22
+ 345 00d6 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 346 00da 9969     		ldr	r1, [r3, #24]
+ 347 00dc 059B     		ldr	r3, [sp, #20]
+ 348 00de 5B88     		ldrh	r3, [r3, #2]
+ 349 00e0 03F01F03 		and	r3, r3, #31
+ 350 00e4 0122     		movs	r2, #1
+ 351 00e6 9A40     		lsls	r2, r2, r3
+ 352 00e8 059B     		ldr	r3, [sp, #20]
+ 353 00ea 5B88     		ldrh	r3, [r3, #2]
+ 354 00ec 5B09     		lsrs	r3, r3, #5
+ 355 00ee 9BB2     		uxth	r3, r3
+ 356 00f0 1846     		mov	r0, r3
+ 357 00f2 0F4B     		ldr	r3, .L22
+ 358 00f4 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 359 00f8 0A43     		orrs	r2, r2, r1
+ 360 00fa 9A61     		str	r2, [r3, #24]
+ 361 00fc 12E0     		b	.L14
+ 362              	.L20:
+ 363              		.loc 1 181 13 discriminator 2
+ 364 00fe 0022     		movs	r2, #0
+ 365 0100 B521     		movs	r1, #181
+ 366 0102 0C48     		ldr	r0, .L22+4
+ 367 0104 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 368 0108 0CE0     		b	.L14
+ 369              	.L17:
+ 182:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 183:libraries/zf_device/zf_device_imu_interface.c ****         else
+ 184:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 185:libraries/zf_device/zf_device_imu_interface.c ****             zf_soft_iic_write_8bit_splicing_array(interface->soft_iic_index, addr, &reg, 1, data, l
+ 370              		.loc 1 185 13 is_stmt 1
+ 371 010a 059B     		ldr	r3, [sp, #20]
+ 372 010c 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 373 010e 0DF11202 		add	r2, sp, #18
+ 374 0112 9DF81310 		ldrb	r1, [sp, #19]	@ zero_extendqisi2
+ 375 0116 0A9B     		ldr	r3, [sp, #40]
+ 376 0118 0193     		str	r3, [sp, #4]
+ 377 011a 039B     		ldr	r3, [sp, #12]
+ 378 011c 0093     		str	r3, [sp]
+ 379 011e 0123     		movs	r3, #1
+ 380 0120 FFF7FEFF 		bl	zf_soft_iic_write_8bit_splicing_array
+ 381              	.L14:
+ 186:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 187:libraries/zf_device/zf_device_imu_interface.c **** 
+ 188:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 189:libraries/zf_device/zf_device_imu_interface.c **** 
+ 190:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 382              		.loc 1 190 12
+ 383 0124 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 191:libraries/zf_device/zf_device_imu_interface.c **** }
+ 384              		.loc 1 191 1
+ 385 0128 1846     		mov	r0, r3
+ 386 012a 09B0     		add	sp, sp, #36
+ 387              		.cfi_def_cfa_offset 4
+ 388              		@ sp needed
+ 389 012c 5DF804FB 		ldr	pc, [sp], #4
+ 390              	.L23:
+ 391              		.align	2
+ 392              	.L22:
+ 393 0130 00000000 		.word	gpio_group_list
+ 394 0134 00000000 		.word	.LC0
+ 395              		.cfi_endproc
+ 396              	.LFE483:
+ 398              		.section	.text.imu_interface_read_8bit_register,"ax",%progbits
+ 399              		.align	1
+ 400              		.p2align 4,,15
+ 401              		.global	imu_interface_read_8bit_register
+ 402              		.syntax unified
+ 403              		.thumb
+ 404              		.thumb_func
+ 406              	imu_interface_read_8bit_register:
+ 407              	.LFB484:
+ 192:libraries/zf_device/zf_device_imu_interface.c **** 
+ 193:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 194:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 读寄存器 8bit
+ 195:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMUxx 系列通用的接口对象
+ 196:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     addr                IIC 器件地址 SPI 通信时这个参数会被忽略
+ 197:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     reg                 寄存器地址
+ 198:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *data               数据存放缓冲区
+ 199:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 200:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_read_8bit_register(interface, addr, reg, data);
+ 201:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 202:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 203:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_read_8bit_register (imu_interface_obj_struct *interface, uint8 addr, uint8 reg,
+ 204:libraries/zf_device/zf_device_imu_interface.c **** {
+ 408              		.loc 1 204 1
+ 409              		.cfi_startproc
+ 410              		@ args = 0, pretend = 0, frame = 24
+ 411              		@ frame_needed = 0, uses_anonymous_args = 0
+ 412 0000 00B5     		push	{lr}
+ 413              		.cfi_def_cfa_offset 4
+ 414              		.cfi_offset 14, -4
+ 415 0002 89B0     		sub	sp, sp, #36
+ 416              		.cfi_def_cfa_offset 40
+ 417 0004 0590     		str	r0, [sp, #20]
+ 418 0006 0393     		str	r3, [sp, #12]
+ 419 0008 0B46     		mov	r3, r1
+ 420 000a 8DF81330 		strb	r3, [sp, #19]
+ 421 000e 1346     		mov	r3, r2
+ 422 0010 8DF81230 		strb	r3, [sp, #18]
+ 205:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+ 423              		.loc 1 205 41
+ 424 0014 0123     		movs	r3, #1
+ 425 0016 8DF81F30 		strb	r3, [sp, #31]
+ 206:libraries/zf_device/zf_device_imu_interface.c **** 
+ 207:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 208:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 209:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+ 426              		.loc 1 209 11
+ 427 001a 059B     		ldr	r3, [sp, #20]
+ 428 001c 002B     		cmp	r3, #0
+ 429 001e 03D1     		bne	.L25
+ 210:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 211:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+ 430              		.loc 1 211 26
+ 431 0020 2323     		movs	r3, #35
+ 432 0022 8DF81F30 		strb	r3, [sp, #31]
+ 212:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 433              		.loc 1 212 13
+ 434 0026 7DE0     		b	.L26
+ 435              	.L25:
+ 213:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 214:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == data)
+ 436              		.loc 1 214 11
+ 437 0028 039B     		ldr	r3, [sp, #12]
+ 438 002a 002B     		cmp	r3, #0
+ 439 002c 03D1     		bne	.L27
+ 215:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 216:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 440              		.loc 1 216 26
+ 441 002e 2423     		movs	r3, #36
+ 442 0030 8DF81F30 		strb	r3, [sp, #31]
+ 217:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 443              		.loc 1 217 13
+ 444 0034 76E0     		b	.L26
+ 445              	.L27:
+ 218:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 219:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 446              		.loc 1 219 50
+ 447 0036 059B     		ldr	r3, [sp, #20]
+ 448 0038 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 449              		.loc 1 219 11
+ 450 003a 002B     		cmp	r3, #0
+ 451 003c 03D1     		bne	.L28
+ 220:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 221:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 452              		.loc 1 221 26
+ 453 003e 2123     		movs	r3, #33
+ 454 0040 8DF81F30 		strb	r3, [sp, #31]
+ 222:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 455              		.loc 1 222 13
+ 456 0044 6EE0     		b	.L26
+ 457              	.L28:
+ 223:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 224:libraries/zf_device/zf_device_imu_interface.c **** 
+ 225:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+ 458              		.loc 1 225 22
+ 459 0046 0023     		movs	r3, #0
+ 460 0048 8DF81F30 		strb	r3, [sp, #31]
+ 226:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_SPI == interface->interface_type)
+ 461              		.loc 1 226 47
+ 462 004c 059B     		ldr	r3, [sp, #20]
+ 463 004e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 464              		.loc 1 226 11
+ 465 0050 012B     		cmp	r3, #1
+ 466 0052 5AD1     		bne	.L29
+ 227:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 228:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+ 467              		.loc 1 228 13
+ 468 0054 059B     		ldr	r3, [sp, #20]
+ 469 0056 5B88     		ldrh	r3, [r3, #2]
+ 470 0058 40F6FF72 		movw	r2, #4095
+ 471 005c 9342     		cmp	r3, r2
+ 472 005e 1AD0     		beq	.L30
+ 473              		.loc 1 228 13 is_stmt 0 discriminator 1
+ 474 0060 059B     		ldr	r3, [sp, #20]
+ 475 0062 5B88     		ldrh	r3, [r3, #2]
+ 476 0064 5B09     		lsrs	r3, r3, #5
+ 477 0066 9BB2     		uxth	r3, r3
+ 478 0068 1A46     		mov	r2, r3
+ 479 006a 314B     		ldr	r3, .L34
+ 480 006c 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 481 0070 9969     		ldr	r1, [r3, #24]
+ 482 0072 059B     		ldr	r3, [sp, #20]
+ 483 0074 5B88     		ldrh	r3, [r3, #2]
+ 484 0076 03F01F03 		and	r3, r3, #31
+ 485 007a 4FF48032 		mov	r2, #65536
+ 486 007e 9A40     		lsls	r2, r2, r3
+ 487 0080 059B     		ldr	r3, [sp, #20]
+ 488 0082 5B88     		ldrh	r3, [r3, #2]
+ 489 0084 5B09     		lsrs	r3, r3, #5
+ 490 0086 9BB2     		uxth	r3, r3
+ 491 0088 1846     		mov	r0, r3
+ 492 008a 294B     		ldr	r3, .L34
+ 493 008c 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 494 0090 0A43     		orrs	r2, r2, r1
+ 495 0092 9A61     		str	r2, [r3, #24]
+ 496 0094 04E0     		b	.L31
+ 497              	.L30:
+ 498              		.loc 1 228 13 discriminator 2
+ 499 0096 0022     		movs	r2, #0
+ 500 0098 E421     		movs	r1, #228
+ 501 009a 2648     		ldr	r0, .L34+4
+ 502 009c FFF7FEFF 		bl	zf_gpio_assert_handler
+ 503              	.L31:
+ 229:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, &reg , NULL , 1);
+ 504              		.loc 1 229 13 is_stmt 1
+ 505 00a0 059B     		ldr	r3, [sp, #20]
+ 506 00a2 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 507 00a4 0DF11201 		add	r1, sp, #18
+ 508 00a8 0123     		movs	r3, #1
+ 509 00aa 0022     		movs	r2, #0
+ 510 00ac FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 230:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, NULL, data, 1);
+ 511              		.loc 1 230 13
+ 512 00b0 059B     		ldr	r3, [sp, #20]
+ 513 00b2 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 514 00b4 0123     		movs	r3, #1
+ 515 00b6 039A     		ldr	r2, [sp, #12]
+ 516 00b8 0021     		movs	r1, #0
+ 517 00ba FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 231:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 518              		.loc 1 231 13
+ 519 00be 059B     		ldr	r3, [sp, #20]
+ 520 00c0 5B88     		ldrh	r3, [r3, #2]
+ 521 00c2 40F6FF72 		movw	r2, #4095
+ 522 00c6 9342     		cmp	r3, r2
+ 523 00c8 19D0     		beq	.L32
+ 524              		.loc 1 231 13 is_stmt 0 discriminator 1
+ 525 00ca 059B     		ldr	r3, [sp, #20]
+ 526 00cc 5B88     		ldrh	r3, [r3, #2]
+ 527 00ce 5B09     		lsrs	r3, r3, #5
+ 528 00d0 9BB2     		uxth	r3, r3
+ 529 00d2 1A46     		mov	r2, r3
+ 530 00d4 164B     		ldr	r3, .L34
+ 531 00d6 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 532 00da 9969     		ldr	r1, [r3, #24]
+ 533 00dc 059B     		ldr	r3, [sp, #20]
+ 534 00de 5B88     		ldrh	r3, [r3, #2]
+ 535 00e0 03F01F03 		and	r3, r3, #31
+ 536 00e4 0122     		movs	r2, #1
+ 537 00e6 9A40     		lsls	r2, r2, r3
+ 538 00e8 059B     		ldr	r3, [sp, #20]
+ 539 00ea 5B88     		ldrh	r3, [r3, #2]
+ 540 00ec 5B09     		lsrs	r3, r3, #5
+ 541 00ee 9BB2     		uxth	r3, r3
+ 542 00f0 1846     		mov	r0, r3
+ 543 00f2 0F4B     		ldr	r3, .L34
+ 544 00f4 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 545 00f8 0A43     		orrs	r2, r2, r1
+ 546 00fa 9A61     		str	r2, [r3, #24]
+ 547 00fc 12E0     		b	.L26
+ 548              	.L32:
+ 549              		.loc 1 231 13 discriminator 2
+ 550 00fe 0022     		movs	r2, #0
+ 551 0100 E721     		movs	r1, #231
+ 552 0102 0C48     		ldr	r0, .L34+4
+ 553 0104 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 554 0108 0CE0     		b	.L26
+ 555              	.L29:
+ 232:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 233:libraries/zf_device/zf_device_imu_interface.c ****         else
+ 234:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 235:libraries/zf_device/zf_device_imu_interface.c ****             zf_soft_iic_transfer_8bit_array(interface->soft_iic_index, addr, &reg, 1, data, 1);
+ 556              		.loc 1 235 13 is_stmt 1
+ 557 010a 059B     		ldr	r3, [sp, #20]
+ 558 010c 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 559 010e 0DF11202 		add	r2, sp, #18
+ 560 0112 9DF81310 		ldrb	r1, [sp, #19]	@ zero_extendqisi2
+ 561 0116 0123     		movs	r3, #1
+ 562 0118 0193     		str	r3, [sp, #4]
+ 563 011a 039B     		ldr	r3, [sp, #12]
+ 564 011c 0093     		str	r3, [sp]
+ 565 011e 0123     		movs	r3, #1
+ 566 0120 FFF7FEFF 		bl	zf_soft_iic_transfer_8bit_array
+ 567              	.L26:
+ 236:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 237:libraries/zf_device/zf_device_imu_interface.c **** 
+ 238:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 239:libraries/zf_device/zf_device_imu_interface.c **** 
+ 240:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 568              		.loc 1 240 12
+ 569 0124 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 241:libraries/zf_device/zf_device_imu_interface.c **** }
+ 570              		.loc 1 241 1
+ 571 0128 1846     		mov	r0, r3
+ 572 012a 09B0     		add	sp, sp, #36
+ 573              		.cfi_def_cfa_offset 4
+ 574              		@ sp needed
+ 575 012c 5DF804FB 		ldr	pc, [sp], #4
+ 576              	.L35:
+ 577              		.align	2
+ 578              	.L34:
+ 579 0130 00000000 		.word	gpio_group_list
+ 580 0134 00000000 		.word	.LC0
+ 581              		.cfi_endproc
+ 582              	.LFE484:
+ 584              		.section	.text.imu_interface_read_8bit_registers,"ax",%progbits
+ 585              		.align	1
+ 586              		.p2align 4,,15
+ 587              		.global	imu_interface_read_8bit_registers
+ 588              		.syntax unified
+ 589              		.thumb
+ 590              		.thumb_func
+ 592              	imu_interface_read_8bit_registers:
+ 593              	.LFB485:
+ 242:libraries/zf_device/zf_device_imu_interface.c **** 
+ 243:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 244:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 读数据 8bit
+ 245:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMUxx 系列通用的接口对象
+ 246:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     addr                IIC 器件地址 SPI 通信时这个参数会被忽略
+ 247:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     reg                 寄存器地址
+ 248:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     data                数据缓冲区
+ 249:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     len                 数据长度
+ 250:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 251:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_read_8bit_registers(interface, addr, reg, data, len);
+ 252:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 253:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 254:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_read_8bit_registers (imu_interface_obj_struct *interface, uint8 addr, uint8 reg
+ 255:libraries/zf_device/zf_device_imu_interface.c **** {
+ 594              		.loc 1 255 1
+ 595              		.cfi_startproc
+ 596              		@ args = 4, pretend = 0, frame = 24
+ 597              		@ frame_needed = 0, uses_anonymous_args = 0
+ 598 0000 00B5     		push	{lr}
+ 599              		.cfi_def_cfa_offset 4
+ 600              		.cfi_offset 14, -4
+ 601 0002 89B0     		sub	sp, sp, #36
+ 602              		.cfi_def_cfa_offset 40
+ 603 0004 0590     		str	r0, [sp, #20]
+ 604 0006 0393     		str	r3, [sp, #12]
+ 605 0008 0B46     		mov	r3, r1
+ 606 000a 8DF81330 		strb	r3, [sp, #19]
+ 607 000e 1346     		mov	r3, r2
+ 608 0010 8DF81230 		strb	r3, [sp, #18]
+ 256:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+ 609              		.loc 1 256 41
+ 610 0014 0123     		movs	r3, #1
+ 611 0016 8DF81F30 		strb	r3, [sp, #31]
+ 257:libraries/zf_device/zf_device_imu_interface.c **** 
+ 258:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 259:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 260:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+ 612              		.loc 1 260 11
+ 613 001a 059B     		ldr	r3, [sp, #20]
+ 614 001c 002B     		cmp	r3, #0
+ 615 001e 03D1     		bne	.L37
+ 261:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 262:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+ 616              		.loc 1 262 26
+ 617 0020 2323     		movs	r3, #35
+ 618 0022 8DF81F30 		strb	r3, [sp, #31]
+ 263:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 619              		.loc 1 263 13
+ 620 0026 7FE0     		b	.L38
+ 621              	.L37:
+ 264:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 265:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == data)
+ 622              		.loc 1 265 11
+ 623 0028 039B     		ldr	r3, [sp, #12]
+ 624 002a 002B     		cmp	r3, #0
+ 625 002c 03D1     		bne	.L39
+ 266:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 267:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 626              		.loc 1 267 26
+ 627 002e 2423     		movs	r3, #36
+ 628 0030 8DF81F30 		strb	r3, [sp, #31]
+ 268:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 629              		.loc 1 268 13
+ 630 0034 78E0     		b	.L38
+ 631              	.L39:
+ 269:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 270:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 632              		.loc 1 270 50
+ 633 0036 059B     		ldr	r3, [sp, #20]
+ 634 0038 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 635              		.loc 1 270 11
+ 636 003a 002B     		cmp	r3, #0
+ 637 003c 03D1     		bne	.L40
+ 271:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 272:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 638              		.loc 1 272 26
+ 639 003e 2123     		movs	r3, #33
+ 640 0040 8DF81F30 		strb	r3, [sp, #31]
+ 273:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 641              		.loc 1 273 13
+ 642 0044 70E0     		b	.L38
+ 643              	.L40:
+ 274:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 275:libraries/zf_device/zf_device_imu_interface.c **** 
+ 276:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+ 644              		.loc 1 276 22
+ 645 0046 0023     		movs	r3, #0
+ 646 0048 8DF81F30 		strb	r3, [sp, #31]
+ 277:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_SPI == interface->interface_type)
+ 647              		.loc 1 277 47
+ 648 004c 059B     		ldr	r3, [sp, #20]
+ 649 004e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 650              		.loc 1 277 11
+ 651 0050 012B     		cmp	r3, #1
+ 652 0052 5CD1     		bne	.L41
+ 278:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 279:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+ 653              		.loc 1 279 13
+ 654 0054 059B     		ldr	r3, [sp, #20]
+ 655 0056 5B88     		ldrh	r3, [r3, #2]
+ 656 0058 40F6FF72 		movw	r2, #4095
+ 657 005c 9342     		cmp	r3, r2
+ 658 005e 1AD0     		beq	.L42
+ 659              		.loc 1 279 13 is_stmt 0 discriminator 1
+ 660 0060 059B     		ldr	r3, [sp, #20]
+ 661 0062 5B88     		ldrh	r3, [r3, #2]
+ 662 0064 5B09     		lsrs	r3, r3, #5
+ 663 0066 9BB2     		uxth	r3, r3
+ 664 0068 1A46     		mov	r2, r3
+ 665 006a 324B     		ldr	r3, .L46
+ 666 006c 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 667 0070 9969     		ldr	r1, [r3, #24]
+ 668 0072 059B     		ldr	r3, [sp, #20]
+ 669 0074 5B88     		ldrh	r3, [r3, #2]
+ 670 0076 03F01F03 		and	r3, r3, #31
+ 671 007a 4FF48032 		mov	r2, #65536
+ 672 007e 9A40     		lsls	r2, r2, r3
+ 673 0080 059B     		ldr	r3, [sp, #20]
+ 674 0082 5B88     		ldrh	r3, [r3, #2]
+ 675 0084 5B09     		lsrs	r3, r3, #5
+ 676 0086 9BB2     		uxth	r3, r3
+ 677 0088 1846     		mov	r0, r3
+ 678 008a 2A4B     		ldr	r3, .L46
+ 679 008c 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 680 0090 0A43     		orrs	r2, r2, r1
+ 681 0092 9A61     		str	r2, [r3, #24]
+ 682 0094 05E0     		b	.L43
+ 683              	.L42:
+ 684              		.loc 1 279 13 discriminator 2
+ 685 0096 0022     		movs	r2, #0
+ 686 0098 40F21711 		movw	r1, #279
+ 687 009c 2648     		ldr	r0, .L46+4
+ 688 009e FFF7FEFF 		bl	zf_gpio_assert_handler
+ 689              	.L43:
+ 280:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, &reg , NULL , 1);
+ 690              		.loc 1 280 13 is_stmt 1
+ 691 00a2 059B     		ldr	r3, [sp, #20]
+ 692 00a4 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 693 00a6 0DF11201 		add	r1, sp, #18
+ 694 00aa 0123     		movs	r3, #1
+ 695 00ac 0022     		movs	r2, #0
+ 696 00ae FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 281:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, NULL, data, len);
+ 697              		.loc 1 281 13
+ 698 00b2 059B     		ldr	r3, [sp, #20]
+ 699 00b4 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 700 00b6 0A9B     		ldr	r3, [sp, #40]
+ 701 00b8 039A     		ldr	r2, [sp, #12]
+ 702 00ba 0021     		movs	r1, #0
+ 703 00bc FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 282:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 704              		.loc 1 282 13
+ 705 00c0 059B     		ldr	r3, [sp, #20]
+ 706 00c2 5B88     		ldrh	r3, [r3, #2]
+ 707 00c4 40F6FF72 		movw	r2, #4095
+ 708 00c8 9342     		cmp	r3, r2
+ 709 00ca 19D0     		beq	.L44
+ 710              		.loc 1 282 13 is_stmt 0 discriminator 1
+ 711 00cc 059B     		ldr	r3, [sp, #20]
+ 712 00ce 5B88     		ldrh	r3, [r3, #2]
+ 713 00d0 5B09     		lsrs	r3, r3, #5
+ 714 00d2 9BB2     		uxth	r3, r3
+ 715 00d4 1A46     		mov	r2, r3
+ 716 00d6 174B     		ldr	r3, .L46
+ 717 00d8 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 718 00dc 9969     		ldr	r1, [r3, #24]
+ 719 00de 059B     		ldr	r3, [sp, #20]
+ 720 00e0 5B88     		ldrh	r3, [r3, #2]
+ 721 00e2 03F01F03 		and	r3, r3, #31
+ 722 00e6 0122     		movs	r2, #1
+ 723 00e8 9A40     		lsls	r2, r2, r3
+ 724 00ea 059B     		ldr	r3, [sp, #20]
+ 725 00ec 5B88     		ldrh	r3, [r3, #2]
+ 726 00ee 5B09     		lsrs	r3, r3, #5
+ 727 00f0 9BB2     		uxth	r3, r3
+ 728 00f2 1846     		mov	r0, r3
+ 729 00f4 0F4B     		ldr	r3, .L46
+ 730 00f6 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 731 00fa 0A43     		orrs	r2, r2, r1
+ 732 00fc 9A61     		str	r2, [r3, #24]
+ 733 00fe 13E0     		b	.L38
+ 734              	.L44:
+ 735              		.loc 1 282 13 discriminator 2
+ 736 0100 0022     		movs	r2, #0
+ 737 0102 4FF48D71 		mov	r1, #282
+ 738 0106 0C48     		ldr	r0, .L46+4
+ 739 0108 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 740 010c 0CE0     		b	.L38
+ 741              	.L41:
+ 283:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 284:libraries/zf_device/zf_device_imu_interface.c ****         else
+ 285:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 286:libraries/zf_device/zf_device_imu_interface.c ****             zf_soft_iic_transfer_8bit_array(interface->soft_iic_index, addr, &reg, 1, data, len);
+ 742              		.loc 1 286 13 is_stmt 1
+ 743 010e 059B     		ldr	r3, [sp, #20]
+ 744 0110 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 745 0112 0DF11202 		add	r2, sp, #18
+ 746 0116 9DF81310 		ldrb	r1, [sp, #19]	@ zero_extendqisi2
+ 747 011a 0A9B     		ldr	r3, [sp, #40]
+ 748 011c 0193     		str	r3, [sp, #4]
+ 749 011e 039B     		ldr	r3, [sp, #12]
+ 750 0120 0093     		str	r3, [sp]
+ 751 0122 0123     		movs	r3, #1
+ 752 0124 FFF7FEFF 		bl	zf_soft_iic_transfer_8bit_array
+ 753              	.L38:
+ 287:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 288:libraries/zf_device/zf_device_imu_interface.c **** 
+ 289:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 290:libraries/zf_device/zf_device_imu_interface.c **** 
+ 291:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 754              		.loc 1 291 12
+ 755 0128 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 292:libraries/zf_device/zf_device_imu_interface.c **** }
+ 756              		.loc 1 292 1
+ 757 012c 1846     		mov	r0, r3
+ 758 012e 09B0     		add	sp, sp, #36
+ 759              		.cfi_def_cfa_offset 4
+ 760              		@ sp needed
+ 761 0130 5DF804FB 		ldr	pc, [sp], #4
+ 762              	.L47:
+ 763              		.align	2
+ 764              	.L46:
+ 765 0134 00000000 		.word	gpio_group_list
+ 766 0138 00000000 		.word	.LC0
+ 767              		.cfi_endproc
+ 768              	.LFE485:
+ 770              		.section	.text.imu_interface_transfer_8bit_array,"ax",%progbits
+ 771              		.align	1
+ 772              		.p2align 4,,15
+ 773              		.global	imu_interface_transfer_8bit_array
+ 774              		.syntax unified
+ 775              		.thumb
+ 776              		.thumb_func
+ 778              	imu_interface_transfer_8bit_array:
+ 779              	.LFB486:
+ 293:libraries/zf_device/zf_device_imu_interface.c **** 
+ 294:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 295:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 双向传输 8bit 数据
+ 296:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMUxx 系列通用的接口对象
+ 297:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     addr                IIC 器件地址 SPI 通信时这个参数会被忽略
+ 298:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *send_data          发送数据缓冲区
+ 299:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     send_len            发送数据长度
+ 300:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *receive_data       接收数据缓冲区
+ 301:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     receive_len         接收数据长度
+ 302:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 303:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_transfer_8bit_array(interface, addr, send_data, send_len, receive
+ 304:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 305:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 306:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_transfer_8bit_array (imu_interface_obj_struct *interface, uint8 addr, const uin
+ 307:libraries/zf_device/zf_device_imu_interface.c **** {
+ 780              		.loc 1 307 1
+ 781              		.cfi_startproc
+ 782              		@ args = 8, pretend = 0, frame = 24
+ 783              		@ frame_needed = 0, uses_anonymous_args = 0
+ 784 0000 00B5     		push	{lr}
+ 785              		.cfi_def_cfa_offset 4
+ 786              		.cfi_offset 14, -4
+ 787 0002 89B0     		sub	sp, sp, #36
+ 788              		.cfi_def_cfa_offset 40
+ 789 0004 0590     		str	r0, [sp, #20]
+ 790 0006 0392     		str	r2, [sp, #12]
+ 791 0008 0293     		str	r3, [sp, #8]
+ 792 000a 0B46     		mov	r3, r1
+ 793 000c 8DF81330 		strb	r3, [sp, #19]
+ 308:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+ 794              		.loc 1 308 41
+ 795 0010 0123     		movs	r3, #1
+ 796 0012 8DF81F30 		strb	r3, [sp, #31]
+ 309:libraries/zf_device/zf_device_imu_interface.c **** 
+ 310:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 311:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 312:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+ 797              		.loc 1 312 11
+ 798 0016 059B     		ldr	r3, [sp, #20]
+ 799 0018 002B     		cmp	r3, #0
+ 800 001a 03D1     		bne	.L49
+ 313:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 314:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+ 801              		.loc 1 314 26
+ 802 001c 2323     		movs	r3, #35
+ 803 001e 8DF81F30 		strb	r3, [sp, #31]
+ 315:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 804              		.loc 1 315 13
+ 805 0022 76E0     		b	.L50
+ 806              	.L49:
+ 316:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 317:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 807              		.loc 1 317 50
+ 808 0024 059B     		ldr	r3, [sp, #20]
+ 809 0026 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 810              		.loc 1 317 11
+ 811 0028 002B     		cmp	r3, #0
+ 812 002a 03D1     		bne	.L51
+ 318:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 319:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 813              		.loc 1 319 26
+ 814 002c 2123     		movs	r3, #33
+ 815 002e 8DF81F30 		strb	r3, [sp, #31]
+ 320:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 816              		.loc 1 320 13
+ 817 0032 6EE0     		b	.L50
+ 818              	.L51:
+ 321:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 322:libraries/zf_device/zf_device_imu_interface.c **** 
+ 323:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+ 819              		.loc 1 323 22
+ 820 0034 0023     		movs	r3, #0
+ 821 0036 8DF81F30 		strb	r3, [sp, #31]
+ 324:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_SPI == interface->interface_type)
+ 822              		.loc 1 324 47
+ 823 003a 059B     		ldr	r3, [sp, #20]
+ 824 003c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 825              		.loc 1 324 11
+ 826 003e 012B     		cmp	r3, #1
+ 827 0040 5BD1     		bne	.L52
+ 325:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 326:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+ 828              		.loc 1 326 13
+ 829 0042 059B     		ldr	r3, [sp, #20]
+ 830 0044 5B88     		ldrh	r3, [r3, #2]
+ 831 0046 40F6FF72 		movw	r2, #4095
+ 832 004a 9342     		cmp	r3, r2
+ 833 004c 1AD0     		beq	.L53
+ 834              		.loc 1 326 13 is_stmt 0 discriminator 1
+ 835 004e 059B     		ldr	r3, [sp, #20]
+ 836 0050 5B88     		ldrh	r3, [r3, #2]
+ 837 0052 5B09     		lsrs	r3, r3, #5
+ 838 0054 9BB2     		uxth	r3, r3
+ 839 0056 1A46     		mov	r2, r3
+ 840 0058 314B     		ldr	r3, .L57
+ 841 005a 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 842 005e 9969     		ldr	r1, [r3, #24]
+ 843 0060 059B     		ldr	r3, [sp, #20]
+ 844 0062 5B88     		ldrh	r3, [r3, #2]
+ 845 0064 03F01F03 		and	r3, r3, #31
+ 846 0068 4FF48032 		mov	r2, #65536
+ 847 006c 9A40     		lsls	r2, r2, r3
+ 848 006e 059B     		ldr	r3, [sp, #20]
+ 849 0070 5B88     		ldrh	r3, [r3, #2]
+ 850 0072 5B09     		lsrs	r3, r3, #5
+ 851 0074 9BB2     		uxth	r3, r3
+ 852 0076 1846     		mov	r0, r3
+ 853 0078 294B     		ldr	r3, .L57
+ 854 007a 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 855 007e 0A43     		orrs	r2, r2, r1
+ 856 0080 9A61     		str	r2, [r3, #24]
+ 857 0082 05E0     		b	.L54
+ 858              	.L53:
+ 859              		.loc 1 326 13 discriminator 2
+ 860 0084 0022     		movs	r2, #0
+ 861 0086 4FF4A371 		mov	r1, #326
+ 862 008a 2648     		ldr	r0, .L57+4
+ 863 008c FFF7FEFF 		bl	zf_gpio_assert_handler
+ 864              	.L54:
+ 327:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, send_data, NULL, send_len);
+ 865              		.loc 1 327 13 is_stmt 1
+ 866 0090 059B     		ldr	r3, [sp, #20]
+ 867 0092 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 868 0094 029B     		ldr	r3, [sp, #8]
+ 869 0096 0022     		movs	r2, #0
+ 870 0098 0399     		ldr	r1, [sp, #12]
+ 871 009a FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 328:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, NULL, receive_data, receive_len);
+ 872              		.loc 1 328 13
+ 873 009e 059B     		ldr	r3, [sp, #20]
+ 874 00a0 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 875 00a2 0B9B     		ldr	r3, [sp, #44]
+ 876 00a4 0A9A     		ldr	r2, [sp, #40]
+ 877 00a6 0021     		movs	r1, #0
+ 878 00a8 FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 329:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 879              		.loc 1 329 13
+ 880 00ac 059B     		ldr	r3, [sp, #20]
+ 881 00ae 5B88     		ldrh	r3, [r3, #2]
+ 882 00b0 40F6FF72 		movw	r2, #4095
+ 883 00b4 9342     		cmp	r3, r2
+ 884 00b6 19D0     		beq	.L55
+ 885              		.loc 1 329 13 is_stmt 0 discriminator 1
+ 886 00b8 059B     		ldr	r3, [sp, #20]
+ 887 00ba 5B88     		ldrh	r3, [r3, #2]
+ 888 00bc 5B09     		lsrs	r3, r3, #5
+ 889 00be 9BB2     		uxth	r3, r3
+ 890 00c0 1A46     		mov	r2, r3
+ 891 00c2 174B     		ldr	r3, .L57
+ 892 00c4 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 893 00c8 9969     		ldr	r1, [r3, #24]
+ 894 00ca 059B     		ldr	r3, [sp, #20]
+ 895 00cc 5B88     		ldrh	r3, [r3, #2]
+ 896 00ce 03F01F03 		and	r3, r3, #31
+ 897 00d2 0122     		movs	r2, #1
+ 898 00d4 9A40     		lsls	r2, r2, r3
+ 899 00d6 059B     		ldr	r3, [sp, #20]
+ 900 00d8 5B88     		ldrh	r3, [r3, #2]
+ 901 00da 5B09     		lsrs	r3, r3, #5
+ 902 00dc 9BB2     		uxth	r3, r3
+ 903 00de 1846     		mov	r0, r3
+ 904 00e0 0F4B     		ldr	r3, .L57
+ 905 00e2 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 906 00e6 0A43     		orrs	r2, r2, r1
+ 907 00e8 9A61     		str	r2, [r3, #24]
+ 908 00ea 12E0     		b	.L50
+ 909              	.L55:
+ 910              		.loc 1 329 13 discriminator 2
+ 911 00ec 0022     		movs	r2, #0
+ 912 00ee 40F24911 		movw	r1, #329
+ 913 00f2 0C48     		ldr	r0, .L57+4
+ 914 00f4 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 915 00f8 0BE0     		b	.L50
+ 916              	.L52:
+ 330:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 331:libraries/zf_device/zf_device_imu_interface.c ****         else
+ 332:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 333:libraries/zf_device/zf_device_imu_interface.c ****             zf_soft_iic_transfer_8bit_array(interface->soft_iic_index, addr, send_data, send_len, r
+ 917              		.loc 1 333 13 is_stmt 1
+ 918 00fa 059B     		ldr	r3, [sp, #20]
+ 919 00fc 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 920 00fe 9DF81310 		ldrb	r1, [sp, #19]	@ zero_extendqisi2
+ 921 0102 0B9B     		ldr	r3, [sp, #44]
+ 922 0104 0193     		str	r3, [sp, #4]
+ 923 0106 0A9B     		ldr	r3, [sp, #40]
+ 924 0108 0093     		str	r3, [sp]
+ 925 010a 029B     		ldr	r3, [sp, #8]
+ 926 010c 039A     		ldr	r2, [sp, #12]
+ 927 010e FFF7FEFF 		bl	zf_soft_iic_transfer_8bit_array
+ 928              	.L50:
+ 334:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 335:libraries/zf_device/zf_device_imu_interface.c **** 
+ 336:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 337:libraries/zf_device/zf_device_imu_interface.c **** 
+ 338:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 929              		.loc 1 338 12
+ 930 0112 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 339:libraries/zf_device/zf_device_imu_interface.c **** }
+ 931              		.loc 1 339 1
+ 932 0116 1846     		mov	r0, r3
+ 933 0118 09B0     		add	sp, sp, #36
+ 934              		.cfi_def_cfa_offset 4
+ 935              		@ sp needed
+ 936 011a 5DF804FB 		ldr	pc, [sp], #4
+ 937              	.L58:
+ 938 011e 00BF     		.align	2
+ 939              	.L57:
+ 940 0120 00000000 		.word	gpio_group_list
+ 941 0124 00000000 		.word	.LC0
+ 942              		.cfi_endproc
+ 943              	.LFE486:
+ 945              		.section	.text.imu_interface_deinit,"ax",%progbits
+ 946              		.align	1
+ 947              		.p2align 4,,15
+ 948              		.global	imu_interface_deinit
+ 949              		.syntax unified
+ 950              		.thumb
+ 951              		.thumb_func
+ 953              	imu_interface_deinit:
+ 954              	.LFB487:
+ 340:libraries/zf_device/zf_device_imu_interface.c **** 
+ 341:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 342:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU 接口注销初始化
+ 343:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMUxx 系列通用的接口对象
+ 344:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 345:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_deinit(interface);
+ 346:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     
+ 347:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 348:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_deinit (imu_interface_obj_struct *interface)
+ 349:libraries/zf_device/zf_device_imu_interface.c **** {
+ 955              		.loc 1 349 1
+ 956              		.cfi_startproc
+ 957              		@ args = 0, pretend = 0, frame = 16
+ 958              		@ frame_needed = 0, uses_anonymous_args = 0
+ 959 0000 00B5     		push	{lr}
+ 960              		.cfi_def_cfa_offset 4
+ 961              		.cfi_offset 14, -4
+ 962 0002 85B0     		sub	sp, sp, #20
+ 963              		.cfi_def_cfa_offset 24
+ 964 0004 0190     		str	r0, [sp, #4]
+ 350:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+ 965              		.loc 1 350 41
+ 966 0006 0123     		movs	r3, #1
+ 967 0008 8DF80F30 		strb	r3, [sp, #15]
+ 351:libraries/zf_device/zf_device_imu_interface.c **** 
+ 352:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 353:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 354:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+ 968              		.loc 1 354 11
+ 969 000c 019B     		ldr	r3, [sp, #4]
+ 970 000e 002B     		cmp	r3, #0
+ 971 0010 03D1     		bne	.L60
+ 355:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 356:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+ 972              		.loc 1 356 26
+ 973 0012 2323     		movs	r3, #35
+ 974 0014 8DF80F30 		strb	r3, [sp, #15]
+ 357:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 975              		.loc 1 357 13
+ 976 0018 27E0     		b	.L61
+ 977              	.L60:
+ 358:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 359:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 978              		.loc 1 359 50
+ 979 001a 019B     		ldr	r3, [sp, #4]
+ 980 001c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 981              		.loc 1 359 11
+ 982 001e 002B     		cmp	r3, #0
+ 983 0020 03D1     		bne	.L62
+ 360:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 361:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 984              		.loc 1 361 26
+ 985 0022 2123     		movs	r3, #33
+ 986 0024 8DF80F30 		strb	r3, [sp, #15]
+ 362:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 987              		.loc 1 362 13
+ 988 0028 1FE0     		b	.L61
+ 989              	.L62:
+ 363:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 364:libraries/zf_device/zf_device_imu_interface.c **** 
+ 365:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_SPI == interface->interface_type)
+ 990              		.loc 1 365 47
+ 991 002a 019B     		ldr	r3, [sp, #4]
+ 992 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 993              		.loc 1 365 11
+ 994 002e 012B     		cmp	r3, #1
+ 995 0030 0AD1     		bne	.L63
+ 366:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 367:libraries/zf_device/zf_device_imu_interface.c ****             zf_spi_deinit(interface->spi_index);
+ 996              		.loc 1 367 13
+ 997 0032 019B     		ldr	r3, [sp, #4]
+ 998 0034 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 999 0036 1846     		mov	r0, r3
+ 1000 0038 FFF7FEFF 		bl	zf_spi_deinit
+ 368:libraries/zf_device/zf_device_imu_interface.c ****             zf_gpio_deinit(interface->spi_cs_pin);
+ 1001              		.loc 1 368 13
+ 1002 003c 019B     		ldr	r3, [sp, #4]
+ 1003 003e 5B88     		ldrh	r3, [r3, #2]
+ 1004 0040 1846     		mov	r0, r3
+ 1005 0042 FFF7FEFF 		bl	zf_gpio_deinit
+ 1006 0046 04E0     		b	.L64
+ 1007              	.L63:
+ 369:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 370:libraries/zf_device/zf_device_imu_interface.c ****         else
+ 371:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 372:libraries/zf_device/zf_device_imu_interface.c ****             zf_soft_iic_deinit(interface->soft_iic_index);
+ 1008              		.loc 1 372 13
+ 1009 0048 019B     		ldr	r3, [sp, #4]
+ 1010 004a 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 1011 004c 1846     		mov	r0, r3
+ 1012 004e FFF7FEFF 		bl	zf_soft_iic_deinit
+ 1013              	.L64:
+ 373:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 374:libraries/zf_device/zf_device_imu_interface.c **** 
+ 375:libraries/zf_device/zf_device_imu_interface.c ****         interface->interface_type   = IMU_INTERFACE_TYPE_UNKNOW ;
+ 1014              		.loc 1 375 37
+ 1015 0052 019B     		ldr	r3, [sp, #4]
+ 1016 0054 0022     		movs	r2, #0
+ 1017 0056 1A70     		strb	r2, [r3]
+ 376:libraries/zf_device/zf_device_imu_interface.c ****         interface->spi_index        = 0                         ;
+ 1018              		.loc 1 376 37
+ 1019 0058 019B     		ldr	r3, [sp, #4]
+ 1020 005a 0022     		movs	r2, #0
+ 1021 005c 5A70     		strb	r2, [r3, #1]
+ 377:libraries/zf_device/zf_device_imu_interface.c ****         interface->spi_cs_pin       = IMU_INTERFACE_CS_PIN      ;
+ 1022              		.loc 1 377 37
+ 1023 005e 019B     		ldr	r3, [sp, #4]
+ 1024 0060 6722     		movs	r2, #103
+ 1025 0062 5A80     		strh	r2, [r3, #2]	@ movhi
+ 378:libraries/zf_device/zf_device_imu_interface.c **** 
+ 379:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+ 1026              		.loc 1 379 22
+ 1027 0064 0023     		movs	r3, #0
+ 1028 0066 8DF80F30 		strb	r3, [sp, #15]
+ 1029              	.L61:
+ 380:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 381:libraries/zf_device/zf_device_imu_interface.c **** 
+ 382:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 1030              		.loc 1 382 12
+ 1031 006a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 383:libraries/zf_device/zf_device_imu_interface.c **** }
+ 1032              		.loc 1 383 1
+ 1033 006e 1846     		mov	r0, r3
+ 1034 0070 05B0     		add	sp, sp, #20
+ 1035              		.cfi_def_cfa_offset 4
+ 1036              		@ sp needed
+ 1037 0072 5DF804FB 		ldr	pc, [sp], #4
+ 1038              		.cfi_endproc
+ 1039              	.LFE487:
+ 1041 0076 00BF     		.section	.text.imu_interface_spi_init,"ax",%progbits
+ 1042              		.align	1
+ 1043              		.p2align 4,,15
+ 1044              		.global	imu_interface_spi_init
+ 1045              		.syntax unified
+ 1046              		.thumb
+ 1047              		.thumb_func
+ 1049              	imu_interface_spi_init:
+ 1050              	.LFB488:
+ 384:libraries/zf_device/zf_device_imu_interface.c **** 
+ 385:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 386:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU SPI 通信 接口初始化
+ 387:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMUxx 系列通用的接口对象
+ 388:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 389:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     mode                SPI 模式        (详见 zf_driver_spi.h 内 zf_spi_mode_e
+ 390:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     baudrate            设置 SPI 的波特率 不超过系统时钟的一半 会�
+ 391:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     sck_pin             选择 SCK 引脚   (详见 zf_driver_spi.h 内 zf_spi_sck_
+ 392:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     mosi_pin            选择 MOSI 引脚  (详见 zf_driver_spi.h 内 zf_spi_mosi
+ 393:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     miso_pin            选择 MISO 引脚  (详见 zf_driver_spi.h 内 zf_spi_miso
+ 394:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     cs_pin              使用软件 CS 控制 所以此处填写 GPIO 索引
+ 395:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 396:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_spi_init(interface, spi_index, mode, baudrate, sck_pin, mosi_pin,
+ 397:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     
+ 398:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 399:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_spi_init (imu_interface_obj_struct *interface, zf_spi_index_enum spi_index, zf_
+ 400:libraries/zf_device/zf_device_imu_interface.c **** {
+ 1051              		.loc 1 400 1
+ 1052              		.cfi_startproc
+ 1053              		@ args = 16, pretend = 0, frame = 24
+ 1054              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1055 0000 00B5     		push	{lr}
+ 1056              		.cfi_def_cfa_offset 4
+ 1057              		.cfi_offset 14, -4
+ 1058 0002 8BB0     		sub	sp, sp, #44
+ 1059              		.cfi_def_cfa_offset 48
+ 1060 0004 0790     		str	r0, [sp, #28]
+ 1061 0006 0593     		str	r3, [sp, #20]
+ 1062 0008 0B46     		mov	r3, r1
+ 1063 000a 8DF81B30 		strb	r3, [sp, #27]
+ 1064 000e 1346     		mov	r3, r2
+ 1065 0010 8DF81A30 		strb	r3, [sp, #26]
+ 401:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+ 1066              		.loc 1 401 41
+ 1067 0014 0123     		movs	r3, #1
+ 1068 0016 8DF82730 		strb	r3, [sp, #39]
+ 402:libraries/zf_device/zf_device_imu_interface.c **** 
+ 403:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 404:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 405:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+ 1069              		.loc 1 405 11
+ 1070 001a 079B     		ldr	r3, [sp, #28]
+ 1071 001c 002B     		cmp	r3, #0
+ 1072 001e 03D1     		bne	.L67
+ 406:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 407:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+ 1073              		.loc 1 407 26
+ 1074 0020 2323     		movs	r3, #35
+ 1075 0022 8DF82730 		strb	r3, [sp, #39]
+ 408:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 1076              		.loc 1 408 13
+ 1077 0026 32E0     		b	.L68
+ 1078              	.L67:
+ 409:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 410:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW != interface->interface_type)
+ 1079              		.loc 1 410 50
+ 1080 0028 079B     		ldr	r3, [sp, #28]
+ 1081 002a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1082              		.loc 1 410 11
+ 1083 002c 002B     		cmp	r3, #0
+ 1084 002e 03D0     		beq	.L69
+ 411:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 412:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 1085              		.loc 1 412 26
+ 1086 0030 2023     		movs	r3, #32
+ 1087 0032 8DF82730 		strb	r3, [sp, #39]
+ 413:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 1088              		.loc 1 413 13
+ 1089 0036 2AE0     		b	.L68
+ 1090              	.L69:
+ 414:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 415:libraries/zf_device/zf_device_imu_interface.c **** 
+ 416:libraries/zf_device/zf_device_imu_interface.c ****         if(zf_spi_init(spi_index, mode, baudrate, sck_pin, mosi_pin, miso_pin, SPI_CS_NULL))
+ 1091              		.loc 1 416 12
+ 1092 0038 9DF81A10 		ldrb	r1, [sp, #26]	@ zero_extendqisi2
+ 1093 003c 9DF81B00 		ldrb	r0, [sp, #27]	@ zero_extendqisi2
+ 1094 0040 40F6FF73 		movw	r3, #4095
+ 1095 0044 0293     		str	r3, [sp, #8]
+ 1096 0046 0E9B     		ldr	r3, [sp, #56]
+ 1097 0048 0193     		str	r3, [sp, #4]
+ 1098 004a 0D9B     		ldr	r3, [sp, #52]
+ 1099 004c 0093     		str	r3, [sp]
+ 1100 004e 0C9B     		ldr	r3, [sp, #48]
+ 1101 0050 059A     		ldr	r2, [sp, #20]
+ 1102 0052 FFF7FEFF 		bl	zf_spi_init
+ 1103 0056 0346     		mov	r3, r0
+ 1104              		.loc 1 416 11
+ 1105 0058 002B     		cmp	r3, #0
+ 1106 005a 03D0     		beq	.L70
+ 417:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 418:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 1107              		.loc 1 418 26
+ 1108 005c 2023     		movs	r3, #32
+ 1109 005e 8DF82730 		strb	r3, [sp, #39]
+ 419:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 1110              		.loc 1 419 13
+ 1111 0062 14E0     		b	.L68
+ 1112              	.L70:
+ 420:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 421:libraries/zf_device/zf_device_imu_interface.c ****         zf_gpio_init(cs_pin, GPO_PUSH_PULL, GPIO_HIGH);
+ 1113              		.loc 1 421 9
+ 1114 0064 BDF83C30 		ldrh	r3, [sp, #60]
+ 1115 0068 0122     		movs	r2, #1
+ 1116 006a 1021     		movs	r1, #16
+ 1117 006c 1846     		mov	r0, r3
+ 1118 006e FFF7FEFF 		bl	zf_gpio_init
+ 422:libraries/zf_device/zf_device_imu_interface.c **** 
+ 423:libraries/zf_device/zf_device_imu_interface.c ****         interface->interface_type   = IMU_INTERFACE_TYPE_SPI;
+ 1119              		.loc 1 423 37
+ 1120 0072 079B     		ldr	r3, [sp, #28]
+ 1121 0074 0122     		movs	r2, #1
+ 1122 0076 1A70     		strb	r2, [r3]
+ 424:libraries/zf_device/zf_device_imu_interface.c ****         interface->spi_index        = spi_index             ;
+ 1123              		.loc 1 424 37
+ 1124 0078 079B     		ldr	r3, [sp, #28]
+ 1125 007a 9DF81B20 		ldrb	r2, [sp, #27]
+ 1126 007e 5A70     		strb	r2, [r3, #1]
+ 425:libraries/zf_device/zf_device_imu_interface.c ****         interface->spi_cs_pin       = cs_pin                ;
+ 1127              		.loc 1 425 37
+ 1128 0080 079B     		ldr	r3, [sp, #28]
+ 1129 0082 BDF83C20 		ldrh	r2, [sp, #60]	@ movhi
+ 1130 0086 5A80     		strh	r2, [r3, #2]	@ movhi
+ 426:libraries/zf_device/zf_device_imu_interface.c **** 
+ 427:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+ 1131              		.loc 1 427 22
+ 1132 0088 0023     		movs	r3, #0
+ 1133 008a 8DF82730 		strb	r3, [sp, #39]
+ 1134              	.L68:
+ 428:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 429:libraries/zf_device/zf_device_imu_interface.c **** 
+ 430:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 1135              		.loc 1 430 12
+ 1136 008e 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 431:libraries/zf_device/zf_device_imu_interface.c **** }
+ 1137              		.loc 1 431 1
+ 1138 0092 1846     		mov	r0, r3
+ 1139 0094 0BB0     		add	sp, sp, #44
+ 1140              		.cfi_def_cfa_offset 4
+ 1141              		@ sp needed
+ 1142 0096 5DF804FB 		ldr	pc, [sp], #4
+ 1143              		.cfi_endproc
+ 1144              	.LFE488:
+ 1146 009a 00BF     		.section	.text.imu_interface_soft_iic_init,"ax",%progbits
+ 1147              		.align	1
+ 1148              		.p2align 4,,15
+ 1149              		.global	imu_interface_soft_iic_init
+ 1150              		.syntax unified
+ 1151              		.thumb
+ 1152              		.thumb_func
+ 1154              	imu_interface_soft_iic_init:
+ 1155              	.LFB489:
+ 432:libraries/zf_device/zf_device_imu_interface.c **** 
+ 433:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 434:libraries/zf_device/zf_device_imu_interface.c **** // 函数简介     IMU SOFT_IIC 通信 接口初始化
+ 435:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     *interface          接口对象 IMUxx 系列通用的接口对象
+ 436:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     soft_iic_index      SOFT_IIC 索引   (详见 zf_driver_soft_iic.h 内 zf_soft_
+ 437:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     delay               SOFT_IIC 延时 就是时钟电平维持时间 越短 IIC �
+ 438:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     scl_pin             SCL 引脚 参照   (详见 zf_driver_gpio.h 内 zf_gpio_pi
+ 439:libraries/zf_device/zf_device_imu_interface.c **** // 参数说明     sda_pin             SDA 引脚 参照   (详见 zf_driver_gpio.h 内 zf_gpio_pi
+ 440:libraries/zf_device/zf_device_imu_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / IMU_INTERFACE_OPERATION_DONE - �
+ 441:libraries/zf_device/zf_device_imu_interface.c **** // 使用示例     imu_interface_soft_iic_init(interface, soft_iic_index, delay, scl_pin, sda_pin)
+ 442:libraries/zf_device/zf_device_imu_interface.c **** // 备注信息     
+ 443:libraries/zf_device/zf_device_imu_interface.c **** //-------------------------------------------------------------------------------------------------
+ 444:libraries/zf_device/zf_device_imu_interface.c **** uint8 imu_interface_soft_iic_init (imu_interface_obj_struct *interface, zf_soft_iic_index_enum soft
+ 445:libraries/zf_device/zf_device_imu_interface.c **** {
+ 1156              		.loc 1 445 1
+ 1157              		.cfi_startproc
+ 1158              		@ args = 4, pretend = 0, frame = 24
+ 1159              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1160 0000 00B5     		push	{lr}
+ 1161              		.cfi_def_cfa_offset 4
+ 1162              		.cfi_offset 14, -4
+ 1163 0002 87B0     		sub	sp, sp, #28
+ 1164              		.cfi_def_cfa_offset 32
+ 1165 0004 0390     		str	r0, [sp, #12]
+ 1166 0006 0192     		str	r2, [sp, #4]
+ 1167 0008 1A46     		mov	r2, r3
+ 1168 000a 0B46     		mov	r3, r1
+ 1169 000c 8DF80B30 		strb	r3, [sp, #11]
+ 1170 0010 1346     		mov	r3, r2	@ movhi
+ 1171 0012 ADF80830 		strh	r3, [sp, #8]	@ movhi
+ 446:libraries/zf_device/zf_device_imu_interface.c ****     imu_interface_operation_state_enum  return_state    =   IMU_INTERFACE_ERROR_UNKNOW_ERROR;
+ 1172              		.loc 1 446 41
+ 1173 0016 0123     		movs	r3, #1
+ 1174 0018 8DF81730 		strb	r3, [sp, #23]
+ 447:libraries/zf_device/zf_device_imu_interface.c **** 
+ 448:libraries/zf_device/zf_device_imu_interface.c ****     do
+ 449:libraries/zf_device/zf_device_imu_interface.c ****     {
+ 450:libraries/zf_device/zf_device_imu_interface.c ****         if(NULL == interface)
+ 1175              		.loc 1 450 11
+ 1176 001c 039B     		ldr	r3, [sp, #12]
+ 1177 001e 002B     		cmp	r3, #0
+ 1178 0020 03D1     		bne	.L73
+ 451:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 452:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_OBJ_BUFFER_NULL;
+ 1179              		.loc 1 452 26
+ 1180 0022 2323     		movs	r3, #35
+ 1181 0024 8DF81730 		strb	r3, [sp, #23]
+ 453:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 1182              		.loc 1 453 13
+ 1183 0028 21E0     		b	.L74
+ 1184              	.L73:
+ 454:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 455:libraries/zf_device/zf_device_imu_interface.c ****         if(IMU_INTERFACE_TYPE_UNKNOW != interface->interface_type)
+ 1185              		.loc 1 455 50
+ 1186 002a 039B     		ldr	r3, [sp, #12]
+ 1187 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1188              		.loc 1 455 11
+ 1189 002e 002B     		cmp	r3, #0
+ 1190 0030 03D0     		beq	.L75
+ 456:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 457:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 1191              		.loc 1 457 26
+ 1192 0032 2023     		movs	r3, #32
+ 1193 0034 8DF81730 		strb	r3, [sp, #23]
+ 458:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 1194              		.loc 1 458 13
+ 1195 0038 19E0     		b	.L74
+ 1196              	.L75:
+ 459:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 460:libraries/zf_device/zf_device_imu_interface.c **** 
+ 461:libraries/zf_device/zf_device_imu_interface.c ****         if(zf_soft_iic_init(soft_iic_index, delay, scl_pin, sda_pin))
+ 1197              		.loc 1 461 12
+ 1198 003a BDF82030 		ldrh	r3, [sp, #32]
+ 1199 003e BDF80820 		ldrh	r2, [sp, #8]
+ 1200 0042 9DF80B00 		ldrb	r0, [sp, #11]	@ zero_extendqisi2
+ 1201 0046 0199     		ldr	r1, [sp, #4]
+ 1202 0048 FFF7FEFF 		bl	zf_soft_iic_init
+ 1203 004c 0346     		mov	r3, r0
+ 1204              		.loc 1 461 11
+ 1205 004e 002B     		cmp	r3, #0
+ 1206 0050 03D0     		beq	.L76
+ 462:libraries/zf_device/zf_device_imu_interface.c ****         {
+ 463:libraries/zf_device/zf_device_imu_interface.c ****             return_state = IMU_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 1207              		.loc 1 463 26
+ 1208 0052 2023     		movs	r3, #32
+ 1209 0054 8DF81730 		strb	r3, [sp, #23]
+ 464:libraries/zf_device/zf_device_imu_interface.c ****             break;
+ 1210              		.loc 1 464 13
+ 1211 0058 09E0     		b	.L74
+ 1212              	.L76:
+ 465:libraries/zf_device/zf_device_imu_interface.c ****         }
+ 466:libraries/zf_device/zf_device_imu_interface.c **** 
+ 467:libraries/zf_device/zf_device_imu_interface.c ****         interface->interface_type   = IMU_INTERFACE_TYPE_SOFT_IIC   ;
+ 1213              		.loc 1 467 37
+ 1214 005a 039B     		ldr	r3, [sp, #12]
+ 1215 005c 0222     		movs	r2, #2
+ 1216 005e 1A70     		strb	r2, [r3]
+ 468:libraries/zf_device/zf_device_imu_interface.c ****         interface->soft_iic_index   = soft_iic_index                ;
+ 1217              		.loc 1 468 37
+ 1218 0060 039B     		ldr	r3, [sp, #12]
+ 1219 0062 9DF80B20 		ldrb	r2, [sp, #11]
+ 1220 0066 5A70     		strb	r2, [r3, #1]
+ 469:libraries/zf_device/zf_device_imu_interface.c **** 
+ 470:libraries/zf_device/zf_device_imu_interface.c ****         return_state = IMU_INTERFACE_OPERATION_DONE;
+ 1221              		.loc 1 470 22
+ 1222 0068 0023     		movs	r3, #0
+ 1223 006a 8DF81730 		strb	r3, [sp, #23]
+ 1224              	.L74:
+ 471:libraries/zf_device/zf_device_imu_interface.c ****     }while(0);
+ 472:libraries/zf_device/zf_device_imu_interface.c **** 
+ 473:libraries/zf_device/zf_device_imu_interface.c ****     return return_state;
+ 1225              		.loc 1 473 12
+ 1226 006e 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 474:libraries/zf_device/zf_device_imu_interface.c **** }
+ 1227              		.loc 1 474 1
+ 1228 0072 1846     		mov	r0, r3
+ 1229 0074 07B0     		add	sp, sp, #28
+ 1230              		.cfi_def_cfa_offset 4
+ 1231              		@ sp needed
+ 1232 0076 5DF804FB 		ldr	pc, [sp], #4
+ 1233              		.cfi_endproc
+ 1234              	.LFE489:
+ 1236 007a 00BF     		.text
+ 1237              	.Letext0:
+ 1238              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1239              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1240              		.file 4 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_GPIO
+ 1241              		.file 5 "libraries/zf_common/zf_common_typedef.h"
+ 1242              		.file 6 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 1243              		.file 7 "libraries/zf_driver/zf_driver_gpio.h"
+ 1244              		.file 8 "libraries/zf_driver/zf_driver_adc.h"
+ 1245              		.file 9 "libraries/zf_driver/zf_driver_can.h"
+ 1246              		.file 10 "libraries/zf_driver/zf_driver_encoder.h"
+ 1247              		.file 11 "libraries/zf_driver/zf_driver_exti.h"
+ 1248              		.file 12 "libraries/zf_driver/zf_driver_hrtim.h"
+ 1249              		.file 13 "libraries/zf_driver/zf_driver_pwm.h"
+ 1250              		.file 14 "libraries/zf_driver/zf_driver_soft_iic.h"
+ 1251              		.file 15 "libraries/zf_driver/zf_driver_spi.h"
+ 1252              		.file 16 "libraries/zf_driver/zf_driver_uart.h"
+ 1253              		.file 17 "libraries/zf_device/zf_device_imu_interface.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_device_imu_interface.c
+D:\Users\TMP\cchd0W1D.s:23     .data.imu_interface_default_obj:00000000 imu_interface_default_obj
+D:\Users\TMP\cchd0W1D.s:20     .data.imu_interface_default_obj:00000000 $d
+D:\Users\TMP\cchd0W1D.s:28     .rodata:00000000 $d
+D:\Users\TMP\cchd0W1D.s:32     .text.imu_interface_write_8bit_register:00000000 $t
+D:\Users\TMP\cchd0W1D.s:39     .text.imu_interface_write_8bit_register:00000000 imu_interface_write_8bit_register
+D:\Users\TMP\cchd0W1D.s:207    .text.imu_interface_write_8bit_register:00000130 $d
+D:\Users\TMP\cchd0W1D.s:213    .text.imu_interface_write_8bit_registers:00000000 $t
+D:\Users\TMP\cchd0W1D.s:220    .text.imu_interface_write_8bit_registers:00000000 imu_interface_write_8bit_registers
+D:\Users\TMP\cchd0W1D.s:393    .text.imu_interface_write_8bit_registers:00000130 $d
+D:\Users\TMP\cchd0W1D.s:399    .text.imu_interface_read_8bit_register:00000000 $t
+D:\Users\TMP\cchd0W1D.s:406    .text.imu_interface_read_8bit_register:00000000 imu_interface_read_8bit_register
+D:\Users\TMP\cchd0W1D.s:579    .text.imu_interface_read_8bit_register:00000130 $d
+D:\Users\TMP\cchd0W1D.s:585    .text.imu_interface_read_8bit_registers:00000000 $t
+D:\Users\TMP\cchd0W1D.s:592    .text.imu_interface_read_8bit_registers:00000000 imu_interface_read_8bit_registers
+D:\Users\TMP\cchd0W1D.s:765    .text.imu_interface_read_8bit_registers:00000134 $d
+D:\Users\TMP\cchd0W1D.s:771    .text.imu_interface_transfer_8bit_array:00000000 $t
+D:\Users\TMP\cchd0W1D.s:778    .text.imu_interface_transfer_8bit_array:00000000 imu_interface_transfer_8bit_array
+D:\Users\TMP\cchd0W1D.s:940    .text.imu_interface_transfer_8bit_array:00000120 $d
+D:\Users\TMP\cchd0W1D.s:946    .text.imu_interface_deinit:00000000 $t
+D:\Users\TMP\cchd0W1D.s:953    .text.imu_interface_deinit:00000000 imu_interface_deinit
+D:\Users\TMP\cchd0W1D.s:1042   .text.imu_interface_spi_init:00000000 $t
+D:\Users\TMP\cchd0W1D.s:1049   .text.imu_interface_spi_init:00000000 imu_interface_spi_init
+D:\Users\TMP\cchd0W1D.s:1147   .text.imu_interface_soft_iic_init:00000000 $t
+D:\Users\TMP\cchd0W1D.s:1154   .text.imu_interface_soft_iic_init:00000000 imu_interface_soft_iic_init
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.33.6d362bbaa8a8ff23e6f5c0a30bf7361f
+                           .group:00000000 wm4.zf_common_fifo.h.33.e14e643902e26e4e65437b5b20e82793
+                           .group:00000000 wm4.zf_common_function.h.33.02bbfb055e8ee322bc4f8b14ea195da2
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.saradc.h.25.e5a70aef9ec4fddf35f2b7cc0c9cf1bc
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_adc.h.64.349fb433626b42172b0e0fee038428ca
+                           .group:00000000 wm4.can.h.25.3cfccb6c630ada4f656cab597e231e58
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.zf_driver_can.h.67.fd10d2fa867eb54a54d4b57027d73a60
+                           .group:00000000 wm4.tim.h.25.6e7ad96569e77a70a68b9b4cc59f54f2
+                           .group:00000000 wm4.zf_driver_timer.h.33.8df253b6990d9861816977209fb11e90
+                           .group:00000000 wm4.zf_driver_encoder.h.57.7e32999f25354fac086ca226b0c630d4
+                           .group:00000000 wm4.exti.h.25.21597c35d9630b0985ce88d2c41f4ea4
+                           .group:00000000 wm4.zf_driver_exti.h.59.1b02b8083e5295ef5baaf83905d59395
+                           .group:00000000 wm4.ssd_types.h.29.b861f4e6d39d333f931bfc05b964cb1c
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.zf_driver_flash.h.59.db93fe574c35ea9e79030063fbb35a13
+                           .group:00000000 wm4.hrtim.h.25.1601aea9d4a0da1de8252dc444355251
+                           .group:00000000 wm4.zf_driver_hrtim.h.64.cd8d2bf3bf1c471ea59d9c61e4a721d7
+                           .group:00000000 wm4.zf_driver_interrupt.h.33.2c3660dcc36cb090bd75b8f180c14f27
+                           .group:00000000 wm4.zf_driver_pit.h.33.834ac720a62e09d5603a9557331e9049
+                           .group:00000000 wm4.zf_driver_pwm.h.33.7d80487064ca712231a453396685a551
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.zf_driver_soft_iic.h.33.9067bd298084134f63c61c075f95fa2b
+                           .group:00000000 wm4.zf_driver_soft_spi.h.33.a938287c023905d97cafe56e4be63674
+                           .group:00000000 wm4.zf_driver_spi.h.62.950b1f52ed365034df2907601137b455
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.zf_driver_uart.h.70.ffcf3694337ad0b4066179f1abd5d668
+                           .group:00000000 wm4.zf_device_imu_interface.h.76.450693495da70d0baeb57a35ebd84d55
+
+UNDEFINED SYMBOLS
+zf_gpio_assert_handler
+zf_spi_transfer_8bit_array
+zf_soft_iic_write_8bit_splicing_array
+gpio_group_list
+zf_soft_iic_transfer_8bit_array
+zf_spi_deinit
+zf_gpio_deinit
+zf_soft_iic_deinit
+zf_spi_init
+zf_gpio_init
+zf_soft_iic_init

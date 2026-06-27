@@ -1,0 +1,1824 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"seekfree_assistant.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.bss.seekfree_assistant_buffer,"aw",%nobits
+  19              		.align	2
+  22              	seekfree_assistant_buffer:
+  23 0000 00000000 		.space	128
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  24              		.section	.data.seekfree_assistant_fifo,"aw"
+  25              		.align	2
+  28              	seekfree_assistant_fifo:
+  29 0000 00000000 		.word	seekfree_assistant_buffer
+  30 0004 80000000 		.word	seekfree_assistant_buffer+128
+  31 0008 00000000 		.word	seekfree_assistant_buffer
+  32 000c 00000000 		.word	seekfree_assistant_buffer
+  33 0010 01       		.byte	1
+  34 0011 01       		.byte	1
+  35 0012 0000     		.space	2
+  36              		.section	.bss.seekfree_assistant_camera_data,"aw",%nobits
+  37              		.align	2
+  40              	seekfree_assistant_camera_data:
+  41 0000 00000000 		.space	8
+  41      00000000 
+  42              		.section	.bss.seekfree_assistant_camera_dot_data,"aw",%nobits
+  43              		.align	2
+  46              	seekfree_assistant_camera_dot_data:
+  47 0000 00000000 		.space	8
+  47      00000000 
+  48              		.section	.bss.seekfree_assistant_camera_buffer,"aw",%nobits
+  49              		.align	2
+  52              	seekfree_assistant_camera_buffer:
+  53 0000 00000000 		.space	76
+  53      00000000 
+  53      00000000 
+  53      00000000 
+  53      00000000 
+  54              		.global	seekfree_assistant_transfer_callback
+  55              		.section	.data.seekfree_assistant_transfer_callback,"aw"
+  56              		.align	2
+  59              	seekfree_assistant_transfer_callback:
+  60 0000 00000000 		.word	seekfree_assistant_transfer
+  61              		.global	seekfree_assistant_receive_callback
+  62              		.section	.data.seekfree_assistant_receive_callback,"aw"
+  63              		.align	2
+  66              	seekfree_assistant_receive_callback:
+  67 0000 00000000 		.word	seekfree_assistant_receive
+  68              		.global	seekfree_assistant_oscilloscope_data
+  69              		.section	.bss.seekfree_assistant_oscilloscope_data,"aw",%nobits
+  70              		.align	2
+  73              	seekfree_assistant_oscilloscope_data:
+  74 0000 00000000 		.space	36
+  74      00000000 
+  74      00000000 
+  74      00000000 
+  74      00000000 
+  75              		.global	seekfree_assistant_parameter
+  76              		.section	.bss.seekfree_assistant_parameter,"aw",%nobits
+  77              		.align	2
+  80              	seekfree_assistant_parameter:
+  81 0000 00000000 		.space	32
+  81      00000000 
+  81      00000000 
+  81      00000000 
+  81      00000000 
+  82              		.global	seekfree_assistant_parameter_update_flag
+  83              		.section	.bss.seekfree_assistant_parameter_update_flag,"aw",%nobits
+  84              		.align	2
+  87              	seekfree_assistant_parameter_update_flag:
+  88 0000 00000000 		.space	8
+  88      00000000 
+  89              		.section	.text.seekfree_assistant_sum,"ax",%progbits
+  90              		.align	1
+  91              		.p2align 4,,15
+  92              		.syntax unified
+  93              		.thumb
+  94              		.thumb_func
+  96              	seekfree_assistant_sum:
+  97              	.LFB3:
+  98              		.file 1 "libraries/zf_components/seekfree_assistant/seekfree_assistant.c"
+   1:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** /**************************************************************************************************
+   2:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * RT1064DVL6A Opensourec Library 即（RT1064DVL6A 开源库）是一个基于官方 SDK 接口的�
+   3:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** *
+   5:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 本文件是 RT1064DVL6A 开源库的一部分
+   6:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** *
+   7:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * RT1064DVL6A 开源库 是免费软件
+   8:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** *
+  11:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 更多细节请参见 GPL
+  14:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** *
+  15:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** *
+  18:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 额外注明：
+  19:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** *
+  24:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 文件名称          seekfree_assistant
+  25:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 开发环境          IAR 8.32.4 or MDK 5.33
+  28:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 适用平台          RT1064DVL6A
+  29:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 店铺链接          https://seekfree.taobao.com/
+  30:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** *
+  31:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 修改记录
+  32:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 日期             作者             备注
+  33:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** * 2024-1-11        SeekFree         first version
+  34:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** ***************************************************************************************************
+  35:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  36:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #include "seekfree_assistant.h"
+  37:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  38:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #ifndef zf_assert
+  39:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #define zf_assert(x)    ((void)(x))
+  40:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #endif
+  41:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  42:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** extern uint8 seekfree_assistant_transfer (const uint8 *buff, uint32 *length);
+  43:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** extern uint8 seekfree_assistant_receive (uint8 *buff, uint32 *length);
+  44:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  45:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #if (1 == SEEKFREE_ASSISTANT_SET_PARAMETR_ENABLE)
+  46:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #include "zf_common_fifo.h"
+  47:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** static uint8                seekfree_assistant_buffer[SEEKFREE_ASSISTANT_BUFFER_SIZE];             
+  48:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** static zf_fifo_obj_struct   seekfree_assistant_fifo =                                              
+  49:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+  50:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     .base_ptr   = ((uint32)seekfree_assistant_buffer),
+  51:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     .tail_ptr   = ((uint32)seekfree_assistant_buffer) + SEEKFREE_ASSISTANT_BUFFER_SIZE,
+  52:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     .write_ptr  = ((uint32)seekfree_assistant_buffer),
+  53:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     .read_ptr   = ((uint32)seekfree_assistant_buffer),
+  54:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     .step       = FIFO_DATA_8BIT,
+  55:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     .state      = 0x01,
+  56:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** };
+  57:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #endif
+  58:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  59:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** static seekfree_assistant_camera_struct         seekfree_assistant_camera_data;                    
+  60:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** static seekfree_assistant_camera_dot_struct     seekfree_assistant_camera_dot_data;                
+  61:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** static seekfree_assistant_camera_buffer_struct  seekfree_assistant_camera_buffer;                  
+  62:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  63:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** seekfree_assistant_transfer_callback_function   seekfree_assistant_transfer_callback = seekfree_ass
+  64:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** seekfree_assistant_receive_callback_function    seekfree_assistant_receive_callback  = seekfree_ass
+  65:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  66:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** seekfree_assistant_oscilloscope_struct          seekfree_assistant_oscilloscope_data;              
+  67:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** float   seekfree_assistant_parameter[SEEKFREE_ASSISTANT_SET_PARAMETR_COUNT] = {0};                 
+  68:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** vuint8  seekfree_assistant_parameter_update_flag[SEEKFREE_ASSISTANT_SET_PARAMETR_COUNT] = {0};     
+  69:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  70:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+  71:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手求和函数
+  72:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     *buffer         需要校验的数据地址
+  73:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     length          校验长度
+  74:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     uint8           和值
+  75:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例
+  76:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+  77:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** static uint8 seekfree_assistant_sum (uint8 *buffer, uint32 length)
+  78:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+  99              		.loc 1 78 1
+ 100              		.cfi_startproc
+ 101              		@ args = 0, pretend = 0, frame = 16
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103              		@ link register save eliminated.
+ 104 0000 84B0     		sub	sp, sp, #16
+ 105              		.cfi_def_cfa_offset 16
+ 106 0002 0190     		str	r0, [sp, #4]
+ 107 0004 0091     		str	r1, [sp]
+  79:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint8 temp_sum = 0;
+ 108              		.loc 1 79 11
+ 109 0006 0023     		movs	r3, #0
+ 110 0008 8DF80F30 		strb	r3, [sp, #15]
+  80:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  81:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     while(length--)
+ 111              		.loc 1 81 10
+ 112 000c 08E0     		b	.L2
+ 113              	.L3:
+  82:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+  83:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         temp_sum += *buffer++;
+ 114              		.loc 1 83 28
+ 115 000e 019B     		ldr	r3, [sp, #4]
+ 116 0010 5A1C     		adds	r2, r3, #1
+ 117 0012 0192     		str	r2, [sp, #4]
+ 118              		.loc 1 83 21
+ 119 0014 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 120              		.loc 1 83 18
+ 121 0016 9DF80F30 		ldrb	r3, [sp, #15]
+ 122 001a 1344     		add	r3, r3, r2
+ 123 001c 8DF80F30 		strb	r3, [sp, #15]
+ 124              	.L2:
+  81:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 125              		.loc 1 81 17
+ 126 0020 009B     		ldr	r3, [sp]
+ 127 0022 5A1E     		subs	r2, r3, #1
+ 128 0024 0092     		str	r2, [sp]
+  81:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 129              		.loc 1 81 10
+ 130 0026 002B     		cmp	r3, #0
+ 131 0028 F1D1     		bne	.L3
+  84:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+  85:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  86:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     return temp_sum;
+ 132              		.loc 1 86 12
+ 133 002a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+  87:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 134              		.loc 1 87 1
+ 135 002e 1846     		mov	r0, r3
+ 136 0030 04B0     		add	sp, sp, #16
+ 137              		.cfi_def_cfa_offset 0
+ 138              		@ sp needed
+ 139 0032 7047     		bx	lr
+ 140              		.cfi_endproc
+ 141              	.LFE3:
+ 143              		.section	.text.seekfree_assistant_camera_data_send,"ax",%progbits
+ 144              		.align	1
+ 145              		.p2align 4,,15
+ 146              		.global	seekfree_assistant_camera_data_send
+ 147              		.syntax unified
+ 148              		.thumb
+ 149              		.thumb_func
+ 151              	seekfree_assistant_camera_data_send:
+ 152              	.LFB4:
+  88:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+  89:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+  90:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手 图像发送函数
+  91:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     camera_type     摄像头类型
+  92:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     *image_addr     图像首地址
+  93:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     boundary_num    图像中包含边界数量
+  94:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     width           图像宽度
+  95:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     height          图像高度
+  96:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     void
+  97:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例
+  98:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+  99:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** void seekfree_assistant_camera_data_send (seekfree_assistant_image_type_enum camera_type, void *ima
+ 100:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+ 153              		.loc 1 100 1
+ 154              		.cfi_startproc
+ 155              		@ args = 4, pretend = 0, frame = 16
+ 156              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157 0000 00B5     		push	{lr}
+ 158              		.cfi_def_cfa_offset 4
+ 159              		.cfi_offset 14, -4
+ 160 0002 85B0     		sub	sp, sp, #20
+ 161              		.cfi_def_cfa_offset 24
+ 162 0004 0091     		str	r1, [sp]
+ 163 0006 1146     		mov	r1, r2
+ 164 0008 1A46     		mov	r2, r3
+ 165 000a 0346     		mov	r3, r0
+ 166 000c 8DF80730 		strb	r3, [sp, #7]
+ 167 0010 0B46     		mov	r3, r1
+ 168 0012 8DF80630 		strb	r3, [sp, #6]
+ 169 0016 1346     		mov	r3, r2	@ movhi
+ 170 0018 ADF80430 		strh	r3, [sp, #4]	@ movhi
+ 101:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint32 image_size = 0;
+ 171              		.loc 1 101 12
+ 172 001c 0023     		movs	r3, #0
+ 173 001e 0393     		str	r3, [sp, #12]
+ 102:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 103:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_data.head           = SEEKFREE_ASSISTANT_SEND_HEAD;
+ 174              		.loc 1 103 51
+ 175 0020 314B     		ldr	r3, .L15
+ 176 0022 AA22     		movs	r2, #170
+ 177 0024 1A70     		strb	r2, [r3]
+ 104:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_data.function       = SEEKFREE_ASSISTANT_CAMERA_FUNCTION;
+ 178              		.loc 1 104 51
+ 179 0026 304B     		ldr	r3, .L15
+ 180 0028 0222     		movs	r2, #2
+ 181 002a 5A70     		strb	r2, [r3, #1]
+ 105:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_data.camera_type    = (camera_type << 5) | ((image_addr != NULL ? 0 :
+ 182              		.loc 1 105 66
+ 183 002c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 184 0030 5B01     		lsls	r3, r3, #5
+ 185              		.loc 1 105 72
+ 186 0032 5BB2     		sxtb	r3, r3
+ 187 0034 009A     		ldr	r2, [sp]
+ 188 0036 002A     		cmp	r2, #0
+ 189 0038 01D1     		bne	.L6
+ 190              		.loc 1 105 72 is_stmt 0 discriminator 1
+ 191 003a 1022     		movs	r2, #16
+ 192 003c 00E0     		b	.L7
+ 193              	.L6:
+ 194              		.loc 1 105 72 discriminator 2
+ 195 003e 0022     		movs	r2, #0
+ 196              	.L7:
+ 197              		.loc 1 105 72 discriminator 4
+ 198 0040 1343     		orrs	r3, r3, r2
+ 199 0042 5AB2     		sxtb	r2, r3
+ 200              		.loc 1 105 110 is_stmt 1 discriminator 4
+ 201 0044 9DF90630 		ldrsb	r3, [sp, #6]
+ 202 0048 1343     		orrs	r3, r3, r2
+ 203 004a 5BB2     		sxtb	r3, r3
+ 204 004c DAB2     		uxtb	r2, r3
+ 205              		.loc 1 105 51 discriminator 4
+ 206 004e 264B     		ldr	r3, .L15
+ 207 0050 9A70     		strb	r2, [r3, #2]
+ 106:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 写入包长度信息，仅包含协议部分
+ 107:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_data.length         = sizeof(seekfree_assistant_camera_struct);
+ 208              		.loc 1 107 51 discriminator 4
+ 209 0052 254B     		ldr	r3, .L15
+ 210 0054 0822     		movs	r2, #8
+ 211 0056 DA70     		strb	r2, [r3, #3]
+ 108:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_data.image_width    = width;
+ 212              		.loc 1 108 51 discriminator 4
+ 213 0058 234A     		ldr	r2, .L15
+ 214 005a BDF80430 		ldrh	r3, [sp, #4]	@ movhi
+ 215 005e 9380     		strh	r3, [r2, #4]	@ movhi
+ 109:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_data.image_height   = height;
+ 216              		.loc 1 109 51 discriminator 4
+ 217 0060 214A     		ldr	r2, .L15
+ 218 0062 BDF81830 		ldrh	r3, [sp, #24]	@ movhi
+ 219 0066 D380     		strh	r3, [r2, #6]	@ movhi
+ 110:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 111:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 首先发送帧头、功能、摄像头类型、以及宽度高度等信息
+ 112:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint32 temp_lenght = sizeof(seekfree_assistant_camera_struct);
+ 220              		.loc 1 112 12 discriminator 4
+ 221 0068 0823     		movs	r3, #8
+ 222 006a 0293     		str	r3, [sp, #8]
+ 113:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_transfer_callback((const uint8 *)&seekfree_assistant_camera_data, &temp_leng
+ 223              		.loc 1 113 5 discriminator 4
+ 224 006c 1F4B     		ldr	r3, .L15+4
+ 225 006e 1B68     		ldr	r3, [r3]
+ 226 0070 02AA     		add	r2, sp, #8
+ 227 0072 1146     		mov	r1, r2
+ 228 0074 1C48     		ldr	r0, .L15
+ 229 0076 9847     		blx	r3
+ 230              	.LVL0:
+ 114:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 115:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 根据摄像头类型计算图像大小
+ 116:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     switch(camera_type)
+ 231              		.loc 1 116 5 discriminator 4
+ 232 0078 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 233 007c 032B     		cmp	r3, #3
+ 234 007e 1AD0     		beq	.L8
+ 235              		.loc 1 116 5 is_stmt 0
+ 236 0080 032B     		cmp	r3, #3
+ 237 0082 21DC     		bgt	.L9
+ 238 0084 012B     		cmp	r3, #1
+ 239 0086 02D0     		beq	.L10
+ 240 0088 022B     		cmp	r3, #2
+ 241 008a 0CD0     		beq	.L11
+ 242 008c 1CE0     		b	.L9
+ 243              	.L10:
+ 117:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 118:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         case SEEKFREE_ASSISTANT_OV7725_BIN:
+ 119:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 120:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             image_size = width * height / 8;
+ 244              		.loc 1 120 32 is_stmt 1
+ 245 008e BDF80430 		ldrh	r3, [sp, #4]
+ 246 0092 BDF81820 		ldrh	r2, [sp, #24]
+ 247 0096 02FB03F3 		mul	r3, r2, r3
+ 248              		.loc 1 120 41
+ 249 009a 002B     		cmp	r3, #0
+ 250 009c 00DA     		bge	.L12
+ 251 009e 0733     		adds	r3, r3, #7
+ 252              	.L12:
+ 253 00a0 DB10     		asrs	r3, r3, #3
+ 254              		.loc 1 120 24
+ 255 00a2 0393     		str	r3, [sp, #12]
+ 121:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }break;
+ 256              		.loc 1 121 9
+ 257 00a4 10E0     		b	.L9
+ 258              	.L11:
+ 122:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 123:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         case SEEKFREE_ASSISTANT_MT9V03X:
+ 124:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 125:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             image_size = width * height;
+ 259              		.loc 1 125 32
+ 260 00a6 BDF80430 		ldrh	r3, [sp, #4]
+ 261 00aa BDF81820 		ldrh	r2, [sp, #24]
+ 262 00ae 02FB03F3 		mul	r3, r2, r3
+ 263              		.loc 1 125 24
+ 264 00b2 0393     		str	r3, [sp, #12]
+ 126:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }break;
+ 265              		.loc 1 126 9
+ 266 00b4 08E0     		b	.L9
+ 267              	.L8:
+ 127:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 128:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         case SEEKFREE_ASSISTANT_SCC8660:
+ 129:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 130:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             image_size = width * height * 2;
+ 268              		.loc 1 130 32
+ 269 00b6 BDF80430 		ldrh	r3, [sp, #4]
+ 270 00ba BDF81820 		ldrh	r2, [sp, #24]
+ 271 00be 02FB03F3 		mul	r3, r2, r3
+ 272              		.loc 1 130 41
+ 273 00c2 5B00     		lsls	r3, r3, #1
+ 274              		.loc 1 130 24
+ 275 00c4 0393     		str	r3, [sp, #12]
+ 131:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }break;
+ 276              		.loc 1 131 9
+ 277 00c6 00BF     		nop
+ 278              	.L9:
+ 132:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 133:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 134:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 发送图像数据
+ 135:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     if(NULL != image_addr)
+ 279              		.loc 1 135 7
+ 280 00c8 009B     		ldr	r3, [sp]
+ 281 00ca 002B     		cmp	r3, #0
+ 282 00cc 07D0     		beq	.L14
+ 136:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 137:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         temp_lenght = image_size;
+ 283              		.loc 1 137 21
+ 284 00ce 039B     		ldr	r3, [sp, #12]
+ 285 00d0 0293     		str	r3, [sp, #8]
+ 138:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         seekfree_assistant_transfer_callback(image_addr, &temp_lenght);
+ 286              		.loc 1 138 9
+ 287 00d2 064B     		ldr	r3, .L15+4
+ 288 00d4 1B68     		ldr	r3, [r3]
+ 289 00d6 02AA     		add	r2, sp, #8
+ 290 00d8 1146     		mov	r1, r2
+ 291 00da 0098     		ldr	r0, [sp]
+ 292 00dc 9847     		blx	r3
+ 293              	.LVL1:
+ 294              	.L14:
+ 139:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 140:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 295              		.loc 1 140 1
+ 296 00de 00BF     		nop
+ 297 00e0 05B0     		add	sp, sp, #20
+ 298              		.cfi_def_cfa_offset 4
+ 299              		@ sp needed
+ 300 00e2 5DF804FB 		ldr	pc, [sp], #4
+ 301              	.L16:
+ 302 00e6 00BF     		.align	2
+ 303              	.L15:
+ 304 00e8 00000000 		.word	seekfree_assistant_camera_data
+ 305 00ec 00000000 		.word	seekfree_assistant_transfer_callback
+ 306              		.cfi_endproc
+ 307              	.LFE4:
+ 309              		.section	.text.seekfree_assistant_camera_dot_send,"ax",%progbits
+ 310              		.align	1
+ 311              		.p2align 4,,15
+ 312              		.global	seekfree_assistant_camera_dot_send
+ 313              		.syntax unified
+ 314              		.thumb
+ 315              		.thumb_func
+ 317              	seekfree_assistant_camera_dot_send:
+ 318              	.LFB5:
+ 141:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 142:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 143:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手 图像边线绘制函数
+ 144:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     boundary_id     边线ID
+ 145:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_num         点数量
+ 146:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     *dot_x          横坐标数据首地址
+ 147:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     *dot_y          纵坐标数据首地址
+ 148:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     width           图像宽度
+ 149:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     height          图像高度
+ 150:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     void
+ 151:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例
+ 152:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 153:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** void seekfree_assistant_camera_dot_send (seekfree_assistant_camera_buffer_struct *buffer)
+ 154:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+ 319              		.loc 1 154 1
+ 320              		.cfi_startproc
+ 321              		@ args = 0, pretend = 0, frame = 16
+ 322              		@ frame_needed = 0, uses_anonymous_args = 0
+ 323 0000 00B5     		push	{lr}
+ 324              		.cfi_def_cfa_offset 4
+ 325              		.cfi_offset 14, -4
+ 326 0002 85B0     		sub	sp, sp, #20
+ 327              		.cfi_def_cfa_offset 24
+ 328 0004 0190     		str	r0, [sp, #4]
+ 155:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint8  i;
+ 156:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint16 dot_bytes = 0;   // 点字节数量
+ 329              		.loc 1 156 12
+ 330 0006 0023     		movs	r3, #0
+ 331 0008 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 157:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 158:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     dot_bytes = seekfree_assistant_camera_dot_data.dot_num;
+ 332              		.loc 1 158 15
+ 333 000c 2C4B     		ldr	r3, .L23
+ 334 000e 9B88     		ldrh	r3, [r3, #4]	@ movhi
+ 335 0010 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 159:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 160:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     if(seekfree_assistant_camera_dot_data.dot_type & (1 << 5))
+ 336              		.loc 1 160 42
+ 337 0014 2A4B     		ldr	r3, .L23
+ 338 0016 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 339              		.loc 1 160 52
+ 340 0018 03F02003 		and	r3, r3, #32
+ 341              		.loc 1 160 7
+ 342 001c 002B     		cmp	r3, #0
+ 343 001e 04D0     		beq	.L18
+ 161:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 162:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         dot_bytes *= 2;
+ 344              		.loc 1 162 19
+ 345 0020 BDF80C30 		ldrh	r3, [sp, #12]	@ movhi
+ 346 0024 5B00     		lsls	r3, r3, #1
+ 347 0026 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 348              	.L18:
+ 163:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 164:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 165:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 首先发送帧头、功能、边界编号、坐标长度、点个数
+ 166:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint32 temp_lenght = sizeof(seekfree_assistant_camera_dot_struct);
+ 349              		.loc 1 166 12
+ 350 002a 0823     		movs	r3, #8
+ 351 002c 0293     		str	r3, [sp, #8]
+ 167:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_transfer_callback((const uint8 *)&seekfree_assistant_camera_dot_data, &temp_
+ 352              		.loc 1 167 5
+ 353 002e 254B     		ldr	r3, .L23+4
+ 354 0030 1B68     		ldr	r3, [r3]
+ 355 0032 02AA     		add	r2, sp, #8
+ 356 0034 1146     		mov	r1, r2
+ 357 0036 2248     		ldr	r0, .L23
+ 358 0038 9847     		blx	r3
+ 359              	.LVL2:
+ 168:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 169:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     for(i=0; i < SEEKFREE_ASSISTANT_CAMERA_MAX_BOUNDARY; i++)
+ 360              		.loc 1 169 10
+ 361 003a 0023     		movs	r3, #0
+ 362 003c 8DF80F30 		strb	r3, [sp, #15]
+ 363              		.loc 1 169 5
+ 364 0040 34E0     		b	.L19
+ 365              	.L22:
+ 170:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 171:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         // 判断是否发送横坐标数据
+ 172:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         if(NULL != buffer->boundary_x[i])
+ 366              		.loc 1 172 38
+ 367 0042 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 368 0046 019A     		ldr	r2, [sp, #4]
+ 369 0048 0233     		adds	r3, r3, #2
+ 370 004a 9B00     		lsls	r3, r3, #2
+ 371 004c 1344     		add	r3, r3, r2
+ 372 004e 5B68     		ldr	r3, [r3, #4]
+ 373              		.loc 1 172 11
+ 374 0050 002B     		cmp	r3, #0
+ 375 0052 0ED0     		beq	.L20
+ 173:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 174:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             temp_lenght = dot_bytes;
+ 376              		.loc 1 174 25
+ 377 0054 BDF80C30 		ldrh	r3, [sp, #12]
+ 378 0058 0293     		str	r3, [sp, #8]
+ 175:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             seekfree_assistant_transfer_callback((const uint8 *)buffer->boundary_x[i], &temp_lenght
+ 379              		.loc 1 175 13
+ 380 005a 1A4B     		ldr	r3, .L23+4
+ 381 005c 1A68     		ldr	r2, [r3]
+ 382 005e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 383              		.loc 1 175 83
+ 384 0062 0199     		ldr	r1, [sp, #4]
+ 385 0064 0233     		adds	r3, r3, #2
+ 386 0066 9B00     		lsls	r3, r3, #2
+ 387 0068 0B44     		add	r3, r3, r1
+ 388 006a 5B68     		ldr	r3, [r3, #4]
+ 389              		.loc 1 175 13
+ 390 006c 02A9     		add	r1, sp, #8
+ 391 006e 1846     		mov	r0, r3
+ 392 0070 9047     		blx	r2
+ 393              	.LVL3:
+ 394              	.L20:
+ 176:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }
+ 177:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 178:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         // 判断是否发送纵坐标数据
+ 179:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         if(NULL != buffer->boundary_y[i])
+ 395              		.loc 1 179 38
+ 396 0072 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 397 0076 019A     		ldr	r2, [sp, #4]
+ 398 0078 0A33     		adds	r3, r3, #10
+ 399 007a 9B00     		lsls	r3, r3, #2
+ 400 007c 1344     		add	r3, r3, r2
+ 401 007e 5B68     		ldr	r3, [r3, #4]
+ 402              		.loc 1 179 11
+ 403 0080 002B     		cmp	r3, #0
+ 404 0082 0ED0     		beq	.L21
+ 180:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 181:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             // 如果没有纵坐标数据，则表示每一行只有一个边界
+ 182:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             // 指定了横纵坐标数据，这种方式可以实现同一行多个边界的情况
+ 183:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             temp_lenght = dot_bytes;
+ 405              		.loc 1 183 25
+ 406 0084 BDF80C30 		ldrh	r3, [sp, #12]
+ 407 0088 0293     		str	r3, [sp, #8]
+ 184:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             seekfree_assistant_transfer_callback((const uint8 *)buffer->boundary_y[i], &temp_lenght
+ 408              		.loc 1 184 13
+ 409 008a 0E4B     		ldr	r3, .L23+4
+ 410 008c 1A68     		ldr	r2, [r3]
+ 411 008e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 412              		.loc 1 184 83
+ 413 0092 0199     		ldr	r1, [sp, #4]
+ 414 0094 0A33     		adds	r3, r3, #10
+ 415 0096 9B00     		lsls	r3, r3, #2
+ 416 0098 0B44     		add	r3, r3, r1
+ 417 009a 5B68     		ldr	r3, [r3, #4]
+ 418              		.loc 1 184 13
+ 419 009c 02A9     		add	r1, sp, #8
+ 420 009e 1846     		mov	r0, r3
+ 421 00a0 9047     		blx	r2
+ 422              	.LVL4:
+ 423              	.L21:
+ 169:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 424              		.loc 1 169 59 discriminator 2
+ 425 00a2 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 426 00a6 0133     		adds	r3, r3, #1
+ 427 00a8 8DF80F30 		strb	r3, [sp, #15]
+ 428              	.L19:
+ 169:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 429              		.loc 1 169 5 discriminator 1
+ 430 00ac 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 431 00b0 072B     		cmp	r3, #7
+ 432 00b2 C6D9     		bls	.L22
+ 185:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }
+ 186:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 187:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 433              		.loc 1 187 1
+ 434 00b4 00BF     		nop
+ 435 00b6 00BF     		nop
+ 436 00b8 05B0     		add	sp, sp, #20
+ 437              		.cfi_def_cfa_offset 4
+ 438              		@ sp needed
+ 439 00ba 5DF804FB 		ldr	pc, [sp], #4
+ 440              	.L24:
+ 441 00be 00BF     		.align	2
+ 442              	.L23:
+ 443 00c0 00000000 		.word	seekfree_assistant_camera_dot_data
+ 444 00c4 00000000 		.word	seekfree_assistant_transfer_callback
+ 445              		.cfi_endproc
+ 446              	.LFE5:
+ 448              		.section	.text.seekfree_assistant_oscilloscope_send,"ax",%progbits
+ 449              		.align	1
+ 450              		.p2align 4,,15
+ 451              		.global	seekfree_assistant_oscilloscope_send
+ 452              		.syntax unified
+ 453              		.thumb
+ 454              		.thumb_func
+ 456              	seekfree_assistant_oscilloscope_send:
+ 457              	.LFB6:
+ 188:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 189:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 190:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手 虚拟示波器发送函数
+ 191:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     *seekfree_assistant_oscilloscope  示波器数据结构体
+ 192:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     void
+ 193:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例     seekfree_assistant_oscilloscope_send(&seekfree_assistant_oscilloscope_data);
+ 194:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 195:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** void seekfree_assistant_oscilloscope_send (seekfree_assistant_oscilloscope_struct *seekfree_assista
+ 196:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+ 458              		.loc 1 196 1
+ 459              		.cfi_startproc
+ 460              		@ args = 0, pretend = 0, frame = 16
+ 461              		@ frame_needed = 0, uses_anonymous_args = 0
+ 462 0000 00B5     		push	{lr}
+ 463              		.cfi_def_cfa_offset 4
+ 464              		.cfi_offset 14, -4
+ 465 0002 85B0     		sub	sp, sp, #20
+ 466              		.cfi_def_cfa_offset 24
+ 467 0004 0190     		str	r0, [sp, #4]
+ 197:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint8 packet_size;
+ 198:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 199:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 将高四位清空
+ 200:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_oscilloscope->channel_num &= 0x0f;
+ 468              		.loc 1 200 50
+ 469 0006 019B     		ldr	r3, [sp, #4]
+ 470 0008 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 471 000a 03F00F03 		and	r3, r3, #15
+ 472 000e DAB2     		uxtb	r2, r3
+ 473 0010 019B     		ldr	r3, [sp, #4]
+ 474 0012 5A70     		strb	r2, [r3, #1]
+ 201:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 202:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     zf_assert(SEEKFREE_ASSISTANT_SET_OSCILLOSCOPE_COUNT >= seekfree_assistant_oscilloscope->channel
+ 203:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 204:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 帧头
+ 205:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_oscilloscope->head         = SEEKFREE_ASSISTANT_SEND_HEAD;
+ 475              		.loc 1 205 51
+ 476 0014 019B     		ldr	r3, [sp, #4]
+ 477 0016 AA22     		movs	r2, #170
+ 478 0018 1A70     		strb	r2, [r3]
+ 206:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 207:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 写入包长度信息
+ 208:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     packet_size                         = sizeof(seekfree_assistant_oscilloscope_struct) - (SEEKFRE
+ 479              		.loc 1 208 168
+ 480 001a 019B     		ldr	r3, [sp, #4]
+ 481 001c 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 482              		.loc 1 208 135
+ 483 001e C3F10803 		rsb	r3, r3, #8
+ 484              		.loc 1 208 90
+ 485 0022 DBB2     		uxtb	r3, r3
+ 486 0024 C3F10903 		rsb	r3, r3, #9
+ 487 0028 DBB2     		uxtb	r3, r3
+ 488              		.loc 1 208 41
+ 489 002a 9B00     		lsls	r3, r3, #2
+ 490 002c 8DF80F30 		strb	r3, [sp, #15]
+ 209:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_oscilloscope->length       = packet_size;
+ 491              		.loc 1 209 51
+ 492 0030 019B     		ldr	r3, [sp, #4]
+ 493 0032 9DF80F20 		ldrb	r2, [sp, #15]
+ 494 0036 DA70     		strb	r2, [r3, #3]
+ 210:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 211:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 写入功能字与通道数量
+ 212:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_oscilloscope->channel_num |= SEEKFREE_ASSISTANT_CAMERA_OSCILLOSCOPE;
+ 495              		.loc 1 212 50
+ 496 0038 019B     		ldr	r3, [sp, #4]
+ 497 003a 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 498 003c 43F01003 		orr	r3, r3, #16
+ 499 0040 DAB2     		uxtb	r2, r3
+ 500 0042 019B     		ldr	r3, [sp, #4]
+ 501 0044 5A70     		strb	r2, [r3, #1]
+ 213:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 214:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 和校验计算
+ 215:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_oscilloscope->check_sum    = 0;
+ 502              		.loc 1 215 51
+ 503 0046 019B     		ldr	r3, [sp, #4]
+ 504 0048 0022     		movs	r2, #0
+ 505 004a 9A70     		strb	r2, [r3, #2]
+ 216:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_oscilloscope->check_sum    = seekfree_assistant_sum((uint8 *)seekfree_assist
+ 506              		.loc 1 216 53
+ 507 004c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 508 0050 1946     		mov	r1, r3
+ 509 0052 0198     		ldr	r0, [sp, #4]
+ 510 0054 FFF7FEFF 		bl	seekfree_assistant_sum
+ 511 0058 0346     		mov	r3, r0
+ 512 005a 1A46     		mov	r2, r3
+ 513              		.loc 1 216 51
+ 514 005c 019B     		ldr	r3, [sp, #4]
+ 515 005e 9A70     		strb	r2, [r3, #2]
+ 217:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 218:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 数据在调用本函数之前，由用户将需要发送的数据写入seekfree_assistant_o
+ 219:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 220:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint32 temp_lenght = packet_size;
+ 516              		.loc 1 220 12
+ 517 0060 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 518 0064 0293     		str	r3, [sp, #8]
+ 221:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_transfer_callback((const uint8 *)seekfree_assistant_oscilloscope, &temp_leng
+ 519              		.loc 1 221 5
+ 520 0066 054B     		ldr	r3, .L26
+ 521 0068 1B68     		ldr	r3, [r3]
+ 522 006a 02AA     		add	r2, sp, #8
+ 523 006c 1146     		mov	r1, r2
+ 524 006e 0198     		ldr	r0, [sp, #4]
+ 525 0070 9847     		blx	r3
+ 526              	.LVL5:
+ 222:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 527              		.loc 1 222 1
+ 528 0072 00BF     		nop
+ 529 0074 05B0     		add	sp, sp, #20
+ 530              		.cfi_def_cfa_offset 4
+ 531              		@ sp needed
+ 532 0076 5DF804FB 		ldr	pc, [sp], #4
+ 533              	.L27:
+ 534 007a 00BF     		.align	2
+ 535              	.L26:
+ 536 007c 00000000 		.word	seekfree_assistant_transfer_callback
+ 537              		.cfi_endproc
+ 538              	.LFE6:
+ 540              		.section	.text.seekfree_assistant_camera_information_config,"ax",%progbits
+ 541              		.align	1
+ 542              		.p2align 4,,15
+ 543              		.global	seekfree_assistant_camera_information_config
+ 544              		.syntax unified
+ 545              		.thumb
+ 546              		.thumb_func
+ 548              	seekfree_assistant_camera_information_config:
+ 549              	.LFB7:
+ 223:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 224:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 225:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手图像信息配置函数
+ 226:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     camera_type     图像类型
+ 227:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     image_addr      图像地址    如果传递NULL参数则表示只发送边线�
+ 228:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     width           图像宽度
+ 229:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     height          图像高度
+ 230:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     void
+ 231:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例                     seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT
+ 232:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 备注信息
+ 233:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 234:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** void seekfree_assistant_camera_information_config (seekfree_assistant_image_type_enum camera_type, 
+ 235:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+ 550              		.loc 1 235 1
+ 551              		.cfi_startproc
+ 552              		@ args = 0, pretend = 0, frame = 16
+ 553              		@ frame_needed = 0, uses_anonymous_args = 0
+ 554              		@ link register save eliminated.
+ 555 0000 84B0     		sub	sp, sp, #16
+ 556              		.cfi_def_cfa_offset 16
+ 557 0002 0291     		str	r1, [sp, #8]
+ 558 0004 1146     		mov	r1, r2
+ 559 0006 1A46     		mov	r2, r3
+ 560 0008 0346     		mov	r3, r0
+ 561 000a 8DF80F30 		strb	r3, [sp, #15]
+ 562 000e 0B46     		mov	r3, r1	@ movhi
+ 563 0010 ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 564 0014 1346     		mov	r3, r2	@ movhi
+ 565 0016 ADF80630 		strh	r3, [sp, #6]	@ movhi
+ 236:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_dot_data.head       = SEEKFREE_ASSISTANT_SEND_HEAD;
+ 566              		.loc 1 236 51
+ 567 001a 0D4B     		ldr	r3, .L29
+ 568 001c AA22     		movs	r2, #170
+ 569 001e 1A70     		strb	r2, [r3]
+ 237:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_dot_data.function   = SEEKFREE_ASSISTANT_CAMERA_DOT_FUNCTION;
+ 570              		.loc 1 237 51
+ 571 0020 0B4B     		ldr	r3, .L29
+ 572 0022 0322     		movs	r2, #3
+ 573 0024 5A70     		strb	r2, [r3, #1]
+ 238:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 写入包长度信息
+ 239:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_dot_data.length     = sizeof(seekfree_assistant_camera_dot_struct);
+ 574              		.loc 1 239 51
+ 575 0026 0A4B     		ldr	r3, .L29
+ 576 0028 0822     		movs	r2, #8
+ 577 002a DA70     		strb	r2, [r3, #3]
+ 240:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 241:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_buffer.camera_type  = camera_type;
+ 578              		.loc 1 241 51
+ 579 002c 094A     		ldr	r2, .L29+4
+ 580 002e 9DF80F30 		ldrb	r3, [sp, #15]
+ 581 0032 1372     		strb	r3, [r2, #8]
+ 242:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_buffer.image_addr   = image_addr;
+ 582              		.loc 1 242 51
+ 583 0034 074A     		ldr	r2, .L29+4
+ 584 0036 029B     		ldr	r3, [sp, #8]
+ 585 0038 1360     		str	r3, [r2]
+ 243:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_buffer.width        = width;
+ 586              		.loc 1 243 51
+ 587 003a 064A     		ldr	r2, .L29+4
+ 588 003c BDF80C30 		ldrh	r3, [sp, #12]	@ movhi
+ 589 0040 9380     		strh	r3, [r2, #4]	@ movhi
+ 244:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_buffer.height       = height;
+ 590              		.loc 1 244 51
+ 591 0042 044A     		ldr	r2, .L29+4
+ 592 0044 BDF80630 		ldrh	r3, [sp, #6]	@ movhi
+ 593 0048 D380     		strh	r3, [r2, #6]	@ movhi
+ 245:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 594              		.loc 1 245 1
+ 595 004a 00BF     		nop
+ 596 004c 04B0     		add	sp, sp, #16
+ 597              		.cfi_def_cfa_offset 0
+ 598              		@ sp needed
+ 599 004e 7047     		bx	lr
+ 600              	.L30:
+ 601              		.align	2
+ 602              	.L29:
+ 603 0050 00000000 		.word	seekfree_assistant_camera_dot_data
+ 604 0054 00000000 		.word	seekfree_assistant_camera_buffer
+ 605              		.cfi_endproc
+ 606              	.LFE7:
+ 608              		.section	.text.seekfree_assistant_camera_boundary_config,"ax",%progbits
+ 609              		.align	1
+ 610              		.p2align 4,,15
+ 611              		.global	seekfree_assistant_camera_boundary_config
+ 612              		.syntax unified
+ 613              		.thumb
+ 614              		.thumb_func
+ 616              	seekfree_assistant_camera_boundary_config:
+ 617              	.LFB8:
+ 246:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 247:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 248:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手图像边线发送配置函数
+ 249:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     boundary_type   边界类型
+ 250:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_num         一条边界有多少个点
+ 251:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_x1          存放边线1横坐标的地址  如果传递NULL参数则表�
+ 252:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_x2          存放边线2横坐标的地址  如果传递NULL参数则表�
+ 253:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_x3          存放边线3横坐标的地址  如果传递NULL参数则表�
+ 254:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_y1          存放边线1纵坐标的地址  如果传递NULL参数则表�
+ 255:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_y2          存放边线2纵坐标的地址  如果传递NULL参数则表�
+ 256:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     dot_y3          存放边线3纵坐标的地址  如果传递NULL参数则表�
+ 257:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     void
+ 258:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例                     seekfree_assistant_camera_config(X_BOUNDARY, MT9V03X_H, x1_boun
+ 259:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例                     seekfree_assistant_camera_config(Y_BOUNDARY, MT9V03X_W, NULL, N
+ 260:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例                     seekfree_assistant_camera_config(XY_BOUNDARY, 160, xy_x1_bounda
+ 261:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 备注信息
+ 262:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 263:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** void seekfree_assistant_camera_boundary_config (seekfree_assistant_boundary_type_enum boundary_type
+ 264:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+ 618              		.loc 1 264 1
+ 619              		.cfi_startproc
+ 620              		@ args = 16, pretend = 0, frame = 24
+ 621              		@ frame_needed = 0, uses_anonymous_args = 0
+ 622              		@ link register save eliminated.
+ 623 0000 86B0     		sub	sp, sp, #24
+ 624              		.cfi_def_cfa_offset 24
+ 625 0002 0292     		str	r2, [sp, #8]
+ 626 0004 0193     		str	r3, [sp, #4]
+ 627 0006 0346     		mov	r3, r0
+ 628 0008 8DF80F30 		strb	r3, [sp, #15]
+ 629 000c 0B46     		mov	r3, r1	@ movhi
+ 630 000e ADF80C30 		strh	r3, [sp, #12]	@ movhi
+ 265:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint8 i = 0;
+ 631              		.loc 1 265 11
+ 632 0012 0023     		movs	r3, #0
+ 633 0014 8DF81730 		strb	r3, [sp, #23]
+ 266:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint8 boundary_num = 0;
+ 634              		.loc 1 266 11
+ 635 0018 0023     		movs	r3, #0
+ 636 001a 8DF81630 		strb	r3, [sp, #22]
+ 267:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint8 boundary_data_type = 0;
+ 637              		.loc 1 267 11
+ 638 001e 0023     		movs	r3, #0
+ 639 0020 8DF81530 		strb	r3, [sp, #21]
+ 268:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 269:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 检查图像发送缓冲区是否准备就绪, 调用此函数之前需要先调用seekfree_
+ 270:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     zf_assert(0 != seekfree_assistant_camera_buffer.camera_type);
+ 271:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 272:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_dot_data.dot_num    = dot_num;
+ 640              		.loc 1 272 51
+ 641 0024 B04A     		ldr	r2, .L56
+ 642 0026 BDF80C30 		ldrh	r3, [sp, #12]	@ movhi
+ 643 002a 9380     		strh	r3, [r2, #4]	@ movhi
+ 273:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_dot_data.valid_flag = 0;
+ 644              		.loc 1 273 51
+ 645 002c AE4B     		ldr	r3, .L56
+ 646 002e 0022     		movs	r2, #0
+ 647 0030 9A71     		strb	r2, [r3, #6]
+ 274:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     for(i = 0; i < 3; i++)
+ 648              		.loc 1 274 11
+ 649 0032 0023     		movs	r3, #0
+ 650 0034 8DF81730 		strb	r3, [sp, #23]
+ 651              		.loc 1 274 5
+ 652 0038 14E0     		b	.L32
+ 653              	.L33:
+ 275:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 276:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         seekfree_assistant_camera_buffer.boundary_x[i] = NULL;
+ 654              		.loc 1 276 52 discriminator 3
+ 655 003a 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 656              		.loc 1 276 56 discriminator 3
+ 657 003e AB4A     		ldr	r2, .L56+4
+ 658 0040 0233     		adds	r3, r3, #2
+ 659 0042 9B00     		lsls	r3, r3, #2
+ 660 0044 1344     		add	r3, r3, r2
+ 661 0046 0022     		movs	r2, #0
+ 662 0048 5A60     		str	r2, [r3, #4]
+ 277:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         seekfree_assistant_camera_buffer.boundary_y[i] = NULL;
+ 663              		.loc 1 277 52 discriminator 3
+ 664 004a 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 665              		.loc 1 277 56 discriminator 3
+ 666 004e A74A     		ldr	r2, .L56+4
+ 667 0050 0A33     		adds	r3, r3, #10
+ 668 0052 9B00     		lsls	r3, r3, #2
+ 669 0054 1344     		add	r3, r3, r2
+ 670 0056 0022     		movs	r2, #0
+ 671 0058 5A60     		str	r2, [r3, #4]
+ 274:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     for(i = 0; i < 3; i++)
+ 672              		.loc 1 274 24 discriminator 3
+ 673 005a 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 674 005e 0133     		adds	r3, r3, #1
+ 675 0060 8DF81730 		strb	r3, [sp, #23]
+ 676              	.L32:
+ 274:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     for(i = 0; i < 3; i++)
+ 677              		.loc 1 274 5 discriminator 1
+ 678 0064 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 679 0068 022B     		cmp	r3, #2
+ 680 006a E6D9     		bls	.L33
+ 278:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 279:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 280:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     switch(boundary_type)
+ 681              		.loc 1 280 5
+ 682 006c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 683 0070 032B     		cmp	r3, #3
+ 684 0072 00F23E81 		bhi	.L34
+ 685 0076 01A2     		adr	r2, .L36
+ 686 0078 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 687              		.p2align 2
+ 688              	.L36:
+ 689 007c 8D000000 		.word	.L39+1
+ 690 0080 3B010000 		.word	.L38+1
+ 691 0084 E9010000 		.word	.L37+1
+ 692 0088 F3020000 		.word	.L34+1
+ 693              		.p2align 1
+ 694              	.L39:
+ 281:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 282:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         case X_BOUNDARY:
+ 283:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 284:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(NULL != dot_x1)
+ 695              		.loc 1 284 15
+ 696 008c 029B     		ldr	r3, [sp, #8]
+ 697 008e 002B     		cmp	r3, #0
+ 698 0090 16D0     		beq	.L40
+ 285:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 286:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 699              		.loc 1 286 29
+ 700 0092 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 701 0096 0133     		adds	r3, r3, #1
+ 702 0098 8DF81630 		strb	r3, [sp, #22]
+ 287:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 0;
+ 703              		.loc 1 287 63
+ 704 009c 924B     		ldr	r3, .L56
+ 705 009e 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 706 00a0 43F00103 		orr	r3, r3, #1
+ 707 00a4 DAB2     		uxtb	r2, r3
+ 708 00a6 904B     		ldr	r3, .L56
+ 709 00a8 9A71     		strb	r2, [r3, #6]
+ 288:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_x[i++] = dot_x1;
+ 710              		.loc 1 288 62
+ 711 00aa 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 712 00ae 5A1C     		adds	r2, r3, #1
+ 713 00b0 8DF81720 		strb	r2, [sp, #23]
+ 714              		.loc 1 288 66
+ 715 00b4 8D4A     		ldr	r2, .L56+4
+ 716 00b6 0233     		adds	r3, r3, #2
+ 717 00b8 9B00     		lsls	r3, r3, #2
+ 718 00ba 1344     		add	r3, r3, r2
+ 719 00bc 029A     		ldr	r2, [sp, #8]
+ 720 00be 5A60     		str	r2, [r3, #4]
+ 721              	.L40:
+ 289:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 290:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(NULL != dot_x2)
+ 722              		.loc 1 290 15
+ 723 00c0 019B     		ldr	r3, [sp, #4]
+ 724 00c2 002B     		cmp	r3, #0
+ 725 00c4 16D0     		beq	.L41
+ 291:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 292:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 726              		.loc 1 292 29
+ 727 00c6 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 728 00ca 0133     		adds	r3, r3, #1
+ 729 00cc 8DF81630 		strb	r3, [sp, #22]
+ 293:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 1;
+ 730              		.loc 1 293 63
+ 731 00d0 854B     		ldr	r3, .L56
+ 732 00d2 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 733 00d4 43F00203 		orr	r3, r3, #2
+ 734 00d8 DAB2     		uxtb	r2, r3
+ 735 00da 834B     		ldr	r3, .L56
+ 736 00dc 9A71     		strb	r2, [r3, #6]
+ 294:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_x[i++] = dot_x2;
+ 737              		.loc 1 294 62
+ 738 00de 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 739 00e2 5A1C     		adds	r2, r3, #1
+ 740 00e4 8DF81720 		strb	r2, [sp, #23]
+ 741              		.loc 1 294 66
+ 742 00e8 804A     		ldr	r2, .L56+4
+ 743 00ea 0233     		adds	r3, r3, #2
+ 744 00ec 9B00     		lsls	r3, r3, #2
+ 745 00ee 1344     		add	r3, r3, r2
+ 746 00f0 019A     		ldr	r2, [sp, #4]
+ 747 00f2 5A60     		str	r2, [r3, #4]
+ 748              	.L41:
+ 295:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 296:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(NULL != dot_x3)
+ 749              		.loc 1 296 15
+ 750 00f4 069B     		ldr	r3, [sp, #24]
+ 751 00f6 002B     		cmp	r3, #0
+ 752 00f8 16D0     		beq	.L42
+ 297:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 298:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 753              		.loc 1 298 29
+ 754 00fa 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 755 00fe 0133     		adds	r3, r3, #1
+ 756 0100 8DF81630 		strb	r3, [sp, #22]
+ 299:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 2;
+ 757              		.loc 1 299 63
+ 758 0104 784B     		ldr	r3, .L56
+ 759 0106 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 760 0108 43F00403 		orr	r3, r3, #4
+ 761 010c DAB2     		uxtb	r2, r3
+ 762 010e 764B     		ldr	r3, .L56
+ 763 0110 9A71     		strb	r2, [r3, #6]
+ 300:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_x[i++] = dot_x3;
+ 764              		.loc 1 300 62
+ 765 0112 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 766 0116 5A1C     		adds	r2, r3, #1
+ 767 0118 8DF81720 		strb	r2, [sp, #23]
+ 768              		.loc 1 300 66
+ 769 011c 734A     		ldr	r2, .L56+4
+ 770 011e 0233     		adds	r3, r3, #2
+ 771 0120 9B00     		lsls	r3, r3, #2
+ 772 0122 1344     		add	r3, r3, r2
+ 773 0124 069A     		ldr	r2, [sp, #24]
+ 774 0126 5A60     		str	r2, [r3, #4]
+ 775              	.L42:
+ 301:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 302:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 303:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(255 < seekfree_assistant_camera_buffer.height)
+ 776              		.loc 1 303 54
+ 777 0128 704B     		ldr	r3, .L56+4
+ 778 012a DB88     		ldrh	r3, [r3, #6]
+ 779              		.loc 1 303 15
+ 780 012c FF2B     		cmp	r3, #255
+ 781 012e 40F2D680 		bls	.L53
+ 304:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 305:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_data_type = 1;
+ 782              		.loc 1 305 36
+ 783 0132 0123     		movs	r3, #1
+ 784 0134 8DF81530 		strb	r3, [sp, #21]
+ 306:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 307:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }break;
+ 785              		.loc 1 307 9
+ 786 0138 D1E0     		b	.L53
+ 787              	.L38:
+ 308:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 309:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         case Y_BOUNDARY:
+ 310:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 311:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(NULL != dot_y1)
+ 788              		.loc 1 311 15
+ 789 013a 079B     		ldr	r3, [sp, #28]
+ 790 013c 002B     		cmp	r3, #0
+ 791 013e 16D0     		beq	.L44
+ 312:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 313:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 792              		.loc 1 313 29
+ 793 0140 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 794 0144 0133     		adds	r3, r3, #1
+ 795 0146 8DF81630 		strb	r3, [sp, #22]
+ 314:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 0;
+ 796              		.loc 1 314 63
+ 797 014a 674B     		ldr	r3, .L56
+ 798 014c 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 799 014e 43F00103 		orr	r3, r3, #1
+ 800 0152 DAB2     		uxtb	r2, r3
+ 801 0154 644B     		ldr	r3, .L56
+ 802 0156 9A71     		strb	r2, [r3, #6]
+ 315:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_y[i++] = dot_y1;
+ 803              		.loc 1 315 62
+ 804 0158 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 805 015c 5A1C     		adds	r2, r3, #1
+ 806 015e 8DF81720 		strb	r2, [sp, #23]
+ 807              		.loc 1 315 66
+ 808 0162 624A     		ldr	r2, .L56+4
+ 809 0164 0A33     		adds	r3, r3, #10
+ 810 0166 9B00     		lsls	r3, r3, #2
+ 811 0168 1344     		add	r3, r3, r2
+ 812 016a 079A     		ldr	r2, [sp, #28]
+ 813 016c 5A60     		str	r2, [r3, #4]
+ 814              	.L44:
+ 316:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 317:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(NULL != dot_y2)
+ 815              		.loc 1 317 15
+ 816 016e 089B     		ldr	r3, [sp, #32]
+ 817 0170 002B     		cmp	r3, #0
+ 818 0172 16D0     		beq	.L45
+ 318:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 319:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 819              		.loc 1 319 29
+ 820 0174 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 821 0178 0133     		adds	r3, r3, #1
+ 822 017a 8DF81630 		strb	r3, [sp, #22]
+ 320:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 1;
+ 823              		.loc 1 320 63
+ 824 017e 5A4B     		ldr	r3, .L56
+ 825 0180 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 826 0182 43F00203 		orr	r3, r3, #2
+ 827 0186 DAB2     		uxtb	r2, r3
+ 828 0188 574B     		ldr	r3, .L56
+ 829 018a 9A71     		strb	r2, [r3, #6]
+ 321:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_y[i++] = dot_y2;
+ 830              		.loc 1 321 62
+ 831 018c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 832 0190 5A1C     		adds	r2, r3, #1
+ 833 0192 8DF81720 		strb	r2, [sp, #23]
+ 834              		.loc 1 321 66
+ 835 0196 554A     		ldr	r2, .L56+4
+ 836 0198 0A33     		adds	r3, r3, #10
+ 837 019a 9B00     		lsls	r3, r3, #2
+ 838 019c 1344     		add	r3, r3, r2
+ 839 019e 089A     		ldr	r2, [sp, #32]
+ 840 01a0 5A60     		str	r2, [r3, #4]
+ 841              	.L45:
+ 322:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 323:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(NULL != dot_y3)
+ 842              		.loc 1 323 15
+ 843 01a2 099B     		ldr	r3, [sp, #36]
+ 844 01a4 002B     		cmp	r3, #0
+ 845 01a6 16D0     		beq	.L46
+ 324:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 325:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 846              		.loc 1 325 29
+ 847 01a8 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 848 01ac 0133     		adds	r3, r3, #1
+ 849 01ae 8DF81630 		strb	r3, [sp, #22]
+ 326:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 2;
+ 850              		.loc 1 326 63
+ 851 01b2 4D4B     		ldr	r3, .L56
+ 852 01b4 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 853 01b6 43F00403 		orr	r3, r3, #4
+ 854 01ba DAB2     		uxtb	r2, r3
+ 855 01bc 4A4B     		ldr	r3, .L56
+ 856 01be 9A71     		strb	r2, [r3, #6]
+ 327:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_y[i++] = dot_y3;
+ 857              		.loc 1 327 62
+ 858 01c0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 859 01c4 5A1C     		adds	r2, r3, #1
+ 860 01c6 8DF81720 		strb	r2, [sp, #23]
+ 861              		.loc 1 327 66
+ 862 01ca 484A     		ldr	r2, .L56+4
+ 863 01cc 0A33     		adds	r3, r3, #10
+ 864 01ce 9B00     		lsls	r3, r3, #2
+ 865 01d0 1344     		add	r3, r3, r2
+ 866 01d2 099A     		ldr	r2, [sp, #36]
+ 867 01d4 5A60     		str	r2, [r3, #4]
+ 868              	.L46:
+ 328:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 329:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 330:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(255 < seekfree_assistant_camera_buffer.width)
+ 869              		.loc 1 330 54
+ 870 01d6 454B     		ldr	r3, .L56+4
+ 871 01d8 9B88     		ldrh	r3, [r3, #4]
+ 872              		.loc 1 330 15
+ 873 01da FF2B     		cmp	r3, #255
+ 874 01dc 40F28180 		bls	.L54
+ 331:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 332:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_data_type = 1;
+ 875              		.loc 1 332 36
+ 876 01e0 0123     		movs	r3, #1
+ 877 01e2 8DF81530 		strb	r3, [sp, #21]
+ 333:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 334:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }break;
+ 878              		.loc 1 334 9
+ 879 01e6 7CE0     		b	.L54
+ 880              	.L37:
+ 335:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 336:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         case XY_BOUNDARY:
+ 337:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 338:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if((NULL != dot_x1) && (NULL != dot_y1))
+ 881              		.loc 1 338 15
+ 882 01e8 029B     		ldr	r3, [sp, #8]
+ 883 01ea 002B     		cmp	r3, #0
+ 884 01ec 21D0     		beq	.L48
+ 885              		.loc 1 338 33 discriminator 1
+ 886 01ee 079B     		ldr	r3, [sp, #28]
+ 887 01f0 002B     		cmp	r3, #0
+ 888 01f2 1ED0     		beq	.L48
+ 339:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 340:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 889              		.loc 1 340 29
+ 890 01f4 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 891 01f8 0133     		adds	r3, r3, #1
+ 892 01fa 8DF81630 		strb	r3, [sp, #22]
+ 341:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 0;
+ 893              		.loc 1 341 63
+ 894 01fe 3A4B     		ldr	r3, .L56
+ 895 0200 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 896 0202 43F00103 		orr	r3, r3, #1
+ 897 0206 DAB2     		uxtb	r2, r3
+ 898 0208 374B     		ldr	r3, .L56
+ 899 020a 9A71     		strb	r2, [r3, #6]
+ 342:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_x[i]   = dot_x1;
+ 900              		.loc 1 342 60
+ 901 020c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 902              		.loc 1 342 66
+ 903 0210 364A     		ldr	r2, .L56+4
+ 904 0212 0233     		adds	r3, r3, #2
+ 905 0214 9B00     		lsls	r3, r3, #2
+ 906 0216 1344     		add	r3, r3, r2
+ 907 0218 029A     		ldr	r2, [sp, #8]
+ 908 021a 5A60     		str	r2, [r3, #4]
+ 343:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_y[i++] = dot_y1;
+ 909              		.loc 1 343 62
+ 910 021c 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 911 0220 5A1C     		adds	r2, r3, #1
+ 912 0222 8DF81720 		strb	r2, [sp, #23]
+ 913              		.loc 1 343 66
+ 914 0226 314A     		ldr	r2, .L56+4
+ 915 0228 0A33     		adds	r3, r3, #10
+ 916 022a 9B00     		lsls	r3, r3, #2
+ 917 022c 1344     		add	r3, r3, r2
+ 918 022e 079A     		ldr	r2, [sp, #28]
+ 919 0230 5A60     		str	r2, [r3, #4]
+ 920              	.L48:
+ 344:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 345:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if((NULL != dot_x2) && (NULL != dot_y2))
+ 921              		.loc 1 345 15
+ 922 0232 019B     		ldr	r3, [sp, #4]
+ 923 0234 002B     		cmp	r3, #0
+ 924 0236 21D0     		beq	.L49
+ 925              		.loc 1 345 33 discriminator 1
+ 926 0238 089B     		ldr	r3, [sp, #32]
+ 927 023a 002B     		cmp	r3, #0
+ 928 023c 1ED0     		beq	.L49
+ 346:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 347:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 929              		.loc 1 347 29
+ 930 023e 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 931 0242 0133     		adds	r3, r3, #1
+ 932 0244 8DF81630 		strb	r3, [sp, #22]
+ 348:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 1;
+ 933              		.loc 1 348 63
+ 934 0248 274B     		ldr	r3, .L56
+ 935 024a 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 936 024c 43F00203 		orr	r3, r3, #2
+ 937 0250 DAB2     		uxtb	r2, r3
+ 938 0252 254B     		ldr	r3, .L56
+ 939 0254 9A71     		strb	r2, [r3, #6]
+ 349:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_x[i]   = dot_x2;
+ 940              		.loc 1 349 60
+ 941 0256 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 942              		.loc 1 349 66
+ 943 025a 244A     		ldr	r2, .L56+4
+ 944 025c 0233     		adds	r3, r3, #2
+ 945 025e 9B00     		lsls	r3, r3, #2
+ 946 0260 1344     		add	r3, r3, r2
+ 947 0262 019A     		ldr	r2, [sp, #4]
+ 948 0264 5A60     		str	r2, [r3, #4]
+ 350:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_y[i++] = dot_y2;
+ 949              		.loc 1 350 62
+ 950 0266 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 951 026a 5A1C     		adds	r2, r3, #1
+ 952 026c 8DF81720 		strb	r2, [sp, #23]
+ 953              		.loc 1 350 66
+ 954 0270 1E4A     		ldr	r2, .L56+4
+ 955 0272 0A33     		adds	r3, r3, #10
+ 956 0274 9B00     		lsls	r3, r3, #2
+ 957 0276 1344     		add	r3, r3, r2
+ 958 0278 089A     		ldr	r2, [sp, #32]
+ 959 027a 5A60     		str	r2, [r3, #4]
+ 960              	.L49:
+ 351:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 352:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if((NULL != dot_x3) && (NULL != dot_y3))
+ 961              		.loc 1 352 15
+ 962 027c 069B     		ldr	r3, [sp, #24]
+ 963 027e 002B     		cmp	r3, #0
+ 964 0280 21D0     		beq	.L50
+ 965              		.loc 1 352 33 discriminator 1
+ 966 0282 099B     		ldr	r3, [sp, #36]
+ 967 0284 002B     		cmp	r3, #0
+ 968 0286 1ED0     		beq	.L50
+ 353:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 354:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_num++;
+ 969              		.loc 1 354 29
+ 970 0288 9DF81630 		ldrb	r3, [sp, #22]	@ zero_extendqisi2
+ 971 028c 0133     		adds	r3, r3, #1
+ 972 028e 8DF81630 		strb	r3, [sp, #22]
+ 355:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_dot_data.valid_flag |= 1 << 2;
+ 973              		.loc 1 355 63
+ 974 0292 154B     		ldr	r3, .L56
+ 975 0294 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 976 0296 43F00403 		orr	r3, r3, #4
+ 977 029a DAB2     		uxtb	r2, r3
+ 978 029c 124B     		ldr	r3, .L56
+ 979 029e 9A71     		strb	r2, [r3, #6]
+ 356:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_x[i]   = dot_x3;
+ 980              		.loc 1 356 60
+ 981 02a0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 982              		.loc 1 356 66
+ 983 02a4 114A     		ldr	r2, .L56+4
+ 984 02a6 0233     		adds	r3, r3, #2
+ 985 02a8 9B00     		lsls	r3, r3, #2
+ 986 02aa 1344     		add	r3, r3, r2
+ 987 02ac 069A     		ldr	r2, [sp, #24]
+ 988 02ae 5A60     		str	r2, [r3, #4]
+ 357:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_camera_buffer.boundary_y[i++] = dot_y3;
+ 989              		.loc 1 357 62
+ 990 02b0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 991 02b4 5A1C     		adds	r2, r3, #1
+ 992 02b6 8DF81720 		strb	r2, [sp, #23]
+ 993              		.loc 1 357 66
+ 994 02ba 0C4A     		ldr	r2, .L56+4
+ 995 02bc 0A33     		adds	r3, r3, #10
+ 996 02be 9B00     		lsls	r3, r3, #2
+ 997 02c0 1344     		add	r3, r3, r2
+ 998 02c2 099A     		ldr	r2, [sp, #36]
+ 999 02c4 5A60     		str	r2, [r3, #4]
+ 1000              	.L50:
+ 358:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 359:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 360:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if((255 < seekfree_assistant_camera_buffer.width) || (255 < seekfree_assistant_camera_b
+ 1001              		.loc 1 360 55
+ 1002 02c6 094B     		ldr	r3, .L56+4
+ 1003 02c8 9B88     		ldrh	r3, [r3, #4]
+ 1004              		.loc 1 360 15
+ 1005 02ca FF2B     		cmp	r3, #255
+ 1006 02cc 03D8     		bhi	.L51
+ 1007              		.loc 1 360 105 discriminator 1
+ 1008 02ce 074B     		ldr	r3, .L56+4
+ 1009 02d0 DB88     		ldrh	r3, [r3, #6]
+ 1010              		.loc 1 360 63 discriminator 1
+ 1011 02d2 FF2B     		cmp	r3, #255
+ 1012 02d4 0CD9     		bls	.L55
+ 1013              	.L51:
+ 361:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 362:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 boundary_data_type = 1;
+ 1014              		.loc 1 362 36
+ 1015 02d6 0123     		movs	r3, #1
+ 1016 02d8 8DF81530 		strb	r3, [sp, #21]
+ 363:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 364:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }break;
+ 1017              		.loc 1 364 9
+ 1018 02dc 08E0     		b	.L55
+ 1019              	.L53:
+ 307:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 1020              		.loc 1 307 9
+ 1021 02de 00BF     		nop
+ 1022 02e0 07E0     		b	.L34
+ 1023              	.L54:
+ 334:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 1024              		.loc 1 334 9
+ 1025 02e2 00BF     		nop
+ 1026 02e4 05E0     		b	.L34
+ 1027              	.L57:
+ 1028 02e6 00BF     		.align	2
+ 1029              	.L56:
+ 1030 02e8 00000000 		.word	seekfree_assistant_camera_dot_data
+ 1031 02ec 00000000 		.word	seekfree_assistant_camera_buffer
+ 1032              	.L55:
+ 1033              		.loc 1 364 9
+ 1034 02f0 00BF     		nop
+ 1035              	.L34:
+ 365:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 366:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         case NO_BOUNDARY:break;
+ 367:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 368:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 369:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_dot_data.dot_type   = (boundary_type << 6) | (boundary_data_type << 5
+ 1036              		.loc 1 369 68
+ 1037 02f2 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1038 02f6 9B01     		lsls	r3, r3, #6
+ 1039              		.loc 1 369 74
+ 1040 02f8 5AB2     		sxtb	r2, r3
+ 1041              		.loc 1 369 96
+ 1042 02fa 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 1043 02fe 5B01     		lsls	r3, r3, #5
+ 1044              		.loc 1 369 74
+ 1045 0300 5BB2     		sxtb	r3, r3
+ 1046 0302 1343     		orrs	r3, r3, r2
+ 1047 0304 5AB2     		sxtb	r2, r3
+ 1048              		.loc 1 369 102
+ 1049 0306 9DF91630 		ldrsb	r3, [sp, #22]
+ 1050 030a 1343     		orrs	r3, r3, r2
+ 1051 030c 5BB2     		sxtb	r3, r3
+ 1052 030e DAB2     		uxtb	r2, r3
+ 1053              		.loc 1 369 51
+ 1054 0310 024B     		ldr	r3, .L58
+ 1055 0312 9A70     		strb	r2, [r3, #2]
+ 370:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 1056              		.loc 1 370 1
+ 1057 0314 00BF     		nop
+ 1058 0316 06B0     		add	sp, sp, #24
+ 1059              		.cfi_def_cfa_offset 0
+ 1060              		@ sp needed
+ 1061 0318 7047     		bx	lr
+ 1062              	.L59:
+ 1063 031a 00BF     		.align	2
+ 1064              	.L58:
+ 1065 031c 00000000 		.word	seekfree_assistant_camera_dot_data
+ 1066              		.cfi_endproc
+ 1067              	.LFE8:
+ 1069              		.section	.text.seekfree_assistant_camera_send,"ax",%progbits
+ 1070              		.align	1
+ 1071              		.p2align 4,,15
+ 1072              		.global	seekfree_assistant_camera_send
+ 1073              		.syntax unified
+ 1074              		.thumb
+ 1075              		.thumb_func
+ 1077              	seekfree_assistant_camera_send:
+ 1078              	.LFB9:
+ 371:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 372:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 373:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手发送摄像头图像
+ 374:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     void
+ 375:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     void
+ 376:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例
+ 377:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 备注信息     在调用图像发送函数之前，请务必调用一次seekfree_assistant_cam
+ 378:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 379:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** void seekfree_assistant_camera_send (void)
+ 380:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+ 1079              		.loc 1 380 1
+ 1080              		.cfi_startproc
+ 1081              		@ args = 0, pretend = 0, frame = 0
+ 1082              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1083 0000 10B5     		push	{r4, lr}
+ 1084              		.cfi_def_cfa_offset 8
+ 1085              		.cfi_offset 4, -8
+ 1086              		.cfi_offset 14, -4
+ 1087 0002 82B0     		sub	sp, sp, #8
+ 1088              		.cfi_def_cfa_offset 16
+ 381:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 检查图像发送缓冲区是否准备就绪
+ 382:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     zf_assert(0 != seekfree_assistant_camera_buffer.camera_type);
+ 383:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 384:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_camera_data_send(seekfree_assistant_camera_buffer.camera_type, seekfree_assi
+ 1089              		.loc 1 384 5
+ 1090 0004 0E4B     		ldr	r3, .L63
+ 1091 0006 187A     		ldrb	r0, [r3, #8]	@ zero_extendqisi2
+ 1092 0008 0D4B     		ldr	r3, .L63
+ 1093 000a 1968     		ldr	r1, [r3]
+ 1094              		.loc 1 384 166
+ 1095 000c 0D4B     		ldr	r3, .L63+4
+ 1096 000e 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 1097              		.loc 1 384 5
+ 1098 0010 03F00F03 		and	r3, r3, #15
+ 1099 0014 DAB2     		uxtb	r2, r3
+ 1100 0016 0A4B     		ldr	r3, .L63
+ 1101 0018 9C88     		ldrh	r4, [r3, #4]
+ 1102 001a 094B     		ldr	r3, .L63
+ 1103 001c DB88     		ldrh	r3, [r3, #6]
+ 1104 001e 0093     		str	r3, [sp]
+ 1105 0020 2346     		mov	r3, r4
+ 1106 0022 FFF7FEFF 		bl	seekfree_assistant_camera_data_send
+ 385:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 386:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     if(seekfree_assistant_camera_dot_data.dot_type & 0x0f)
+ 1107              		.loc 1 386 42
+ 1108 0026 074B     		ldr	r3, .L63+4
+ 1109 0028 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 1110              		.loc 1 386 52
+ 1111 002a 03F00F03 		and	r3, r3, #15
+ 1112              		.loc 1 386 7
+ 1113 002e 002B     		cmp	r3, #0
+ 1114 0030 02D0     		beq	.L62
+ 387:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 388:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         seekfree_assistant_camera_dot_send(&seekfree_assistant_camera_buffer);
+ 1115              		.loc 1 388 9
+ 1116 0032 0348     		ldr	r0, .L63
+ 1117 0034 FFF7FEFF 		bl	seekfree_assistant_camera_dot_send
+ 1118              	.L62:
+ 389:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 390:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 1119              		.loc 1 390 1
+ 1120 0038 00BF     		nop
+ 1121 003a 02B0     		add	sp, sp, #8
+ 1122              		.cfi_def_cfa_offset 8
+ 1123              		@ sp needed
+ 1124 003c 10BD     		pop	{r4, pc}
+ 1125              	.L64:
+ 1126 003e 00BF     		.align	2
+ 1127              	.L63:
+ 1128 0040 00000000 		.word	seekfree_assistant_camera_buffer
+ 1129 0044 00000000 		.word	seekfree_assistant_camera_dot_data
+ 1130              		.cfi_endproc
+ 1131              	.LFE9:
+ 1133              		.section	.text.seekfree_assistant_data_analysis,"ax",%progbits
+ 1134              		.align	1
+ 1135              		.p2align 4,,15
+ 1136              		.global	seekfree_assistant_data_analysis
+ 1137              		.syntax unified
+ 1138              		.thumb
+ 1139              		.thumb_func
+ 1141              	seekfree_assistant_data_analysis:
+ 1142              	.LFB10:
+ 391:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 392:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 393:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 394:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 函数简介     逐飞助手解析接收到的数据
+ 395:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 参数说明     void
+ 396:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 返回参数     void
+ 397:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** // 使用示例     函数只需要放到周期运行的PIT中断或者主循环即可
+ 398:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** //-------------------------------------------------------------------------------------------------
+ 399:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** #if (1 == SEEKFREE_ASSISTANT_SET_PARAMETR_ENABLE)
+ 400:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** void seekfree_assistant_data_analysis (void)
+ 401:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** {
+ 1143              		.loc 1 401 1
+ 1144              		.cfi_startproc
+ 1145              		@ args = 0, pretend = 0, frame = 144
+ 1146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1147 0000 00B5     		push	{lr}
+ 1148              		.cfi_def_cfa_offset 4
+ 1149              		.cfi_offset 14, -4
+ 1150 0002 A5B0     		sub	sp, sp, #148
+ 1151              		.cfi_def_cfa_offset 152
+ 402:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint8  temp_sum;
+ 403:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint32 read_length;
+ 404:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_parameter_struct *receive_packet;
+ 405:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 406:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 这里使用uint32进行定义，目的是为了保证数组四字节对齐
+ 407:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     uint32  temp_buffer[SEEKFREE_ASSISTANT_BUFFER_SIZE / 4];
+ 408:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 409:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     // 尝试读取数据, 如果不是自定义的传输方式则从接收回调中读取数据
+ 410:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     read_length = SEEKFREE_ASSISTANT_BUFFER_SIZE;
+ 1152              		.loc 1 410 17
+ 1153 0004 8023     		movs	r3, #128
+ 1154 0006 2193     		str	r3, [sp, #132]
+ 411:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     seekfree_assistant_receive_callback((uint8 *)temp_buffer, &read_length);
+ 1155              		.loc 1 411 5
+ 1156 0008 2A4B     		ldr	r3, .L72
+ 1157 000a 1B68     		ldr	r3, [r3]
+ 1158 000c 21A9     		add	r1, sp, #132
+ 1159 000e 01AA     		add	r2, sp, #4
+ 1160 0010 1046     		mov	r0, r2
+ 1161 0012 9847     		blx	r3
+ 1162              	.LVL6:
+ 412:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     if(read_length)
+ 1163              		.loc 1 412 8
+ 1164 0014 219B     		ldr	r3, [sp, #132]
+ 1165              		.loc 1 412 7
+ 1166 0016 002B     		cmp	r3, #0
+ 1167 0018 41D0     		beq	.L67
+ 413:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 414:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         // 将读取到的数据写入FIFO
+ 415:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         zf_fifo_write_buffer(&seekfree_assistant_fifo, temp_buffer, &read_length);
+ 1168              		.loc 1 415 9
+ 1169 001a 21AA     		add	r2, sp, #132
+ 1170 001c 01AB     		add	r3, sp, #4
+ 1171 001e 1946     		mov	r1, r3
+ 1172 0020 2548     		ldr	r0, .L72+4
+ 1173 0022 FFF7FEFF 		bl	zf_fifo_write_buffer
+ 416:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 417:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 418:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     while(sizeof(seekfree_assistant_parameter_struct) <= zf_fifo_used(&seekfree_assistant_fifo))
+ 1174              		.loc 1 418 10
+ 1175 0026 3AE0     		b	.L67
+ 1176              	.L71:
+ 419:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 420:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         read_length = sizeof(seekfree_assistant_parameter_struct);
+ 1177              		.loc 1 420 21
+ 1178 0028 0823     		movs	r3, #8
+ 1179 002a 2193     		str	r3, [sp, #132]
+ 421:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         zf_fifo_read_buffer(&seekfree_assistant_fifo, (uint8 *)temp_buffer, &read_length, FIFO_READ
+ 1180              		.loc 1 421 9
+ 1181 002c 21AA     		add	r2, sp, #132
+ 1182 002e 01A9     		add	r1, sp, #4
+ 1183 0030 0023     		movs	r3, #0
+ 1184 0032 2148     		ldr	r0, .L72+4
+ 1185 0034 FFF7FEFF 		bl	zf_fifo_read_buffer
+ 422:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 423:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         if(SEEKFREE_ASSISTANT_RECEIVE_HEAD != ((uint8 *)temp_buffer)[0])
+ 1186              		.loc 1 423 57
+ 1187 0038 01AB     		add	r3, sp, #4
+ 1188              		.loc 1 423 69
+ 1189 003a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1190              		.loc 1 423 11
+ 1191 003c 552B     		cmp	r3, #85
+ 1192 003e 02D0     		beq	.L68
+ 424:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 425:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             // 没有帧头则从FIFO中去掉第一个数据
+ 426:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             read_length = 1;
+ 1193              		.loc 1 426 25
+ 1194 0040 0123     		movs	r3, #1
+ 1195 0042 2193     		str	r3, [sp, #132]
+ 1196 0044 25E0     		b	.L69
+ 1197              	.L68:
+ 427:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }
+ 428:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         else
+ 429:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         {
+ 430:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             // 找到帧头
+ 431:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             receive_packet = (seekfree_assistant_parameter_struct *)temp_buffer;
+ 1198              		.loc 1 431 28
+ 1199 0046 01AB     		add	r3, sp, #4
+ 1200 0048 2393     		str	r3, [sp, #140]
+ 432:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             temp_sum = receive_packet->check_sum;
+ 1201              		.loc 1 432 22
+ 1202 004a 239B     		ldr	r3, [sp, #140]
+ 1203 004c DB78     		ldrb	r3, [r3, #3]
+ 1204 004e 8DF88B30 		strb	r3, [sp, #139]
+ 433:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             receive_packet->check_sum = 0;
+ 1205              		.loc 1 433 39
+ 1206 0052 239B     		ldr	r3, [sp, #140]
+ 1207 0054 0022     		movs	r2, #0
+ 1208 0056 DA70     		strb	r2, [r3, #3]
+ 434:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             if(temp_sum == seekfree_assistant_sum((uint8 *)temp_buffer, sizeof(seekfree_assistant_p
+ 1209              		.loc 1 434 28
+ 1210 0058 01AB     		add	r3, sp, #4
+ 1211 005a 0821     		movs	r1, #8
+ 1212 005c 1846     		mov	r0, r3
+ 1213 005e FFF7FEFF 		bl	seekfree_assistant_sum
+ 1214 0062 0346     		mov	r3, r0
+ 1215 0064 1A46     		mov	r2, r3
+ 1216              		.loc 1 434 15
+ 1217 0066 9DF88B30 		ldrb	r3, [sp, #139]	@ zero_extendqisi2
+ 1218 006a 9342     		cmp	r3, r2
+ 1219 006c 0FD1     		bne	.L70
+ 435:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 436:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 // 和校验成功保存数据
+ 437:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_parameter[receive_packet->channel - 1] = receive_packet->data;
+ 1220              		.loc 1 437 60
+ 1221 006e 239B     		ldr	r3, [sp, #140]
+ 1222 0070 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 1223              		.loc 1 437 70
+ 1224 0072 013B     		subs	r3, r3, #1
+ 1225              		.loc 1 437 91
+ 1226 0074 239A     		ldr	r2, [sp, #140]
+ 1227 0076 5268     		ldr	r2, [r2, #4]	@ float
+ 1228              		.loc 1 437 75
+ 1229 0078 1049     		ldr	r1, .L72+8
+ 1230 007a 9B00     		lsls	r3, r3, #2
+ 1231 007c 0B44     		add	r3, r3, r1
+ 1232 007e 1A60     		str	r2, [r3]	@ float
+ 438:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 seekfree_assistant_parameter_update_flag[receive_packet->channel - 1] = 1;
+ 1233              		.loc 1 438 72
+ 1234 0080 239B     		ldr	r3, [sp, #140]
+ 1235 0082 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 1236              		.loc 1 438 82
+ 1237 0084 013B     		subs	r3, r3, #1
+ 1238              		.loc 1 438 87
+ 1239 0086 0E4A     		ldr	r2, .L72+12
+ 1240 0088 0121     		movs	r1, #1
+ 1241 008a D154     		strb	r1, [r2, r3]
+ 1242 008c 01E0     		b	.L69
+ 1243              	.L70:
+ 439:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 440:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             else
+ 441:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             {
+ 442:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****                 read_length = 1;
+ 1244              		.loc 1 442 29
+ 1245 008e 0123     		movs	r3, #1
+ 1246 0090 2193     		str	r3, [sp, #132]
+ 1247              	.L69:
+ 443:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****             }
+ 444:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         }
+ 445:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** 
+ 446:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         // 丢弃无需使用的数据
+ 447:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****         zf_fifo_read_buffer(&seekfree_assistant_fifo, (uint8 *)temp_buffer, &read_length, FIFO_READ
+ 1248              		.loc 1 447 9
+ 1249 0092 21AA     		add	r2, sp, #132
+ 1250 0094 01A9     		add	r1, sp, #4
+ 1251 0096 0123     		movs	r3, #1
+ 1252 0098 0748     		ldr	r0, .L72+4
+ 1253 009a FFF7FEFF 		bl	zf_fifo_read_buffer
+ 1254              	.L67:
+ 418:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 1255              		.loc 1 418 58
+ 1256 009e 0648     		ldr	r0, .L72+4
+ 1257 00a0 FFF7FEFF 		bl	zf_fifo_used
+ 1258 00a4 0346     		mov	r3, r0
+ 418:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     {
+ 1259              		.loc 1 418 10
+ 1260 00a6 072B     		cmp	r3, #7
+ 1261 00a8 BED8     		bhi	.L71
+ 448:libraries/zf_components/seekfree_assistant/seekfree_assistant.c ****     }
+ 449:libraries/zf_components/seekfree_assistant/seekfree_assistant.c **** }
+ 1262              		.loc 1 449 1
+ 1263 00aa 00BF     		nop
+ 1264 00ac 00BF     		nop
+ 1265 00ae 25B0     		add	sp, sp, #148
+ 1266              		.cfi_def_cfa_offset 4
+ 1267              		@ sp needed
+ 1268 00b0 5DF804FB 		ldr	pc, [sp], #4
+ 1269              	.L73:
+ 1270              		.align	2
+ 1271              	.L72:
+ 1272 00b4 00000000 		.word	seekfree_assistant_receive_callback
+ 1273 00b8 00000000 		.word	seekfree_assistant_fifo
+ 1274 00bc 00000000 		.word	seekfree_assistant_parameter
+ 1275 00c0 00000000 		.word	seekfree_assistant_parameter_update_flag
+ 1276              		.cfi_endproc
+ 1277              	.LFE10:
+ 1279              		.text
+ 1280              	.Letext0:
+ 1281              		.file 2 "libraries/zf_common/zf_common_typedef.h"
+ 1282              		.file 3 "libraries/zf_components/seekfree_assistant/seekfree_assistant.h"
+ 1283              		.file 4 "libraries/zf_common/zf_common_fifo.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 seekfree_assistant.c
+D:\Users\TMP\cchmauJS.s:19     .bss.seekfree_assistant_buffer:00000000 $d
+D:\Users\TMP\cchmauJS.s:22     .bss.seekfree_assistant_buffer:00000000 seekfree_assistant_buffer
+D:\Users\TMP\cchmauJS.s:25     .data.seekfree_assistant_fifo:00000000 $d
+D:\Users\TMP\cchmauJS.s:28     .data.seekfree_assistant_fifo:00000000 seekfree_assistant_fifo
+D:\Users\TMP\cchmauJS.s:37     .bss.seekfree_assistant_camera_data:00000000 $d
+D:\Users\TMP\cchmauJS.s:40     .bss.seekfree_assistant_camera_data:00000000 seekfree_assistant_camera_data
+D:\Users\TMP\cchmauJS.s:43     .bss.seekfree_assistant_camera_dot_data:00000000 $d
+D:\Users\TMP\cchmauJS.s:46     .bss.seekfree_assistant_camera_dot_data:00000000 seekfree_assistant_camera_dot_data
+D:\Users\TMP\cchmauJS.s:49     .bss.seekfree_assistant_camera_buffer:00000000 $d
+D:\Users\TMP\cchmauJS.s:52     .bss.seekfree_assistant_camera_buffer:00000000 seekfree_assistant_camera_buffer
+D:\Users\TMP\cchmauJS.s:59     .data.seekfree_assistant_transfer_callback:00000000 seekfree_assistant_transfer_callback
+D:\Users\TMP\cchmauJS.s:56     .data.seekfree_assistant_transfer_callback:00000000 $d
+D:\Users\TMP\cchmauJS.s:66     .data.seekfree_assistant_receive_callback:00000000 seekfree_assistant_receive_callback
+D:\Users\TMP\cchmauJS.s:63     .data.seekfree_assistant_receive_callback:00000000 $d
+D:\Users\TMP\cchmauJS.s:73     .bss.seekfree_assistant_oscilloscope_data:00000000 seekfree_assistant_oscilloscope_data
+D:\Users\TMP\cchmauJS.s:70     .bss.seekfree_assistant_oscilloscope_data:00000000 $d
+D:\Users\TMP\cchmauJS.s:80     .bss.seekfree_assistant_parameter:00000000 seekfree_assistant_parameter
+D:\Users\TMP\cchmauJS.s:77     .bss.seekfree_assistant_parameter:00000000 $d
+D:\Users\TMP\cchmauJS.s:87     .bss.seekfree_assistant_parameter_update_flag:00000000 seekfree_assistant_parameter_update_flag
+D:\Users\TMP\cchmauJS.s:84     .bss.seekfree_assistant_parameter_update_flag:00000000 $d
+D:\Users\TMP\cchmauJS.s:90     .text.seekfree_assistant_sum:00000000 $t
+D:\Users\TMP\cchmauJS.s:96     .text.seekfree_assistant_sum:00000000 seekfree_assistant_sum
+D:\Users\TMP\cchmauJS.s:144    .text.seekfree_assistant_camera_data_send:00000000 $t
+D:\Users\TMP\cchmauJS.s:151    .text.seekfree_assistant_camera_data_send:00000000 seekfree_assistant_camera_data_send
+D:\Users\TMP\cchmauJS.s:304    .text.seekfree_assistant_camera_data_send:000000e8 $d
+D:\Users\TMP\cchmauJS.s:310    .text.seekfree_assistant_camera_dot_send:00000000 $t
+D:\Users\TMP\cchmauJS.s:317    .text.seekfree_assistant_camera_dot_send:00000000 seekfree_assistant_camera_dot_send
+D:\Users\TMP\cchmauJS.s:443    .text.seekfree_assistant_camera_dot_send:000000c0 $d
+D:\Users\TMP\cchmauJS.s:449    .text.seekfree_assistant_oscilloscope_send:00000000 $t
+D:\Users\TMP\cchmauJS.s:456    .text.seekfree_assistant_oscilloscope_send:00000000 seekfree_assistant_oscilloscope_send
+D:\Users\TMP\cchmauJS.s:536    .text.seekfree_assistant_oscilloscope_send:0000007c $d
+D:\Users\TMP\cchmauJS.s:541    .text.seekfree_assistant_camera_information_config:00000000 $t
+D:\Users\TMP\cchmauJS.s:548    .text.seekfree_assistant_camera_information_config:00000000 seekfree_assistant_camera_information_config
+D:\Users\TMP\cchmauJS.s:603    .text.seekfree_assistant_camera_information_config:00000050 $d
+D:\Users\TMP\cchmauJS.s:609    .text.seekfree_assistant_camera_boundary_config:00000000 $t
+D:\Users\TMP\cchmauJS.s:616    .text.seekfree_assistant_camera_boundary_config:00000000 seekfree_assistant_camera_boundary_config
+D:\Users\TMP\cchmauJS.s:689    .text.seekfree_assistant_camera_boundary_config:0000007c $d
+D:\Users\TMP\cchmauJS.s:693    .text.seekfree_assistant_camera_boundary_config:0000008c $t
+D:\Users\TMP\cchmauJS.s:1030   .text.seekfree_assistant_camera_boundary_config:000002e8 $d
+D:\Users\TMP\cchmauJS.s:1034   .text.seekfree_assistant_camera_boundary_config:000002f0 $t
+D:\Users\TMP\cchmauJS.s:1065   .text.seekfree_assistant_camera_boundary_config:0000031c $d
+D:\Users\TMP\cchmauJS.s:1070   .text.seekfree_assistant_camera_send:00000000 $t
+D:\Users\TMP\cchmauJS.s:1077   .text.seekfree_assistant_camera_send:00000000 seekfree_assistant_camera_send
+D:\Users\TMP\cchmauJS.s:1128   .text.seekfree_assistant_camera_send:00000040 $d
+D:\Users\TMP\cchmauJS.s:1134   .text.seekfree_assistant_data_analysis:00000000 $t
+D:\Users\TMP\cchmauJS.s:1141   .text.seekfree_assistant_data_analysis:00000000 seekfree_assistant_data_analysis
+D:\Users\TMP\cchmauJS.s:1272   .text.seekfree_assistant_data_analysis:000000b4 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.seekfree_assistant.h.43.d010b237c287198fee162e35eb617bdf
+                           .group:00000000 wm4.zf_common_fifo.h.114.cace62233bb13c2a4f57ef2746f514d9
+
+UNDEFINED SYMBOLS
+seekfree_assistant_transfer
+seekfree_assistant_receive
+zf_fifo_write_buffer
+zf_fifo_read_buffer
+zf_fifo_used

@@ -1,0 +1,1178 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_common_memory.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.bss.zf_memory_management,"aw",%nobits
+  19              		.align	2
+  22              	zf_memory_management:
+  23 0000 00000000 		.space	20
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  24              		.section	.bss.zf_memory_management_state,"aw",%nobits
+  25              		.align	2
+  28              	zf_memory_management_state:
+  29 0000 00       		.space	1
+  30              		.global	memory_management_buffer
+  31              		.section	.bss.memory_management_buffer,"aw",%nobits
+  32              		.align	2
+  35              	memory_management_buffer:
+  36 0000 00000000 		.space	65536
+  36      00000000 
+  36      00000000 
+  36      00000000 
+  36      00000000 
+  37              		.section	.text.zf_memory_assert_handler,"ax",%progbits
+  38              		.align	1
+  39              		.p2align 4,,15
+  40              		.global	zf_memory_assert_handler
+  41              		.syntax unified
+  42              		.thumb
+  43              		.thumb_func
+  45              	zf_memory_assert_handler:
+  46              	.LFB3:
+  47              		.file 1 "libraries/zf_common/zf_common_memory.c"
+   1:libraries/zf_common/zf_common_memory.c **** /**************************************************************************************************
+   2:libraries/zf_common/zf_common_memory.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_common/zf_common_memory.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_common/zf_common_memory.c **** *
+   5:libraries/zf_common/zf_common_memory.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_common/zf_common_memory.c **** *
+   7:libraries/zf_common/zf_common_memory.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_common/zf_common_memory.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_common/zf_common_memory.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_common/zf_common_memory.c **** *
+  11:libraries/zf_common/zf_common_memory.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_common/zf_common_memory.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_common/zf_common_memory.c **** * 更多细节请参见 GPL
+  14:libraries/zf_common/zf_common_memory.c **** *
+  15:libraries/zf_common/zf_common_memory.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_common/zf_common_memory.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_common/zf_common_memory.c **** *
+  18:libraries/zf_common/zf_common_memory.c **** * 额外注明：
+  19:libraries/zf_common/zf_common_memory.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_common/zf_common_memory.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_common/zf_common_memory.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_common/zf_common_memory.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_common/zf_common_memory.c **** *
+  24:libraries/zf_common/zf_common_memory.c **** * 文件名称          zf_common_memory
+  25:libraries/zf_common/zf_common_memory.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_common/zf_common_memory.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_common/zf_common_memory.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_common/zf_common_memory.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_common/zf_common_memory.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_common/zf_common_memory.c **** ***************************************************************************************************
+  31:libraries/zf_common/zf_common_memory.c **** 
+  32:libraries/zf_common/zf_common_memory.c **** // zf_common 层引用
+  33:libraries/zf_common/zf_common_memory.c **** #include "zf_common_debug.h"
+  34:libraries/zf_common/zf_common_memory.c **** 
+  35:libraries/zf_common/zf_common_memory.c **** // 自身头文件
+  36:libraries/zf_common/zf_common_memory.c **** #include "zf_common_memory.h"
+  37:libraries/zf_common/zf_common_memory.c **** 
+  38:libraries/zf_common/zf_common_memory.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  39:libraries/zf_common/zf_common_memory.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  40:libraries/zf_common/zf_common_memory.c **** typedef struct
+  41:libraries/zf_common/zf_common_memory.c **** {
+  42:libraries/zf_common/zf_common_memory.c ****     union
+  43:libraries/zf_common/zf_common_memory.c ****     {
+  44:libraries/zf_common/zf_common_memory.c ****         uint8           state       ;                                           // 整体操作状�
+  45:libraries/zf_common/zf_common_memory.c ****         struct
+  46:libraries/zf_common/zf_common_memory.c ****         {
+  47:libraries/zf_common/zf_common_memory.c ****             uint8       malloc  : 1 ;                                           // 申请操作
+  48:libraries/zf_common/zf_common_memory.c ****             uint8       free    : 1 ;                                           // 释放操作
+  49:libraries/zf_common/zf_common_memory.c ****             uint8               : 6 ;
+  50:libraries/zf_common/zf_common_memory.c ****         };
+  51:libraries/zf_common/zf_common_memory.c ****     };
+  52:libraries/zf_common/zf_common_memory.c **** }zf_memory_management_state_struct;
+  53:libraries/zf_common/zf_common_memory.c **** 
+  54:libraries/zf_common/zf_common_memory.c **** 
+  55:libraries/zf_common/zf_common_memory.c **** AT_ZF_LIB_SECTION_START
+  56:libraries/zf_common/zf_common_memory.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  57:libraries/zf_common/zf_common_memory.c **** AT_ZF_LIB_SECTION static memory_management_info_struct      zf_memory_management        = {0, 0, 0,
+  58:libraries/zf_common/zf_common_memory.c **** AT_ZF_LIB_SECTION static zf_memory_management_state_struct  zf_memory_management_state  = {0};
+  59:libraries/zf_common/zf_common_memory.c **** #if   (!MEMORY_MANAGEMENT_MODE)
+  60:libraries/zf_common/zf_common_memory.c **** uint32 memory_management_buffer[ZF_HEAP_SIZE / 4];
+  61:libraries/zf_common/zf_common_memory.c **** #endif
+  62:libraries/zf_common/zf_common_memory.c **** AT_ZF_LIB_SECTION_END
+  63:libraries/zf_common/zf_common_memory.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  64:libraries/zf_common/zf_common_memory.c **** 
+  65:libraries/zf_common/zf_common_memory.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  66:libraries/zf_common/zf_common_memory.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  67:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+  68:libraries/zf_common/zf_common_memory.c **** // 函数简介     GPIO 断言处理
+  69:libraries/zf_common/zf_common_memory.c **** // 参数说明     *file               文件路径
+  70:libraries/zf_common/zf_common_memory.c **** // 参数说明     line                报错行
+  71:libraries/zf_common/zf_common_memory.c **** // 参数说明     *tips               输出信息
+  72:libraries/zf_common/zf_common_memory.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / GPIO_OPERATION_DONE - 完成 其
+  73:libraries/zf_common/zf_common_memory.c **** // 使用示例     zf_memory_assert_handler(file, line, tips);
+  74:libraries/zf_common/zf_common_memory.c **** // 备注信息
+  75:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+  76:libraries/zf_common/zf_common_memory.c **** uint8 zf_memory_assert_handler (char *file, int line, char *tips)
+  77:libraries/zf_common/zf_common_memory.c **** {
+  48              		.loc 1 77 1
+  49              		.cfi_startproc
+  50              		@ args = 0, pretend = 0, frame = 16
+  51              		@ frame_needed = 0, uses_anonymous_args = 0
+  52 0000 00B5     		push	{lr}
+  53              		.cfi_def_cfa_offset 4
+  54              		.cfi_offset 14, -4
+  55 0002 87B0     		sub	sp, sp, #28
+  56              		.cfi_def_cfa_offset 32
+  57 0004 0590     		str	r0, [sp, #20]
+  58 0006 0491     		str	r1, [sp, #16]
+  59 0008 0392     		str	r2, [sp, #12]
+  78:libraries/zf_common/zf_common_memory.c ****     debug_message_handler(DEBUG_OUTPUT_LEVEL_ASSERT, ZF_FALSE, tips, file, line);
+  60              		.loc 1 78 5
+  61 000a 049B     		ldr	r3, [sp, #16]
+  62 000c 0093     		str	r3, [sp]
+  63 000e 059B     		ldr	r3, [sp, #20]
+  64 0010 039A     		ldr	r2, [sp, #12]
+  65 0012 0021     		movs	r1, #0
+  66 0014 0220     		movs	r0, #2
+  67 0016 FFF7FEFF 		bl	debug_message_handler
+  68              	.L2:
+  79:libraries/zf_common/zf_common_memory.c ****     while(1);
+  69              		.loc 1 79 10 discriminator 1
+  70 001a FEE7     		b	.L2
+  71              		.cfi_endproc
+  72              	.LFE3:
+  74              		.section	.rodata
+  75              		.align	2
+  76              	.LC0:
+  77 0000 6C696272 		.ascii	"libraries/zf_common/zf_common_memory.c\000"
+  77      61726965 
+  77      732F7A66 
+  77      5F636F6D 
+  77      6D6F6E2F 
+  78              		.section	.text.zf_memory_malloc,"ax",%progbits
+  79              		.align	1
+  80              		.p2align 4,,15
+  81              		.weak	zf_memory_malloc
+  82              		.syntax unified
+  83              		.thumb
+  84              		.thumb_func
+  86              	zf_memory_malloc:
+  87              	.LFB4:
+  80:libraries/zf_common/zf_common_memory.c ****     return ZF_ERROR;
+  81:libraries/zf_common/zf_common_memory.c **** }
+  82:libraries/zf_common/zf_common_memory.c **** 
+  83:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+  84:libraries/zf_common/zf_common_memory.c **** // 函数简介     从堆中申请对应大小内存
+  85:libraries/zf_common/zf_common_memory.c **** // 参数说明     *ptr                内存空间地址
+  86:libraries/zf_common/zf_common_memory.c **** // 参数说明     type                内存对齐类型    (详见 zf_common_memory.h 中枚举 
+  87:libraries/zf_common/zf_common_memory.c **** // 参数说明     size                需要的内存空间大小 固定是字节长度
+  88:libraries/zf_common/zf_common_memory.c **** // 返回参数     void *              返回分配的内存地址
+  89:libraries/zf_common/zf_common_memory.c **** // 使用示例     uint16 *data_buffer = (uint16 * )zf_memory_malloc(ZF_MEMORY_1BYTE, 110);
+  90:libraries/zf_common/zf_common_memory.c **** // 备注信息     不支持多线程操作 不支持中断嵌套调用 不支持递归调用
+  91:libraries/zf_common/zf_common_memory.c **** //              本函数使用弱定义 这样做的目的是在移植操作系统时可以重载�
+  92:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+  93:libraries/zf_common/zf_common_memory.c **** ZF_WEAK void *zf_memory_malloc (memory_align_type_enum type, uint32 size)
+  94:libraries/zf_common/zf_common_memory.c **** {
+  88              		.loc 1 94 1
+  89              		.cfi_startproc
+  90              		@ args = 0, pretend = 0, frame = 32
+  91              		@ frame_needed = 0, uses_anonymous_args = 0
+  92 0000 00B5     		push	{lr}
+  93              		.cfi_def_cfa_offset 4
+  94              		.cfi_offset 14, -4
+  95 0002 89B0     		sub	sp, sp, #36
+  96              		.cfi_def_cfa_offset 40
+  97 0004 0346     		mov	r3, r0
+  98 0006 0091     		str	r1, [sp]
+  99 0008 8DF80730 		strb	r3, [sp, #7]
+  95:libraries/zf_common/zf_common_memory.c ****     void *ptr = NULL;
+ 100              		.loc 1 95 11
+ 101 000c 0023     		movs	r3, #0
+ 102 000e 0793     		str	r3, [sp, #28]
+ 103              	.LBB2:
+  96:libraries/zf_common/zf_common_memory.c **** 
+  97:libraries/zf_common/zf_common_memory.c ****     do
+  98:libraries/zf_common/zf_common_memory.c ****     {
+  99:libraries/zf_common/zf_common_memory.c ****         if(zf_memory_management_state.state)                                    // 简易互斥判�
+ 104              		.loc 1 99 38
+ 105 0010 924B     		ldr	r3, .L28
+ 106 0012 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 107              		.loc 1 99 11
+ 108 0014 002B     		cmp	r3, #0
+ 109 0016 40F00F81 		bne	.L24
+ 100:libraries/zf_common/zf_common_memory.c ****         {
+ 101:libraries/zf_common/zf_common_memory.c ****             break;
+ 102:libraries/zf_common/zf_common_memory.c ****         }
+ 103:libraries/zf_common/zf_common_memory.c ****         zf_memory_management_state.malloc = ZF_TRUE;                            // 申请操作占�
+ 110              		.loc 1 103 43
+ 111 001a 904A     		ldr	r2, .L28
+ 112 001c 1378     		ldrb	r3, [r2]
+ 113 001e 43F00103 		orr	r3, r3, #1
+ 114 0022 1370     		strb	r3, [r2]
+ 104:libraries/zf_common/zf_common_memory.c **** 
+ 105:libraries/zf_common/zf_common_memory.c ****         // 由于有时候 IDE 不会检查输入的参数是否符合枚举体限制
+ 106:libraries/zf_common/zf_common_memory.c ****         // 所以在这里直接进行断言判断 这是为了保证内存管理不会出错
+ 107:libraries/zf_common/zf_common_memory.c ****         if(zf_memory_assert((
+ 115              		.loc 1 107 11
+ 116 0024 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 117 0028 012B     		cmp	r3, #1
+ 118 002a 10D0     		beq	.L6
+ 119              		.loc 1 107 12 discriminator 1
+ 120 002c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 121 0030 022B     		cmp	r3, #2
+ 122 0032 0CD0     		beq	.L6
+ 123              		.loc 1 107 12 is_stmt 0 discriminator 2
+ 124 0034 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 125 0038 042B     		cmp	r3, #4
+ 126 003a 08D0     		beq	.L6
+ 127              		.loc 1 107 12 discriminator 3
+ 128 003c 0022     		movs	r2, #0
+ 129 003e 6B21     		movs	r1, #107
+ 130 0040 8748     		ldr	r0, .L28+4
+ 131 0042 FFF7FEFF 		bl	zf_memory_assert_handler
+ 132 0046 0346     		mov	r3, r0
+ 133 0048 002B     		cmp	r3, #0
+ 134 004a 40F0F780 		bne	.L25
+ 135              	.L6:
+ 108:libraries/zf_common/zf_common_memory.c ****                     MEMORY_ALIGN_1BYTE == type
+ 109:libraries/zf_common/zf_common_memory.c ****                 ||  MEMORY_ALIGN_2BYTE == type
+ 110:libraries/zf_common/zf_common_memory.c ****                 ||  MEMORY_ALIGN_4BYTE == type)))
+ 111:libraries/zf_common/zf_common_memory.c ****         {
+ 112:libraries/zf_common/zf_common_memory.c ****             break;
+ 113:libraries/zf_common/zf_common_memory.c ****         }
+ 114:libraries/zf_common/zf_common_memory.c **** 
+ 115:libraries/zf_common/zf_common_memory.c ****         // 初步判断是否还有足够的空间
+ 116:libraries/zf_common/zf_common_memory.c ****         // 因为区块列表信息也是存储在这里 所以还要减去新增区块信息大小
+ 117:libraries/zf_common/zf_common_memory.c ****         if(zf_memory_management.size - sizeof(memory_block_info_struct) < size)
+ 136              		.loc 1 117 32 is_stmt 1
+ 137 004e 854B     		ldr	r3, .L28+8
+ 138 0050 1B68     		ldr	r3, [r3]
+ 139              		.loc 1 117 38
+ 140 0052 083B     		subs	r3, r3, #8
+ 141              		.loc 1 117 11
+ 142 0054 009A     		ldr	r2, [sp]
+ 143 0056 9A42     		cmp	r2, r3
+ 144 0058 00F2F280 		bhi	.L26
+ 118:libraries/zf_common/zf_common_memory.c ****         {
+ 119:libraries/zf_common/zf_common_memory.c ****             break;
+ 120:libraries/zf_common/zf_common_memory.c ****         }
+ 121:libraries/zf_common/zf_common_memory.c **** 
+ 122:libraries/zf_common/zf_common_memory.c ****         // 获取信息栈顶信息块的地址
+ 123:libraries/zf_common/zf_common_memory.c ****         memory_block_info_struct    *block_top      = zf_memory_management.block_list;
+ 145              		.loc 1 123 38
+ 146 005c 814B     		ldr	r3, .L28+8
+ 147 005e 1B69     		ldr	r3, [r3, #16]
+ 148 0060 0693     		str	r3, [sp, #24]
+ 124:libraries/zf_common/zf_common_memory.c ****         memory_block_info_struct    *block_bottom   = zf_memory_management.block_list;
+ 149              		.loc 1 124 38
+ 150 0062 804B     		ldr	r3, .L28+8
+ 151 0064 1B69     		ldr	r3, [r3, #16]
+ 152 0066 0493     		str	r3, [sp, #16]
+ 125:libraries/zf_common/zf_common_memory.c ****         // 新建两个变量存储地址 用于后续的地址对齐计算
+ 126:libraries/zf_common/zf_common_memory.c ****         uint32                      addr_temp_top   = 0;
+ 153              		.loc 1 126 37
+ 154 0068 0023     		movs	r3, #0
+ 155 006a 0393     		str	r3, [sp, #12]
+ 127:libraries/zf_common/zf_common_memory.c ****         uint32                      addr_temp_bottom= 0;
+ 156              		.loc 1 127 37
+ 157 006c 0023     		movs	r3, #0
+ 158 006e 0293     		str	r3, [sp, #8]
+ 159              	.LBB3:
+ 128:libraries/zf_common/zf_common_memory.c **** 
+ 129:libraries/zf_common/zf_common_memory.c ****         // 这里开始查询动态内存列表 这一步是为了查看是否有小块内存可以
+ 130:libraries/zf_common/zf_common_memory.c ****         // 例如三块内存中间那块释放了 后续使用时可以申请这个位置
+ 131:libraries/zf_common/zf_common_memory.c ****         // 因此必须存在至少两个区块时才会进行查询
+ 132:libraries/zf_common/zf_common_memory.c ****         for(uint32 memory_loop = 2; zf_memory_management.block_count >= memory_loop; memory_loop ++
+ 160              		.loc 1 132 20
+ 161 0070 0223     		movs	r3, #2
+ 162 0072 0593     		str	r3, [sp, #20]
+ 163              		.loc 1 132 9
+ 164 0074 84E0     		b	.L8
+ 165              	.L17:
+ 133:libraries/zf_common/zf_common_memory.c ****         {
+ 134:libraries/zf_common/zf_common_memory.c ****             // 首先获取前后两个区块的地址信息
+ 135:libraries/zf_common/zf_common_memory.c ****             block_top           = zf_memory_management.block_list - (memory_loop - 2);
+ 166              		.loc 1 135 55
+ 167 0076 7B4B     		ldr	r3, .L28+8
+ 168 0078 1A69     		ldr	r2, [r3, #16]
+ 169              		.loc 1 135 67
+ 170 007a 059B     		ldr	r3, [sp, #20]
+ 171 007c C3F10203 		rsb	r3, r3, #2
+ 172 0080 DB00     		lsls	r3, r3, #3
+ 173              		.loc 1 135 33
+ 174 0082 1344     		add	r3, r3, r2
+ 175 0084 0693     		str	r3, [sp, #24]
+ 136:libraries/zf_common/zf_common_memory.c ****             block_bottom        = zf_memory_management.block_list - (memory_loop - 1);
+ 176              		.loc 1 136 55
+ 177 0086 774B     		ldr	r3, .L28+8
+ 178 0088 1A69     		ldr	r2, [r3, #16]
+ 179              		.loc 1 136 67
+ 180 008a 059B     		ldr	r3, [sp, #20]
+ 181 008c C3F10103 		rsb	r3, r3, #1
+ 182 0090 DB00     		lsls	r3, r3, #3
+ 183              		.loc 1 136 33
+ 184 0092 1344     		add	r3, r3, r2
+ 185 0094 0493     		str	r3, [sp, #16]
+ 137:libraries/zf_common/zf_common_memory.c **** 
+ 138:libraries/zf_common/zf_common_memory.c ****             // 前一个区块的结束地址和后一个区块的起始地址进行对齐操作 �
+ 139:libraries/zf_common/zf_common_memory.c ****             // 操作逻辑也很简单 就是判断是否有余数 如果有余数就加上对应�
+ 140:libraries/zf_common/zf_common_memory.c ****             addr_temp_top       =   block_top->limit_addr;
+ 186              		.loc 1 140 33
+ 187 0096 069B     		ldr	r3, [sp, #24]
+ 188 0098 5B68     		ldr	r3, [r3, #4]
+ 189 009a 0393     		str	r3, [sp, #12]
+ 141:libraries/zf_common/zf_common_memory.c ****             addr_temp_top       +=  ((addr_temp_top % type) ? (type - (addr_temp_top % type)) : (0)
+ 190              		.loc 1 141 53
+ 191 009c 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 192 00a0 039B     		ldr	r3, [sp, #12]
+ 193 00a2 B3FBF2F1 		udiv	r1, r3, r2
+ 194 00a6 01FB02F2 		mul	r2, r1, r2
+ 195 00aa 9B1A     		subs	r3, r3, r2
+ 196              		.loc 1 141 95
+ 197 00ac 002B     		cmp	r3, #0
+ 198 00ae 0BD0     		beq	.L9
+ 199              		.loc 1 141 69 discriminator 1
+ 200 00b0 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 201              		.loc 1 141 86 discriminator 1
+ 202 00b4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 203 00b8 039B     		ldr	r3, [sp, #12]
+ 204 00ba B3FBF2F0 		udiv	r0, r3, r2
+ 205 00be 00FB02F2 		mul	r2, r0, r2
+ 206 00c2 9B1A     		subs	r3, r3, r2
+ 207              		.loc 1 141 95 discriminator 1
+ 208 00c4 CB1A     		subs	r3, r1, r3
+ 209 00c6 00E0     		b	.L10
+ 210              	.L9:
+ 211              		.loc 1 141 95 is_stmt 0 discriminator 2
+ 212 00c8 0023     		movs	r3, #0
+ 213              	.L10:
+ 214              		.loc 1 141 33 is_stmt 1 discriminator 4
+ 215 00ca 039A     		ldr	r2, [sp, #12]
+ 216 00cc 1344     		add	r3, r3, r2
+ 217 00ce 0393     		str	r3, [sp, #12]
+ 142:libraries/zf_common/zf_common_memory.c ****             addr_temp_bottom    =   block_bottom->start_addr;
+ 218              		.loc 1 142 33 discriminator 4
+ 219 00d0 049B     		ldr	r3, [sp, #16]
+ 220 00d2 1B68     		ldr	r3, [r3]
+ 221 00d4 0293     		str	r3, [sp, #8]
+ 143:libraries/zf_common/zf_common_memory.c ****             addr_temp_bottom    +=  ((addr_temp_bottom % type) ? (type - (addr_temp_bottom % type))
+ 222              		.loc 1 143 56 discriminator 4
+ 223 00d6 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 224 00da 029B     		ldr	r3, [sp, #8]
+ 225 00dc B3FBF2F1 		udiv	r1, r3, r2
+ 226 00e0 01FB02F2 		mul	r2, r1, r2
+ 227 00e4 9B1A     		subs	r3, r3, r2
+ 228              		.loc 1 143 101 discriminator 4
+ 229 00e6 002B     		cmp	r3, #0
+ 230 00e8 0BD0     		beq	.L11
+ 231              		.loc 1 143 72 discriminator 1
+ 232 00ea 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 233              		.loc 1 143 92 discriminator 1
+ 234 00ee 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 235 00f2 029B     		ldr	r3, [sp, #8]
+ 236 00f4 B3FBF2F0 		udiv	r0, r3, r2
+ 237 00f8 00FB02F2 		mul	r2, r0, r2
+ 238 00fc 9B1A     		subs	r3, r3, r2
+ 239              		.loc 1 143 101 discriminator 1
+ 240 00fe CB1A     		subs	r3, r1, r3
+ 241 0100 00E0     		b	.L12
+ 242              	.L11:
+ 243              		.loc 1 143 101 is_stmt 0 discriminator 2
+ 244 0102 0023     		movs	r3, #0
+ 245              	.L12:
+ 246              		.loc 1 143 33 is_stmt 1 discriminator 4
+ 247 0104 029A     		ldr	r2, [sp, #8]
+ 248 0106 1344     		add	r3, r3, r2
+ 249 0108 0293     		str	r3, [sp, #8]
+ 144:libraries/zf_common/zf_common_memory.c **** 
+ 145:libraries/zf_common/zf_common_memory.c ****             // 判断两个区块间是否能塞进要申请的空间大小
+ 146:libraries/zf_common/zf_common_memory.c ****             if(addr_temp_bottom - addr_temp_top >= size)
+ 250              		.loc 1 146 33 discriminator 4
+ 251 010a 029A     		ldr	r2, [sp, #8]
+ 252 010c 039B     		ldr	r3, [sp, #12]
+ 253 010e D31A     		subs	r3, r2, r3
+ 254              		.loc 1 146 15 discriminator 4
+ 255 0110 009A     		ldr	r2, [sp]
+ 256 0112 9A42     		cmp	r2, r3
+ 257 0114 31D8     		bhi	.L13
+ 147:libraries/zf_common/zf_common_memory.c ****             {
+ 148:libraries/zf_common/zf_common_memory.c ****                 // 获取新申请的内存地址
+ 149:libraries/zf_common/zf_common_memory.c ****                 ptr = (void *)addr_temp_top;
+ 258              		.loc 1 149 21
+ 259 0116 039B     		ldr	r3, [sp, #12]
+ 260 0118 0793     		str	r3, [sp, #28]
+ 150:libraries/zf_common/zf_common_memory.c ****                 // 动态内存管理减去对应内存大小
+ 151:libraries/zf_common/zf_common_memory.c ****                 zf_memory_management.size           -= (size + sizeof(memory_block_info_struct));
+ 261              		.loc 1 151 53
+ 262 011a 524B     		ldr	r3, .L28+8
+ 263 011c 1A68     		ldr	r2, [r3]
+ 264 011e 009B     		ldr	r3, [sp]
+ 265 0120 D31A     		subs	r3, r2, r3
+ 266 0122 083B     		subs	r3, r3, #8
+ 267 0124 4F4A     		ldr	r2, .L28+8
+ 268 0126 1360     		str	r3, [r2]
+ 152:libraries/zf_common/zf_common_memory.c ****                 // 新增区块数量
+ 153:libraries/zf_common/zf_common_memory.c ****                 zf_memory_management.block_count    += 1;
+ 269              		.loc 1 153 53
+ 270 0128 4E4B     		ldr	r3, .L28+8
+ 271 012a DB68     		ldr	r3, [r3, #12]
+ 272 012c 0133     		adds	r3, r3, #1
+ 273 012e 4D4A     		ldr	r2, .L28+8
+ 274 0130 D360     		str	r3, [r2, #12]
+ 154:libraries/zf_common/zf_common_memory.c **** 
+ 155:libraries/zf_common/zf_common_memory.c ****                 // 接下来开始遍历更新区块信息列表 将后面的区块后移 然后在
+ 156:libraries/zf_common/zf_common_memory.c ****                 // 信息存储栈与系统栈一样 高地址为栈顶 新增的信息块会压入
+ 157:libraries/zf_common/zf_common_memory.c ****                 // 操作逻辑是 碎片化分配时 是进行遍历查询 因此可以获取到�
+ 158:libraries/zf_common/zf_common_memory.c ****                 // 先通过 block_count 将所有高地址的信息块后移 再将新插入的信
+ 159:libraries/zf_common/zf_common_memory.c ****                 // 这样是为了方便后续碎片化操作时 从栈顶遍历一次就能知道�
+ 160:libraries/zf_common/zf_common_memory.c ****                 for(block_top = zf_memory_management.block_list - zf_memory_management.block_count;
+ 275              		.loc 1 160 53
+ 276 0132 4C4B     		ldr	r3, .L28+8
+ 277 0134 1A69     		ldr	r2, [r3, #16]
+ 278              		.loc 1 160 87
+ 279 0136 4B4B     		ldr	r3, .L28+8
+ 280 0138 DB68     		ldr	r3, [r3, #12]
+ 281              		.loc 1 160 65
+ 282 013a DB00     		lsls	r3, r3, #3
+ 283 013c 5B42     		rsbs	r3, r3, #0
+ 284              		.loc 1 160 31
+ 285 013e 1344     		add	r3, r3, r2
+ 286 0140 0693     		str	r3, [sp, #24]
+ 287              		.loc 1 160 17
+ 288 0142 0CE0     		b	.L14
+ 289              	.L15:
+ 161:libraries/zf_common/zf_common_memory.c ****                     block_bottom > block_top;
+ 162:libraries/zf_common/zf_common_memory.c ****                     block_top ++)
+ 163:libraries/zf_common/zf_common_memory.c ****                 {
+ 164:libraries/zf_common/zf_common_memory.c ****                     // 区块信息转移
+ 165:libraries/zf_common/zf_common_memory.c ****                     block_top->start_addr   = (block_top + 1)->start_addr;
+ 290              		.loc 1 165 58
+ 291 0144 069B     		ldr	r3, [sp, #24]
+ 292 0146 0833     		adds	r3, r3, #8
+ 293              		.loc 1 165 62
+ 294 0148 1A68     		ldr	r2, [r3]
+ 295              		.loc 1 165 45
+ 296 014a 069B     		ldr	r3, [sp, #24]
+ 297 014c 1A60     		str	r2, [r3]
+ 166:libraries/zf_common/zf_common_memory.c ****                     block_top->limit_addr   = (block_top + 1)->limit_addr;
+ 298              		.loc 1 166 58
+ 299 014e 069B     		ldr	r3, [sp, #24]
+ 300 0150 0833     		adds	r3, r3, #8
+ 301              		.loc 1 166 62
+ 302 0152 5A68     		ldr	r2, [r3, #4]
+ 303              		.loc 1 166 45
+ 304 0154 069B     		ldr	r3, [sp, #24]
+ 305 0156 5A60     		str	r2, [r3, #4]
+ 162:libraries/zf_common/zf_common_memory.c ****                 {
+ 306              		.loc 1 162 31
+ 307 0158 069B     		ldr	r3, [sp, #24]
+ 308 015a 0833     		adds	r3, r3, #8
+ 309 015c 0693     		str	r3, [sp, #24]
+ 310              	.L14:
+ 160:libraries/zf_common/zf_common_memory.c ****                     block_bottom > block_top;
+ 311              		.loc 1 160 17 discriminator 1
+ 312 015e 049A     		ldr	r2, [sp, #16]
+ 313 0160 069B     		ldr	r3, [sp, #24]
+ 314 0162 9A42     		cmp	r2, r3
+ 315 0164 EED8     		bhi	.L15
+ 167:libraries/zf_common/zf_common_memory.c ****                 }
+ 168:libraries/zf_common/zf_common_memory.c ****                 // 插入新申请的区块信息
+ 169:libraries/zf_common/zf_common_memory.c ****                 block_top->start_addr       = addr_temp_top;
+ 316              		.loc 1 169 45
+ 317 0166 069B     		ldr	r3, [sp, #24]
+ 318 0168 039A     		ldr	r2, [sp, #12]
+ 319 016a 1A60     		str	r2, [r3]
+ 170:libraries/zf_common/zf_common_memory.c ****                 block_top->limit_addr       = block_top->start_addr + size;
+ 320              		.loc 1 170 56
+ 321 016c 069B     		ldr	r3, [sp, #24]
+ 322 016e 1A68     		ldr	r2, [r3]
+ 323              		.loc 1 170 69
+ 324 0170 009B     		ldr	r3, [sp]
+ 325 0172 1A44     		add	r2, r2, r3
+ 326              		.loc 1 170 45
+ 327 0174 069B     		ldr	r3, [sp, #24]
+ 328 0176 5A60     		str	r2, [r3, #4]
+ 171:libraries/zf_common/zf_common_memory.c ****                 break;
+ 329              		.loc 1 171 17
+ 330 0178 08E0     		b	.L16
+ 331              	.L13:
+ 132:libraries/zf_common/zf_common_memory.c ****         {
+ 332              		.loc 1 132 98 discriminator 2
+ 333 017a 059B     		ldr	r3, [sp, #20]
+ 334 017c 0133     		adds	r3, r3, #1
+ 335 017e 0593     		str	r3, [sp, #20]
+ 336              	.L8:
+ 132:libraries/zf_common/zf_common_memory.c ****         {
+ 337              		.loc 1 132 57 discriminator 1
+ 338 0180 384B     		ldr	r3, .L28+8
+ 339 0182 DB68     		ldr	r3, [r3, #12]
+ 132:libraries/zf_common/zf_common_memory.c ****         {
+ 340              		.loc 1 132 9 discriminator 1
+ 341 0184 059A     		ldr	r2, [sp, #20]
+ 342 0186 9A42     		cmp	r2, r3
+ 343 0188 7FF675AF 		bls	.L17
+ 344              	.L16:
+ 345              	.LBE3:
+ 172:libraries/zf_common/zf_common_memory.c ****             }
+ 173:libraries/zf_common/zf_common_memory.c ****         }
+ 174:libraries/zf_common/zf_common_memory.c **** 
+ 175:libraries/zf_common/zf_common_memory.c ****         // 判断是否进行了碎片内存分配 如果没有的话就新增分配
+ 176:libraries/zf_common/zf_common_memory.c ****         if(NULL == ptr)
+ 346              		.loc 1 176 11
+ 347 018c 079B     		ldr	r3, [sp, #28]
+ 348 018e 002B     		cmp	r3, #0
+ 349 0190 59D1     		bne	.L5
+ 177:libraries/zf_common/zf_common_memory.c ****         {
+ 178:libraries/zf_common/zf_common_memory.c ****             // 如果是碎片内存分配就会有地址 否则就会进入这一步
+ 179:libraries/zf_common/zf_common_memory.c ****             // 首先获取到最后一个区块的信息存储地址
+ 180:libraries/zf_common/zf_common_memory.c ****             block_bottom        =   zf_memory_management.block_list - zf_memory_management.block_co
+ 350              		.loc 1 180 57
+ 351 0192 344B     		ldr	r3, .L28+8
+ 352 0194 1A69     		ldr	r2, [r3, #16]
+ 353              		.loc 1 180 91
+ 354 0196 334B     		ldr	r3, .L28+8
+ 355 0198 DB68     		ldr	r3, [r3, #12]
+ 356              		.loc 1 180 69
+ 357 019a DB00     		lsls	r3, r3, #3
+ 358 019c 5B42     		rsbs	r3, r3, #0
+ 359              		.loc 1 180 33
+ 360 019e 1344     		add	r3, r3, r2
+ 361 01a0 0493     		str	r3, [sp, #16]
+ 181:libraries/zf_common/zf_common_memory.c ****             block_top           =   block_bottom == zf_memory_management.block_list ? block_bottom 
+ 362              		.loc 1 181 73
+ 363 01a2 304B     		ldr	r3, .L28+8
+ 364 01a4 1B69     		ldr	r3, [r3, #16]
+ 365              		.loc 1 181 100
+ 366 01a6 049A     		ldr	r2, [sp, #16]
+ 367 01a8 9A42     		cmp	r2, r3
+ 368 01aa 02D0     		beq	.L18
+ 369              		.loc 1 181 100 is_stmt 0 discriminator 1
+ 370 01ac 049B     		ldr	r3, [sp, #16]
+ 371 01ae 0833     		adds	r3, r3, #8
+ 372 01b0 00E0     		b	.L19
+ 373              	.L18:
+ 374              		.loc 1 181 100 discriminator 2
+ 375 01b2 049B     		ldr	r3, [sp, #16]
+ 376              	.L19:
+ 377              		.loc 1 181 33 is_stmt 1 discriminator 4
+ 378 01b4 0693     		str	r3, [sp, #24]
+ 182:libraries/zf_common/zf_common_memory.c **** 
+ 183:libraries/zf_common/zf_common_memory.c ****             // 将最后一个区块的结束地址与区块信息存储的栈底地址进行对齐
+ 184:libraries/zf_common/zf_common_memory.c ****             addr_temp_top       =   block_top->limit_addr;
+ 379              		.loc 1 184 33 discriminator 4
+ 380 01b6 069B     		ldr	r3, [sp, #24]
+ 381 01b8 5B68     		ldr	r3, [r3, #4]
+ 382 01ba 0393     		str	r3, [sp, #12]
+ 185:libraries/zf_common/zf_common_memory.c ****             addr_temp_top       +=  ((addr_temp_top % type) ? (type - (addr_temp_top % type)) : (0)
+ 383              		.loc 1 185 53 discriminator 4
+ 384 01bc 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 385 01c0 039B     		ldr	r3, [sp, #12]
+ 386 01c2 B3FBF2F1 		udiv	r1, r3, r2
+ 387 01c6 01FB02F2 		mul	r2, r1, r2
+ 388 01ca 9B1A     		subs	r3, r3, r2
+ 389              		.loc 1 185 95 discriminator 4
+ 390 01cc 002B     		cmp	r3, #0
+ 391 01ce 0BD0     		beq	.L20
+ 392              		.loc 1 185 69 discriminator 1
+ 393 01d0 9DF80710 		ldrb	r1, [sp, #7]	@ zero_extendqisi2
+ 394              		.loc 1 185 86 discriminator 1
+ 395 01d4 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 396 01d8 039B     		ldr	r3, [sp, #12]
+ 397 01da B3FBF2F0 		udiv	r0, r3, r2
+ 398 01de 00FB02F2 		mul	r2, r0, r2
+ 399 01e2 9B1A     		subs	r3, r3, r2
+ 400              		.loc 1 185 95 discriminator 1
+ 401 01e4 CB1A     		subs	r3, r1, r3
+ 402 01e6 00E0     		b	.L21
+ 403              	.L20:
+ 404              		.loc 1 185 95 is_stmt 0 discriminator 2
+ 405 01e8 0023     		movs	r3, #0
+ 406              	.L21:
+ 407              		.loc 1 185 33 is_stmt 1 discriminator 4
+ 408 01ea 039A     		ldr	r2, [sp, #12]
+ 409 01ec 1344     		add	r3, r3, r2
+ 410 01ee 0393     		str	r3, [sp, #12]
+ 186:libraries/zf_common/zf_common_memory.c **** 
+ 187:libraries/zf_common/zf_common_memory.c ****             // 由于是新分配 因此信息栈向下生长
+ 188:libraries/zf_common/zf_common_memory.c ****             // 同时肯定是新增块的起始地址跟着上一个块的结束地址
+ 189:libraries/zf_common/zf_common_memory.c ****             // 所以进行对齐操作后 对这两个地址间的空间进行判断 是否能够�
+ 190:libraries/zf_common/zf_common_memory.c ****             if( (       zf_memory_management.limit_addr
+ 411              		.loc 1 190 45 discriminator 4
+ 412 01f0 1C4B     		ldr	r3, .L28+8
+ 413 01f2 9A68     		ldr	r2, [r3, #8]
+ 191:libraries/zf_common/zf_common_memory.c ****                     -   (zf_memory_management.block_count) * sizeof(memory_block_info_struct))
+ 414              		.loc 1 191 46 discriminator 4
+ 415 01f4 1B4B     		ldr	r3, .L28+8
+ 416 01f6 DB68     		ldr	r3, [r3, #12]
+ 417              		.loc 1 191 60 discriminator 4
+ 418 01f8 DB00     		lsls	r3, r3, #3
+ 419              		.loc 1 191 21 discriminator 4
+ 420 01fa D21A     		subs	r2, r2, r3
+ 192:libraries/zf_common/zf_common_memory.c ****                     -   sizeof(memory_block_info_struct)
+ 193:libraries/zf_common/zf_common_memory.c ****                     -   addr_temp_top
+ 421              		.loc 1 193 21 discriminator 4
+ 422 01fc 039B     		ldr	r3, [sp, #12]
+ 423 01fe D31A     		subs	r3, r2, r3
+ 424 0200 083B     		subs	r3, r3, #8
+ 190:libraries/zf_common/zf_common_memory.c ****                     -   (zf_memory_management.block_count) * sizeof(memory_block_info_struct))
+ 425              		.loc 1 190 15 discriminator 4
+ 426 0202 009A     		ldr	r2, [sp]
+ 427 0204 9A42     		cmp	r2, r3
+ 428 0206 1DD8     		bhi	.L27
+ 194:libraries/zf_common/zf_common_memory.c ****                 >=  size)
+ 195:libraries/zf_common/zf_common_memory.c ****             {
+ 196:libraries/zf_common/zf_common_memory.c ****                 // 获取新申请的内存地址
+ 197:libraries/zf_common/zf_common_memory.c ****                 ptr = (void *)addr_temp_top;
+ 429              		.loc 1 197 21
+ 430 0208 039B     		ldr	r3, [sp, #12]
+ 431 020a 0793     		str	r3, [sp, #28]
+ 198:libraries/zf_common/zf_common_memory.c ****                 // 动态内存管理减去对应内存大小
+ 199:libraries/zf_common/zf_common_memory.c ****                 zf_memory_management.size           -= (size + sizeof(memory_block_info_struct));
+ 432              		.loc 1 199 53
+ 433 020c 154B     		ldr	r3, .L28+8
+ 434 020e 1A68     		ldr	r2, [r3]
+ 435 0210 009B     		ldr	r3, [sp]
+ 436 0212 D31A     		subs	r3, r2, r3
+ 437 0214 083B     		subs	r3, r3, #8
+ 438 0216 134A     		ldr	r2, .L28+8
+ 439 0218 1360     		str	r3, [r2]
+ 200:libraries/zf_common/zf_common_memory.c ****                 // 新增区块数量
+ 201:libraries/zf_common/zf_common_memory.c ****                 zf_memory_management.block_count    += 1;
+ 440              		.loc 1 201 53
+ 441 021a 124B     		ldr	r3, .L28+8
+ 442 021c DB68     		ldr	r3, [r3, #12]
+ 443 021e 0133     		adds	r3, r3, #1
+ 444 0220 104A     		ldr	r2, .L28+8
+ 445 0222 D360     		str	r3, [r2, #12]
+ 202:libraries/zf_common/zf_common_memory.c **** 
+ 203:libraries/zf_common/zf_common_memory.c ****                 // 插入新申请的区块信息
+ 204:libraries/zf_common/zf_common_memory.c ****                 block_bottom->start_addr            = (uint32)ptr;
+ 446              		.loc 1 204 55
+ 447 0224 079A     		ldr	r2, [sp, #28]
+ 448              		.loc 1 204 53
+ 449 0226 049B     		ldr	r3, [sp, #16]
+ 450 0228 1A60     		str	r2, [r3]
+ 205:libraries/zf_common/zf_common_memory.c ****                 block_bottom->limit_addr            = block_bottom->start_addr + size;
+ 451              		.loc 1 205 67
+ 452 022a 049B     		ldr	r3, [sp, #16]
+ 453 022c 1A68     		ldr	r2, [r3]
+ 454              		.loc 1 205 80
+ 455 022e 009B     		ldr	r3, [sp]
+ 456 0230 1A44     		add	r2, r2, r3
+ 457              		.loc 1 205 53
+ 458 0232 049B     		ldr	r3, [sp, #16]
+ 459 0234 5A60     		str	r2, [r3, #4]
+ 460 0236 06E0     		b	.L5
+ 461              	.L24:
+ 101:libraries/zf_common/zf_common_memory.c ****         }
+ 462              		.loc 1 101 13
+ 463 0238 00BF     		nop
+ 464 023a 04E0     		b	.L5
+ 465              	.L25:
+ 112:libraries/zf_common/zf_common_memory.c ****         }
+ 466              		.loc 1 112 13
+ 467 023c 00BF     		nop
+ 468 023e 02E0     		b	.L5
+ 469              	.L26:
+ 119:libraries/zf_common/zf_common_memory.c ****         }
+ 470              		.loc 1 119 13
+ 471 0240 00BF     		nop
+ 472 0242 00E0     		b	.L5
+ 473              	.L27:
+ 206:libraries/zf_common/zf_common_memory.c ****             }
+ 207:libraries/zf_common/zf_common_memory.c ****             else
+ 208:libraries/zf_common/zf_common_memory.c ****             {
+ 209:libraries/zf_common/zf_common_memory.c ****                 break;
+ 474              		.loc 1 209 17
+ 475 0244 00BF     		nop
+ 476              	.L5:
+ 477              	.LBE2:
+ 210:libraries/zf_common/zf_common_memory.c ****             }
+ 211:libraries/zf_common/zf_common_memory.c ****         }
+ 212:libraries/zf_common/zf_common_memory.c ****     }while(0);
+ 213:libraries/zf_common/zf_common_memory.c ****     zf_memory_management_state.malloc = ZF_FALSE;                               // 申请操作占�
+ 478              		.loc 1 213 39
+ 479 0246 054A     		ldr	r2, .L28
+ 480 0248 1378     		ldrb	r3, [r2]
+ 481 024a 6FF30003 		bfc	r3, #0, #1
+ 482 024e 1370     		strb	r3, [r2]
+ 214:libraries/zf_common/zf_common_memory.c **** 
+ 215:libraries/zf_common/zf_common_memory.c ****     return ptr;
+ 483              		.loc 1 215 12
+ 484 0250 079B     		ldr	r3, [sp, #28]
+ 216:libraries/zf_common/zf_common_memory.c **** }
+ 485              		.loc 1 216 1
+ 486 0252 1846     		mov	r0, r3
+ 487 0254 09B0     		add	sp, sp, #36
+ 488              		.cfi_def_cfa_offset 4
+ 489              		@ sp needed
+ 490 0256 5DF804FB 		ldr	pc, [sp], #4
+ 491              	.L29:
+ 492 025a 00BF     		.align	2
+ 493              	.L28:
+ 494 025c 00000000 		.word	zf_memory_management_state
+ 495 0260 00000000 		.word	.LC0
+ 496 0264 00000000 		.word	zf_memory_management
+ 497              		.cfi_endproc
+ 498              	.LFE4:
+ 500              		.section	.text.zf_memory_free,"ax",%progbits
+ 501              		.align	1
+ 502              		.p2align 4,,15
+ 503              		.weak	zf_memory_free
+ 504              		.syntax unified
+ 505              		.thumb
+ 506              		.thumb_func
+ 508              	zf_memory_free:
+ 509              	.LFB5:
+ 217:libraries/zf_common/zf_common_memory.c **** 
+ 218:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+ 219:libraries/zf_common/zf_common_memory.c **** // 函数简介     释放指针对应堆内存
+ 220:libraries/zf_common/zf_common_memory.c **** // 参数说明     *ptr                内存空间地址
+ 221:libraries/zf_common/zf_common_memory.c **** // 返回参数     uint8               ZF_NO_ERROR-成功 / ZF_ERROR-失败
+ 222:libraries/zf_common/zf_common_memory.c **** // 使用示例     zf_memory_free(data_buffer);
+ 223:libraries/zf_common/zf_common_memory.c **** // 备注信息     必须是申请内存时获取的地址数值 否则遍历内存占用后会直
+ 224:libraries/zf_common/zf_common_memory.c **** //              不支持多线程操作 不支持中断嵌套调用 不支持递归调用
+ 225:libraries/zf_common/zf_common_memory.c **** //              本函数使用弱定义 这样做的目的是在移植操作系统时可以重载�
+ 226:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+ 227:libraries/zf_common/zf_common_memory.c **** ZF_WEAK uint8 zf_memory_free (void *ptr)
+ 228:libraries/zf_common/zf_common_memory.c **** {
+ 510              		.loc 1 228 1
+ 511              		.cfi_startproc
+ 512              		@ args = 0, pretend = 0, frame = 24
+ 513              		@ frame_needed = 0, uses_anonymous_args = 0
+ 514              		@ link register save eliminated.
+ 515 0000 86B0     		sub	sp, sp, #24
+ 516              		.cfi_def_cfa_offset 24
+ 517 0002 0190     		str	r0, [sp, #4]
+ 229:libraries/zf_common/zf_common_memory.c ****     uint8 return_state = ZF_ERROR;
+ 518              		.loc 1 229 11
+ 519 0004 0123     		movs	r3, #1
+ 520 0006 8DF81730 		strb	r3, [sp, #23]
+ 521              	.LBB4:
+ 230:libraries/zf_common/zf_common_memory.c **** 
+ 231:libraries/zf_common/zf_common_memory.c ****     do
+ 232:libraries/zf_common/zf_common_memory.c ****     {
+ 233:libraries/zf_common/zf_common_memory.c ****         if(zf_memory_management_state.state)                                    // 简易互斥判�
+ 522              		.loc 1 233 38
+ 523 000a 354B     		ldr	r3, .L42
+ 524 000c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 525              		.loc 1 233 11
+ 526 000e 002B     		cmp	r3, #0
+ 527 0010 59D1     		bne	.L40
+ 234:libraries/zf_common/zf_common_memory.c ****         {
+ 235:libraries/zf_common/zf_common_memory.c ****             break;
+ 236:libraries/zf_common/zf_common_memory.c ****         }
+ 237:libraries/zf_common/zf_common_memory.c ****         zf_memory_management_state.free = ZF_TRUE;                              // 释放操作占�
+ 528              		.loc 1 237 41
+ 529 0012 334A     		ldr	r2, .L42
+ 530 0014 1378     		ldrb	r3, [r2]
+ 531 0016 43F00203 		orr	r3, r3, #2
+ 532 001a 1370     		strb	r3, [r2]
+ 238:libraries/zf_common/zf_common_memory.c **** 
+ 239:libraries/zf_common/zf_common_memory.c ****         // 如果没有分配过内存就直接退出去
+ 240:libraries/zf_common/zf_common_memory.c ****         // 没有分配过内存释放个锤子
+ 241:libraries/zf_common/zf_common_memory.c ****         if(!zf_memory_management.block_count)
+ 533              		.loc 1 241 33
+ 534 001c 314B     		ldr	r3, .L42+4
+ 535 001e DB68     		ldr	r3, [r3, #12]
+ 536              		.loc 1 241 11
+ 537 0020 002B     		cmp	r3, #0
+ 538 0022 52D0     		beq	.L41
+ 242:libraries/zf_common/zf_common_memory.c ****         {
+ 243:libraries/zf_common/zf_common_memory.c ****             break;
+ 244:libraries/zf_common/zf_common_memory.c ****         }
+ 245:libraries/zf_common/zf_common_memory.c **** 
+ 246:libraries/zf_common/zf_common_memory.c ****         // 获取信息栈底信息块的地址 也就是最后一个块
+ 247:libraries/zf_common/zf_common_memory.c ****         // 这里为什么是 block_count - 1 因为 block_list 就是第一个块地址
+ 248:libraries/zf_common/zf_common_memory.c ****         // 所以当 block_count == 1 时就是指向第一个块 因此需要 block_count - 1 才�
+ 249:libraries/zf_common/zf_common_memory.c ****         // 数学索引号和程序索引号的关系 数学索引从 1 开始 程序索引从 0 �
+ 250:libraries/zf_common/zf_common_memory.c ****         // 这也就是为什么想要判断是否进行过内存分配 否则 0 - 1 就内存溢�
+ 251:libraries/zf_common/zf_common_memory.c ****         memory_block_info_struct    *block_first    = zf_memory_management.block_list - (zf_memory_
+ 539              		.loc 1 251 75
+ 540 0024 2F4B     		ldr	r3, .L42+4
+ 541 0026 1A69     		ldr	r2, [r3, #16]
+ 542              		.loc 1 251 110
+ 543 0028 2E4B     		ldr	r3, .L42+4
+ 544 002a DB68     		ldr	r3, [r3, #12]
+ 545              		.loc 1 251 87
+ 546 002c C3F10103 		rsb	r3, r3, #1
+ 547 0030 DB00     		lsls	r3, r3, #3
+ 548              		.loc 1 251 38
+ 549 0032 1344     		add	r3, r3, r2
+ 550 0034 0493     		str	r3, [sp, #16]
+ 252:libraries/zf_common/zf_common_memory.c ****         memory_block_info_struct    *block_second   = zf_memory_management.block_list - (zf_memory_
+ 551              		.loc 1 252 75
+ 552 0036 2B4B     		ldr	r3, .L42+4
+ 553 0038 1A69     		ldr	r2, [r3, #16]
+ 554              		.loc 1 252 110
+ 555 003a 2A4B     		ldr	r3, .L42+4
+ 556 003c DB68     		ldr	r3, [r3, #12]
+ 557              		.loc 1 252 87
+ 558 003e C3F10103 		rsb	r3, r3, #1
+ 559 0042 DB00     		lsls	r3, r3, #3
+ 560              		.loc 1 252 38
+ 561 0044 1344     		add	r3, r3, r2
+ 562 0046 0393     		str	r3, [sp, #12]
+ 253:libraries/zf_common/zf_common_memory.c **** 
+ 254:libraries/zf_common/zf_common_memory.c ****         // 从信息栈底部开始 向上遍历区块信息列表 查询是否有对应的地址
+ 255:libraries/zf_common/zf_common_memory.c ****         for(; zf_memory_management.block_list >= block_first; block_first ++)
+ 563              		.loc 1 255 9
+ 564 0048 37E0     		b	.L34
+ 565              	.L38:
+ 256:libraries/zf_common/zf_common_memory.c ****         {
+ 257:libraries/zf_common/zf_common_memory.c ****             // 如果有的话就释放对应的区块
+ 258:libraries/zf_common/zf_common_memory.c ****             if((uint32)ptr == block_first->start_addr)
+ 566              		.loc 1 258 42
+ 567 004a 049B     		ldr	r3, [sp, #16]
+ 568 004c 1A68     		ldr	r2, [r3]
+ 569              		.loc 1 258 28
+ 570 004e 019B     		ldr	r3, [sp, #4]
+ 571              		.loc 1 258 15
+ 572 0050 9A42     		cmp	r2, r3
+ 573 0052 2FD1     		bne	.L35
+ 259:libraries/zf_common/zf_common_memory.c ****             {
+ 260:libraries/zf_common/zf_common_memory.c ****                 // 首先将区块数自减 并恢复对应的存储大小
+ 261:libraries/zf_common/zf_common_memory.c ****                 zf_memory_management.block_count    -= 1;
+ 574              		.loc 1 261 53
+ 575 0054 234B     		ldr	r3, .L42+4
+ 576 0056 DB68     		ldr	r3, [r3, #12]
+ 577 0058 013B     		subs	r3, r3, #1
+ 578 005a 224A     		ldr	r2, .L42+4
+ 579 005c D360     		str	r3, [r2, #12]
+ 262:libraries/zf_common/zf_common_memory.c ****                 zf_memory_management.size           += sizeof(memory_block_info_struct);
+ 580              		.loc 1 262 53
+ 581 005e 214B     		ldr	r3, .L42+4
+ 582 0060 1B68     		ldr	r3, [r3]
+ 583 0062 0833     		adds	r3, r3, #8
+ 584 0064 1F4A     		ldr	r2, .L42+4
+ 585 0066 1360     		str	r3, [r2]
+ 263:libraries/zf_common/zf_common_memory.c ****                 zf_memory_management.size           += (block_first->limit_addr - block_first->star
+ 586              		.loc 1 263 53
+ 587 0068 1E4B     		ldr	r3, .L42+4
+ 588 006a 1A68     		ldr	r2, [r3]
+ 589              		.loc 1 263 68
+ 590 006c 049B     		ldr	r3, [sp, #16]
+ 591 006e 5968     		ldr	r1, [r3, #4]
+ 592              		.loc 1 263 94
+ 593 0070 049B     		ldr	r3, [sp, #16]
+ 594 0072 1B68     		ldr	r3, [r3]
+ 595              		.loc 1 263 81
+ 596 0074 CB1A     		subs	r3, r1, r3
+ 597              		.loc 1 263 53
+ 598 0076 1344     		add	r3, r3, r2
+ 599 0078 1A4A     		ldr	r2, .L42+4
+ 600 007a 1360     		str	r3, [r2]
+ 264:libraries/zf_common/zf_common_memory.c **** 
+ 265:libraries/zf_common/zf_common_memory.c ****                 // 然后对信息栈进行调整 这里通过两个块指针判断是否需要进�
+ 266:libraries/zf_common/zf_common_memory.c ****                 for(; block_second != block_first; block_first --)
+ 601              		.loc 1 266 17
+ 602 007c 0CE0     		b	.L36
+ 603              	.L37:
+ 267:libraries/zf_common/zf_common_memory.c ****                 {
+ 268:libraries/zf_common/zf_common_memory.c ****                     // 如果释放的是中间的地址 那么这里就会依次将底部的信息
+ 269:libraries/zf_common/zf_common_memory.c ****                     block_first->start_addr = (block_first - 1)->start_addr;
+ 604              		.loc 1 269 60 discriminator 2
+ 605 007e 049B     		ldr	r3, [sp, #16]
+ 606 0080 083B     		subs	r3, r3, #8
+ 607              		.loc 1 269 64 discriminator 2
+ 608 0082 1A68     		ldr	r2, [r3]
+ 609              		.loc 1 269 45 discriminator 2
+ 610 0084 049B     		ldr	r3, [sp, #16]
+ 611 0086 1A60     		str	r2, [r3]
+ 270:libraries/zf_common/zf_common_memory.c ****                     block_first->limit_addr = (block_first - 1)->limit_addr;
+ 612              		.loc 1 270 60 discriminator 2
+ 613 0088 049B     		ldr	r3, [sp, #16]
+ 614 008a 083B     		subs	r3, r3, #8
+ 615              		.loc 1 270 64 discriminator 2
+ 616 008c 5A68     		ldr	r2, [r3, #4]
+ 617              		.loc 1 270 45 discriminator 2
+ 618 008e 049B     		ldr	r3, [sp, #16]
+ 619 0090 5A60     		str	r2, [r3, #4]
+ 266:libraries/zf_common/zf_common_memory.c ****                 {
+ 620              		.loc 1 266 64 discriminator 2
+ 621 0092 049B     		ldr	r3, [sp, #16]
+ 622 0094 083B     		subs	r3, r3, #8
+ 623 0096 0493     		str	r3, [sp, #16]
+ 624              	.L36:
+ 266:libraries/zf_common/zf_common_memory.c ****                 {
+ 625              		.loc 1 266 17 discriminator 1
+ 626 0098 039A     		ldr	r2, [sp, #12]
+ 627 009a 049B     		ldr	r3, [sp, #16]
+ 628 009c 9A42     		cmp	r2, r3
+ 629 009e EED1     		bne	.L37
+ 271:libraries/zf_common/zf_common_memory.c ****                 }
+ 272:libraries/zf_common/zf_common_memory.c ****                 // 最后将底部信息块设置默认值
+ 273:libraries/zf_common/zf_common_memory.c ****                 block_second->start_addr    = ZF_HEAP_START_ADDR;
+ 630              		.loc 1 273 47
+ 631 00a0 114A     		ldr	r2, .L42+8
+ 632              		.loc 1 273 45
+ 633 00a2 039B     		ldr	r3, [sp, #12]
+ 634 00a4 1A60     		str	r2, [r3]
+ 274:libraries/zf_common/zf_common_memory.c ****                 block_second->limit_addr    = ZF_HEAP_START_ADDR;
+ 635              		.loc 1 274 47
+ 636 00a6 104A     		ldr	r2, .L42+8
+ 637              		.loc 1 274 45
+ 638 00a8 039B     		ldr	r3, [sp, #12]
+ 639 00aa 5A60     		str	r2, [r3, #4]
+ 275:libraries/zf_common/zf_common_memory.c **** 
+ 276:libraries/zf_common/zf_common_memory.c ****                 return_state = ZF_NO_ERROR;
+ 640              		.loc 1 276 30
+ 641 00ac 0023     		movs	r3, #0
+ 642 00ae 8DF81730 		strb	r3, [sp, #23]
+ 277:libraries/zf_common/zf_common_memory.c ****                 break;
+ 643              		.loc 1 277 17
+ 644 00b2 0BE0     		b	.L32
+ 645              	.L35:
+ 255:libraries/zf_common/zf_common_memory.c ****         {
+ 646              		.loc 1 255 75
+ 647 00b4 049B     		ldr	r3, [sp, #16]
+ 648 00b6 0833     		adds	r3, r3, #8
+ 649 00b8 0493     		str	r3, [sp, #16]
+ 650              	.L34:
+ 255:libraries/zf_common/zf_common_memory.c ****         {
+ 651              		.loc 1 255 35 discriminator 1
+ 652 00ba 0A4B     		ldr	r3, .L42+4
+ 653 00bc 1B69     		ldr	r3, [r3, #16]
+ 255:libraries/zf_common/zf_common_memory.c ****         {
+ 654              		.loc 1 255 9 discriminator 1
+ 655 00be 049A     		ldr	r2, [sp, #16]
+ 656 00c0 9A42     		cmp	r2, r3
+ 657 00c2 C2D9     		bls	.L38
+ 658 00c4 02E0     		b	.L32
+ 659              	.L40:
+ 235:libraries/zf_common/zf_common_memory.c ****         }
+ 660              		.loc 1 235 13
+ 661 00c6 00BF     		nop
+ 662 00c8 00E0     		b	.L32
+ 663              	.L41:
+ 243:libraries/zf_common/zf_common_memory.c ****         }
+ 664              		.loc 1 243 13
+ 665 00ca 00BF     		nop
+ 666              	.L32:
+ 667              	.LBE4:
+ 278:libraries/zf_common/zf_common_memory.c ****             }
+ 279:libraries/zf_common/zf_common_memory.c ****         }
+ 280:libraries/zf_common/zf_common_memory.c ****     }while(0);
+ 281:libraries/zf_common/zf_common_memory.c ****     zf_memory_management_state.free = ZF_FALSE;                                 // 释放操作占�
+ 668              		.loc 1 281 37
+ 669 00cc 044A     		ldr	r2, .L42
+ 670 00ce 1378     		ldrb	r3, [r2]
+ 671 00d0 6FF34103 		bfc	r3, #1, #1
+ 672 00d4 1370     		strb	r3, [r2]
+ 282:libraries/zf_common/zf_common_memory.c **** 
+ 283:libraries/zf_common/zf_common_memory.c ****     return return_state;
+ 673              		.loc 1 283 12
+ 674 00d6 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 284:libraries/zf_common/zf_common_memory.c **** }
+ 675              		.loc 1 284 1
+ 676 00da 1846     		mov	r0, r3
+ 677 00dc 06B0     		add	sp, sp, #24
+ 678              		.cfi_def_cfa_offset 0
+ 679              		@ sp needed
+ 680 00de 7047     		bx	lr
+ 681              	.L43:
+ 682              		.align	2
+ 683              	.L42:
+ 684 00e0 00000000 		.word	zf_memory_management_state
+ 685 00e4 00000000 		.word	zf_memory_management
+ 686 00e8 00000000 		.word	memory_management_buffer
+ 687              		.cfi_endproc
+ 688              	.LFE5:
+ 690              		.section	.text.zf_memory_init,"ax",%progbits
+ 691              		.align	1
+ 692              		.p2align 4,,15
+ 693              		.weak	zf_memory_init
+ 694              		.syntax unified
+ 695              		.thumb
+ 696              		.thumb_func
+ 698              	zf_memory_init:
+ 699              	.LFB6:
+ 285:libraries/zf_common/zf_common_memory.c **** 
+ 286:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+ 287:libraries/zf_common/zf_common_memory.c **** // 函数简介     内存管理初始化
+ 288:libraries/zf_common/zf_common_memory.c **** // 参数说明     void
+ 289:libraries/zf_common/zf_common_memory.c **** // 返回参数     void            
+ 290:libraries/zf_common/zf_common_memory.c **** // 使用示例     zf_memory_init();
+ 291:libraries/zf_common/zf_common_memory.c **** // 备注信息     获取空闲内存地址 通常来说应该在系统时钟初始化自动调用
+ 292:libraries/zf_common/zf_common_memory.c **** //              本函数使用弱定义 这样做的目的是在移植操作系统时可以重载�
+ 293:libraries/zf_common/zf_common_memory.c **** //-------------------------------------------------------------------------------------------------
+ 294:libraries/zf_common/zf_common_memory.c **** ZF_WEAK void zf_memory_init (void)
+ 295:libraries/zf_common/zf_common_memory.c **** {
+ 700              		.loc 1 295 1
+ 701              		.cfi_startproc
+ 702              		@ args = 0, pretend = 0, frame = 0
+ 703              		@ frame_needed = 0, uses_anonymous_args = 0
+ 704 0000 08B5     		push	{r3, lr}
+ 705              		.cfi_def_cfa_offset 8
+ 706              		.cfi_offset 3, -8
+ 707              		.cfi_offset 14, -4
+ 296:libraries/zf_common/zf_common_memory.c ****     if(ZF_HEAP_START_ADDR != zf_memory_management.start_addr)
+ 708              		.loc 1 296 50
+ 709 0002 174B     		ldr	r3, .L47
+ 710 0004 5B68     		ldr	r3, [r3, #4]
+ 711              		.loc 1 296 27
+ 712 0006 174A     		ldr	r2, .L47+4
+ 713              		.loc 1 296 7
+ 714 0008 9342     		cmp	r3, r2
+ 715 000a 27D0     		beq	.L46
+ 297:libraries/zf_common/zf_common_memory.c ****     {
+ 298:libraries/zf_common/zf_common_memory.c ****         zf_memory_management.size                   = ZF_HEAP_SIZE;
+ 716              		.loc 1 298 53
+ 717 000c 144B     		ldr	r3, .L47
+ 718 000e 4FF48032 		mov	r2, #65536
+ 719 0012 1A60     		str	r2, [r3]
+ 299:libraries/zf_common/zf_common_memory.c ****         zf_memory_management.start_addr             = ZF_HEAP_START_ADDR;
+ 720              		.loc 1 299 55
+ 721 0014 134A     		ldr	r2, .L47+4
+ 722              		.loc 1 299 53
+ 723 0016 124B     		ldr	r3, .L47
+ 724 0018 5A60     		str	r2, [r3, #4]
+ 300:libraries/zf_common/zf_common_memory.c ****         zf_memory_management.limit_addr             = ZF_HEAP_LIMIT_ADDR;
+ 725              		.loc 1 300 55
+ 726 001a 124B     		ldr	r3, .L47+4
+ 727 001c 03F58033 		add	r3, r3, #65536
+ 728              		.loc 1 300 53
+ 729 0020 0F4A     		ldr	r2, .L47
+ 730 0022 9360     		str	r3, [r2, #8]
+ 301:libraries/zf_common/zf_common_memory.c ****         zf_memory_management.block_count            = 0;
+ 731              		.loc 1 301 53
+ 732 0024 0E4B     		ldr	r3, .L47
+ 733 0026 0022     		movs	r2, #0
+ 734 0028 DA60     		str	r2, [r3, #12]
+ 302:libraries/zf_common/zf_common_memory.c **** 
+ 303:libraries/zf_common/zf_common_memory.c ****         zf_memory_management_state.state            = 0;
+ 735              		.loc 1 303 53
+ 736 002a 0F4B     		ldr	r3, .L47+8
+ 737 002c 0022     		movs	r2, #0
+ 738 002e 1A70     		strb	r2, [r3]
+ 304:libraries/zf_common/zf_common_memory.c **** 
+ 305:libraries/zf_common/zf_common_memory.c ****         memset((void *)ZF_HEAP_START_ADDR, 0, zf_memory_management.size);
+ 739              		.loc 1 305 67
+ 740 0030 0B4B     		ldr	r3, .L47
+ 741 0032 1B68     		ldr	r3, [r3]
+ 742              		.loc 1 305 9
+ 743 0034 1A46     		mov	r2, r3
+ 744 0036 0021     		movs	r1, #0
+ 745 0038 0A48     		ldr	r0, .L47+4
+ 746 003a FFF7FEFF 		bl	memset
+ 306:libraries/zf_common/zf_common_memory.c ****         zf_memory_management.block_list             = (memory_block_info_struct *)(ZF_HEAP_LIMIT_AD
+ 747              		.loc 1 306 84
+ 748 003e 094A     		ldr	r2, .L47+4
+ 749              		.loc 1 306 103
+ 750 0040 4FF6F873 		movw	r3, #65528
+ 751 0044 1344     		add	r3, r3, r2
+ 752              		.loc 1 306 55
+ 753 0046 1A46     		mov	r2, r3
+ 754              		.loc 1 306 53
+ 755 0048 054B     		ldr	r3, .L47
+ 756 004a 1A61     		str	r2, [r3, #16]
+ 307:libraries/zf_common/zf_common_memory.c ****         zf_memory_management.block_list->start_addr = ZF_HEAP_START_ADDR;
+ 757              		.loc 1 307 29
+ 758 004c 044B     		ldr	r3, .L47
+ 759 004e 1B69     		ldr	r3, [r3, #16]
+ 760              		.loc 1 307 55
+ 761 0050 044A     		ldr	r2, .L47+4
+ 762              		.loc 1 307 53
+ 763 0052 1A60     		str	r2, [r3]
+ 308:libraries/zf_common/zf_common_memory.c ****         zf_memory_management.block_list->limit_addr = ZF_HEAP_START_ADDR;
+ 764              		.loc 1 308 29
+ 765 0054 024B     		ldr	r3, .L47
+ 766 0056 1B69     		ldr	r3, [r3, #16]
+ 767              		.loc 1 308 55
+ 768 0058 024A     		ldr	r2, .L47+4
+ 769              		.loc 1 308 53
+ 770 005a 5A60     		str	r2, [r3, #4]
+ 771              	.L46:
+ 309:libraries/zf_common/zf_common_memory.c ****     }
+ 310:libraries/zf_common/zf_common_memory.c **** }
+ 772              		.loc 1 310 1
+ 773 005c 00BF     		nop
+ 774 005e 08BD     		pop	{r3, pc}
+ 775              	.L48:
+ 776              		.align	2
+ 777              	.L47:
+ 778 0060 00000000 		.word	zf_memory_management
+ 779 0064 00000000 		.word	memory_management_buffer
+ 780 0068 00000000 		.word	zf_memory_management_state
+ 781              		.cfi_endproc
+ 782              	.LFE6:
+ 784              		.text
+ 785              	.Letext0:
+ 786              		.file 2 "libraries/zf_common/zf_common_typedef.h"
+ 787              		.file 3 "libraries/zf_common/zf_common_memory.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_common_memory.c
+D:\Users\TMP\ccvWzNrt.s:19     .bss.zf_memory_management:00000000 $d
+D:\Users\TMP\ccvWzNrt.s:22     .bss.zf_memory_management:00000000 zf_memory_management
+D:\Users\TMP\ccvWzNrt.s:25     .bss.zf_memory_management_state:00000000 $d
+D:\Users\TMP\ccvWzNrt.s:28     .bss.zf_memory_management_state:00000000 zf_memory_management_state
+D:\Users\TMP\ccvWzNrt.s:35     .bss.memory_management_buffer:00000000 memory_management_buffer
+D:\Users\TMP\ccvWzNrt.s:32     .bss.memory_management_buffer:00000000 $d
+D:\Users\TMP\ccvWzNrt.s:38     .text.zf_memory_assert_handler:00000000 $t
+D:\Users\TMP\ccvWzNrt.s:45     .text.zf_memory_assert_handler:00000000 zf_memory_assert_handler
+D:\Users\TMP\ccvWzNrt.s:75     .rodata:00000000 $d
+D:\Users\TMP\ccvWzNrt.s:79     .text.zf_memory_malloc:00000000 $t
+D:\Users\TMP\ccvWzNrt.s:86     .text.zf_memory_malloc:00000000 zf_memory_malloc
+D:\Users\TMP\ccvWzNrt.s:494    .text.zf_memory_malloc:0000025c $d
+D:\Users\TMP\ccvWzNrt.s:501    .text.zf_memory_free:00000000 $t
+D:\Users\TMP\ccvWzNrt.s:508    .text.zf_memory_free:00000000 zf_memory_free
+D:\Users\TMP\ccvWzNrt.s:684    .text.zf_memory_free:000000e0 $d
+D:\Users\TMP\ccvWzNrt.s:691    .text.zf_memory_init:00000000 $t
+D:\Users\TMP\ccvWzNrt.s:698    .text.zf_memory_init:00000000 zf_memory_init
+D:\Users\TMP\ccvWzNrt.s:778    .text.zf_memory_init:00000060 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+
+UNDEFINED SYMBOLS
+debug_message_handler
+memset

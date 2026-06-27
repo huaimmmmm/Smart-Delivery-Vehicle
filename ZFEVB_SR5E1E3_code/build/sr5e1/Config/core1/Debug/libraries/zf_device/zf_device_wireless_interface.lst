@@ -1,0 +1,1632 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_device_wireless_interface.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	wireless_interface_uart_default_obj
+  19              		.section	.data.wireless_interface_uart_default_obj,"aw"
+  20              		.align	2
+  23              	wireless_interface_uart_default_obj:
+  24 0000 00       		.byte	0
+  25 0001 00       		.byte	0
+  26 0002 FF0F     		.short	4095
+  27 0004 FF0F     		.short	4095
+  28 0006 0000     		.space	2
+  29 0008 00000000 		.word	0
+  30 000c 00000000 		.word	0
+  31 0010 00000000 		.word	0
+  32 0014 00000000 		.word	0
+  33 0018 00000000 		.word	0
+  34 001c 01       		.byte	1
+  35 001d 00       		.byte	0
+  36 001e 0000     		.space	2
+  37              		.section	.rodata
+  38              		.align	2
+  39              	.LC0:
+  40 0000 6C696272 		.ascii	"libraries/zf_device/zf_device_wireless_interface.c\000"
+  40      61726965 
+  40      732F7A66 
+  40      5F646576 
+  40      6963652F 
+  41              		.section	.text.wireless_interface_write_8bit_array,"ax",%progbits
+  42              		.align	1
+  43              		.p2align 4,,15
+  44              		.global	wireless_interface_write_8bit_array
+  45              		.syntax unified
+  46              		.thumb
+  47              		.thumb_func
+  49              	wireless_interface_write_8bit_array:
+  50              	.LFB482:
+  51              		.file 1 "libraries/zf_device/zf_device_wireless_interface.c"
+   1:libraries/zf_device/zf_device_wireless_interface.c **** /**************************************************************************************************
+   2:libraries/zf_device/zf_device_wireless_interface.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_device/zf_device_wireless_interface.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_device/zf_device_wireless_interface.c **** *
+   5:libraries/zf_device/zf_device_wireless_interface.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_device/zf_device_wireless_interface.c **** *
+   7:libraries/zf_device/zf_device_wireless_interface.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_device/zf_device_wireless_interface.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_device/zf_device_wireless_interface.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_device/zf_device_wireless_interface.c **** *
+  11:libraries/zf_device/zf_device_wireless_interface.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_device/zf_device_wireless_interface.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_device/zf_device_wireless_interface.c **** * 更多细节请参见 GPL
+  14:libraries/zf_device/zf_device_wireless_interface.c **** *
+  15:libraries/zf_device/zf_device_wireless_interface.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_device/zf_device_wireless_interface.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_device/zf_device_wireless_interface.c **** *
+  18:libraries/zf_device/zf_device_wireless_interface.c **** * 额外注明：
+  19:libraries/zf_device/zf_device_wireless_interface.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_device/zf_device_wireless_interface.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_device/zf_device_wireless_interface.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_device/zf_device_wireless_interface.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_device/zf_device_wireless_interface.c **** *
+  24:libraries/zf_device/zf_device_wireless_interface.c **** * 文件名称          zf_device_wireless_interface
+  25:libraries/zf_device/zf_device_wireless_interface.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_device/zf_device_wireless_interface.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_device/zf_device_wireless_interface.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_device/zf_device_wireless_interface.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_device/zf_device_wireless_interface.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_device/zf_device_wireless_interface.c **** ***************************************************************************************************
+  31:libraries/zf_device/zf_device_wireless_interface.c **** 
+  32:libraries/zf_device/zf_device_wireless_interface.c **** /**************************************************************************************************
+  33:libraries/zf_device/zf_device_wireless_interface.c **** * 本文件的作用是方便 WIRELESS 的任意平台适配
+  34:libraries/zf_device/zf_device_wireless_interface.c **** * 内容为将 WIRELESS 相关的接口进行解耦整合
+  35:libraries/zf_device/zf_device_wireless_interface.c **** * 在移植到新的平台时 只需要实现了本文件的接口
+  36:libraries/zf_device/zf_device_wireless_interface.c **** * 就可以直接适配 SeekFree 所有的 V4 库 WIRELESS 器件
+  37:libraries/zf_device/zf_device_wireless_interface.c **** ***************************************************************************************************
+  38:libraries/zf_device/zf_device_wireless_interface.c **** 
+  39:libraries/zf_device/zf_device_wireless_interface.c **** // 自身头文件
+  40:libraries/zf_device/zf_device_wireless_interface.c **** #include "zf_device_wireless_interface.h"
+  41:libraries/zf_device/zf_device_wireless_interface.c **** 
+  42:libraries/zf_device/zf_device_wireless_interface.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改 这里不允许
+  43:libraries/zf_device/zf_device_wireless_interface.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  44:libraries/zf_device/zf_device_wireless_interface.c **** AT_ZF_LIB_SECTION_START
+  45:libraries/zf_device/zf_device_wireless_interface.c **** #if WIRELESS_INTERFACE_BOARD_UART_INTERFACE
+  46:libraries/zf_device/zf_device_wireless_interface.c **** AT_ZF_LIB_SECTION wireless_interface_obj_struct wireless_interface_uart_default_obj = 
+  47:libraries/zf_device/zf_device_wireless_interface.c **** {
+  48:libraries/zf_device/zf_device_wireless_interface.c ****     .interface_type         = WIRELESS_INTERFACE_TYPE_UNKNOW,
+  49:libraries/zf_device/zf_device_wireless_interface.c ****     .communication_index    = 0,
+  50:libraries/zf_device/zf_device_wireless_interface.c ****     .rts_pin                = PIN_NULL,
+  51:libraries/zf_device/zf_device_wireless_interface.c ****     .rst_pin                = PIN_NULL,
+  52:libraries/zf_device/zf_device_wireless_interface.c ****     .int_pin                = EXTI1_CH0_A0,
+  53:libraries/zf_device/zf_device_wireless_interface.c ****     .fifo_obj               =
+  54:libraries/zf_device/zf_device_wireless_interface.c ****     {
+  55:libraries/zf_device/zf_device_wireless_interface.c ****         .base_ptr           = 0,
+  56:libraries/zf_device/zf_device_wireless_interface.c ****         .tail_ptr           = 0,
+  57:libraries/zf_device/zf_device_wireless_interface.c ****         .write_ptr          = 0,
+  58:libraries/zf_device/zf_device_wireless_interface.c ****         .read_ptr           = 0,
+  59:libraries/zf_device/zf_device_wireless_interface.c ****         .step               = FIFO_DATA_8BIT,
+  60:libraries/zf_device/zf_device_wireless_interface.c ****         .state              = 0
+  61:libraries/zf_device/zf_device_wireless_interface.c ****     }
+  62:libraries/zf_device/zf_device_wireless_interface.c **** };
+  63:libraries/zf_device/zf_device_wireless_interface.c **** #endif
+  64:libraries/zf_device/zf_device_wireless_interface.c **** #if WIRELESS_INTERFACE_BOARD_SPI_INTERFACE
+  65:libraries/zf_device/zf_device_wireless_interface.c **** AT_ZF_LIB_SECTION wireless_interface_obj_struct wireless_interface_spi_default_obj = 
+  66:libraries/zf_device/zf_device_wireless_interface.c **** {
+  67:libraries/zf_device/zf_device_wireless_interface.c ****     .interface_type         = WIRELESS_INTERFACE_TYPE_UNKNOW,
+  68:libraries/zf_device/zf_device_wireless_interface.c ****     .communication_index    = 0,
+  69:libraries/zf_device/zf_device_wireless_interface.c ****     .rts_pin                = PIN_NULL,
+  70:libraries/zf_device/zf_device_wireless_interface.c ****     .rst_pin                = PIN_NULL,
+  71:libraries/zf_device/zf_device_wireless_interface.c ****     .int_pin                = EXTI1_CH0_A0,
+  72:libraries/zf_device/zf_device_wireless_interface.c ****     .fifo_obj               =
+  73:libraries/zf_device/zf_device_wireless_interface.c ****     {
+  74:libraries/zf_device/zf_device_wireless_interface.c ****         .base_ptr           = 0,
+  75:libraries/zf_device/zf_device_wireless_interface.c ****         .tail_ptr           = 0,
+  76:libraries/zf_device/zf_device_wireless_interface.c ****         .write_ptr          = 0,
+  77:libraries/zf_device/zf_device_wireless_interface.c ****         .read_ptr           = 0,
+  78:libraries/zf_device/zf_device_wireless_interface.c ****         .step               = FIFO_DATA_8BIT,
+  79:libraries/zf_device/zf_device_wireless_interface.c ****         .state              = 0
+  80:libraries/zf_device/zf_device_wireless_interface.c ****     }
+  81:libraries/zf_device/zf_device_wireless_interface.c **** };
+  82:libraries/zf_device/zf_device_wireless_interface.c **** #endif
+  83:libraries/zf_device/zf_device_wireless_interface.c **** AT_ZF_LIB_SECTION_END
+  84:libraries/zf_device/zf_device_wireless_interface.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  85:libraries/zf_device/zf_device_wireless_interface.c **** 
+  86:libraries/zf_device/zf_device_wireless_interface.c **** // 此处定义 WIRELESS 相关的接口实现 这里允许用户修改
+  87:libraries/zf_device/zf_device_wireless_interface.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  88:libraries/zf_device/zf_device_wireless_interface.c **** // //----------------------------------------------------------------------------------------------
+  89:libraries/zf_device/zf_device_wireless_interface.c **** // // 函数简介     WIRELESS 中断处理
+  90:libraries/zf_device/zf_device_wireless_interface.c **** // // 参数说明     event               回调事件
+  91:libraries/zf_device/zf_device_wireless_interface.c **** // // 参数说明     *ptr                标志位指针
+  92:libraries/zf_device/zf_device_wireless_interface.c **** // // 返回参数     void
+  93:libraries/zf_device/zf_device_wireless_interface.c **** // // 使用示例     
+  94:libraries/zf_device/zf_device_wireless_interface.c **** // // 备注信息     
+  95:libraries/zf_device/zf_device_wireless_interface.c **** // //----------------------------------------------------------------------------------------------
+  96:libraries/zf_device/zf_device_wireless_interface.c **** // static void wireless_interface_callbakc_defalut (uint32 event, void *ptr)
+  97:libraries/zf_device/zf_device_wireless_interface.c **** // {
+  98:libraries/zf_device/zf_device_wireless_interface.c **** //     (void)event;
+  99:libraries/zf_device/zf_device_wireless_interface.c **** //     (void)ptr;
+ 100:libraries/zf_device/zf_device_wireless_interface.c **** // }
+ 101:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 102:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 103:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS 断言处理
+ 104:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *file               文件路径
+ 105:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     line                报错行
+ 106:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *tips               输出信息
+ 107:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / GPIO_OPERATION_DONE - 完成 其
+ 108:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     zf_spi_assert_handler(file, line, tips);
+ 109:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息
+ 110:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 111:libraries/zf_device/zf_device_wireless_interface.c **** #if WIRELESS_INTERFACE_USE_ZF_COMMON_DEBUG
+ 112:libraries/zf_device/zf_device_wireless_interface.c **** #else
+ 113:libraries/zf_device/zf_device_wireless_interface.c **** uint8 wireless_interface_assert_handler (char *file, int line, char *tips)
+ 114:libraries/zf_device/zf_device_wireless_interface.c **** {
+ 115:libraries/zf_device/zf_device_wireless_interface.c ****     printf("\r\n WIRELESS OPERATION ASSERT!\r\n");
+ 116:libraries/zf_device/zf_device_wireless_interface.c ****     printf("\r\n file: %s.\r\n", file);
+ 117:libraries/zf_device/zf_device_wireless_interface.c ****     printf("\r\n line: %d.\r\n", line);
+ 118:libraries/zf_device/zf_device_wireless_interface.c ****     if(NULL != tips)
+ 119:libraries/zf_device/zf_device_wireless_interface.c ****     {
+ 120:libraries/zf_device/zf_device_wireless_interface.c ****         printf("\r\n tips: %s.\r\n", tips);
+ 121:libraries/zf_device/zf_device_wireless_interface.c ****     }
+ 122:libraries/zf_device/zf_device_wireless_interface.c ****     while(1);
+ 123:libraries/zf_device/zf_device_wireless_interface.c ****     return ZF_ERROR;
+ 124:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 125:libraries/zf_device/zf_device_wireless_interface.c **** #endif
+ 126:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 127:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 128:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS 延时
+ 129:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     ms              毫秒数
+ 130:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     void
+ 131:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     wireless_interface_delay_ms(ms);
+ 132:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息     
+ 133:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 134:libraries/zf_device/zf_device_wireless_interface.c **** #if WIRELESS_INTERFACE_USE_ZF_DIRVER_DELAY
+ 135:libraries/zf_device/zf_device_wireless_interface.c **** #else
+ 136:libraries/zf_device/zf_device_wireless_interface.c **** void wireless_interface_delay_ms (uint32 ms)
+ 137:libraries/zf_device/zf_device_wireless_interface.c **** {
+ 138:libraries/zf_device/zf_device_wireless_interface.c ****     for(uint32 loop_count1 = ms    ; loop_count1 --; )
+ 139:libraries/zf_device/zf_device_wireless_interface.c ****     for(uint32 loop_count2 = 0xFFFF; loop_count2 --; );
+ 140:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 141:libraries/zf_device/zf_device_wireless_interface.c **** #endif
+ 142:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 143:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 144:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 145:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS 输出 8bit 数据
+ 146:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *interface          接口对象 WIRELESS 系列通用的接口对象
+ 147:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *send_data          发送数据缓冲区
+ 148:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     send_len            发送数据长度
+ 149:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / WIRELESS_INTERFACE_OPERATION_DON
+ 150:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     wireless_interface_write_8bit_array(interface, send_data, send_len);
+ 151:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 152:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 153:libraries/zf_device/zf_device_wireless_interface.c **** uint8 wireless_interface_write_8bit_array (wireless_interface_obj_struct *interface, const uint8 *s
+ 154:libraries/zf_device/zf_device_wireless_interface.c **** {
+  52              		.loc 1 154 1
+  53              		.cfi_startproc
+  54              		@ args = 0, pretend = 0, frame = 24
+  55              		@ frame_needed = 0, uses_anonymous_args = 0
+  56 0000 00B5     		push	{lr}
+  57              		.cfi_def_cfa_offset 4
+  58              		.cfi_offset 14, -4
+  59 0002 87B0     		sub	sp, sp, #28
+  60              		.cfi_def_cfa_offset 32
+  61 0004 0390     		str	r0, [sp, #12]
+  62 0006 0291     		str	r1, [sp, #8]
+  63 0008 0192     		str	r2, [sp, #4]
+ 155:libraries/zf_device/zf_device_wireless_interface.c ****     wireless_interface_operation_state_enum  return_state    =   WIRELESS_INTERFACE_ERROR_UNKNOW_ER
+  64              		.loc 1 155 46
+  65 000a 0123     		movs	r3, #1
+  66 000c 8DF81730 		strb	r3, [sp, #23]
+ 156:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 157:libraries/zf_device/zf_device_wireless_interface.c ****     do
+ 158:libraries/zf_device/zf_device_wireless_interface.c ****     {
+ 159:libraries/zf_device/zf_device_wireless_interface.c ****         if(NULL == interface)
+  67              		.loc 1 159 11
+  68 0010 039B     		ldr	r3, [sp, #12]
+  69 0012 002B     		cmp	r3, #0
+  70 0014 03D1     		bne	.L2
+ 160:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 161:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_DATA_BUFFER_NULL;
+  71              		.loc 1 161 26
+  72 0016 2223     		movs	r3, #34
+  73 0018 8DF81730 		strb	r3, [sp, #23]
+ 162:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+  74              		.loc 1 162 13
+  75 001c 68E0     		b	.L3
+  76              	.L2:
+ 163:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 164:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+  77              		.loc 1 164 55
+  78 001e 039B     		ldr	r3, [sp, #12]
+  79 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  80              		.loc 1 164 11
+  81 0022 002B     		cmp	r3, #0
+  82 0024 03D1     		bne	.L4
+ 165:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 166:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+  83              		.loc 1 166 26
+  84 0026 2123     		movs	r3, #33
+  85 0028 8DF81730 		strb	r3, [sp, #23]
+ 167:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+  86              		.loc 1 167 13
+  87 002c 60E0     		b	.L3
+  88              	.L4:
+ 168:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 169:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 170:libraries/zf_device/zf_device_wireless_interface.c ****         return_state = WIRELESS_INTERFACE_OPERATION_DONE;
+  89              		.loc 1 170 22
+  90 002e 0023     		movs	r3, #0
+  91 0030 8DF81730 		strb	r3, [sp, #23]
+ 171:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_SPI == interface->interface_type)
+  92              		.loc 1 171 52
+  93 0034 039B     		ldr	r3, [sp, #12]
+  94 0036 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  95              		.loc 1 171 11
+  96 0038 022B     		cmp	r3, #2
+  97 003a 52D1     		bne	.L5
+ 172:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 173:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+  98              		.loc 1 173 13
+  99 003c 039B     		ldr	r3, [sp, #12]
+ 100 003e 5B88     		ldrh	r3, [r3, #2]
+ 101 0040 40F6FF72 		movw	r2, #4095
+ 102 0044 9342     		cmp	r3, r2
+ 103 0046 1AD0     		beq	.L6
+ 104              		.loc 1 173 13 is_stmt 0 discriminator 1
+ 105 0048 039B     		ldr	r3, [sp, #12]
+ 106 004a 5B88     		ldrh	r3, [r3, #2]
+ 107 004c 5B09     		lsrs	r3, r3, #5
+ 108 004e 9BB2     		uxth	r3, r3
+ 109 0050 1A46     		mov	r2, r3
+ 110 0052 2A4B     		ldr	r3, .L10
+ 111 0054 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 112 0058 9969     		ldr	r1, [r3, #24]
+ 113 005a 039B     		ldr	r3, [sp, #12]
+ 114 005c 5B88     		ldrh	r3, [r3, #2]
+ 115 005e 03F01F03 		and	r3, r3, #31
+ 116 0062 4FF48032 		mov	r2, #65536
+ 117 0066 9A40     		lsls	r2, r2, r3
+ 118 0068 039B     		ldr	r3, [sp, #12]
+ 119 006a 5B88     		ldrh	r3, [r3, #2]
+ 120 006c 5B09     		lsrs	r3, r3, #5
+ 121 006e 9BB2     		uxth	r3, r3
+ 122 0070 1846     		mov	r0, r3
+ 123 0072 224B     		ldr	r3, .L10
+ 124 0074 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 125 0078 0A43     		orrs	r2, r2, r1
+ 126 007a 9A61     		str	r2, [r3, #24]
+ 127 007c 04E0     		b	.L7
+ 128              	.L6:
+ 129              		.loc 1 173 13 discriminator 2
+ 130 007e 0022     		movs	r2, #0
+ 131 0080 AD21     		movs	r1, #173
+ 132 0082 1F48     		ldr	r0, .L10+4
+ 133 0084 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 134              	.L7:
+ 174:libraries/zf_device/zf_device_wireless_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, send_data, NULL, send_len);
+ 135              		.loc 1 174 13 is_stmt 1
+ 136 0088 039B     		ldr	r3, [sp, #12]
+ 137 008a 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 138 008c 019B     		ldr	r3, [sp, #4]
+ 139 008e 0022     		movs	r2, #0
+ 140 0090 0299     		ldr	r1, [sp, #8]
+ 141 0092 FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 175:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 142              		.loc 1 175 13
+ 143 0096 039B     		ldr	r3, [sp, #12]
+ 144 0098 5B88     		ldrh	r3, [r3, #2]
+ 145 009a 40F6FF72 		movw	r2, #4095
+ 146 009e 9342     		cmp	r3, r2
+ 147 00a0 19D0     		beq	.L8
+ 148              		.loc 1 175 13 is_stmt 0 discriminator 1
+ 149 00a2 039B     		ldr	r3, [sp, #12]
+ 150 00a4 5B88     		ldrh	r3, [r3, #2]
+ 151 00a6 5B09     		lsrs	r3, r3, #5
+ 152 00a8 9BB2     		uxth	r3, r3
+ 153 00aa 1A46     		mov	r2, r3
+ 154 00ac 134B     		ldr	r3, .L10
+ 155 00ae 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 156 00b2 9969     		ldr	r1, [r3, #24]
+ 157 00b4 039B     		ldr	r3, [sp, #12]
+ 158 00b6 5B88     		ldrh	r3, [r3, #2]
+ 159 00b8 03F01F03 		and	r3, r3, #31
+ 160 00bc 0122     		movs	r2, #1
+ 161 00be 9A40     		lsls	r2, r2, r3
+ 162 00c0 039B     		ldr	r3, [sp, #12]
+ 163 00c2 5B88     		ldrh	r3, [r3, #2]
+ 164 00c4 5B09     		lsrs	r3, r3, #5
+ 165 00c6 9BB2     		uxth	r3, r3
+ 166 00c8 1846     		mov	r0, r3
+ 167 00ca 0C4B     		ldr	r3, .L10
+ 168 00cc 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 169 00d0 0A43     		orrs	r2, r2, r1
+ 170 00d2 9A61     		str	r2, [r3, #24]
+ 171 00d4 0CE0     		b	.L3
+ 172              	.L8:
+ 173              		.loc 1 175 13 discriminator 2
+ 174 00d6 0022     		movs	r2, #0
+ 175 00d8 AF21     		movs	r1, #175
+ 176 00da 0948     		ldr	r0, .L10+4
+ 177 00dc FFF7FEFF 		bl	zf_gpio_assert_handler
+ 178 00e0 06E0     		b	.L3
+ 179              	.L5:
+ 176:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 177:libraries/zf_device/zf_device_wireless_interface.c ****         else
+ 178:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 179:libraries/zf_device/zf_device_wireless_interface.c ****             zf_uart_write_buffer(interface->uart_index, send_data, send_len);
+ 180              		.loc 1 179 13 is_stmt 1
+ 181 00e2 039B     		ldr	r3, [sp, #12]
+ 182 00e4 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 183 00e6 019A     		ldr	r2, [sp, #4]
+ 184 00e8 0299     		ldr	r1, [sp, #8]
+ 185 00ea 1846     		mov	r0, r3
+ 186 00ec FFF7FEFF 		bl	zf_uart_write_buffer
+ 187              	.L3:
+ 180:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 181:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 182:libraries/zf_device/zf_device_wireless_interface.c ****     }while(0);
+ 183:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 184:libraries/zf_device/zf_device_wireless_interface.c ****     return return_state;
+ 188              		.loc 1 184 12
+ 189 00f0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 185:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 190              		.loc 1 185 1
+ 191 00f4 1846     		mov	r0, r3
+ 192 00f6 07B0     		add	sp, sp, #28
+ 193              		.cfi_def_cfa_offset 4
+ 194              		@ sp needed
+ 195 00f8 5DF804FB 		ldr	pc, [sp], #4
+ 196              	.L11:
+ 197              		.align	2
+ 198              	.L10:
+ 199 00fc 00000000 		.word	gpio_group_list
+ 200 0100 00000000 		.word	.LC0
+ 201              		.cfi_endproc
+ 202              	.LFE482:
+ 204              		.section	.text.wireless_interface_read_8bit_array,"ax",%progbits
+ 205              		.align	1
+ 206              		.p2align 4,,15
+ 207              		.global	wireless_interface_read_8bit_array
+ 208              		.syntax unified
+ 209              		.thumb
+ 210              		.thumb_func
+ 212              	wireless_interface_read_8bit_array:
+ 213              	.LFB483:
+ 186:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 187:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 188:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS 接收 8bit 数据
+ 189:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *interface          接口对象 WIRELESS 系列通用的接口对象
+ 190:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *receive_data       接收数据缓冲区
+ 191:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     receive_len         接收数据长度
+ 192:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / WIRELESS_INTERFACE_OPERATION_DON
+ 193:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     wireless_interface_read_8bit_array(interface, receive_data, receive_len);
+ 194:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 195:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 196:libraries/zf_device/zf_device_wireless_interface.c **** uint8 wireless_interface_read_8bit_array (wireless_interface_obj_struct *interface, uint8 *receive_
+ 197:libraries/zf_device/zf_device_wireless_interface.c **** {
+ 214              		.loc 1 197 1
+ 215              		.cfi_startproc
+ 216              		@ args = 0, pretend = 0, frame = 24
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 218 0000 00B5     		push	{lr}
+ 219              		.cfi_def_cfa_offset 4
+ 220              		.cfi_offset 14, -4
+ 221 0002 87B0     		sub	sp, sp, #28
+ 222              		.cfi_def_cfa_offset 32
+ 223 0004 0390     		str	r0, [sp, #12]
+ 224 0006 0291     		str	r1, [sp, #8]
+ 225 0008 0192     		str	r2, [sp, #4]
+ 198:libraries/zf_device/zf_device_wireless_interface.c ****     wireless_interface_operation_state_enum  return_state    =   WIRELESS_INTERFACE_ERROR_UNKNOW_ER
+ 226              		.loc 1 198 46
+ 227 000a 0123     		movs	r3, #1
+ 228 000c 8DF81730 		strb	r3, [sp, #23]
+ 199:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 200:libraries/zf_device/zf_device_wireless_interface.c ****     do
+ 201:libraries/zf_device/zf_device_wireless_interface.c ****     {
+ 202:libraries/zf_device/zf_device_wireless_interface.c ****         if(NULL == interface)
+ 229              		.loc 1 202 11
+ 230 0010 039B     		ldr	r3, [sp, #12]
+ 231 0012 002B     		cmp	r3, #0
+ 232 0014 03D1     		bne	.L13
+ 203:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 204:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 233              		.loc 1 204 26
+ 234 0016 2223     		movs	r3, #34
+ 235 0018 8DF81730 		strb	r3, [sp, #23]
+ 205:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 236              		.loc 1 205 13
+ 237 001c 68E0     		b	.L14
+ 238              	.L13:
+ 206:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 207:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 239              		.loc 1 207 55
+ 240 001e 039B     		ldr	r3, [sp, #12]
+ 241 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 242              		.loc 1 207 11
+ 243 0022 002B     		cmp	r3, #0
+ 244 0024 03D1     		bne	.L15
+ 208:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 209:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 245              		.loc 1 209 26
+ 246 0026 2123     		movs	r3, #33
+ 247 0028 8DF81730 		strb	r3, [sp, #23]
+ 210:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 248              		.loc 1 210 13
+ 249 002c 60E0     		b	.L14
+ 250              	.L15:
+ 211:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 212:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 213:libraries/zf_device/zf_device_wireless_interface.c ****         return_state = WIRELESS_INTERFACE_OPERATION_DONE;
+ 251              		.loc 1 213 22
+ 252 002e 0023     		movs	r3, #0
+ 253 0030 8DF81730 		strb	r3, [sp, #23]
+ 214:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_SPI == interface->interface_type)
+ 254              		.loc 1 214 52
+ 255 0034 039B     		ldr	r3, [sp, #12]
+ 256 0036 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 257              		.loc 1 214 11
+ 258 0038 022B     		cmp	r3, #2
+ 259 003a 52D1     		bne	.L16
+ 215:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 216:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+ 260              		.loc 1 216 13
+ 261 003c 039B     		ldr	r3, [sp, #12]
+ 262 003e 5B88     		ldrh	r3, [r3, #2]
+ 263 0040 40F6FF72 		movw	r2, #4095
+ 264 0044 9342     		cmp	r3, r2
+ 265 0046 1AD0     		beq	.L17
+ 266              		.loc 1 216 13 is_stmt 0 discriminator 1
+ 267 0048 039B     		ldr	r3, [sp, #12]
+ 268 004a 5B88     		ldrh	r3, [r3, #2]
+ 269 004c 5B09     		lsrs	r3, r3, #5
+ 270 004e 9BB2     		uxth	r3, r3
+ 271 0050 1A46     		mov	r2, r3
+ 272 0052 2A4B     		ldr	r3, .L21
+ 273 0054 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 274 0058 9969     		ldr	r1, [r3, #24]
+ 275 005a 039B     		ldr	r3, [sp, #12]
+ 276 005c 5B88     		ldrh	r3, [r3, #2]
+ 277 005e 03F01F03 		and	r3, r3, #31
+ 278 0062 4FF48032 		mov	r2, #65536
+ 279 0066 9A40     		lsls	r2, r2, r3
+ 280 0068 039B     		ldr	r3, [sp, #12]
+ 281 006a 5B88     		ldrh	r3, [r3, #2]
+ 282 006c 5B09     		lsrs	r3, r3, #5
+ 283 006e 9BB2     		uxth	r3, r3
+ 284 0070 1846     		mov	r0, r3
+ 285 0072 224B     		ldr	r3, .L21
+ 286 0074 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 287 0078 0A43     		orrs	r2, r2, r1
+ 288 007a 9A61     		str	r2, [r3, #24]
+ 289 007c 04E0     		b	.L18
+ 290              	.L17:
+ 291              		.loc 1 216 13 discriminator 2
+ 292 007e 0022     		movs	r2, #0
+ 293 0080 D821     		movs	r1, #216
+ 294 0082 1F48     		ldr	r0, .L21+4
+ 295 0084 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 296              	.L18:
+ 217:libraries/zf_device/zf_device_wireless_interface.c ****             zf_spi_transfer_8bit_array(interface->spi_index, NULL, receive_data, receive_len);
+ 297              		.loc 1 217 13 is_stmt 1
+ 298 0088 039B     		ldr	r3, [sp, #12]
+ 299 008a 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 300 008c 019B     		ldr	r3, [sp, #4]
+ 301 008e 029A     		ldr	r2, [sp, #8]
+ 302 0090 0021     		movs	r1, #0
+ 303 0092 FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 218:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 304              		.loc 1 218 13
+ 305 0096 039B     		ldr	r3, [sp, #12]
+ 306 0098 5B88     		ldrh	r3, [r3, #2]
+ 307 009a 40F6FF72 		movw	r2, #4095
+ 308 009e 9342     		cmp	r3, r2
+ 309 00a0 19D0     		beq	.L19
+ 310              		.loc 1 218 13 is_stmt 0 discriminator 1
+ 311 00a2 039B     		ldr	r3, [sp, #12]
+ 312 00a4 5B88     		ldrh	r3, [r3, #2]
+ 313 00a6 5B09     		lsrs	r3, r3, #5
+ 314 00a8 9BB2     		uxth	r3, r3
+ 315 00aa 1A46     		mov	r2, r3
+ 316 00ac 134B     		ldr	r3, .L21
+ 317 00ae 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 318 00b2 9969     		ldr	r1, [r3, #24]
+ 319 00b4 039B     		ldr	r3, [sp, #12]
+ 320 00b6 5B88     		ldrh	r3, [r3, #2]
+ 321 00b8 03F01F03 		and	r3, r3, #31
+ 322 00bc 0122     		movs	r2, #1
+ 323 00be 9A40     		lsls	r2, r2, r3
+ 324 00c0 039B     		ldr	r3, [sp, #12]
+ 325 00c2 5B88     		ldrh	r3, [r3, #2]
+ 326 00c4 5B09     		lsrs	r3, r3, #5
+ 327 00c6 9BB2     		uxth	r3, r3
+ 328 00c8 1846     		mov	r0, r3
+ 329 00ca 0C4B     		ldr	r3, .L21
+ 330 00cc 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 331 00d0 0A43     		orrs	r2, r2, r1
+ 332 00d2 9A61     		str	r2, [r3, #24]
+ 333 00d4 0CE0     		b	.L14
+ 334              	.L19:
+ 335              		.loc 1 218 13 discriminator 2
+ 336 00d6 0022     		movs	r2, #0
+ 337 00d8 DA21     		movs	r1, #218
+ 338 00da 0948     		ldr	r0, .L21+4
+ 339 00dc FFF7FEFF 		bl	zf_gpio_assert_handler
+ 340 00e0 06E0     		b	.L14
+ 341              	.L16:
+ 219:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 220:libraries/zf_device/zf_device_wireless_interface.c ****         else
+ 221:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 222:libraries/zf_device/zf_device_wireless_interface.c ****             zf_uart_read_buffer(interface->uart_index, receive_data, receive_len);
+ 342              		.loc 1 222 13 is_stmt 1
+ 343 00e2 039B     		ldr	r3, [sp, #12]
+ 344 00e4 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 345 00e6 019A     		ldr	r2, [sp, #4]
+ 346 00e8 0299     		ldr	r1, [sp, #8]
+ 347 00ea 1846     		mov	r0, r3
+ 348 00ec FFF7FEFF 		bl	zf_uart_read_buffer
+ 349              	.L14:
+ 223:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 224:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 225:libraries/zf_device/zf_device_wireless_interface.c ****     }while(0);
+ 226:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 227:libraries/zf_device/zf_device_wireless_interface.c ****     return return_state;
+ 350              		.loc 1 227 12
+ 351 00f0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 228:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 352              		.loc 1 228 1
+ 353 00f4 1846     		mov	r0, r3
+ 354 00f6 07B0     		add	sp, sp, #28
+ 355              		.cfi_def_cfa_offset 4
+ 356              		@ sp needed
+ 357 00f8 5DF804FB 		ldr	pc, [sp], #4
+ 358              	.L22:
+ 359              		.align	2
+ 360              	.L21:
+ 361 00fc 00000000 		.word	gpio_group_list
+ 362 0100 00000000 		.word	.LC0
+ 363              		.cfi_endproc
+ 364              	.LFE483:
+ 366              		.section	.text.wireless_interface_transfer_8bit_array,"ax",%progbits
+ 367              		.align	1
+ 368              		.p2align 4,,15
+ 369              		.global	wireless_interface_transfer_8bit_array
+ 370              		.syntax unified
+ 371              		.thumb
+ 372              		.thumb_func
+ 374              	wireless_interface_transfer_8bit_array:
+ 375              	.LFB484:
+ 229:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 230:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 231:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 232:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS 双向传输 8bit 数据
+ 233:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *interface          接口对象 WIRELESS 系列通用的接口对象
+ 234:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *send_data          发送数据缓冲区
+ 235:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     send_len            发送数据长度
+ 236:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *receive_data       接收数据缓冲区
+ 237:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     receive_len         接收数据长度
+ 238:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / WIRELESS_INTERFACE_OPERATION_DON
+ 239:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     wireless_interface_transfer_8bit_array(interface, send_data, send_len, receive_
+ 240:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息     自行实现此处接口时 按照标准传输格式实现即可
+ 241:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 242:libraries/zf_device/zf_device_wireless_interface.c **** uint8 wireless_interface_transfer_8bit_array (wireless_interface_obj_struct *interface, const uint8
+ 243:libraries/zf_device/zf_device_wireless_interface.c **** {
+ 376              		.loc 1 243 1
+ 377              		.cfi_startproc
+ 378              		@ args = 4, pretend = 0, frame = 24
+ 379              		@ frame_needed = 0, uses_anonymous_args = 0
+ 380 0000 00B5     		push	{lr}
+ 381              		.cfi_def_cfa_offset 4
+ 382              		.cfi_offset 14, -4
+ 383 0002 87B0     		sub	sp, sp, #28
+ 384              		.cfi_def_cfa_offset 32
+ 385 0004 0390     		str	r0, [sp, #12]
+ 386 0006 0291     		str	r1, [sp, #8]
+ 387 0008 0192     		str	r2, [sp, #4]
+ 388 000a 0093     		str	r3, [sp]
+ 244:libraries/zf_device/zf_device_wireless_interface.c ****     wireless_interface_operation_state_enum  return_state    =   WIRELESS_INTERFACE_ERROR_UNKNOW_ER
+ 389              		.loc 1 244 46
+ 390 000c 0123     		movs	r3, #1
+ 391 000e 8DF81730 		strb	r3, [sp, #23]
+ 245:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 246:libraries/zf_device/zf_device_wireless_interface.c ****     do
+ 247:libraries/zf_device/zf_device_wireless_interface.c ****     {
+ 248:libraries/zf_device/zf_device_wireless_interface.c ****         if(NULL == interface)
+ 392              		.loc 1 248 11
+ 393 0012 039B     		ldr	r3, [sp, #12]
+ 394 0014 002B     		cmp	r3, #0
+ 395 0016 03D1     		bne	.L24
+ 249:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 250:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 396              		.loc 1 250 26
+ 397 0018 2223     		movs	r3, #34
+ 398 001a 8DF81730 		strb	r3, [sp, #23]
+ 251:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 399              		.loc 1 251 13
+ 400 001e 90E0     		b	.L25
+ 401              	.L24:
+ 252:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 253:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 402              		.loc 1 253 55
+ 403 0020 039B     		ldr	r3, [sp, #12]
+ 404 0022 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 405              		.loc 1 253 11
+ 406 0024 002B     		cmp	r3, #0
+ 407 0026 03D1     		bne	.L26
+ 254:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 255:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 408              		.loc 1 255 26
+ 409 0028 2123     		movs	r3, #33
+ 410 002a 8DF81730 		strb	r3, [sp, #23]
+ 256:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 411              		.loc 1 256 13
+ 412 002e 88E0     		b	.L25
+ 413              	.L26:
+ 257:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 258:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 259:libraries/zf_device/zf_device_wireless_interface.c ****         return_state = WIRELESS_INTERFACE_OPERATION_DONE;
+ 414              		.loc 1 259 22
+ 415 0030 0023     		movs	r3, #0
+ 416 0032 8DF81730 		strb	r3, [sp, #23]
+ 260:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_SPI == interface->interface_type)
+ 417              		.loc 1 260 52
+ 418 0036 039B     		ldr	r3, [sp, #12]
+ 419 0038 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 420              		.loc 1 260 11
+ 421 003a 022B     		cmp	r3, #2
+ 422 003c 67D1     		bne	.L27
+ 261:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 262:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_low(interface->spi_cs_pin);
+ 423              		.loc 1 262 13
+ 424 003e 039B     		ldr	r3, [sp, #12]
+ 425 0040 5B88     		ldrh	r3, [r3, #2]
+ 426 0042 40F6FF72 		movw	r2, #4095
+ 427 0046 9342     		cmp	r3, r2
+ 428 0048 1AD0     		beq	.L28
+ 429              		.loc 1 262 13 is_stmt 0 discriminator 1
+ 430 004a 039B     		ldr	r3, [sp, #12]
+ 431 004c 5B88     		ldrh	r3, [r3, #2]
+ 432 004e 5B09     		lsrs	r3, r3, #5
+ 433 0050 9BB2     		uxth	r3, r3
+ 434 0052 1A46     		mov	r2, r3
+ 435 0054 3E4B     		ldr	r3, .L35
+ 436 0056 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 437 005a 9969     		ldr	r1, [r3, #24]
+ 438 005c 039B     		ldr	r3, [sp, #12]
+ 439 005e 5B88     		ldrh	r3, [r3, #2]
+ 440 0060 03F01F03 		and	r3, r3, #31
+ 441 0064 4FF48032 		mov	r2, #65536
+ 442 0068 9A40     		lsls	r2, r2, r3
+ 443 006a 039B     		ldr	r3, [sp, #12]
+ 444 006c 5B88     		ldrh	r3, [r3, #2]
+ 445 006e 5B09     		lsrs	r3, r3, #5
+ 446 0070 9BB2     		uxth	r3, r3
+ 447 0072 1846     		mov	r0, r3
+ 448 0074 364B     		ldr	r3, .L35
+ 449 0076 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 450 007a 0A43     		orrs	r2, r2, r1
+ 451 007c 9A61     		str	r2, [r3, #24]
+ 452 007e 05E0     		b	.L29
+ 453              	.L28:
+ 454              		.loc 1 262 13 discriminator 2
+ 455 0080 0022     		movs	r2, #0
+ 456 0082 4FF48371 		mov	r1, #262
+ 457 0086 3348     		ldr	r0, .L35+4
+ 458 0088 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 459              	.L29:
+ 263:libraries/zf_device/zf_device_wireless_interface.c ****             if(NULL != send_data && 0 != send_len)
+ 460              		.loc 1 263 15 is_stmt 1
+ 461 008c 029B     		ldr	r3, [sp, #8]
+ 462 008e 002B     		cmp	r3, #0
+ 463 0090 09D0     		beq	.L30
+ 464              		.loc 1 263 34 discriminator 1
+ 465 0092 019B     		ldr	r3, [sp, #4]
+ 466 0094 002B     		cmp	r3, #0
+ 467 0096 06D0     		beq	.L30
+ 264:libraries/zf_device/zf_device_wireless_interface.c ****             {
+ 265:libraries/zf_device/zf_device_wireless_interface.c ****                 zf_spi_transfer_8bit_array(interface->spi_index, send_data, NULL, send_len);
+ 468              		.loc 1 265 17
+ 469 0098 039B     		ldr	r3, [sp, #12]
+ 470 009a 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 471 009c 019B     		ldr	r3, [sp, #4]
+ 472 009e 0022     		movs	r2, #0
+ 473 00a0 0299     		ldr	r1, [sp, #8]
+ 474 00a2 FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 475              	.L30:
+ 266:libraries/zf_device/zf_device_wireless_interface.c ****             }
+ 267:libraries/zf_device/zf_device_wireless_interface.c ****             if(NULL != receive_data && 0 != receive_len)
+ 476              		.loc 1 267 15
+ 477 00a6 009B     		ldr	r3, [sp]
+ 478 00a8 002B     		cmp	r3, #0
+ 479 00aa 09D0     		beq	.L31
+ 480              		.loc 1 267 37 discriminator 1
+ 481 00ac 089B     		ldr	r3, [sp, #32]
+ 482 00ae 002B     		cmp	r3, #0
+ 483 00b0 06D0     		beq	.L31
+ 268:libraries/zf_device/zf_device_wireless_interface.c ****             {
+ 269:libraries/zf_device/zf_device_wireless_interface.c ****                 zf_spi_transfer_8bit_array(interface->spi_index, NULL, receive_data, receive_len);
+ 484              		.loc 1 269 17
+ 485 00b2 039B     		ldr	r3, [sp, #12]
+ 486 00b4 5878     		ldrb	r0, [r3, #1]	@ zero_extendqisi2
+ 487 00b6 089B     		ldr	r3, [sp, #32]
+ 488 00b8 009A     		ldr	r2, [sp]
+ 489 00ba 0021     		movs	r1, #0
+ 490 00bc FFF7FEFF 		bl	zf_spi_transfer_8bit_array
+ 491              	.L31:
+ 270:libraries/zf_device/zf_device_wireless_interface.c ****             }
+ 271:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_high(interface->spi_cs_pin);
+ 492              		.loc 1 271 13
+ 493 00c0 039B     		ldr	r3, [sp, #12]
+ 494 00c2 5B88     		ldrh	r3, [r3, #2]
+ 495 00c4 40F6FF72 		movw	r2, #4095
+ 496 00c8 9342     		cmp	r3, r2
+ 497 00ca 19D0     		beq	.L32
+ 498              		.loc 1 271 13 is_stmt 0 discriminator 1
+ 499 00cc 039B     		ldr	r3, [sp, #12]
+ 500 00ce 5B88     		ldrh	r3, [r3, #2]
+ 501 00d0 5B09     		lsrs	r3, r3, #5
+ 502 00d2 9BB2     		uxth	r3, r3
+ 503 00d4 1A46     		mov	r2, r3
+ 504 00d6 1E4B     		ldr	r3, .L35
+ 505 00d8 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 506 00dc 9969     		ldr	r1, [r3, #24]
+ 507 00de 039B     		ldr	r3, [sp, #12]
+ 508 00e0 5B88     		ldrh	r3, [r3, #2]
+ 509 00e2 03F01F03 		and	r3, r3, #31
+ 510 00e6 0122     		movs	r2, #1
+ 511 00e8 9A40     		lsls	r2, r2, r3
+ 512 00ea 039B     		ldr	r3, [sp, #12]
+ 513 00ec 5B88     		ldrh	r3, [r3, #2]
+ 514 00ee 5B09     		lsrs	r3, r3, #5
+ 515 00f0 9BB2     		uxth	r3, r3
+ 516 00f2 1846     		mov	r0, r3
+ 517 00f4 164B     		ldr	r3, .L35
+ 518 00f6 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 519 00fa 0A43     		orrs	r2, r2, r1
+ 520 00fc 9A61     		str	r2, [r3, #24]
+ 521 00fe 20E0     		b	.L25
+ 522              	.L32:
+ 523              		.loc 1 271 13 discriminator 2
+ 524 0100 0022     		movs	r2, #0
+ 525 0102 40F20F11 		movw	r1, #271
+ 526 0106 1348     		ldr	r0, .L35+4
+ 527 0108 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 528 010c 19E0     		b	.L25
+ 529              	.L27:
+ 272:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 273:libraries/zf_device/zf_device_wireless_interface.c ****         else
+ 274:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 275:libraries/zf_device/zf_device_wireless_interface.c ****             if(NULL != send_data && 0 != send_len)
+ 530              		.loc 1 275 15 is_stmt 1
+ 531 010e 029B     		ldr	r3, [sp, #8]
+ 532 0110 002B     		cmp	r3, #0
+ 533 0112 09D0     		beq	.L33
+ 534              		.loc 1 275 34 discriminator 1
+ 535 0114 019B     		ldr	r3, [sp, #4]
+ 536 0116 002B     		cmp	r3, #0
+ 537 0118 06D0     		beq	.L33
+ 276:libraries/zf_device/zf_device_wireless_interface.c ****             {
+ 277:libraries/zf_device/zf_device_wireless_interface.c ****                 zf_uart_write_buffer(interface->uart_index, send_data, send_len);
+ 538              		.loc 1 277 17
+ 539 011a 039B     		ldr	r3, [sp, #12]
+ 540 011c 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 541 011e 019A     		ldr	r2, [sp, #4]
+ 542 0120 0299     		ldr	r1, [sp, #8]
+ 543 0122 1846     		mov	r0, r3
+ 544 0124 FFF7FEFF 		bl	zf_uart_write_buffer
+ 545              	.L33:
+ 278:libraries/zf_device/zf_device_wireless_interface.c ****             }
+ 279:libraries/zf_device/zf_device_wireless_interface.c ****             if(NULL != receive_data && 0 != receive_len)
+ 546              		.loc 1 279 15
+ 547 0128 009B     		ldr	r3, [sp]
+ 548 012a 002B     		cmp	r3, #0
+ 549 012c 09D0     		beq	.L25
+ 550              		.loc 1 279 37 discriminator 1
+ 551 012e 089B     		ldr	r3, [sp, #32]
+ 552 0130 002B     		cmp	r3, #0
+ 553 0132 06D0     		beq	.L25
+ 280:libraries/zf_device/zf_device_wireless_interface.c ****             {
+ 281:libraries/zf_device/zf_device_wireless_interface.c ****                 zf_uart_read_buffer(interface->uart_index, receive_data, receive_len);
+ 554              		.loc 1 281 17
+ 555 0134 039B     		ldr	r3, [sp, #12]
+ 556 0136 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 557 0138 089A     		ldr	r2, [sp, #32]
+ 558 013a 0099     		ldr	r1, [sp]
+ 559 013c 1846     		mov	r0, r3
+ 560 013e FFF7FEFF 		bl	zf_uart_read_buffer
+ 561              	.L25:
+ 282:libraries/zf_device/zf_device_wireless_interface.c ****             }
+ 283:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 284:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 285:libraries/zf_device/zf_device_wireless_interface.c ****     }while(0);
+ 286:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 287:libraries/zf_device/zf_device_wireless_interface.c ****     return return_state;
+ 562              		.loc 1 287 12
+ 563 0142 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 288:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 564              		.loc 1 288 1
+ 565 0146 1846     		mov	r0, r3
+ 566 0148 07B0     		add	sp, sp, #28
+ 567              		.cfi_def_cfa_offset 4
+ 568              		@ sp needed
+ 569 014a 5DF804FB 		ldr	pc, [sp], #4
+ 570              	.L36:
+ 571 014e 00BF     		.align	2
+ 572              	.L35:
+ 573 0150 00000000 		.word	gpio_group_list
+ 574 0154 00000000 		.word	.LC0
+ 575              		.cfi_endproc
+ 576              	.LFE484:
+ 578              		.section	.text.wireless_interface_deinit,"ax",%progbits
+ 579              		.align	1
+ 580              		.p2align 4,,15
+ 581              		.global	wireless_interface_deinit
+ 582              		.syntax unified
+ 583              		.thumb
+ 584              		.thumb_func
+ 586              	wireless_interface_deinit:
+ 587              	.LFB485:
+ 289:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 290:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 291:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS 接口注销初始化
+ 292:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *interface          接口对象 WIRELESS 系列通用的接口对象
+ 293:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / WIRELESS_INTERFACE_OPERATION_DON
+ 294:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     wireless_interface_deinit(interface);
+ 295:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息     
+ 296:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 297:libraries/zf_device/zf_device_wireless_interface.c **** uint8 wireless_interface_deinit (wireless_interface_obj_struct *interface)
+ 298:libraries/zf_device/zf_device_wireless_interface.c **** {
+ 588              		.loc 1 298 1
+ 589              		.cfi_startproc
+ 590              		@ args = 0, pretend = 0, frame = 16
+ 591              		@ frame_needed = 0, uses_anonymous_args = 0
+ 592 0000 00B5     		push	{lr}
+ 593              		.cfi_def_cfa_offset 4
+ 594              		.cfi_offset 14, -4
+ 595 0002 85B0     		sub	sp, sp, #20
+ 596              		.cfi_def_cfa_offset 24
+ 597 0004 0190     		str	r0, [sp, #4]
+ 299:libraries/zf_device/zf_device_wireless_interface.c ****     wireless_interface_operation_state_enum  return_state    =   WIRELESS_INTERFACE_ERROR_UNKNOW_ER
+ 598              		.loc 1 299 46
+ 599 0006 0123     		movs	r3, #1
+ 600 0008 8DF80F30 		strb	r3, [sp, #15]
+ 300:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 301:libraries/zf_device/zf_device_wireless_interface.c ****     do
+ 302:libraries/zf_device/zf_device_wireless_interface.c ****     {
+ 303:libraries/zf_device/zf_device_wireless_interface.c ****         if(NULL == interface)
+ 601              		.loc 1 303 11
+ 602 000c 019B     		ldr	r3, [sp, #4]
+ 603 000e 002B     		cmp	r3, #0
+ 604 0010 03D1     		bne	.L38
+ 304:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 305:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 605              		.loc 1 305 26
+ 606 0012 2223     		movs	r3, #34
+ 607 0014 8DF80F30 		strb	r3, [sp, #15]
+ 306:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 608              		.loc 1 306 13
+ 609 0018 50E0     		b	.L39
+ 610              	.L38:
+ 307:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 308:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_UNKNOW == interface->interface_type)
+ 611              		.loc 1 308 55
+ 612 001a 019B     		ldr	r3, [sp, #4]
+ 613 001c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 614              		.loc 1 308 11
+ 615 001e 002B     		cmp	r3, #0
+ 616 0020 03D1     		bne	.L40
+ 309:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 310:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_NOT_INIT;
+ 617              		.loc 1 310 26
+ 618 0022 2123     		movs	r3, #33
+ 619 0024 8DF80F30 		strb	r3, [sp, #15]
+ 311:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 620              		.loc 1 311 13
+ 621 0028 48E0     		b	.L39
+ 622              	.L40:
+ 312:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 313:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 314:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_SPI == interface->interface_type)
+ 623              		.loc 1 314 52
+ 624 002a 019B     		ldr	r3, [sp, #4]
+ 625 002c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 626              		.loc 1 314 11
+ 627 002e 022B     		cmp	r3, #2
+ 628 0030 14D1     		bne	.L41
+ 315:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 316:libraries/zf_device/zf_device_wireless_interface.c ****             zf_exti_channel_deinit(interface->int_pin);
+ 629              		.loc 1 316 13
+ 630 0032 019B     		ldr	r3, [sp, #4]
+ 631 0034 9B68     		ldr	r3, [r3, #8]
+ 632 0036 1846     		mov	r0, r3
+ 633 0038 FFF7FEFF 		bl	zf_exti_channel_deinit
+ 317:libraries/zf_device/zf_device_wireless_interface.c ****             zf_spi_deinit(interface->spi_index);
+ 634              		.loc 1 317 13
+ 635 003c 019B     		ldr	r3, [sp, #4]
+ 636 003e 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 637 0040 1846     		mov	r0, r3
+ 638 0042 FFF7FEFF 		bl	zf_spi_deinit
+ 318:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_deinit(interface->spi_cs_pin);
+ 639              		.loc 1 318 13
+ 640 0046 019B     		ldr	r3, [sp, #4]
+ 641 0048 5B88     		ldrh	r3, [r3, #2]
+ 642 004a 1846     		mov	r0, r3
+ 643 004c FFF7FEFF 		bl	zf_gpio_deinit
+ 319:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_deinit(interface->rst_pin);
+ 644              		.loc 1 319 13
+ 645 0050 019B     		ldr	r3, [sp, #4]
+ 646 0052 9B88     		ldrh	r3, [r3, #4]
+ 647 0054 1846     		mov	r0, r3
+ 648 0056 FFF7FEFF 		bl	zf_gpio_deinit
+ 649 005a 09E0     		b	.L42
+ 650              	.L41:
+ 320:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 321:libraries/zf_device/zf_device_wireless_interface.c ****         else
+ 322:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 323:libraries/zf_device/zf_device_wireless_interface.c ****             zf_uart_deinit(interface->uart_index);
+ 651              		.loc 1 323 13
+ 652 005c 019B     		ldr	r3, [sp, #4]
+ 653 005e 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 654 0060 1846     		mov	r0, r3
+ 655 0062 FFF7FEFF 		bl	zf_uart_deinit
+ 324:libraries/zf_device/zf_device_wireless_interface.c ****             zf_gpio_deinit(interface->rts_pin);
+ 656              		.loc 1 324 13
+ 657 0066 019B     		ldr	r3, [sp, #4]
+ 658 0068 5B88     		ldrh	r3, [r3, #2]
+ 659 006a 1846     		mov	r0, r3
+ 660 006c FFF7FEFF 		bl	zf_gpio_deinit
+ 661              	.L42:
+ 325:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 326:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 327:libraries/zf_device/zf_device_wireless_interface.c ****         interface->interface_type       = WIRELESS_INTERFACE_TYPE_UNKNOW;
+ 662              		.loc 1 327 41
+ 663 0070 019B     		ldr	r3, [sp, #4]
+ 664 0072 0022     		movs	r2, #0
+ 665 0074 1A70     		strb	r2, [r3]
+ 328:libraries/zf_device/zf_device_wireless_interface.c ****         interface->spi_index            = 0                             ;
+ 666              		.loc 1 328 41
+ 667 0076 019B     		ldr	r3, [sp, #4]
+ 668 0078 0022     		movs	r2, #0
+ 669 007a 5A70     		strb	r2, [r3, #1]
+ 329:libraries/zf_device/zf_device_wireless_interface.c ****         interface->spi_cs_pin           = PIN_NULL                      ;
+ 670              		.loc 1 329 41
+ 671 007c 019B     		ldr	r3, [sp, #4]
+ 672 007e 40F6FF72 		movw	r2, #4095
+ 673 0082 5A80     		strh	r2, [r3, #2]	@ movhi
+ 330:libraries/zf_device/zf_device_wireless_interface.c ****         interface->rst_pin              = PIN_NULL                      ;
+ 674              		.loc 1 330 41
+ 675 0084 019B     		ldr	r3, [sp, #4]
+ 676 0086 40F6FF72 		movw	r2, #4095
+ 677 008a 9A80     		strh	r2, [r3, #4]	@ movhi
+ 331:libraries/zf_device/zf_device_wireless_interface.c ****         interface->int_pin              = 0                             ;
+ 678              		.loc 1 331 41
+ 679 008c 019B     		ldr	r3, [sp, #4]
+ 680 008e 0022     		movs	r2, #0
+ 681 0090 9A60     		str	r2, [r3, #8]
+ 332:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 333:libraries/zf_device/zf_device_wireless_interface.c ****         interface->fifo_obj.base_ptr    = 0                 ;
+ 682              		.loc 1 333 41
+ 683 0092 019B     		ldr	r3, [sp, #4]
+ 684 0094 0022     		movs	r2, #0
+ 685 0096 DA60     		str	r2, [r3, #12]
+ 334:libraries/zf_device/zf_device_wireless_interface.c ****         interface->fifo_obj.tail_ptr    = 0                 ;
+ 686              		.loc 1 334 41
+ 687 0098 019B     		ldr	r3, [sp, #4]
+ 688 009a 0022     		movs	r2, #0
+ 689 009c 1A61     		str	r2, [r3, #16]
+ 335:libraries/zf_device/zf_device_wireless_interface.c ****         interface->fifo_obj.write_ptr   = 0                 ;
+ 690              		.loc 1 335 41
+ 691 009e 019B     		ldr	r3, [sp, #4]
+ 692 00a0 0022     		movs	r2, #0
+ 693 00a2 5A61     		str	r2, [r3, #20]
+ 336:libraries/zf_device/zf_device_wireless_interface.c ****         interface->fifo_obj.read_ptr    = 0                 ;
+ 694              		.loc 1 336 41
+ 695 00a4 019B     		ldr	r3, [sp, #4]
+ 696 00a6 0022     		movs	r2, #0
+ 697 00a8 9A61     		str	r2, [r3, #24]
+ 337:libraries/zf_device/zf_device_wireless_interface.c ****         interface->fifo_obj.step        = FIFO_DATA_8BIT    ;
+ 698              		.loc 1 337 41
+ 699 00aa 019B     		ldr	r3, [sp, #4]
+ 700 00ac 0122     		movs	r2, #1
+ 701 00ae 1A77     		strb	r2, [r3, #28]
+ 338:libraries/zf_device/zf_device_wireless_interface.c ****         interface->fifo_obj.state       = 0                 ;
+ 702              		.loc 1 338 41
+ 703 00b0 019B     		ldr	r3, [sp, #4]
+ 704 00b2 0022     		movs	r2, #0
+ 705 00b4 5A77     		strb	r2, [r3, #29]
+ 339:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 340:libraries/zf_device/zf_device_wireless_interface.c ****         return_state = WIRELESS_INTERFACE_OPERATION_DONE;
+ 706              		.loc 1 340 22
+ 707 00b6 0023     		movs	r3, #0
+ 708 00b8 8DF80F30 		strb	r3, [sp, #15]
+ 709              	.L39:
+ 341:libraries/zf_device/zf_device_wireless_interface.c ****     }while(0);
+ 342:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 343:libraries/zf_device/zf_device_wireless_interface.c ****     return return_state;
+ 710              		.loc 1 343 12
+ 711 00bc 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 344:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 712              		.loc 1 344 1
+ 713 00c0 1846     		mov	r0, r3
+ 714 00c2 05B0     		add	sp, sp, #20
+ 715              		.cfi_def_cfa_offset 4
+ 716              		@ sp needed
+ 717 00c4 5DF804FB 		ldr	pc, [sp], #4
+ 718              		.cfi_endproc
+ 719              	.LFE485:
+ 721              		.section	.text.wireless_interface_spi_init,"ax",%progbits
+ 722              		.align	1
+ 723              		.p2align 4,,15
+ 724              		.global	wireless_interface_spi_init
+ 725              		.syntax unified
+ 726              		.thumb
+ 727              		.thumb_func
+ 729              	wireless_interface_spi_init:
+ 730              	.LFB486:
+ 345:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 346:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 347:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS SPI 通信 接口初始化
+ 348:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *interface          接口对象 WIRELESS 系列通用的接口对象
+ 349:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     spi_index           SPI 索引        (详见 zf_driver_spi.h 内 zf_spi_index_
+ 350:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     mode                SPI 模式        (详见 zf_driver_spi.h 内 zf_spi_mode_e
+ 351:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     baudrate            设置 SPI 的波特率 不超过系统时钟的一半 会�
+ 352:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     sck_pin             选择 SCK 引脚   (详见 zf_driver_spi.h 内 zf_spi_sck_
+ 353:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     mosi_pin            选择 MOSI 引脚  (详见 zf_driver_spi.h 内 zf_spi_mosi
+ 354:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     miso_pin            选择 MISO 引脚  (详见 zf_driver_spi.h 内 zf_spi_miso
+ 355:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     cs_pin              使用软件 CS 控制 所以此处填写 GPIO 索引
+ 356:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     rst_pin             RST 复位引脚
+ 357:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     int_pin             INT 中断引脚    (详见 zf_driver_exti.h 内 zf_exti_ch
+ 358:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *data_buffer        数据缓冲区
+ 359:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     buffer_size         数据缓冲区大小
+ 360:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / WIRELESS_INTERFACE_OPERATION_DON
+ 361:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     wireless_interface_spi_init(interface, spi_index, mode, baudrate, sck_pin, mosi
+ 362:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息     
+ 363:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 364:libraries/zf_device/zf_device_wireless_interface.c **** uint8 wireless_interface_spi_init (wireless_interface_obj_struct *interface,
+ 365:libraries/zf_device/zf_device_wireless_interface.c ****     zf_spi_index_enum spi_index, zf_spi_mode_enum mode, uint32 baudrate,
+ 366:libraries/zf_device/zf_device_wireless_interface.c ****     zf_spi_sck_pin_enum sck_pin, zf_spi_mosi_pin_enum mosi_pin, zf_spi_miso_pin_enum miso_pin, zf_g
+ 367:libraries/zf_device/zf_device_wireless_interface.c ****     zf_gpio_pin_enum rst_pin, zf_exti_channel_pin_enum int_pin, uint8 *data_buffer, uint32 buffer_s
+ 368:libraries/zf_device/zf_device_wireless_interface.c ****     void_callback_uint32_ptr call_back, void *ptr)
+ 369:libraries/zf_device/zf_device_wireless_interface.c **** {
+ 731              		.loc 1 369 1
+ 732              		.cfi_startproc
+ 733              		@ args = 40, pretend = 0, frame = 24
+ 734              		@ frame_needed = 0, uses_anonymous_args = 0
+ 735 0000 00B5     		push	{lr}
+ 736              		.cfi_def_cfa_offset 4
+ 737              		.cfi_offset 14, -4
+ 738 0002 8BB0     		sub	sp, sp, #44
+ 739              		.cfi_def_cfa_offset 48
+ 740 0004 0790     		str	r0, [sp, #28]
+ 741 0006 0593     		str	r3, [sp, #20]
+ 742 0008 0B46     		mov	r3, r1
+ 743 000a 8DF81B30 		strb	r3, [sp, #27]
+ 744 000e 1346     		mov	r3, r2
+ 745 0010 8DF81A30 		strb	r3, [sp, #26]
+ 370:libraries/zf_device/zf_device_wireless_interface.c ****     wireless_interface_operation_state_enum  return_state    =   WIRELESS_INTERFACE_ERROR_UNKNOW_ER
+ 746              		.loc 1 370 46
+ 747 0014 0123     		movs	r3, #1
+ 748 0016 8DF82730 		strb	r3, [sp, #39]
+ 371:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 372:libraries/zf_device/zf_device_wireless_interface.c ****     do
+ 373:libraries/zf_device/zf_device_wireless_interface.c ****     {
+ 374:libraries/zf_device/zf_device_wireless_interface.c ****         if(     NULL == interface   || NULL == call_back    ||  NULL == ptr
+ 749              		.loc 1 374 11
+ 750 001a 079B     		ldr	r3, [sp, #28]
+ 751 001c 002B     		cmp	r3, #0
+ 752 001e 0BD0     		beq	.L45
+ 753              		.loc 1 374 37 discriminator 1
+ 754 0020 149B     		ldr	r3, [sp, #80]
+ 755 0022 002B     		cmp	r3, #0
+ 756 0024 08D0     		beq	.L45
+ 757              		.loc 1 374 61 discriminator 2
+ 758 0026 159B     		ldr	r3, [sp, #84]
+ 759 0028 002B     		cmp	r3, #0
+ 760 002a 05D0     		beq	.L45
+ 375:libraries/zf_device/zf_device_wireless_interface.c ****             ||  NULL == data_buffer || 0 == buffer_size)
+ 761              		.loc 1 375 13
+ 762 002c 129B     		ldr	r3, [sp, #72]
+ 763 002e 002B     		cmp	r3, #0
+ 764 0030 02D0     		beq	.L45
+ 765              		.loc 1 375 37 discriminator 1
+ 766 0032 139B     		ldr	r3, [sp, #76]
+ 767 0034 002B     		cmp	r3, #0
+ 768 0036 03D1     		bne	.L46
+ 769              	.L45:
+ 376:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 377:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 770              		.loc 1 377 26
+ 771 0038 2223     		movs	r3, #34
+ 772 003a 8DF82730 		strb	r3, [sp, #39]
+ 378:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 773              		.loc 1 378 13
+ 774 003e 4EE0     		b	.L47
+ 775              	.L46:
+ 379:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 380:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_UNKNOW != interface->interface_type)
+ 776              		.loc 1 380 55
+ 777 0040 079B     		ldr	r3, [sp, #28]
+ 778 0042 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 779              		.loc 1 380 11
+ 780 0044 002B     		cmp	r3, #0
+ 781 0046 03D0     		beq	.L48
+ 381:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 382:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 782              		.loc 1 382 26
+ 783 0048 2023     		movs	r3, #32
+ 784 004a 8DF82730 		strb	r3, [sp, #39]
+ 383:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 785              		.loc 1 383 13
+ 786 004e 46E0     		b	.L47
+ 787              	.L48:
+ 384:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 385:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 386:libraries/zf_device/zf_device_wireless_interface.c ****         if(zf_spi_init(spi_index, mode, baudrate, sck_pin, mosi_pin, miso_pin, SPI_CS_NULL))
+ 788              		.loc 1 386 12
+ 789 0050 9DF81A10 		ldrb	r1, [sp, #26]	@ zero_extendqisi2
+ 790 0054 9DF81B00 		ldrb	r0, [sp, #27]	@ zero_extendqisi2
+ 791 0058 40F6FF73 		movw	r3, #4095
+ 792 005c 0293     		str	r3, [sp, #8]
+ 793 005e 0E9B     		ldr	r3, [sp, #56]
+ 794 0060 0193     		str	r3, [sp, #4]
+ 795 0062 0D9B     		ldr	r3, [sp, #52]
+ 796 0064 0093     		str	r3, [sp]
+ 797 0066 0C9B     		ldr	r3, [sp, #48]
+ 798 0068 059A     		ldr	r2, [sp, #20]
+ 799 006a FFF7FEFF 		bl	zf_spi_init
+ 800 006e 0346     		mov	r3, r0
+ 801              		.loc 1 386 11
+ 802 0070 002B     		cmp	r3, #0
+ 803 0072 03D0     		beq	.L49
+ 387:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 388:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 804              		.loc 1 388 26
+ 805 0074 2023     		movs	r3, #32
+ 806 0076 8DF82730 		strb	r3, [sp, #39]
+ 389:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 807              		.loc 1 389 13
+ 808 007a 30E0     		b	.L47
+ 809              	.L49:
+ 390:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 391:libraries/zf_device/zf_device_wireless_interface.c ****         zf_gpio_init(cs_pin, GPO_PUSH_PULL, GPIO_HIGH);
+ 810              		.loc 1 391 9
+ 811 007c BDF83C30 		ldrh	r3, [sp, #60]
+ 812 0080 0122     		movs	r2, #1
+ 813 0082 1021     		movs	r1, #16
+ 814 0084 1846     		mov	r0, r3
+ 815 0086 FFF7FEFF 		bl	zf_gpio_init
+ 392:libraries/zf_device/zf_device_wireless_interface.c ****         zf_gpio_init(rst_pin, GPO_PUSH_PULL, GPIO_HIGH);
+ 816              		.loc 1 392 9
+ 817 008a BDF84030 		ldrh	r3, [sp, #64]
+ 818 008e 0122     		movs	r2, #1
+ 819 0090 1021     		movs	r1, #16
+ 820 0092 1846     		mov	r0, r3
+ 821 0094 FFF7FEFF 		bl	zf_gpio_init
+ 393:libraries/zf_device/zf_device_wireless_interface.c ****         zf_exti_channel_init(int_pin, EXTI_TRIGGER_TYPE_FALLING, call_back, ptr);
+ 822              		.loc 1 393 9
+ 823 0098 159B     		ldr	r3, [sp, #84]
+ 824 009a 149A     		ldr	r2, [sp, #80]
+ 825 009c 0221     		movs	r1, #2
+ 826 009e 1198     		ldr	r0, [sp, #68]
+ 827 00a0 FFF7FEFF 		bl	zf_exti_channel_init
+ 394:libraries/zf_device/zf_device_wireless_interface.c ****         zf_fifo_init(&(interface->fifo_obj), FIFO_DATA_8BIT, data_buffer, buffer_size);
+ 828              		.loc 1 394 9
+ 829 00a4 079B     		ldr	r3, [sp, #28]
+ 830 00a6 03F10C00 		add	r0, r3, #12
+ 831 00aa 139B     		ldr	r3, [sp, #76]
+ 832 00ac 129A     		ldr	r2, [sp, #72]
+ 833 00ae 0121     		movs	r1, #1
+ 834 00b0 FFF7FEFF 		bl	zf_fifo_init
+ 395:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 396:libraries/zf_device/zf_device_wireless_interface.c ****         interface->interface_type   = WIRELESS_INTERFACE_TYPE_UART  ;
+ 835              		.loc 1 396 37
+ 836 00b4 079B     		ldr	r3, [sp, #28]
+ 837 00b6 0122     		movs	r2, #1
+ 838 00b8 1A70     		strb	r2, [r3]
+ 397:libraries/zf_device/zf_device_wireless_interface.c ****         interface->spi_index        = spi_index                     ;
+ 839              		.loc 1 397 37
+ 840 00ba 079B     		ldr	r3, [sp, #28]
+ 841 00bc 9DF81B20 		ldrb	r2, [sp, #27]
+ 842 00c0 5A70     		strb	r2, [r3, #1]
+ 398:libraries/zf_device/zf_device_wireless_interface.c ****         interface->spi_cs_pin       = cs_pin                        ;
+ 843              		.loc 1 398 37
+ 844 00c2 079B     		ldr	r3, [sp, #28]
+ 845 00c4 BDF83C20 		ldrh	r2, [sp, #60]	@ movhi
+ 846 00c8 5A80     		strh	r2, [r3, #2]	@ movhi
+ 399:libraries/zf_device/zf_device_wireless_interface.c ****         interface->rst_pin          = rst_pin                       ;
+ 847              		.loc 1 399 37
+ 848 00ca 079B     		ldr	r3, [sp, #28]
+ 849 00cc BDF84020 		ldrh	r2, [sp, #64]	@ movhi
+ 850 00d0 9A80     		strh	r2, [r3, #4]	@ movhi
+ 400:libraries/zf_device/zf_device_wireless_interface.c ****         interface->int_pin          = int_pin                       ;
+ 851              		.loc 1 400 37
+ 852 00d2 079B     		ldr	r3, [sp, #28]
+ 853 00d4 119A     		ldr	r2, [sp, #68]
+ 854 00d6 9A60     		str	r2, [r3, #8]
+ 401:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 402:libraries/zf_device/zf_device_wireless_interface.c ****         return_state = WIRELESS_INTERFACE_OPERATION_DONE;
+ 855              		.loc 1 402 22
+ 856 00d8 0023     		movs	r3, #0
+ 857 00da 8DF82730 		strb	r3, [sp, #39]
+ 858              	.L47:
+ 403:libraries/zf_device/zf_device_wireless_interface.c ****     }while(0);
+ 404:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 405:libraries/zf_device/zf_device_wireless_interface.c ****     return return_state;
+ 859              		.loc 1 405 12
+ 860 00de 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 406:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 861              		.loc 1 406 1
+ 862 00e2 1846     		mov	r0, r3
+ 863 00e4 0BB0     		add	sp, sp, #44
+ 864              		.cfi_def_cfa_offset 4
+ 865              		@ sp needed
+ 866 00e6 5DF804FB 		ldr	pc, [sp], #4
+ 867              		.cfi_endproc
+ 868              	.LFE486:
+ 870 00ea 00BF     		.section	.text.wireless_interface_uart_init,"ax",%progbits
+ 871              		.align	1
+ 872              		.p2align 4,,15
+ 873              		.global	wireless_interface_uart_init
+ 874              		.syntax unified
+ 875              		.thumb
+ 876              		.thumb_func
+ 878              	wireless_interface_uart_init:
+ 879              	.LFB487:
+ 407:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 408:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 409:libraries/zf_device/zf_device_wireless_interface.c **** // 函数简介     WIRELESS UART 通信 接口初始化
+ 410:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *interface          接口对象 WIRELESS 系列通用的接口对象
+ 411:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     uart_index          UART 模块号     (详见 zf_driver_uart.h 内 zf_uart_ind
+ 412:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     baudrate            UART 波特率
+ 413:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     tx_pin              UART 发送引脚   (详见 zf_driver_uart.h 内 zf_uart_tx
+ 414:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     rx_pin              UART 接收引脚   (详见 zf_driver_uart.h 内 zf_uart_rx
+ 415:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     rts_pin             RTS 流控引脚
+ 416:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *data_buffer        数据缓冲区
+ 417:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     buffer_size         数据缓冲区大小
+ 418:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     callback            回调函数 为无返回值 uint32 ptr 两个参数的函�
+ 419:libraries/zf_device/zf_device_wireless_interface.c **** // 参数说明     *ptr                回调参数 用户自拟定的参数指针 不需要的话
+ 420:libraries/zf_device/zf_device_wireless_interface.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / WIRELESS_INTERFACE_OPERATION_DON
+ 421:libraries/zf_device/zf_device_wireless_interface.c **** // 使用示例     wireless_interface_uart_init(interface, uart_index, baudrate, tx_pin, rx_pin, r
+ 422:libraries/zf_device/zf_device_wireless_interface.c **** // 备注信息     
+ 423:libraries/zf_device/zf_device_wireless_interface.c **** //-------------------------------------------------------------------------------------------------
+ 424:libraries/zf_device/zf_device_wireless_interface.c **** uint8 wireless_interface_uart_init (wireless_interface_obj_struct *interface,
+ 425:libraries/zf_device/zf_device_wireless_interface.c ****     zf_uart_index_enum uart_index, uint32 baudrate, zf_uart_tx_pin_enum tx_pin, zf_uart_rx_pin_enum
+ 426:libraries/zf_device/zf_device_wireless_interface.c ****     zf_gpio_pin_enum rts_pin, uint8 *data_buffer, uint32 buffer_size, void_callback_uint32_ptr call
+ 427:libraries/zf_device/zf_device_wireless_interface.c **** {
+ 880              		.loc 1 427 1
+ 881              		.cfi_startproc
+ 882              		@ args = 24, pretend = 0, frame = 24
+ 883              		@ frame_needed = 0, uses_anonymous_args = 0
+ 884 0000 00B5     		push	{lr}
+ 885              		.cfi_def_cfa_offset 4
+ 886              		.cfi_offset 14, -4
+ 887 0002 87B0     		sub	sp, sp, #28
+ 888              		.cfi_def_cfa_offset 32
+ 889 0004 0390     		str	r0, [sp, #12]
+ 890 0006 0192     		str	r2, [sp, #4]
+ 891 0008 0093     		str	r3, [sp]
+ 892 000a 0B46     		mov	r3, r1
+ 893 000c 8DF80B30 		strb	r3, [sp, #11]
+ 428:libraries/zf_device/zf_device_wireless_interface.c ****     wireless_interface_operation_state_enum  return_state    =   WIRELESS_INTERFACE_ERROR_UNKNOW_ER
+ 894              		.loc 1 428 46
+ 895 0010 0123     		movs	r3, #1
+ 896 0012 8DF81730 		strb	r3, [sp, #23]
+ 429:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 430:libraries/zf_device/zf_device_wireless_interface.c ****     do
+ 431:libraries/zf_device/zf_device_wireless_interface.c ****     {
+ 432:libraries/zf_device/zf_device_wireless_interface.c ****         if(     NULL == interface   || NULL == call_back    ||  NULL == ptr
+ 897              		.loc 1 432 11
+ 898 0016 039B     		ldr	r3, [sp, #12]
+ 899 0018 002B     		cmp	r3, #0
+ 900 001a 0BD0     		beq	.L52
+ 901              		.loc 1 432 37 discriminator 1
+ 902 001c 0C9B     		ldr	r3, [sp, #48]
+ 903 001e 002B     		cmp	r3, #0
+ 904 0020 08D0     		beq	.L52
+ 905              		.loc 1 432 61 discriminator 2
+ 906 0022 0D9B     		ldr	r3, [sp, #52]
+ 907 0024 002B     		cmp	r3, #0
+ 908 0026 05D0     		beq	.L52
+ 433:libraries/zf_device/zf_device_wireless_interface.c ****             ||  NULL == data_buffer || 0 == buffer_size)
+ 909              		.loc 1 433 13
+ 910 0028 0A9B     		ldr	r3, [sp, #40]
+ 911 002a 002B     		cmp	r3, #0
+ 912 002c 02D0     		beq	.L52
+ 913              		.loc 1 433 37 discriminator 1
+ 914 002e 0B9B     		ldr	r3, [sp, #44]
+ 915 0030 002B     		cmp	r3, #0
+ 916 0032 03D1     		bne	.L53
+ 917              	.L52:
+ 434:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 435:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_DATA_BUFFER_NULL;
+ 918              		.loc 1 435 26
+ 919 0034 2223     		movs	r3, #34
+ 920 0036 8DF81730 		strb	r3, [sp, #23]
+ 436:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 921              		.loc 1 436 13
+ 922 003a 3FE0     		b	.L54
+ 923              	.L53:
+ 437:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 438:libraries/zf_device/zf_device_wireless_interface.c ****         if(WIRELESS_INTERFACE_TYPE_UNKNOW != interface->interface_type)
+ 924              		.loc 1 438 55
+ 925 003c 039B     		ldr	r3, [sp, #12]
+ 926 003e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 927              		.loc 1 438 11
+ 928 0040 002B     		cmp	r3, #0
+ 929 0042 03D0     		beq	.L55
+ 439:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 440:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 930              		.loc 1 440 26
+ 931 0044 2023     		movs	r3, #32
+ 932 0046 8DF81730 		strb	r3, [sp, #23]
+ 441:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 933              		.loc 1 441 13
+ 934 004a 37E0     		b	.L54
+ 935              	.L55:
+ 442:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 443:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 444:libraries/zf_device/zf_device_wireless_interface.c ****         if(zf_uart_init(uart_index, baudrate, tx_pin, rx_pin))
+ 936              		.loc 1 444 12
+ 937 004c 9DF80B00 		ldrb	r0, [sp, #11]	@ zero_extendqisi2
+ 938 0050 089B     		ldr	r3, [sp, #32]
+ 939 0052 009A     		ldr	r2, [sp]
+ 940 0054 0199     		ldr	r1, [sp, #4]
+ 941 0056 FFF7FEFF 		bl	zf_uart_init
+ 942 005a 0346     		mov	r3, r0
+ 943              		.loc 1 444 11
+ 944 005c 002B     		cmp	r3, #0
+ 945 005e 03D0     		beq	.L56
+ 445:libraries/zf_device/zf_device_wireless_interface.c ****         {
+ 446:libraries/zf_device/zf_device_wireless_interface.c ****             return_state = WIRELESS_INTERFACE_ERROR_INTERFACE_OCCUPIED;
+ 946              		.loc 1 446 26
+ 947 0060 2023     		movs	r3, #32
+ 948 0062 8DF81730 		strb	r3, [sp, #23]
+ 447:libraries/zf_device/zf_device_wireless_interface.c ****             break;
+ 949              		.loc 1 447 13
+ 950 0066 29E0     		b	.L54
+ 951              	.L56:
+ 448:libraries/zf_device/zf_device_wireless_interface.c ****         }
+ 449:libraries/zf_device/zf_device_wireless_interface.c ****         zf_uart_set_interrupt_callback(uart_index, call_back, ptr);
+ 952              		.loc 1 449 9
+ 953 0068 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 954 006c 0D9A     		ldr	r2, [sp, #52]
+ 955 006e 0C99     		ldr	r1, [sp, #48]
+ 956 0070 1846     		mov	r0, r3
+ 957 0072 FFF7FEFF 		bl	zf_uart_set_interrupt_callback
+ 450:libraries/zf_device/zf_device_wireless_interface.c ****         zf_uart_set_interrupt_config(uart_index, UART_INTERRUPT_CONFIG_RX_ENABLE);
+ 958              		.loc 1 450 9
+ 959 0076 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 960 007a 0421     		movs	r1, #4
+ 961 007c 1846     		mov	r0, r3
+ 962 007e FFF7FEFF 		bl	zf_uart_set_interrupt_config
+ 451:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 452:libraries/zf_device/zf_device_wireless_interface.c ****         zf_gpio_init(rts_pin, GPI_PULL_UP, GPIO_HIGH);
+ 963              		.loc 1 452 9
+ 964 0082 BDF82430 		ldrh	r3, [sp, #36]
+ 965 0086 0122     		movs	r2, #1
+ 966 0088 0321     		movs	r1, #3
+ 967 008a 1846     		mov	r0, r3
+ 968 008c FFF7FEFF 		bl	zf_gpio_init
+ 453:libraries/zf_device/zf_device_wireless_interface.c ****         zf_fifo_init(&(interface->fifo_obj), FIFO_DATA_8BIT, data_buffer, buffer_size);
+ 969              		.loc 1 453 9
+ 970 0090 039B     		ldr	r3, [sp, #12]
+ 971 0092 03F10C00 		add	r0, r3, #12
+ 972 0096 0B9B     		ldr	r3, [sp, #44]
+ 973 0098 0A9A     		ldr	r2, [sp, #40]
+ 974 009a 0121     		movs	r1, #1
+ 975 009c FFF7FEFF 		bl	zf_fifo_init
+ 454:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 455:libraries/zf_device/zf_device_wireless_interface.c ****         interface->interface_type   = WIRELESS_INTERFACE_TYPE_UART  ;
+ 976              		.loc 1 455 37
+ 977 00a0 039B     		ldr	r3, [sp, #12]
+ 978 00a2 0122     		movs	r2, #1
+ 979 00a4 1A70     		strb	r2, [r3]
+ 456:libraries/zf_device/zf_device_wireless_interface.c ****         interface->uart_index       = uart_index                    ;
+ 980              		.loc 1 456 37
+ 981 00a6 039B     		ldr	r3, [sp, #12]
+ 982 00a8 9DF80B20 		ldrb	r2, [sp, #11]
+ 983 00ac 5A70     		strb	r2, [r3, #1]
+ 457:libraries/zf_device/zf_device_wireless_interface.c ****         interface->rts_pin          = rts_pin                       ;
+ 984              		.loc 1 457 37
+ 985 00ae 039B     		ldr	r3, [sp, #12]
+ 986 00b0 BDF82420 		ldrh	r2, [sp, #36]	@ movhi
+ 987 00b4 5A80     		strh	r2, [r3, #2]	@ movhi
+ 458:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 459:libraries/zf_device/zf_device_wireless_interface.c ****         return_state = WIRELESS_INTERFACE_OPERATION_DONE;
+ 988              		.loc 1 459 22
+ 989 00b6 0023     		movs	r3, #0
+ 990 00b8 8DF81730 		strb	r3, [sp, #23]
+ 991              	.L54:
+ 460:libraries/zf_device/zf_device_wireless_interface.c ****     }while(0);
+ 461:libraries/zf_device/zf_device_wireless_interface.c **** 
+ 462:libraries/zf_device/zf_device_wireless_interface.c ****     return return_state;
+ 992              		.loc 1 462 12
+ 993 00bc 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 463:libraries/zf_device/zf_device_wireless_interface.c **** }
+ 994              		.loc 1 463 1
+ 995 00c0 1846     		mov	r0, r3
+ 996 00c2 07B0     		add	sp, sp, #28
+ 997              		.cfi_def_cfa_offset 4
+ 998              		@ sp needed
+ 999 00c4 5DF804FB 		ldr	pc, [sp], #4
+ 1000              		.cfi_endproc
+ 1001              	.LFE487:
+ 1003              		.text
+ 1004              	.Letext0:
+ 1005              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1006              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 1007              		.file 4 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_GPIO
+ 1008              		.file 5 "libraries/zf_common/zf_common_typedef.h"
+ 1009              		.file 6 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 1010              		.file 7 "libraries/zf_common/zf_common_fifo.h"
+ 1011              		.file 8 "libraries/zf_driver/zf_driver_gpio.h"
+ 1012              		.file 9 "libraries/zf_driver/zf_driver_adc.h"
+ 1013              		.file 10 "libraries/zf_driver/zf_driver_can.h"
+ 1014              		.file 11 "libraries/zf_driver/zf_driver_encoder.h"
+ 1015              		.file 12 "libraries/zf_driver/zf_driver_exti.h"
+ 1016              		.file 13 "libraries/zf_driver/zf_driver_hrtim.h"
+ 1017              		.file 14 "libraries/zf_driver/zf_driver_pwm.h"
+ 1018              		.file 15 "libraries/zf_driver/zf_driver_spi.h"
+ 1019              		.file 16 "libraries/zf_driver/zf_driver_uart.h"
+ 1020              		.file 17 "libraries/zf_device/zf_device_wireless_interface.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_device_wireless_interface.c
+D:\Users\TMP\ccYaloNA.s:23     .data.wireless_interface_uart_default_obj:00000000 wireless_interface_uart_default_obj
+D:\Users\TMP\ccYaloNA.s:20     .data.wireless_interface_uart_default_obj:00000000 $d
+D:\Users\TMP\ccYaloNA.s:38     .rodata:00000000 $d
+D:\Users\TMP\ccYaloNA.s:42     .text.wireless_interface_write_8bit_array:00000000 $t
+D:\Users\TMP\ccYaloNA.s:49     .text.wireless_interface_write_8bit_array:00000000 wireless_interface_write_8bit_array
+D:\Users\TMP\ccYaloNA.s:199    .text.wireless_interface_write_8bit_array:000000fc $d
+D:\Users\TMP\ccYaloNA.s:205    .text.wireless_interface_read_8bit_array:00000000 $t
+D:\Users\TMP\ccYaloNA.s:212    .text.wireless_interface_read_8bit_array:00000000 wireless_interface_read_8bit_array
+D:\Users\TMP\ccYaloNA.s:361    .text.wireless_interface_read_8bit_array:000000fc $d
+D:\Users\TMP\ccYaloNA.s:367    .text.wireless_interface_transfer_8bit_array:00000000 $t
+D:\Users\TMP\ccYaloNA.s:374    .text.wireless_interface_transfer_8bit_array:00000000 wireless_interface_transfer_8bit_array
+D:\Users\TMP\ccYaloNA.s:573    .text.wireless_interface_transfer_8bit_array:00000150 $d
+D:\Users\TMP\ccYaloNA.s:579    .text.wireless_interface_deinit:00000000 $t
+D:\Users\TMP\ccYaloNA.s:586    .text.wireless_interface_deinit:00000000 wireless_interface_deinit
+D:\Users\TMP\ccYaloNA.s:722    .text.wireless_interface_spi_init:00000000 $t
+D:\Users\TMP\ccYaloNA.s:729    .text.wireless_interface_spi_init:00000000 wireless_interface_spi_init
+D:\Users\TMP\ccYaloNA.s:871    .text.wireless_interface_uart_init:00000000 $t
+D:\Users\TMP\ccYaloNA.s:878    .text.wireless_interface_uart_init:00000000 wireless_interface_uart_init
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.33.6d362bbaa8a8ff23e6f5c0a30bf7361f
+                           .group:00000000 wm4.zf_common_fifo.h.33.e14e643902e26e4e65437b5b20e82793
+                           .group:00000000 wm4.zf_common_function.h.33.02bbfb055e8ee322bc4f8b14ea195da2
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.saradc.h.25.e5a70aef9ec4fddf35f2b7cc0c9cf1bc
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_adc.h.64.349fb433626b42172b0e0fee038428ca
+                           .group:00000000 wm4.can.h.25.3cfccb6c630ada4f656cab597e231e58
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+                           .group:00000000 wm4.zf_driver_can.h.67.fd10d2fa867eb54a54d4b57027d73a60
+                           .group:00000000 wm4.tim.h.25.6e7ad96569e77a70a68b9b4cc59f54f2
+                           .group:00000000 wm4.zf_driver_timer.h.33.8df253b6990d9861816977209fb11e90
+                           .group:00000000 wm4.zf_driver_encoder.h.57.7e32999f25354fac086ca226b0c630d4
+                           .group:00000000 wm4.exti.h.25.21597c35d9630b0985ce88d2c41f4ea4
+                           .group:00000000 wm4.zf_driver_exti.h.59.1b02b8083e5295ef5baaf83905d59395
+                           .group:00000000 wm4.ssd_types.h.29.b861f4e6d39d333f931bfc05b964cb1c
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.zf_driver_flash.h.59.db93fe574c35ea9e79030063fbb35a13
+                           .group:00000000 wm4.hrtim.h.25.1601aea9d4a0da1de8252dc444355251
+                           .group:00000000 wm4.zf_driver_hrtim.h.64.cd8d2bf3bf1c471ea59d9c61e4a721d7
+                           .group:00000000 wm4.zf_driver_interrupt.h.33.2c3660dcc36cb090bd75b8f180c14f27
+                           .group:00000000 wm4.zf_driver_pit.h.33.834ac720a62e09d5603a9557331e9049
+                           .group:00000000 wm4.zf_driver_pwm.h.33.7d80487064ca712231a453396685a551
+                           .group:00000000 wm4.zf_driver_rcc.h.33.4c228cf40a79e1b974b30d5a9a3a77a7
+                           .group:00000000 wm4.zf_driver_soft_iic.h.33.9067bd298084134f63c61c075f95fa2b
+                           .group:00000000 wm4.zf_driver_soft_spi.h.33.a938287c023905d97cafe56e4be63674
+                           .group:00000000 wm4.zf_driver_spi.h.62.950b1f52ed365034df2907601137b455
+                           .group:00000000 wm4.zf_driver_system.h.33.370922a9681b47d575d2c83d302a180b
+                           .group:00000000 wm4.zf_driver_uart.h.70.ffcf3694337ad0b4066179f1abd5d668
+                           .group:00000000 wm4.zf_device_wireless_interface.h.73.ce2fb3b4e3bb5e2ec28e1a82cb7be819
+
+UNDEFINED SYMBOLS
+zf_gpio_assert_handler
+zf_spi_transfer_8bit_array
+zf_uart_write_buffer
+gpio_group_list
+zf_uart_read_buffer
+zf_exti_channel_deinit
+zf_spi_deinit
+zf_gpio_deinit
+zf_uart_deinit
+zf_spi_init
+zf_gpio_init
+zf_exti_channel_init
+zf_fifo_init
+zf_uart_init
+zf_uart_set_interrupt_callback
+zf_uart_set_interrupt_config

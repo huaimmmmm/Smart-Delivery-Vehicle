@@ -1,0 +1,1345 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_flash.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	flash_union_buffer
+  19              		.section	.bss.flash_union_buffer,"aw",%nobits
+  20              		.align	2
+  23              	flash_union_buffer:
+  24 0000 00000000 		.space	16384
+  24      00000000 
+  24      00000000 
+  24      00000000 
+  24      00000000 
+  25              		.section	.text.zf_flash_assert_handler,"ax",%progbits
+  26              		.align	1
+  27              		.p2align 4,,15
+  28              		.global	zf_flash_assert_handler
+  29              		.syntax unified
+  30              		.thumb
+  31              		.thumb_func
+  33              	zf_flash_assert_handler:
+  34              	.LFB157:
+  35              		.file 1 "libraries/zf_driver/zf_driver_flash.c"
+   1:libraries/zf_driver/zf_driver_flash.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_flash.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_flash.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_flash.c **** *
+   5:libraries/zf_driver/zf_driver_flash.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_flash.c **** *
+   7:libraries/zf_driver/zf_driver_flash.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_flash.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_flash.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_flash.c **** *
+  11:libraries/zf_driver/zf_driver_flash.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_flash.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_flash.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_flash.c **** *
+  15:libraries/zf_driver/zf_driver_flash.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_flash.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_flash.c **** *
+  18:libraries/zf_driver/zf_driver_flash.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_flash.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_flash.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_flash.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_flash.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_flash.c **** *
+  24:libraries/zf_driver/zf_driver_flash.c **** * 文件名称          zf_driver_flash
+  25:libraries/zf_driver/zf_driver_flash.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_flash.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_flash.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_flash.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_flash.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_flash.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_flash.c **** 
+  32:libraries/zf_driver/zf_driver_flash.c **** // zf_common 层引用
+  33:libraries/zf_driver/zf_driver_flash.c **** #include "zf_common_debug.h"
+  34:libraries/zf_driver/zf_driver_flash.c **** 
+  35:libraries/zf_driver/zf_driver_flash.c **** // zf_driver 层引用
+  36:libraries/zf_driver/zf_driver_flash.c **** #include "zf_driver_interrupt.h"
+  37:libraries/zf_driver/zf_driver_flash.c **** 
+  38:libraries/zf_driver/zf_driver_flash.c **** // 自身头文件
+  39:libraries/zf_driver/zf_driver_flash.c **** #include "zf_driver_flash.h"
+  40:libraries/zf_driver/zf_driver_flash.c **** 
+  41:libraries/zf_driver/zf_driver_flash.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  42:libraries/zf_driver/zf_driver_flash.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  43:libraries/zf_driver/zf_driver_flash.c **** zf_flash_data_union flash_union_buffer[USER_FLASH_DATA_BUFFER_SIZE];            // FLASH 操作的�
+  44:libraries/zf_driver/zf_driver_flash.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  45:libraries/zf_driver/zf_driver_flash.c **** 
+  46:libraries/zf_driver/zf_driver_flash.c **** // 此处列举 本文件的所有函数声明 [ 其中包括宏定义函数 ] 这里不允许用�
+  47:libraries/zf_driver/zf_driver_flash.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  48:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+  49:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 断言处理
+  50:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     *file               文件路径
+  51:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     line                报错行
+  52:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     *tips               输出信息
+  53:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / GPIO_OPERATION_DONE - 完成 其
+  54:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_assert_handler(file, line, tips);
+  55:libraries/zf_driver/zf_driver_flash.c **** // 备注信息
+  56:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+  57:libraries/zf_driver/zf_driver_flash.c **** uint8 zf_flash_assert_handler (char *file, int line, char *tips)
+  58:libraries/zf_driver/zf_driver_flash.c **** {
+  36              		.loc 1 58 1
+  37              		.cfi_startproc
+  38              		@ args = 0, pretend = 0, frame = 16
+  39              		@ frame_needed = 0, uses_anonymous_args = 0
+  40 0000 00B5     		push	{lr}
+  41              		.cfi_def_cfa_offset 4
+  42              		.cfi_offset 14, -4
+  43 0002 87B0     		sub	sp, sp, #28
+  44              		.cfi_def_cfa_offset 32
+  45 0004 0590     		str	r0, [sp, #20]
+  46 0006 0491     		str	r1, [sp, #16]
+  47 0008 0392     		str	r2, [sp, #12]
+  59:libraries/zf_driver/zf_driver_flash.c ****     debug_message_handler(DEBUG_OUTPUT_LEVEL_ASSERT, ZF_FALSE, tips, file, line);
+  48              		.loc 1 59 5
+  49 000a 049B     		ldr	r3, [sp, #16]
+  50 000c 0093     		str	r3, [sp]
+  51 000e 059B     		ldr	r3, [sp, #20]
+  52 0010 039A     		ldr	r2, [sp, #12]
+  53 0012 0021     		movs	r1, #0
+  54 0014 0220     		movs	r0, #2
+  55 0016 FFF7FEFF 		bl	debug_message_handler
+  56              	.L2:
+  60:libraries/zf_driver/zf_driver_flash.c ****     while(1);
+  57              		.loc 1 60 10 discriminator 1
+  58 001a FEE7     		b	.L2
+  59              		.cfi_endproc
+  60              	.LFE157:
+  62              		.section	.rodata
+  63              		.align	2
+  64              	.LC0:
+  65 0000 6C696272 		.ascii	"libraries/zf_driver/zf_driver_flash.c\000"
+  65      61726965 
+  65      732F7A66 
+  65      5F647269 
+  65      7665722F 
+  66              		.section	.text.zf_flash_check_page,"ax",%progbits
+  67              		.align	1
+  68              		.p2align 4,,15
+  69              		.global	zf_flash_check_page
+  70              		.syntax unified
+  71              		.thumb
+  72              		.thumb_func
+  74              	zf_flash_check_page:
+  75              	.LFB158:
+  61:libraries/zf_driver/zf_driver_flash.c ****     return ZF_ERROR;
+  62:libraries/zf_driver/zf_driver_flash.c **** }
+  63:libraries/zf_driver/zf_driver_flash.c **** 
+  64:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+  65:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 校验当前页是否有数据
+  66:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     sector_num          需要写入的扇区编号 参数范围 <0 - (USER_FLASH_M
+  67:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     page_num            当前扇区页的编号   参数范围 <0 - (USER_FLASH_MA
+  68:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / FLASH_OPERATION_DONE - 区块空
+  69:libraries/zf_driver/zf_driver_flash.c **** //                                  FLASH_STATE_PAGE_OCCUPIED - 区块存在数据
+  70:libraries/zf_driver/zf_driver_flash.c **** //                                  其余值为操作异常报错
+  71:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_check_page(sector_num, page_num);
+  72:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     如果需要对有数据的区域写入新的数据则应该对所在扇区进�
+  73:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+  74:libraries/zf_driver/zf_driver_flash.c **** uint8 zf_flash_check_page (uint32 sector_num, uint32 page_num)
+  75:libraries/zf_driver/zf_driver_flash.c **** {
+  76              		.loc 1 75 1
+  77              		.cfi_startproc
+  78              		@ args = 0, pretend = 0, frame = 32
+  79              		@ frame_needed = 0, uses_anonymous_args = 0
+  80 0000 00B5     		push	{lr}
+  81              		.cfi_def_cfa_offset 4
+  82              		.cfi_offset 14, -4
+  83 0002 8BB0     		sub	sp, sp, #44
+  84              		.cfi_def_cfa_offset 48
+  85 0004 0390     		str	r0, [sp, #12]
+  86 0006 0291     		str	r1, [sp, #8]
+  76:libraries/zf_driver/zf_driver_flash.c ****     zf_flash_operation_state_enum return_state = FLASH_ERROR_UNKNOW;
+  87              		.loc 1 76 35
+  88 0008 0123     		movs	r3, #1
+  89 000a 8DF82730 		strb	r3, [sp, #39]
+  77:libraries/zf_driver/zf_driver_flash.c **** 
+  78:libraries/zf_driver/zf_driver_flash.c ****     do
+  79:libraries/zf_driver/zf_driver_flash.c ****     {
+  80:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_SECTION_INDEX > sector_num))          // 检查 扇区编
+  90              		.loc 1 80 11
+  91 000e 039B     		ldr	r3, [sp, #12]
+  92 0010 002B     		cmp	r3, #0
+  93 0012 0BD0     		beq	.L4
+  94              		.loc 1 80 12 discriminator 1
+  95 0014 0022     		movs	r2, #0
+  96 0016 5021     		movs	r1, #80
+  97 0018 3548     		ldr	r0, .L14
+  98 001a FFF7FEFF 		bl	zf_flash_assert_handler
+  99 001e 0346     		mov	r3, r0
+ 100 0020 002B     		cmp	r3, #0
+ 101 0022 03D0     		beq	.L4
+  81:libraries/zf_driver/zf_driver_flash.c ****         {
+  82:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的区块号非法 超过了定义的 USE
+  83:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 扇区编号
+  84:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_SECTION_ILLEGAL;
+ 102              		.loc 1 84 26
+ 103 0024 0323     		movs	r3, #3
+ 104 0026 8DF82730 		strb	r3, [sp, #39]
+  85:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 105              		.loc 1 85 13
+ 106 002a 5BE0     		b	.L5
+ 107              	.L4:
+  86:libraries/zf_driver/zf_driver_flash.c ****         }
+  87:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_PAGE_INDEX > page_num))               // 检查 页码编
+ 108              		.loc 1 87 11
+ 109 002c 029B     		ldr	r3, [sp, #8]
+ 110 002e 032B     		cmp	r3, #3
+ 111 0030 0BD9     		bls	.L6
+ 112              		.loc 1 87 12 discriminator 1
+ 113 0032 0022     		movs	r2, #0
+ 114 0034 5721     		movs	r1, #87
+ 115 0036 2E48     		ldr	r0, .L14
+ 116 0038 FFF7FEFF 		bl	zf_flash_assert_handler
+ 117 003c 0346     		mov	r3, r0
+ 118 003e 002B     		cmp	r3, #0
+ 119 0040 03D0     		beq	.L6
+  88:libraries/zf_driver/zf_driver_flash.c ****         {
+  89:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的页码号非法 超过了定义的 USE
+  90:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 页码编号
+  91:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_PAGE_ILLEGAL;
+ 120              		.loc 1 91 26
+ 121 0042 0423     		movs	r3, #4
+ 122 0044 8DF82730 		strb	r3, [sp, #39]
+  92:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 123              		.loc 1 92 13
+ 124 0048 4CE0     		b	.L5
+ 125              	.L6:
+ 126              	.LBB2:
+  93:libraries/zf_driver/zf_driver_flash.c ****         }
+  94:libraries/zf_driver/zf_driver_flash.c **** 
+  95:libraries/zf_driver/zf_driver_flash.c ****         {
+  96:libraries/zf_driver/zf_driver_flash.c ****             uint32 blk_lock_state = 0x00000000UL;
+ 127              		.loc 1 96 20
+ 128 004a 0023     		movs	r3, #0
+ 129 004c 0793     		str	r3, [sp, #28]
+  97:libraries/zf_driver/zf_driver_flash.c **** 
+  98:libraries/zf_driver/zf_driver_flash.c **** 
+  99:libraries/zf_driver/zf_driver_flash.c ****             if (C55_OK != flash_getLock(&FLASHD0, C55_BLOCK_HIGH, (unsigned long *)(&blk_lock_state
+ 130              		.loc 1 99 27
+ 131 004e 07AB     		add	r3, sp, #28
+ 132 0050 1A46     		mov	r2, r3
+ 133 0052 0221     		movs	r1, #2
+ 134 0054 2748     		ldr	r0, .L14+4
+ 135 0056 FFF7FEFF 		bl	flash_getLock
+ 136 005a 0346     		mov	r3, r0
+ 137              		.loc 1 99 16
+ 138 005c 002B     		cmp	r3, #0
+ 139 005e 03D0     		beq	.L7
+ 100:libraries/zf_driver/zf_driver_flash.c ****             {
+ 101:libraries/zf_driver/zf_driver_flash.c ****                 return_state = FLASH_ERROR_OPERATION_LOCK_CHECK_ERROR;
+ 140              		.loc 1 101 30
+ 141 0060 0823     		movs	r3, #8
+ 142 0062 8DF82730 		strb	r3, [sp, #39]
+ 102:libraries/zf_driver/zf_driver_flash.c ****                 break;
+ 143              		.loc 1 102 17
+ 144 0066 3DE0     		b	.L5
+ 145              	.L7:
+ 103:libraries/zf_driver/zf_driver_flash.c ****             }
+ 104:libraries/zf_driver/zf_driver_flash.c ****             if (C55_OK != flash_setLock(&FLASHD0, C55_BLOCK_HIGH, 0x00000000))
+ 146              		.loc 1 104 27
+ 147 0068 0022     		movs	r2, #0
+ 148 006a 0221     		movs	r1, #2
+ 149 006c 2148     		ldr	r0, .L14+4
+ 150 006e FFF7FEFF 		bl	flash_setLock
+ 151 0072 0346     		mov	r3, r0
+ 152              		.loc 1 104 16
+ 153 0074 002B     		cmp	r3, #0
+ 154 0076 03D0     		beq	.L9
+ 105:libraries/zf_driver/zf_driver_flash.c ****             {
+ 106:libraries/zf_driver/zf_driver_flash.c ****                 return_state = FLASH_ERROR_OPERATION_LOCK_CHECK_ERROR;
+ 155              		.loc 1 106 30
+ 156 0078 0823     		movs	r3, #8
+ 157 007a 8DF82730 		strb	r3, [sp, #39]
+ 107:libraries/zf_driver/zf_driver_flash.c ****                 break;
+ 158              		.loc 1 107 17
+ 159 007e 31E0     		b	.L5
+ 160              	.L9:
+ 108:libraries/zf_driver/zf_driver_flash.c ****             }
+ 109:libraries/zf_driver/zf_driver_flash.c ****             if (C55_OK != flash_getLock(&FLASHD0, C55_BLOCK_HIGH, (unsigned long *)(&blk_lock_state
+ 161              		.loc 1 109 27
+ 162 0080 07AB     		add	r3, sp, #28
+ 163 0082 1A46     		mov	r2, r3
+ 164 0084 0221     		movs	r1, #2
+ 165 0086 1B48     		ldr	r0, .L14+4
+ 166 0088 FFF7FEFF 		bl	flash_getLock
+ 167 008c 0346     		mov	r3, r0
+ 168              		.loc 1 109 16
+ 169 008e 002B     		cmp	r3, #0
+ 170 0090 03D0     		beq	.L10
+ 110:libraries/zf_driver/zf_driver_flash.c ****             {
+ 111:libraries/zf_driver/zf_driver_flash.c ****                 return_state = FLASH_ERROR_OPERATION_LOCK_CHECK_ERROR;
+ 171              		.loc 1 111 30
+ 172 0092 0823     		movs	r3, #8
+ 173 0094 8DF82730 		strb	r3, [sp, #39]
+ 112:libraries/zf_driver/zf_driver_flash.c ****                 break;
+ 174              		.loc 1 112 17
+ 175 0098 24E0     		b	.L5
+ 176              	.L10:
+ 113:libraries/zf_driver/zf_driver_flash.c ****             }
+ 114:libraries/zf_driver/zf_driver_flash.c **** 
+ 115:libraries/zf_driver/zf_driver_flash.c ****             if (blk_lock_state & 0x0000000F)
+ 177              		.loc 1 115 32
+ 178 009a 079B     		ldr	r3, [sp, #28]
+ 179 009c 03F00F03 		and	r3, r3, #15
+ 180              		.loc 1 115 16
+ 181 00a0 002B     		cmp	r3, #0
+ 182 00a2 03D0     		beq	.L11
+ 116:libraries/zf_driver/zf_driver_flash.c ****             {
+ 117:libraries/zf_driver/zf_driver_flash.c ****                 return_state = FLASH_ERROR_OPERATION_LOCK_CHECK_ERROR;
+ 183              		.loc 1 117 30
+ 184 00a4 0823     		movs	r3, #8
+ 185 00a6 8DF82730 		strb	r3, [sp, #39]
+ 118:libraries/zf_driver/zf_driver_flash.c ****                 break;
+ 186              		.loc 1 118 17
+ 187 00aa 1BE0     		b	.L5
+ 188              	.L11:
+ 119:libraries/zf_driver/zf_driver_flash.c ****             }
+ 120:libraries/zf_driver/zf_driver_flash.c **** 
+ 121:libraries/zf_driver/zf_driver_flash.c ****             uint32 fail_address;
+ 122:libraries/zf_driver/zf_driver_flash.c ****             uint32 fail_data;
+ 123:libraries/zf_driver/zf_driver_flash.c **** 
+ 124:libraries/zf_driver/zf_driver_flash.c ****             uint32  flash_addr  =   USER_FLASH_BASE_ADDR
+ 125:libraries/zf_driver/zf_driver_flash.c ****                                 +   USER_FLASH_SECTION_SIZE * sector_num
+ 189              		.loc 1 125 33
+ 190 00ac 039B     		ldr	r3, [sp, #12]
+ 191 00ae 03F50F63 		add	r3, r3, #2288
+ 126:libraries/zf_driver/zf_driver_flash.c ****                                 +   USER_FLASH_PAGE_SIZE * page_num;
+ 192              		.loc 1 126 33
+ 193 00b2 9A00     		lsls	r2, r3, #2
+ 194 00b4 029B     		ldr	r3, [sp, #8]
+ 195 00b6 1344     		add	r3, r3, r2
+ 124:libraries/zf_driver/zf_driver_flash.c ****                                 +   USER_FLASH_SECTION_SIZE * sector_num
+ 196              		.loc 1 124 21
+ 197 00b8 9B03     		lsls	r3, r3, #14
+ 198 00ba 0893     		str	r3, [sp, #32]
+ 127:libraries/zf_driver/zf_driver_flash.c **** 
+ 128:libraries/zf_driver/zf_driver_flash.c ****             if(C55_OK != flash_blankCheck(&FLASHD0, flash_addr, USER_FLASH_PAGE_SIZE, &fail_address
+ 199              		.loc 1 128 26
+ 200 00bc 06AA     		add	r2, sp, #24
+ 201 00be 05AB     		add	r3, sp, #20
+ 202 00c0 0093     		str	r3, [sp]
+ 203 00c2 1346     		mov	r3, r2
+ 204 00c4 4FF48042 		mov	r2, #16384
+ 205 00c8 0899     		ldr	r1, [sp, #32]
+ 206 00ca 0A48     		ldr	r0, .L14+4
+ 207 00cc FFF7FEFF 		bl	flash_blankCheck
+ 208 00d0 0346     		mov	r3, r0
+ 209              		.loc 1 128 15
+ 210 00d2 002B     		cmp	r3, #0
+ 211 00d4 03D0     		beq	.L12
+ 129:libraries/zf_driver/zf_driver_flash.c ****             {
+ 130:libraries/zf_driver/zf_driver_flash.c ****                 return_state = FLASH_STATE_PAGE_OCCUPIED;
+ 212              		.loc 1 130 30
+ 213 00d6 0223     		movs	r3, #2
+ 214 00d8 8DF82730 		strb	r3, [sp, #39]
+ 131:libraries/zf_driver/zf_driver_flash.c ****                 break;
+ 215              		.loc 1 131 17
+ 216 00dc 02E0     		b	.L5
+ 217              	.L12:
+ 218              	.LBE2:
+ 132:libraries/zf_driver/zf_driver_flash.c ****             }
+ 133:libraries/zf_driver/zf_driver_flash.c ****         }
+ 134:libraries/zf_driver/zf_driver_flash.c **** 
+ 135:libraries/zf_driver/zf_driver_flash.c ****         return_state = FLASH_OPERATION_DONE;
+ 219              		.loc 1 135 22
+ 220 00de 0023     		movs	r3, #0
+ 221 00e0 8DF82730 		strb	r3, [sp, #39]
+ 222              	.L5:
+ 136:libraries/zf_driver/zf_driver_flash.c ****     }while(0);
+ 137:libraries/zf_driver/zf_driver_flash.c **** 
+ 138:libraries/zf_driver/zf_driver_flash.c ****     return return_state;
+ 223              		.loc 1 138 12
+ 224 00e4 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 139:libraries/zf_driver/zf_driver_flash.c **** }
+ 225              		.loc 1 139 1
+ 226 00e8 1846     		mov	r0, r3
+ 227 00ea 0BB0     		add	sp, sp, #44
+ 228              		.cfi_def_cfa_offset 4
+ 229              		@ sp needed
+ 230 00ec 5DF804FB 		ldr	pc, [sp], #4
+ 231              	.L15:
+ 232              		.align	2
+ 233              	.L14:
+ 234 00f0 00000000 		.word	.LC0
+ 235 00f4 00000000 		.word	FLASHD0
+ 236              		.cfi_endproc
+ 237              	.LFE158:
+ 239              		.section	.text.zf_flash_erase_page,"ax",%progbits
+ 240              		.align	1
+ 241              		.p2align 4,,15
+ 242              		.global	zf_flash_erase_page
+ 243              		.syntax unified
+ 244              		.thumb
+ 245              		.thumb_func
+ 247              	zf_flash_erase_page:
+ 248              	.LFB159:
+ 140:libraries/zf_driver/zf_driver_flash.c **** 
+ 141:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 142:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 擦除页
+ 143:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     sector_num          需要写入的扇区编号 参数范围 <0 - (USER_FLASH_M
+ 144:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     page_num            当前扇区页的编号   参数范围 <0 - (USER_FLASH_MA
+ 145:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / FLASH_OPERATION_DONE - 操作完
+ 146:libraries/zf_driver/zf_driver_flash.c **** //                                  FLASH_ERROR_OPERATION_TIMEOUT - FLASH 操作超时退出
+ 147:libraries/zf_driver/zf_driver_flash.c **** //                                  其余值为操作异常报错
+ 148:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_erase_page(sector_num, page_num);
+ 149:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     
+ 150:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 151:libraries/zf_driver/zf_driver_flash.c **** uint8 zf_flash_erase_page (uint32 sector_num, uint32 page_num)
+ 152:libraries/zf_driver/zf_driver_flash.c **** {
+ 249              		.loc 1 152 1
+ 250              		.cfi_startproc
+ 251              		@ args = 0, pretend = 0, frame = 40
+ 252              		@ frame_needed = 0, uses_anonymous_args = 0
+ 253 0000 00B5     		push	{lr}
+ 254              		.cfi_def_cfa_offset 4
+ 255              		.cfi_offset 14, -4
+ 256 0002 8FB0     		sub	sp, sp, #60
+ 257              		.cfi_def_cfa_offset 64
+ 258 0004 0590     		str	r0, [sp, #20]
+ 259 0006 0491     		str	r1, [sp, #16]
+ 153:libraries/zf_driver/zf_driver_flash.c ****     zf_flash_operation_state_enum return_state = FLASH_ERROR_UNKNOW;
+ 260              		.loc 1 153 35
+ 261 0008 0123     		movs	r3, #1
+ 262 000a 8DF83730 		strb	r3, [sp, #55]
+ 154:libraries/zf_driver/zf_driver_flash.c **** 
+ 155:libraries/zf_driver/zf_driver_flash.c ****     do
+ 156:libraries/zf_driver/zf_driver_flash.c ****     {
+ 157:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_SECTION_INDEX > sector_num))          // 检查 扇区编
+ 263              		.loc 1 157 11
+ 264 000e 059B     		ldr	r3, [sp, #20]
+ 265 0010 002B     		cmp	r3, #0
+ 266 0012 0BD0     		beq	.L17
+ 267              		.loc 1 157 12 discriminator 1
+ 268 0014 0022     		movs	r2, #0
+ 269 0016 9D21     		movs	r1, #157
+ 270 0018 2548     		ldr	r0, .L23
+ 271 001a FFF7FEFF 		bl	zf_flash_assert_handler
+ 272 001e 0346     		mov	r3, r0
+ 273 0020 002B     		cmp	r3, #0
+ 274 0022 03D0     		beq	.L17
+ 158:libraries/zf_driver/zf_driver_flash.c ****         {
+ 159:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的区块号非法 超过了定义的 USE
+ 160:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 扇区编号
+ 161:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_SECTION_ILLEGAL;
+ 275              		.loc 1 161 26
+ 276 0024 0323     		movs	r3, #3
+ 277 0026 8DF83730 		strb	r3, [sp, #55]
+ 162:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 278              		.loc 1 162 13
+ 279 002a 3BE0     		b	.L18
+ 280              	.L17:
+ 163:libraries/zf_driver/zf_driver_flash.c ****         }
+ 164:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_PAGE_INDEX > page_num))               // 检查 页码编
+ 281              		.loc 1 164 11
+ 282 002c 049B     		ldr	r3, [sp, #16]
+ 283 002e 032B     		cmp	r3, #3
+ 284 0030 0BD9     		bls	.L19
+ 285              		.loc 1 164 12 discriminator 1
+ 286 0032 0022     		movs	r2, #0
+ 287 0034 A421     		movs	r1, #164
+ 288 0036 1E48     		ldr	r0, .L23
+ 289 0038 FFF7FEFF 		bl	zf_flash_assert_handler
+ 290 003c 0346     		mov	r3, r0
+ 291 003e 002B     		cmp	r3, #0
+ 292 0040 03D0     		beq	.L19
+ 165:libraries/zf_driver/zf_driver_flash.c ****         {
+ 166:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的页码号非法 超过了定义的 USE
+ 167:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 页码编号
+ 168:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_PAGE_ILLEGAL;
+ 293              		.loc 1 168 26
+ 294 0042 0423     		movs	r3, #4
+ 295 0044 8DF83730 		strb	r3, [sp, #55]
+ 169:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 296              		.loc 1 169 13
+ 297 0048 2CE0     		b	.L18
+ 298              	.L19:
+ 299              	.LBB3:
+ 170:libraries/zf_driver/zf_driver_flash.c ****         }
+ 171:libraries/zf_driver/zf_driver_flash.c **** 
+ 172:libraries/zf_driver/zf_driver_flash.c ****         {
+ 173:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_OPERATION_DONE;
+ 300              		.loc 1 173 26
+ 301 004a 0023     		movs	r3, #0
+ 302 004c 8DF83730 		strb	r3, [sp, #55]
+ 174:libraries/zf_driver/zf_driver_flash.c ****             if(!zf_flash_check_page(sector_num, page_num))
+ 303              		.loc 1 174 17
+ 304 0050 0499     		ldr	r1, [sp, #16]
+ 305 0052 0598     		ldr	r0, [sp, #20]
+ 306 0054 FFF7FEFF 		bl	zf_flash_check_page
+ 307 0058 0346     		mov	r3, r0
+ 308              		.loc 1 174 15
+ 309 005a 002B     		cmp	r3, #0
+ 310 005c 21D0     		beq	.L22
+ 175:libraries/zf_driver/zf_driver_flash.c ****             {
+ 176:libraries/zf_driver/zf_driver_flash.c ****                 break;
+ 177:libraries/zf_driver/zf_driver_flash.c ****             }
+ 178:libraries/zf_driver/zf_driver_flash.c **** 
+ 179:libraries/zf_driver/zf_driver_flash.c ****             uint32          primask         = zf_interrupt_global_disable();
+ 311              		.loc 1 179 47
+ 312 005e FFF7FEFF 		bl	zf_interrupt_global_disable
+ 313 0062 0C90     		str	r0, [sp, #48]
+ 180:libraries/zf_driver/zf_driver_flash.c **** 
+ 181:libraries/zf_driver/zf_driver_flash.c ****             uint32          low_block_select    = 0UL;
+ 314              		.loc 1 181 29
+ 315 0064 0023     		movs	r3, #0
+ 316 0066 0B93     		str	r3, [sp, #44]
+ 182:libraries/zf_driver/zf_driver_flash.c ****             uint32          mid_block_select    = 0UL;
+ 317              		.loc 1 182 29
+ 318 0068 0023     		movs	r3, #0
+ 319 006a 0A93     		str	r3, [sp, #40]
+ 183:libraries/zf_driver/zf_driver_flash.c ****             uint32          high_block_select   = 0x00000001UL << page_num;
+ 320              		.loc 1 183 29
+ 321 006c 0122     		movs	r2, #1
+ 322 006e 049B     		ldr	r3, [sp, #16]
+ 323 0070 02FA03F3 		lsl	r3, r2, r3
+ 324 0074 0993     		str	r3, [sp, #36]
+ 184:libraries/zf_driver/zf_driver_flash.c ****             N256K_BLOCK_SEL n256k_block_select  = {.first256KBlockSelect = 0UL, .second256KBlockSel
+ 325              		.loc 1 184 29
+ 326 0076 0023     		movs	r3, #0
+ 327 0078 0793     		str	r3, [sp, #28]
+ 328 007a 0023     		movs	r3, #0
+ 329 007c 0893     		str	r3, [sp, #32]
+ 185:libraries/zf_driver/zf_driver_flash.c **** 
+ 186:libraries/zf_driver/zf_driver_flash.c ****             flash_flashErase(
+ 330              		.loc 1 186 13
+ 331 007e 01AA     		add	r2, sp, #4
+ 332 0080 07AB     		add	r3, sp, #28
+ 333 0082 93E80300 		ldm	r3, {r0, r1}
+ 334 0086 82E80300 		stm	r2, {r0, r1}
+ 335 008a 099B     		ldr	r3, [sp, #36]
+ 336 008c 0093     		str	r3, [sp]
+ 337 008e 0A9B     		ldr	r3, [sp, #40]
+ 338 0090 0B9A     		ldr	r2, [sp, #44]
+ 339 0092 0021     		movs	r1, #0
+ 340 0094 0748     		ldr	r0, .L23+4
+ 341 0096 FFF7FEFF 		bl	flash_flashErase
+ 187:libraries/zf_driver/zf_driver_flash.c ****                 &FLASHD0, C55_ERASE_MAIN,
+ 188:libraries/zf_driver/zf_driver_flash.c ****                 low_block_select, mid_block_select,
+ 189:libraries/zf_driver/zf_driver_flash.c ****                 high_block_select, n256k_block_select);
+ 190:libraries/zf_driver/zf_driver_flash.c **** 
+ 191:libraries/zf_driver/zf_driver_flash.c ****             zf_interrupt_global_enable(primask);
+ 342              		.loc 1 191 13
+ 343 009a 0C98     		ldr	r0, [sp, #48]
+ 344 009c FFF7FEFF 		bl	zf_interrupt_global_enable
+ 345 00a0 00E0     		b	.L18
+ 346              	.L22:
+ 176:libraries/zf_driver/zf_driver_flash.c ****             }
+ 347              		.loc 1 176 17
+ 348 00a2 00BF     		nop
+ 349              	.L18:
+ 350              	.LBE3:
+ 192:libraries/zf_driver/zf_driver_flash.c ****         }
+ 193:libraries/zf_driver/zf_driver_flash.c ****     }while(0);
+ 194:libraries/zf_driver/zf_driver_flash.c **** 
+ 195:libraries/zf_driver/zf_driver_flash.c ****     return return_state;
+ 351              		.loc 1 195 12
+ 352 00a4 9DF83730 		ldrb	r3, [sp, #55]	@ zero_extendqisi2
+ 196:libraries/zf_driver/zf_driver_flash.c **** }
+ 353              		.loc 1 196 1
+ 354 00a8 1846     		mov	r0, r3
+ 355 00aa 0FB0     		add	sp, sp, #60
+ 356              		.cfi_def_cfa_offset 4
+ 357              		@ sp needed
+ 358 00ac 5DF804FB 		ldr	pc, [sp], #4
+ 359              	.L24:
+ 360              		.align	2
+ 361              	.L23:
+ 362 00b0 00000000 		.word	.LC0
+ 363 00b4 00000000 		.word	FLASHD0
+ 364              		.cfi_endproc
+ 365              	.LFE159:
+ 367              		.section	.text.zf_flash_read_page,"ax",%progbits
+ 368              		.align	1
+ 369              		.p2align 4,,15
+ 370              		.global	zf_flash_read_page
+ 371              		.syntax unified
+ 372              		.thumb
+ 373              		.thumb_func
+ 375              	zf_flash_read_page:
+ 376              	.LFB160:
+ 197:libraries/zf_driver/zf_driver_flash.c **** 
+ 198:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 199:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 读取页
+ 200:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     sector_num          需要写入的扇区编号 参数范围 <0 - (USER_FLASH_M
+ 201:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     page_num            当前扇区页的编号   参数范围 <0 - (USER_FLASH_MA
+ 202:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     *buffer             需要读取的数据地址   传入的数组类型必须�
+ 203:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     len                 需要写入的数据长度   参数范围 <0 - USER_FLASH_
+ 204:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / FLASH_OPERATION_DONE - 操作完
+ 205:libraries/zf_driver/zf_driver_flash.c **** //                                  其余值为操作异常报错
+ 206:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_read_page(sector_num, page_num, buffer, len);
+ 207:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     
+ 208:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 209:libraries/zf_driver/zf_driver_flash.c **** uint8 zf_flash_read_page (uint32 sector_num, uint32 page_num, uint32 *buffer, uint16 len)
+ 210:libraries/zf_driver/zf_driver_flash.c **** {
+ 377              		.loc 1 210 1
+ 378              		.cfi_startproc
+ 379              		@ args = 0, pretend = 0, frame = 24
+ 380              		@ frame_needed = 0, uses_anonymous_args = 0
+ 381 0000 00B5     		push	{lr}
+ 382              		.cfi_def_cfa_offset 4
+ 383              		.cfi_offset 14, -4
+ 384 0002 87B0     		sub	sp, sp, #28
+ 385              		.cfi_def_cfa_offset 32
+ 386 0004 0390     		str	r0, [sp, #12]
+ 387 0006 0291     		str	r1, [sp, #8]
+ 388 0008 0192     		str	r2, [sp, #4]
+ 389 000a ADF80230 		strh	r3, [sp, #2]	@ movhi
+ 211:libraries/zf_driver/zf_driver_flash.c ****     zf_flash_operation_state_enum return_state = FLASH_ERROR_UNKNOW;
+ 390              		.loc 1 211 35
+ 391 000e 0123     		movs	r3, #1
+ 392 0010 8DF81730 		strb	r3, [sp, #23]
+ 393              	.LBB4:
+ 212:libraries/zf_driver/zf_driver_flash.c **** 
+ 213:libraries/zf_driver/zf_driver_flash.c ****     do
+ 214:libraries/zf_driver/zf_driver_flash.c ****     {
+ 215:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_SECTION_INDEX > sector_num))          // 检查 扇区编
+ 394              		.loc 1 215 11
+ 395 0014 039B     		ldr	r3, [sp, #12]
+ 396 0016 002B     		cmp	r3, #0
+ 397 0018 0BD0     		beq	.L26
+ 398              		.loc 1 215 12 discriminator 1
+ 399 001a 0022     		movs	r2, #0
+ 400 001c D721     		movs	r1, #215
+ 401 001e 3348     		ldr	r0, .L34
+ 402 0020 FFF7FEFF 		bl	zf_flash_assert_handler
+ 403 0024 0346     		mov	r3, r0
+ 404 0026 002B     		cmp	r3, #0
+ 405 0028 03D0     		beq	.L26
+ 216:libraries/zf_driver/zf_driver_flash.c ****         {
+ 217:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的区块号非法 超过了定义的 USE
+ 218:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 扇区编号
+ 219:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_SECTION_ILLEGAL;
+ 406              		.loc 1 219 26
+ 407 002a 0323     		movs	r3, #3
+ 408 002c 8DF81730 		strb	r3, [sp, #23]
+ 220:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 409              		.loc 1 220 13
+ 410 0030 55E0     		b	.L27
+ 411              	.L26:
+ 221:libraries/zf_driver/zf_driver_flash.c ****         }
+ 222:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_PAGE_INDEX > page_num))               // 检查 页码编
+ 412              		.loc 1 222 11
+ 413 0032 029B     		ldr	r3, [sp, #8]
+ 414 0034 032B     		cmp	r3, #3
+ 415 0036 0BD9     		bls	.L28
+ 416              		.loc 1 222 12 discriminator 1
+ 417 0038 0022     		movs	r2, #0
+ 418 003a DE21     		movs	r1, #222
+ 419 003c 2B48     		ldr	r0, .L34
+ 420 003e FFF7FEFF 		bl	zf_flash_assert_handler
+ 421 0042 0346     		mov	r3, r0
+ 422 0044 002B     		cmp	r3, #0
+ 423 0046 03D0     		beq	.L28
+ 223:libraries/zf_driver/zf_driver_flash.c ****         {
+ 224:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的页码号非法 超过了定义的 USE
+ 225:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 页码编号
+ 226:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_PAGE_ILLEGAL;
+ 424              		.loc 1 226 26
+ 425 0048 0423     		movs	r3, #4
+ 426 004a 8DF81730 		strb	r3, [sp, #23]
+ 227:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 427              		.loc 1 227 13
+ 428 004e 46E0     		b	.L27
+ 429              	.L28:
+ 228:libraries/zf_driver/zf_driver_flash.c ****         }
+ 229:libraries/zf_driver/zf_driver_flash.c **** 
+ 230:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_PAGE_SIZE >= len))                        // 检查 数据操
+ 430              		.loc 1 230 11
+ 431 0050 BDF80230 		ldrh	r3, [sp, #2]
+ 432 0054 B3F5804F 		cmp	r3, #16384
+ 433 0058 0BD9     		bls	.L29
+ 434              		.loc 1 230 12 discriminator 1
+ 435 005a 0022     		movs	r2, #0
+ 436 005c E621     		movs	r1, #230
+ 437 005e 2348     		ldr	r0, .L34
+ 438 0060 FFF7FEFF 		bl	zf_flash_assert_handler
+ 439 0064 0346     		mov	r3, r0
+ 440 0066 002B     		cmp	r3, #0
+ 441 0068 03D0     		beq	.L29
+ 231:libraries/zf_driver/zf_driver_flash.c ****         {
+ 232:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明数据量超过定义的 USER_FLASH_DATA_BUFFER
+ 233:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的数据量
+ 234:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_DATA_SIZE_ILLEGAL;
+ 442              		.loc 1 234 26
+ 443 006a 0623     		movs	r3, #6
+ 444 006c 8DF81730 		strb	r3, [sp, #23]
+ 235:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 445              		.loc 1 235 13
+ 446 0070 35E0     		b	.L27
+ 447              	.L29:
+ 236:libraries/zf_driver/zf_driver_flash.c ****         }
+ 237:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(NULL != buffer))                                     // 检查 数据缓
+ 448              		.loc 1 237 11
+ 449 0072 019B     		ldr	r3, [sp, #4]
+ 450 0074 002B     		cmp	r3, #0
+ 451 0076 0BD1     		bne	.L30
+ 452              		.loc 1 237 12 discriminator 1
+ 453 0078 0022     		movs	r2, #0
+ 454 007a ED21     		movs	r1, #237
+ 455 007c 1B48     		ldr	r0, .L34
+ 456 007e FFF7FEFF 		bl	zf_flash_assert_handler
+ 457 0082 0346     		mov	r3, r0
+ 458 0084 002B     		cmp	r3, #0
+ 459 0086 03D0     		beq	.L30
+ 238:libraries/zf_driver/zf_driver_flash.c ****         {
+ 239:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明数据缓冲区为 NULL 空指针
+ 240:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_DATA_BUFFER_NULL;
+ 460              		.loc 1 240 26
+ 461 0088 0523     		movs	r3, #5
+ 462 008a 8DF81730 		strb	r3, [sp, #23]
+ 241:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 463              		.loc 1 241 13
+ 464 008e 26E0     		b	.L27
+ 465              	.L30:
+ 242:libraries/zf_driver/zf_driver_flash.c ****         }
+ 243:libraries/zf_driver/zf_driver_flash.c **** 
+ 244:libraries/zf_driver/zf_driver_flash.c ****         uint16  temp_loop   = 0;
+ 466              		.loc 1 244 17
+ 467 0090 0023     		movs	r3, #0
+ 468 0092 ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 245:libraries/zf_driver/zf_driver_flash.c ****         uint32  flash_addr  =   USER_FLASH_BASE_ADDR
+ 246:libraries/zf_driver/zf_driver_flash.c ****                             +   USER_FLASH_SECTION_SIZE * sector_num
+ 469              		.loc 1 246 29
+ 470 0096 039B     		ldr	r3, [sp, #12]
+ 471 0098 03F50F63 		add	r3, r3, #2288
+ 247:libraries/zf_driver/zf_driver_flash.c ****                             +   USER_FLASH_PAGE_SIZE * page_num;                // 提取当前 Fla
+ 472              		.loc 1 247 29
+ 473 009c 9A00     		lsls	r2, r3, #2
+ 474 009e 029B     		ldr	r3, [sp, #8]
+ 475 00a0 1344     		add	r3, r3, r2
+ 245:libraries/zf_driver/zf_driver_flash.c ****         uint32  flash_addr  =   USER_FLASH_BASE_ADDR
+ 476              		.loc 1 245 17
+ 477 00a2 9B03     		lsls	r3, r3, #14
+ 478 00a4 0493     		str	r3, [sp, #16]
+ 248:libraries/zf_driver/zf_driver_flash.c **** 
+ 249:libraries/zf_driver/zf_driver_flash.c ****         for(temp_loop = 0; temp_loop < len; temp_loop += 4)                     // 根据指定长�
+ 479              		.loc 1 249 23
+ 480 00a6 0023     		movs	r3, #0
+ 481 00a8 ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 482              		.loc 1 249 9
+ 483 00ac 0EE0     		b	.L31
+ 484              	.L32:
+ 250:libraries/zf_driver/zf_driver_flash.c ****         {
+ 251:libraries/zf_driver/zf_driver_flash.c ****             *buffer ++ = *(__IO uint32*)(flash_addr + temp_loop);               // 循环读取 Fla
+ 485              		.loc 1 251 53 discriminator 3
+ 486 00ae BDF81420 		ldrh	r2, [sp, #20]
+ 487 00b2 049B     		ldr	r3, [sp, #16]
+ 488 00b4 1344     		add	r3, r3, r2
+ 489              		.loc 1 251 27 discriminator 3
+ 490 00b6 1946     		mov	r1, r3
+ 491              		.loc 1 251 21 discriminator 3
+ 492 00b8 019B     		ldr	r3, [sp, #4]
+ 493 00ba 1A1D     		adds	r2, r3, #4
+ 494 00bc 0192     		str	r2, [sp, #4]
+ 495              		.loc 1 251 26 discriminator 3
+ 496 00be 0A68     		ldr	r2, [r1]
+ 497              		.loc 1 251 24 discriminator 3
+ 498 00c0 1A60     		str	r2, [r3]
+ 249:libraries/zf_driver/zf_driver_flash.c ****         {
+ 499              		.loc 1 249 55 discriminator 3
+ 500 00c2 BDF81430 		ldrh	r3, [sp, #20]	@ movhi
+ 501 00c6 0433     		adds	r3, r3, #4
+ 502 00c8 ADF81430 		strh	r3, [sp, #20]	@ movhi
+ 503              	.L31:
+ 249:libraries/zf_driver/zf_driver_flash.c ****         {
+ 504              		.loc 1 249 9 discriminator 1
+ 505 00cc BDF81420 		ldrh	r2, [sp, #20]
+ 506 00d0 BDF80230 		ldrh	r3, [sp, #2]
+ 507 00d4 9A42     		cmp	r2, r3
+ 508 00d6 EAD3     		bcc	.L32
+ 252:libraries/zf_driver/zf_driver_flash.c ****         }
+ 253:libraries/zf_driver/zf_driver_flash.c **** 
+ 254:libraries/zf_driver/zf_driver_flash.c ****         return_state = FLASH_OPERATION_DONE;
+ 509              		.loc 1 254 22
+ 510 00d8 0023     		movs	r3, #0
+ 511 00da 8DF81730 		strb	r3, [sp, #23]
+ 512              	.L27:
+ 513              	.LBE4:
+ 255:libraries/zf_driver/zf_driver_flash.c ****     }while(0);
+ 256:libraries/zf_driver/zf_driver_flash.c **** 
+ 257:libraries/zf_driver/zf_driver_flash.c ****     return return_state;
+ 514              		.loc 1 257 12
+ 515 00de 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 258:libraries/zf_driver/zf_driver_flash.c **** }
+ 516              		.loc 1 258 1
+ 517 00e2 1846     		mov	r0, r3
+ 518 00e4 07B0     		add	sp, sp, #28
+ 519              		.cfi_def_cfa_offset 4
+ 520              		@ sp needed
+ 521 00e6 5DF804FB 		ldr	pc, [sp], #4
+ 522              	.L35:
+ 523 00ea 00BF     		.align	2
+ 524              	.L34:
+ 525 00ec 00000000 		.word	.LC0
+ 526              		.cfi_endproc
+ 527              	.LFE160:
+ 529              		.section	.text.zf_flash_write_page,"ax",%progbits
+ 530              		.align	1
+ 531              		.p2align 4,,15
+ 532              		.global	zf_flash_write_page
+ 533              		.syntax unified
+ 534              		.thumb
+ 535              		.thumb_func
+ 537              	zf_flash_write_page:
+ 538              	.LFB161:
+ 259:libraries/zf_driver/zf_driver_flash.c **** 
+ 260:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 261:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 编程页
+ 262:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     sector_num          需要写入的扇区编号 参数范围 <0 - (USER_FLASH_M
+ 263:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     page_num            当前扇区页的编号   参数范围 <0 - (USER_FLASH_MA
+ 264:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     *buffer             需要读取的数据地址   传入的数组类型必须�
+ 265:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     len                 需要写入的数据长度   参数范围 <0 - USER_FLASH_
+ 266:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / FLASH_OPERATION_DONE - 操作完
+ 267:libraries/zf_driver/zf_driver_flash.c **** //                                  FLASH_ERROR_OPERATION_TIMEOUT - FLASH 操作超时退出
+ 268:libraries/zf_driver/zf_driver_flash.c **** //                                  其余值为操作异常报错
+ 269:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_write_page(sector_num, page_num, buffer, len);
+ 270:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     
+ 271:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 272:libraries/zf_driver/zf_driver_flash.c **** uint8 zf_flash_write_page (uint32 sector_num, uint32 page_num, const uint32 *buffer, uint16 len)
+ 273:libraries/zf_driver/zf_driver_flash.c **** {
+ 539              		.loc 1 273 1
+ 540              		.cfi_startproc
+ 541              		@ args = 0, pretend = 0, frame = 32
+ 542              		@ frame_needed = 0, uses_anonymous_args = 0
+ 543 0000 00B5     		push	{lr}
+ 544              		.cfi_def_cfa_offset 4
+ 545              		.cfi_offset 14, -4
+ 546 0002 8BB0     		sub	sp, sp, #44
+ 547              		.cfi_def_cfa_offset 48
+ 548 0004 0590     		str	r0, [sp, #20]
+ 549 0006 0491     		str	r1, [sp, #16]
+ 550 0008 0392     		str	r2, [sp, #12]
+ 551 000a ADF80A30 		strh	r3, [sp, #10]	@ movhi
+ 274:libraries/zf_driver/zf_driver_flash.c ****     zf_flash_operation_state_enum return_state = FLASH_ERROR_UNKNOW;
+ 552              		.loc 1 274 35
+ 553 000e 0123     		movs	r3, #1
+ 554 0010 8DF82730 		strb	r3, [sp, #39]
+ 555              	.LBB5:
+ 275:libraries/zf_driver/zf_driver_flash.c **** 
+ 276:libraries/zf_driver/zf_driver_flash.c ****     do
+ 277:libraries/zf_driver/zf_driver_flash.c ****     {
+ 278:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_SECTION_INDEX > sector_num))          // 检查 扇区编
+ 556              		.loc 1 278 11
+ 557 0014 059B     		ldr	r3, [sp, #20]
+ 558 0016 002B     		cmp	r3, #0
+ 559 0018 0CD0     		beq	.L37
+ 560              		.loc 1 278 12 discriminator 1
+ 561 001a 0022     		movs	r2, #0
+ 562 001c 4FF48B71 		mov	r1, #278
+ 563 0020 3048     		ldr	r0, .L43
+ 564 0022 FFF7FEFF 		bl	zf_flash_assert_handler
+ 565 0026 0346     		mov	r3, r0
+ 566 0028 002B     		cmp	r3, #0
+ 567 002a 03D0     		beq	.L37
+ 279:libraries/zf_driver/zf_driver_flash.c ****         {
+ 280:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的区块号非法 超过了定义的 USE
+ 281:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 扇区编号
+ 282:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_SECTION_ILLEGAL;
+ 568              		.loc 1 282 26
+ 569 002c 0323     		movs	r3, #3
+ 570 002e 8DF82730 		strb	r3, [sp, #39]
+ 283:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 571              		.loc 1 283 13
+ 572 0032 50E0     		b	.L38
+ 573              	.L37:
+ 284:libraries/zf_driver/zf_driver_flash.c ****         }
+ 285:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_MAX_PAGE_INDEX > page_num))               // 检查 页码编
+ 574              		.loc 1 285 11
+ 575 0034 049B     		ldr	r3, [sp, #16]
+ 576 0036 032B     		cmp	r3, #3
+ 577 0038 0CD9     		bls	.L39
+ 578              		.loc 1 285 12 discriminator 1
+ 579 003a 0022     		movs	r2, #0
+ 580 003c 40F21D11 		movw	r1, #285
+ 581 0040 2848     		ldr	r0, .L43
+ 582 0042 FFF7FEFF 		bl	zf_flash_assert_handler
+ 583 0046 0346     		mov	r3, r0
+ 584 0048 002B     		cmp	r3, #0
+ 585 004a 03D0     		beq	.L39
+ 286:libraries/zf_driver/zf_driver_flash.c ****         {
+ 287:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明输入的页码号非法 超过了定义的 USE
+ 288:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的 FLASH 页码编号
+ 289:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_PAGE_ILLEGAL;
+ 586              		.loc 1 289 26
+ 587 004c 0423     		movs	r3, #4
+ 588 004e 8DF82730 		strb	r3, [sp, #39]
+ 290:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 589              		.loc 1 290 13
+ 590 0052 40E0     		b	.L38
+ 591              	.L39:
+ 291:libraries/zf_driver/zf_driver_flash.c ****         }
+ 292:libraries/zf_driver/zf_driver_flash.c **** 
+ 293:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(USER_FLASH_PAGE_SIZE >= len))                        // 检查 数据操
+ 592              		.loc 1 293 11
+ 593 0054 BDF80A30 		ldrh	r3, [sp, #10]
+ 594 0058 B3F5804F 		cmp	r3, #16384
+ 595 005c 0CD9     		bls	.L40
+ 596              		.loc 1 293 12 discriminator 1
+ 597 005e 0022     		movs	r2, #0
+ 598 0060 40F22511 		movw	r1, #293
+ 599 0064 1F48     		ldr	r0, .L43
+ 600 0066 FFF7FEFF 		bl	zf_flash_assert_handler
+ 601 006a 0346     		mov	r3, r0
+ 602 006c 002B     		cmp	r3, #0
+ 603 006e 03D0     		beq	.L40
+ 294:libraries/zf_driver/zf_driver_flash.c ****         {
+ 295:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明数据量超过定义的 USER_FLASH_DATA_BUFFER
+ 296:libraries/zf_driver/zf_driver_flash.c ****             // 请按照函数注释限定操作的数据量
+ 297:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_DATA_SIZE_ILLEGAL;
+ 604              		.loc 1 297 26
+ 605 0070 0623     		movs	r3, #6
+ 606 0072 8DF82730 		strb	r3, [sp, #39]
+ 298:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 607              		.loc 1 298 13
+ 608 0076 2EE0     		b	.L38
+ 609              	.L40:
+ 299:libraries/zf_driver/zf_driver_flash.c ****         }
+ 300:libraries/zf_driver/zf_driver_flash.c ****         if(zf_flash_assert(NULL != buffer))                                     // 检查 数据缓
+ 610              		.loc 1 300 11
+ 611 0078 039B     		ldr	r3, [sp, #12]
+ 612 007a 002B     		cmp	r3, #0
+ 613 007c 0CD1     		bne	.L41
+ 614              		.loc 1 300 12 discriminator 1
+ 615 007e 0022     		movs	r2, #0
+ 616 0080 4FF49671 		mov	r1, #300
+ 617 0084 1748     		ldr	r0, .L43
+ 618 0086 FFF7FEFF 		bl	zf_flash_assert_handler
+ 619 008a 0346     		mov	r3, r0
+ 620 008c 002B     		cmp	r3, #0
+ 621 008e 03D0     		beq	.L41
+ 301:libraries/zf_driver/zf_driver_flash.c ****         {
+ 302:libraries/zf_driver/zf_driver_flash.c ****             // 此处如果断言报错 那么证明数据缓冲区为 NULL 空指针
+ 303:libraries/zf_driver/zf_driver_flash.c ****             return_state = FLASH_ERROR_DATA_BUFFER_NULL;
+ 622              		.loc 1 303 26
+ 623 0090 0523     		movs	r3, #5
+ 624 0092 8DF82730 		strb	r3, [sp, #39]
+ 304:libraries/zf_driver/zf_driver_flash.c ****             break;
+ 625              		.loc 1 304 13
+ 626 0096 1EE0     		b	.L38
+ 627              	.L41:
+ 305:libraries/zf_driver/zf_driver_flash.c ****         }
+ 306:libraries/zf_driver/zf_driver_flash.c **** 
+ 307:libraries/zf_driver/zf_driver_flash.c ****         uint32          primask         = zf_interrupt_global_disable();
+ 628              		.loc 1 307 43
+ 629 0098 FFF7FEFF 		bl	zf_interrupt_global_disable
+ 630 009c 0890     		str	r0, [sp, #32]
+ 631              	.LBB6:
+ 308:libraries/zf_driver/zf_driver_flash.c **** 
+ 309:libraries/zf_driver/zf_driver_flash.c **** 
+ 310:libraries/zf_driver/zf_driver_flash.c ****         {
+ 311:libraries/zf_driver/zf_driver_flash.c ****             zf_flash_erase_page(sector_num, page_num);
+ 632              		.loc 1 311 13
+ 633 009e 0499     		ldr	r1, [sp, #16]
+ 634 00a0 0598     		ldr	r0, [sp, #20]
+ 635 00a2 FFF7FEFF 		bl	zf_flash_erase_page
+ 312:libraries/zf_driver/zf_driver_flash.c **** 
+ 313:libraries/zf_driver/zf_driver_flash.c **** 
+ 314:libraries/zf_driver/zf_driver_flash.c ****             uint32  flash_addr  =   USER_FLASH_BASE_ADDR
+ 315:libraries/zf_driver/zf_driver_flash.c ****                                 +   USER_FLASH_SECTION_SIZE * sector_num
+ 636              		.loc 1 315 33
+ 637 00a6 059B     		ldr	r3, [sp, #20]
+ 638 00a8 03F50F63 		add	r3, r3, #2288
+ 316:libraries/zf_driver/zf_driver_flash.c ****                                 +   USER_FLASH_PAGE_SIZE * page_num;
+ 639              		.loc 1 316 33
+ 640 00ac 9A00     		lsls	r2, r3, #2
+ 641 00ae 049B     		ldr	r3, [sp, #16]
+ 642 00b0 1344     		add	r3, r3, r2
+ 314:libraries/zf_driver/zf_driver_flash.c ****                                 +   USER_FLASH_SECTION_SIZE * sector_num
+ 643              		.loc 1 314 21
+ 644 00b2 9B03     		lsls	r3, r3, #14
+ 645 00b4 0793     		str	r3, [sp, #28]
+ 317:libraries/zf_driver/zf_driver_flash.c **** 
+ 318:libraries/zf_driver/zf_driver_flash.c ****             flash_flashProgram(&FLASHD0, FALSE, flash_addr, len, (uint32)buffer);
+ 646              		.loc 1 318 13
+ 647 00b6 BDF80A20 		ldrh	r2, [sp, #10]
+ 648 00ba 039B     		ldr	r3, [sp, #12]
+ 649 00bc 0093     		str	r3, [sp]
+ 650 00be 1346     		mov	r3, r2
+ 651 00c0 079A     		ldr	r2, [sp, #28]
+ 652 00c2 0021     		movs	r1, #0
+ 653 00c4 0848     		ldr	r0, .L43+4
+ 654 00c6 FFF7FEFF 		bl	flash_flashProgram
+ 655              	.LBE6:
+ 319:libraries/zf_driver/zf_driver_flash.c ****         }
+ 320:libraries/zf_driver/zf_driver_flash.c **** 
+ 321:libraries/zf_driver/zf_driver_flash.c ****         zf_interrupt_global_enable(primask);
+ 656              		.loc 1 321 9
+ 657 00ca 0898     		ldr	r0, [sp, #32]
+ 658 00cc FFF7FEFF 		bl	zf_interrupt_global_enable
+ 322:libraries/zf_driver/zf_driver_flash.c ****         return_state = FLASH_OPERATION_DONE;
+ 659              		.loc 1 322 22
+ 660 00d0 0023     		movs	r3, #0
+ 661 00d2 8DF82730 		strb	r3, [sp, #39]
+ 662              	.L38:
+ 663              	.LBE5:
+ 323:libraries/zf_driver/zf_driver_flash.c ****     }while(0);
+ 324:libraries/zf_driver/zf_driver_flash.c **** 
+ 325:libraries/zf_driver/zf_driver_flash.c ****     return return_state;
+ 664              		.loc 1 325 12
+ 665 00d6 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 326:libraries/zf_driver/zf_driver_flash.c **** }
+ 666              		.loc 1 326 1
+ 667 00da 1846     		mov	r0, r3
+ 668 00dc 0BB0     		add	sp, sp, #44
+ 669              		.cfi_def_cfa_offset 4
+ 670              		@ sp needed
+ 671 00de 5DF804FB 		ldr	pc, [sp], #4
+ 672              	.L44:
+ 673 00e2 00BF     		.align	2
+ 674              	.L43:
+ 675 00e4 00000000 		.word	.LC0
+ 676 00e8 00000000 		.word	FLASHD0
+ 677              		.cfi_endproc
+ 678              	.LFE161:
+ 680              		.section	.text.zf_flash_read_page_to_buffer,"ax",%progbits
+ 681              		.align	1
+ 682              		.p2align 4,,15
+ 683              		.global	zf_flash_read_page_to_buffer
+ 684              		.syntax unified
+ 685              		.thumb
+ 686              		.thumb_func
+ 688              	zf_flash_read_page_to_buffer:
+ 689              	.LFB162:
+ 327:libraries/zf_driver/zf_driver_flash.c **** 
+ 328:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 329:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH  从指定扇区的指定页码读取数据到缓冲区
+ 330:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     sector_num          需要写入的扇区编号 参数范围 <0 - (USER_FLASH_M
+ 331:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     page_num            当前扇区页的编号   参数范围 <0 - (USER_FLASH_MA
+ 332:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / FLASH_OPERATION_DONE - 操作完
+ 333:libraries/zf_driver/zf_driver_flash.c **** //                                  其余值为操作异常报错
+ 334:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_read_page_to_buffer(sector_num, page_num);
+ 335:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     
+ 336:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 337:libraries/zf_driver/zf_driver_flash.c **** uint8 zf_flash_read_page_to_buffer (uint32 sector_num, uint32 page_num)
+ 338:libraries/zf_driver/zf_driver_flash.c **** {
+ 690              		.loc 1 338 1
+ 691              		.cfi_startproc
+ 692              		@ args = 0, pretend = 0, frame = 8
+ 693              		@ frame_needed = 0, uses_anonymous_args = 0
+ 694 0000 00B5     		push	{lr}
+ 695              		.cfi_def_cfa_offset 4
+ 696              		.cfi_offset 14, -4
+ 697 0002 83B0     		sub	sp, sp, #12
+ 698              		.cfi_def_cfa_offset 16
+ 699 0004 0190     		str	r0, [sp, #4]
+ 700 0006 0091     		str	r1, [sp]
+ 339:libraries/zf_driver/zf_driver_flash.c ****     return zf_flash_read_page(sector_num, page_num, (uint32 *)flash_union_buffer, sizeof(flash_unio
+ 701              		.loc 1 339 12
+ 702 0008 4FF48043 		mov	r3, #16384
+ 703 000c 044A     		ldr	r2, .L47
+ 704 000e 0099     		ldr	r1, [sp]
+ 705 0010 0198     		ldr	r0, [sp, #4]
+ 706 0012 FFF7FEFF 		bl	zf_flash_read_page
+ 707 0016 0346     		mov	r3, r0
+ 340:libraries/zf_driver/zf_driver_flash.c **** }
+ 708              		.loc 1 340 1
+ 709 0018 1846     		mov	r0, r3
+ 710 001a 03B0     		add	sp, sp, #12
+ 711              		.cfi_def_cfa_offset 4
+ 712              		@ sp needed
+ 713 001c 5DF804FB 		ldr	pc, [sp], #4
+ 714              	.L48:
+ 715              		.align	2
+ 716              	.L47:
+ 717 0020 00000000 		.word	flash_union_buffer
+ 718              		.cfi_endproc
+ 719              	.LFE162:
+ 721              		.section	.text.zf_flash_write_page_from_buffer,"ax",%progbits
+ 722              		.align	1
+ 723              		.p2align 4,,15
+ 724              		.global	zf_flash_write_page_from_buffer
+ 725              		.syntax unified
+ 726              		.thumb
+ 727              		.thumb_func
+ 729              	zf_flash_write_page_from_buffer:
+ 730              	.LFB163:
+ 341:libraries/zf_driver/zf_driver_flash.c **** 
+ 342:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 343:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 向指定扇区的指定页码写入缓冲区的数据
+ 344:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     sector_num          需要写入的扇区编号 参数范围 <0 - (USER_FLASH_M
+ 345:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     page_num            当前扇区页的编号   参数范围 <0 - (USER_FLASH_MA
+ 346:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / FLASH_OPERATION_DONE - 操作完
+ 347:libraries/zf_driver/zf_driver_flash.c **** //                                  FLASH_ERROR_OPERATION_TIMEOUT - FLASH 操作超时退出
+ 348:libraries/zf_driver/zf_driver_flash.c **** //                                  其余值为操作异常报错
+ 349:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_write_page_from_buffer(sector_num, page_num);
+ 350:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     
+ 351:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 352:libraries/zf_driver/zf_driver_flash.c **** uint8 zf_flash_write_page_from_buffer (uint32 sector_num, uint32 page_num)
+ 353:libraries/zf_driver/zf_driver_flash.c **** {
+ 731              		.loc 1 353 1
+ 732              		.cfi_startproc
+ 733              		@ args = 0, pretend = 0, frame = 8
+ 734              		@ frame_needed = 0, uses_anonymous_args = 0
+ 735 0000 00B5     		push	{lr}
+ 736              		.cfi_def_cfa_offset 4
+ 737              		.cfi_offset 14, -4
+ 738 0002 83B0     		sub	sp, sp, #12
+ 739              		.cfi_def_cfa_offset 16
+ 740 0004 0190     		str	r0, [sp, #4]
+ 741 0006 0091     		str	r1, [sp]
+ 354:libraries/zf_driver/zf_driver_flash.c ****     return zf_flash_write_page(sector_num, page_num, (const uint32 *)flash_union_buffer, sizeof(fla
+ 742              		.loc 1 354 12
+ 743 0008 4FF48043 		mov	r3, #16384
+ 744 000c 044A     		ldr	r2, .L51
+ 745 000e 0099     		ldr	r1, [sp]
+ 746 0010 0198     		ldr	r0, [sp, #4]
+ 747 0012 FFF7FEFF 		bl	zf_flash_write_page
+ 748 0016 0346     		mov	r3, r0
+ 355:libraries/zf_driver/zf_driver_flash.c **** }
+ 749              		.loc 1 355 1
+ 750 0018 1846     		mov	r0, r3
+ 751 001a 03B0     		add	sp, sp, #12
+ 752              		.cfi_def_cfa_offset 4
+ 753              		@ sp needed
+ 754 001c 5DF804FB 		ldr	pc, [sp], #4
+ 755              	.L52:
+ 756              		.align	2
+ 757              	.L51:
+ 758 0020 00000000 		.word	flash_union_buffer
+ 759              		.cfi_endproc
+ 760              	.LFE163:
+ 762              		.section	.text.zf_flash_buffer_clear,"ax",%progbits
+ 763              		.align	1
+ 764              		.p2align 4,,15
+ 765              		.global	zf_flash_buffer_clear
+ 766              		.syntax unified
+ 767              		.thumb
+ 768              		.thumb_func
+ 770              	zf_flash_buffer_clear:
+ 771              	.LFB164:
+ 356:libraries/zf_driver/zf_driver_flash.c **** 
+ 357:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 358:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 清空数据缓冲区
+ 359:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     void
+ 360:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     void
+ 361:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_buffer_clear();
+ 362:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     
+ 363:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 364:libraries/zf_driver/zf_driver_flash.c **** void zf_flash_buffer_clear (void)
+ 365:libraries/zf_driver/zf_driver_flash.c **** {
+ 772              		.loc 1 365 1
+ 773              		.cfi_startproc
+ 774              		@ args = 0, pretend = 0, frame = 0
+ 775              		@ frame_needed = 0, uses_anonymous_args = 0
+ 776 0000 08B5     		push	{r3, lr}
+ 777              		.cfi_def_cfa_offset 8
+ 778              		.cfi_offset 3, -8
+ 779              		.cfi_offset 14, -4
+ 366:libraries/zf_driver/zf_driver_flash.c ****     memset(flash_union_buffer, 0xFF, sizeof(flash_union_buffer));
+ 780              		.loc 1 366 5
+ 781 0002 4FF48042 		mov	r2, #16384
+ 782 0006 FF21     		movs	r1, #255
+ 783 0008 0248     		ldr	r0, .L54
+ 784 000a FFF7FEFF 		bl	memset
+ 367:libraries/zf_driver/zf_driver_flash.c **** }
+ 785              		.loc 1 367 1
+ 786 000e 00BF     		nop
+ 787 0010 08BD     		pop	{r3, pc}
+ 788              	.L55:
+ 789 0012 00BF     		.align	2
+ 790              	.L54:
+ 791 0014 00000000 		.word	flash_union_buffer
+ 792              		.cfi_endproc
+ 793              	.LFE164:
+ 795              		.section	.text.zf_flash_init,"ax",%progbits
+ 796              		.align	1
+ 797              		.p2align 4,,15
+ 798              		.global	zf_flash_init
+ 799              		.syntax unified
+ 800              		.thumb
+ 801              		.thumb_func
+ 803              	zf_flash_init:
+ 804              	.LFB165:
+ 368:libraries/zf_driver/zf_driver_flash.c **** 
+ 369:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 370:libraries/zf_driver/zf_driver_flash.c **** // 函数简介     FLASH 初始化
+ 371:libraries/zf_driver/zf_driver_flash.c **** // 参数说明     void
+ 372:libraries/zf_driver/zf_driver_flash.c **** // 返回参数     void
+ 373:libraries/zf_driver/zf_driver_flash.c **** // 使用示例     zf_flash_init();
+ 374:libraries/zf_driver/zf_driver_flash.c **** // 备注信息     
+ 375:libraries/zf_driver/zf_driver_flash.c **** //-------------------------------------------------------------------------------------------------
+ 376:libraries/zf_driver/zf_driver_flash.c **** void zf_flash_init (void)
+ 377:libraries/zf_driver/zf_driver_flash.c **** {
+ 805              		.loc 1 377 1
+ 806              		.cfi_startproc
+ 807              		@ args = 0, pretend = 0, frame = 0
+ 808              		@ frame_needed = 0, uses_anonymous_args = 0
+ 809 0000 08B5     		push	{r3, lr}
+ 810              		.cfi_def_cfa_offset 8
+ 811              		.cfi_offset 3, -8
+ 812              		.cfi_offset 14, -4
+ 378:libraries/zf_driver/zf_driver_flash.c ****     flash_init();
+ 813              		.loc 1 378 5
+ 814 0002 FFF7FEFF 		bl	flash_init
+ 379:libraries/zf_driver/zf_driver_flash.c ****     flash_start(&FLASHD0);
+ 815              		.loc 1 379 5
+ 816 0006 0248     		ldr	r0, .L57
+ 817 0008 FFF7FEFF 		bl	flash_start
+ 380:libraries/zf_driver/zf_driver_flash.c **** }
+ 818              		.loc 1 380 1
+ 819 000c 00BF     		nop
+ 820 000e 08BD     		pop	{r3, pc}
+ 821              	.L58:
+ 822              		.align	2
+ 823              	.L57:
+ 824 0010 00000000 		.word	FLASHD0
+ 825              		.cfi_endproc
+ 826              	.LFE165:
+ 828              		.text
+ 829              	.Letext0:
+ 830              		.file 2 "libraries/zf_common/zf_common_typedef.h"
+ 831              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+ 832              		.file 4 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+ 833              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/include/flash.
+ 834              		.file 6 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 835              		.file 7 "libraries/zf_driver/zf_driver_flash.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_flash.c
+D:\Users\TMP\ccqJVOZn.s:23     .bss.flash_union_buffer:00000000 flash_union_buffer
+D:\Users\TMP\ccqJVOZn.s:20     .bss.flash_union_buffer:00000000 $d
+D:\Users\TMP\ccqJVOZn.s:26     .text.zf_flash_assert_handler:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:33     .text.zf_flash_assert_handler:00000000 zf_flash_assert_handler
+D:\Users\TMP\ccqJVOZn.s:63     .rodata:00000000 $d
+D:\Users\TMP\ccqJVOZn.s:67     .text.zf_flash_check_page:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:74     .text.zf_flash_check_page:00000000 zf_flash_check_page
+D:\Users\TMP\ccqJVOZn.s:234    .text.zf_flash_check_page:000000f0 $d
+D:\Users\TMP\ccqJVOZn.s:240    .text.zf_flash_erase_page:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:247    .text.zf_flash_erase_page:00000000 zf_flash_erase_page
+D:\Users\TMP\ccqJVOZn.s:362    .text.zf_flash_erase_page:000000b0 $d
+D:\Users\TMP\ccqJVOZn.s:368    .text.zf_flash_read_page:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:375    .text.zf_flash_read_page:00000000 zf_flash_read_page
+D:\Users\TMP\ccqJVOZn.s:525    .text.zf_flash_read_page:000000ec $d
+D:\Users\TMP\ccqJVOZn.s:530    .text.zf_flash_write_page:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:537    .text.zf_flash_write_page:00000000 zf_flash_write_page
+D:\Users\TMP\ccqJVOZn.s:675    .text.zf_flash_write_page:000000e4 $d
+D:\Users\TMP\ccqJVOZn.s:681    .text.zf_flash_read_page_to_buffer:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:688    .text.zf_flash_read_page_to_buffer:00000000 zf_flash_read_page_to_buffer
+D:\Users\TMP\ccqJVOZn.s:717    .text.zf_flash_read_page_to_buffer:00000020 $d
+D:\Users\TMP\ccqJVOZn.s:722    .text.zf_flash_write_page_from_buffer:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:729    .text.zf_flash_write_page_from_buffer:00000000 zf_flash_write_page_from_buffer
+D:\Users\TMP\ccqJVOZn.s:758    .text.zf_flash_write_page_from_buffer:00000020 $d
+D:\Users\TMP\ccqJVOZn.s:763    .text.zf_flash_buffer_clear:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:770    .text.zf_flash_buffer_clear:00000000 zf_flash_buffer_clear
+D:\Users\TMP\ccqJVOZn.s:791    .text.zf_flash_buffer_clear:00000014 $d
+D:\Users\TMP\ccqJVOZn.s:796    .text.zf_flash_init:00000000 $t
+D:\Users\TMP\ccqJVOZn.s:803    .text.zf_flash_init:00000000 zf_flash_init
+D:\Users\TMP\ccqJVOZn.s:824    .text.zf_flash_init:00000010 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.ssd_types.h.29.b861f4e6d39d333f931bfc05b964cb1c
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+                           .group:00000000 wm4.zf_driver_flash.h.59.db93fe574c35ea9e79030063fbb35a13
+
+UNDEFINED SYMBOLS
+debug_message_handler
+flash_getLock
+flash_setLock
+flash_blankCheck
+FLASHD0
+zf_interrupt_global_disable
+flash_flashErase
+zf_interrupt_global_enable
+flash_flashProgram
+memset
+flash_init
+flash_start

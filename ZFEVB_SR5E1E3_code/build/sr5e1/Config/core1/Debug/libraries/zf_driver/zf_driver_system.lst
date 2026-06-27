@@ -1,0 +1,378 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_system.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	zf_system_clock
+  19              		.section	.data.zf_system_clock,"aw"
+  20              		.align	2
+  23              	zf_system_clock:
+  24 0000 00A3E111 		.word	300000000
+  25              		.section	.text.system_start_up,"ax",%progbits
+  26              		.align	1
+  27              		.p2align 4,,15
+  28              		.syntax unified
+  29              		.thumb
+  30              		.thumb_func
+  32              	system_start_up:
+  33              	.LFB473:
+  34              		.file 1 "libraries/zf_driver/zf_driver_system.c"
+   1:libraries/zf_driver/zf_driver_system.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_system.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_system.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_system.c **** *
+   5:libraries/zf_driver/zf_driver_system.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_system.c **** *
+   7:libraries/zf_driver/zf_driver_system.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_system.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_system.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_system.c **** *
+  11:libraries/zf_driver/zf_driver_system.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_system.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_system.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_system.c **** *
+  15:libraries/zf_driver/zf_driver_system.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_system.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_system.c **** *
+  18:libraries/zf_driver/zf_driver_system.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_system.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_system.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_system.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_system.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_system.c **** *
+  24:libraries/zf_driver/zf_driver_system.c **** * 文件名称          zf_driver_system
+  25:libraries/zf_driver/zf_driver_system.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_system.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_system.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_system.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_system.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_system.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_system.c **** 
+  32:libraries/zf_driver/zf_driver_system.c **** // SDK 底层驱动
+  33:libraries/zf_driver/zf_driver_system.c **** #include <test_env.h>
+  34:libraries/zf_driver/zf_driver_system.c **** 
+  35:libraries/zf_driver/zf_driver_system.c **** // zf_common 层引用
+  36:libraries/zf_driver/zf_driver_system.c **** #include "zf_common_memory.h"
+  37:libraries/zf_driver/zf_driver_system.c **** #include "zf_common_function.h"
+  38:libraries/zf_driver/zf_driver_system.c **** 
+  39:libraries/zf_driver/zf_driver_system.c **** // 自身头文件
+  40:libraries/zf_driver/zf_driver_system.c **** #include "zf_driver_system.h"
+  41:libraries/zf_driver/zf_driver_system.c **** 
+  42:libraries/zf_driver/zf_driver_system.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  43:libraries/zf_driver/zf_driver_system.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  44:libraries/zf_driver/zf_driver_system.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  45:libraries/zf_driver/zf_driver_system.c **** AT_ZF_LIB_SECTION_START
+  46:libraries/zf_driver/zf_driver_system.c **** AT_ZF_LIB_SECTION uint32 zf_system_clock = SYSTEM_CLOCK_300M;                    // 系统时钟信
+  47:libraries/zf_driver/zf_driver_system.c **** AT_ZF_LIB_SECTION_END
+  48:libraries/zf_driver/zf_driver_system.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  49:libraries/zf_driver/zf_driver_system.c **** 
+  50:libraries/zf_driver/zf_driver_system.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  51:libraries/zf_driver/zf_driver_system.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  52:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  53:libraries/zf_driver/zf_driver_system.c **** // 函数简介     核心时钟恢复初始设置
+  54:libraries/zf_driver/zf_driver_system.c **** // 参数说明     void
+  55:libraries/zf_driver/zf_driver_system.c **** // 返回参数     void
+  56:libraries/zf_driver/zf_driver_system.c **** // 使用示例     clock_reset();
+  57:libraries/zf_driver/zf_driver_system.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+  58:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  59:libraries/zf_driver/zf_driver_system.c **** static void system_start_up (void)
+  60:libraries/zf_driver/zf_driver_system.c **** {
+  35              		.loc 1 60 1
+  36              		.cfi_startproc
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 0, uses_anonymous_args = 0
+  39              		@ link register save eliminated.
+  61:libraries/zf_driver/zf_driver_system.c **** }
+  40              		.loc 1 61 1
+  41 0000 00BF     		nop
+  42 0002 7047     		bx	lr
+  43              		.cfi_endproc
+  44              	.LFE473:
+  46              		.section	.text.system_clock_set_freq,"ax",%progbits
+  47              		.align	1
+  48              		.p2align 4,,15
+  49              		.syntax unified
+  50              		.thumb
+  51              		.thumb_func
+  53              	system_clock_set_freq:
+  54              	.LFB474:
+  62:libraries/zf_driver/zf_driver_system.c **** 
+  63:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  64:libraries/zf_driver/zf_driver_system.c **** // 函数简介     核心时钟设置
+  65:libraries/zf_driver/zf_driver_system.c **** // 参数说明     clock               时钟频率 自适配 (详见 zf_driver_system.h 内 syste
+  66:libraries/zf_driver/zf_driver_system.c **** // 返回参数     void
+  67:libraries/zf_driver/zf_driver_system.c **** // 使用示例     system_clock_set_freq(clock);
+  68:libraries/zf_driver/zf_driver_system.c **** // 备注信息     本函数在文件内部调用 用户不用关注 也不可修改
+  69:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  70:libraries/zf_driver/zf_driver_system.c **** static void system_clock_set_freq (uint32 clock)
+  71:libraries/zf_driver/zf_driver_system.c **** {
+  55              		.loc 1 71 1
+  56              		.cfi_startproc
+  57              		@ args = 0, pretend = 0, frame = 8
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		@ link register save eliminated.
+  60 0000 82B0     		sub	sp, sp, #8
+  61              		.cfi_def_cfa_offset 8
+  62 0002 0190     		str	r0, [sp, #4]
+  72:libraries/zf_driver/zf_driver_system.c **** 	zf_system_clock = clock;
+  63              		.loc 1 72 18
+  64 0004 024A     		ldr	r2, .L3
+  65 0006 019B     		ldr	r3, [sp, #4]
+  66 0008 1360     		str	r3, [r2]
+  73:libraries/zf_driver/zf_driver_system.c **** }
+  67              		.loc 1 73 1
+  68 000a 00BF     		nop
+  69 000c 02B0     		add	sp, sp, #8
+  70              		.cfi_def_cfa_offset 0
+  71              		@ sp needed
+  72 000e 7047     		bx	lr
+  73              	.L4:
+  74              		.align	2
+  75              	.L3:
+  76 0010 00000000 		.word	zf_system_clock
+  77              		.cfi_endproc
+  78              	.LFE474:
+  80              		.section	.text.system_set_ram_vectors,"ax",%progbits
+  81              		.align	1
+  82              		.p2align 4,,15
+  83              		.global	system_set_ram_vectors
+  84              		.syntax unified
+  85              		.thumb
+  86              		.thumb_func
+  88              	system_set_ram_vectors:
+  89              	.LFB475:
+  74:libraries/zf_driver/zf_driver_system.c **** 
+  75:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  76:libraries/zf_driver/zf_driver_system.c **** // 函数简介     中断向量表重定向
+  77:libraries/zf_driver/zf_driver_system.c **** // 参数说明     void
+  78:libraries/zf_driver/zf_driver_system.c **** // 返回参数     void
+  79:libraries/zf_driver/zf_driver_system.c **** // 使用示例     system_set_ram_vectors(clock);
+  80:libraries/zf_driver/zf_driver_system.c **** // 备注信息     
+  81:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  82:libraries/zf_driver/zf_driver_system.c **** void system_set_ram_vectors (void)
+  83:libraries/zf_driver/zf_driver_system.c **** {
+  90              		.loc 1 83 1
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+  94              		@ link register save eliminated.
+  84:libraries/zf_driver/zf_driver_system.c **** }
+  95              		.loc 1 84 1
+  96 0000 00BF     		nop
+  97 0002 7047     		bx	lr
+  98              		.cfi_endproc
+  99              	.LFE475:
+ 101              		.section	.text.zf_system_clock_init,"ax",%progbits
+ 102              		.align	1
+ 103              		.p2align 4,,15
+ 104              		.weak	zf_system_clock_init
+ 105              		.syntax unified
+ 106              		.thumb
+ 107              		.thumb_func
+ 109              	zf_system_clock_init:
+ 110              	.LFB476:
+  85:libraries/zf_driver/zf_driver_system.c **** 
+  86:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  87:libraries/zf_driver/zf_driver_system.c **** // 函数简介     核心时钟初始化
+  88:libraries/zf_driver/zf_driver_system.c **** // 参数说明     clock               时钟频率 自适配 (详见 zf_driver_system.h 内 syste
+  89:libraries/zf_driver/zf_driver_system.c **** // 返回参数     void
+  90:libraries/zf_driver/zf_driver_system.c **** // 使用示例     zf_system_clock_init(clock);
+  91:libraries/zf_driver/zf_driver_system.c **** // 备注信息     本函数用于将核心时钟设置到指定频率
+  92:libraries/zf_driver/zf_driver_system.c **** //              当时钟 <=120MHz 时总线频率与核心频率一致
+  93:libraries/zf_driver/zf_driver_system.c **** //              当时钟  >120MHz 时总线频率为核心频率的二分频
+  94:libraries/zf_driver/zf_driver_system.c **** //              本函数使用弱定义 这样做的目的是在移植操作系统时可以重载�
+  95:libraries/zf_driver/zf_driver_system.c **** //-------------------------------------------------------------------------------------------------
+  96:libraries/zf_driver/zf_driver_system.c **** ZF_WEAK void zf_system_clock_init (uint32 clock)
+  97:libraries/zf_driver/zf_driver_system.c **** {
+ 111              		.loc 1 97 1
+ 112              		.cfi_startproc
+ 113              		@ args = 0, pretend = 0, frame = 8
+ 114              		@ frame_needed = 0, uses_anonymous_args = 0
+ 115 0000 00B5     		push	{lr}
+ 116              		.cfi_def_cfa_offset 4
+ 117              		.cfi_offset 14, -4
+ 118 0002 83B0     		sub	sp, sp, #12
+ 119              		.cfi_def_cfa_offset 16
+ 120 0004 0190     		str	r0, [sp, #4]
+  98:libraries/zf_driver/zf_driver_system.c ****     osal_sys_unlock();                                                          // 启用所有中�
+ 121              		.loc 1 98 5
+ 122 0006 FFF7FEFF 		bl	osal_sys_unlock
+  99:libraries/zf_driver/zf_driver_system.c **** 
+ 100:libraries/zf_driver/zf_driver_system.c ****     test_env_init((TestInit_t)(                                                 // 这个接口用�
+ 123              		.loc 1 100 5
+ 124 000a 1F20     		movs	r0, #31
+ 125 000c FFF7FEFF 		bl	test_env_init
+ 101:libraries/zf_driver/zf_driver_system.c ****         TEST_INIT_CLOCK    |                                                    // 默认时钟配�
+ 102:libraries/zf_driver/zf_driver_system.c ****         TEST_INIT_GPIO     |                                                    // 这里其实只�
+ 103:libraries/zf_driver/zf_driver_system.c ****         TEST_INIT_BOARD    |                                                    // 默认引脚配�
+ 104:libraries/zf_driver/zf_driver_system.c ****         TEST_INIT_IRQ      |                                                    // 启用中断
+ 105:libraries/zf_driver/zf_driver_system.c ****         TEST_INIT_OSAL));                                                       // 启用 OSAL 组�
+ 106:libraries/zf_driver/zf_driver_system.c **** 
+ 107:libraries/zf_driver/zf_driver_system.c ****     system_start_up();
+ 126              		.loc 1 107 5
+ 127 0010 FFF7FEFF 		bl	system_start_up
+ 108:libraries/zf_driver/zf_driver_system.c ****     system_clock_set_freq(clock);
+ 128              		.loc 1 108 5
+ 129 0014 0198     		ldr	r0, [sp, #4]
+ 130 0016 FFF7FEFF 		bl	system_clock_set_freq
+ 109:libraries/zf_driver/zf_driver_system.c **** 
+ 110:libraries/zf_driver/zf_driver_system.c ****     zf_memory_init();                                                           // 内存管理初�
+ 131              		.loc 1 110 5
+ 132 001a FFF7FEFF 		bl	zf_memory_init
+ 111:libraries/zf_driver/zf_driver_system.c **** 
+ 112:libraries/zf_driver/zf_driver_system.c ****     extern void zf_interrupt_init (void);                                       // 外部调用中�
+ 113:libraries/zf_driver/zf_driver_system.c ****     zf_interrupt_init();
+ 133              		.loc 1 113 5
+ 134 001e FFF7FEFF 		bl	zf_interrupt_init
+ 114:libraries/zf_driver/zf_driver_system.c **** 
+ 115:libraries/zf_driver/zf_driver_system.c ****     extern void zf_delay_init (void);                                           // 外部调用系�
+ 116:libraries/zf_driver/zf_driver_system.c ****     zf_delay_init();                                                            // 系统延时初�
+ 135              		.loc 1 116 5
+ 136 0022 FFF7FEFF 		bl	zf_delay_init
+ 117:libraries/zf_driver/zf_driver_system.c **** 
+ 118:libraries/zf_driver/zf_driver_system.c ****     extern void zf_flash_init (void);
+ 119:libraries/zf_driver/zf_driver_system.c ****     zf_flash_init();
+ 137              		.loc 1 119 5
+ 138 0026 FFF7FEFF 		bl	zf_flash_init
+ 120:libraries/zf_driver/zf_driver_system.c **** }
+ 139              		.loc 1 120 1
+ 140 002a 00BF     		nop
+ 141 002c 03B0     		add	sp, sp, #12
+ 142              		.cfi_def_cfa_offset 4
+ 143              		@ sp needed
+ 144 002e 5DF804FB 		ldr	pc, [sp], #4
+ 145              		.cfi_endproc
+ 146              	.LFE476:
+ 148 0032 00BF     		.text
+ 149              	.Letext0:
+ 150              		.file 2 "../../SDKS/StellarESDK-1.7.0/Projects/SDKTests/CommonBuild/include/test_env.h"
+ 151              		.file 3 "libraries/zf_common/zf_common_typedef.h"
+ 152              		.file 4 "libraries/zf_driver/zf_driver_system.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_system.c
+D:\Users\TMP\cc5eSLqC.s:23     .data.zf_system_clock:00000000 zf_system_clock
+D:\Users\TMP\cc5eSLqC.s:20     .data.zf_system_clock:00000000 $d
+D:\Users\TMP\cc5eSLqC.s:26     .text.system_start_up:00000000 $t
+D:\Users\TMP\cc5eSLqC.s:32     .text.system_start_up:00000000 system_start_up
+D:\Users\TMP\cc5eSLqC.s:47     .text.system_clock_set_freq:00000000 $t
+D:\Users\TMP\cc5eSLqC.s:53     .text.system_clock_set_freq:00000000 system_clock_set_freq
+D:\Users\TMP\cc5eSLqC.s:76     .text.system_clock_set_freq:00000010 $d
+D:\Users\TMP\cc5eSLqC.s:81     .text.system_set_ram_vectors:00000000 $t
+D:\Users\TMP\cc5eSLqC.s:88     .text.system_set_ram_vectors:00000000 system_set_ram_vectors
+D:\Users\TMP\cc5eSLqC.s:102    .text.zf_system_clock_init:00000000 $t
+D:\Users\TMP\cc5eSLqC.s:109    .text.zf_system_clock_init:00000000 zf_system_clock_init
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stddef.h.39.27677723d43e5b5a7afdf8d798429f1d
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.features.h.33.5bd1eea2d80518b50f7af0b5ce6750e0
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.gpio.h.25.d41a0c19fda8c2de42e666afb48ec15a
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.osal.h.23.3c8c063d5d712ffba7d9086068a59ae1
+                           .group:00000000 wm4.test_env.h.57.690797a2e7b6aa0f01d5a7ba687211c6
+                           .group:00000000 wm4.Config.h.29.490ac862f1b0f873ec89fdcd6ceef99f
+                           .group:00000000 wm4.newlib.h.8.7cb3972cd43265932d4782d5eb589854
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_memory.h.73.030ac6b66200d75dae27b4e5ede2c591
+                           .group:00000000 wm4.zf_common_function.h.33.02bbfb055e8ee322bc4f8b14ea195da2
+                           .group:00000000 wm4.zf_driver_system.h.49.faa5afb6230a00fdd187812da3de231e
+
+UNDEFINED SYMBOLS
+osal_sys_unlock
+test_env_init
+zf_memory_init
+zf_interrupt_init
+zf_delay_init
+zf_flash_init

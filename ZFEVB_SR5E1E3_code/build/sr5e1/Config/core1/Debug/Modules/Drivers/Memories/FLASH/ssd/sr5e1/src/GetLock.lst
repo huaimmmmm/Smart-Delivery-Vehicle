@@ -1,0 +1,525 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"GetLock.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.GetLock,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.global	GetLock
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	GetLock:
+  27              	.LFB0:
+  28              		.file 1 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/
+   1:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** /****************************************************************************
+   2:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  *
+   3:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  *
+   5:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  * terms SLA0098 at www.st.com.
+   7:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  *
+   8:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  *
+  11:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  *
+  12:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****  *****************************************************************************/
+  13:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  14:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** /*************************************************************************
+  15:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                                                                       *
+  16:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *               Standard Software Driver for C55                        *
+  17:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                                                                       *
+  18:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * FILE NAME     : GetLock.c                                             *
+  19:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * FUNCTION      : GetLock                                               *
+  20:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * DESCRIPTION   : This function will check the block locking status     *
+  21:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                   of Low/Middle/High/256K/UTest address spaces in the *
+  22:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                   C55 module.                                         *
+  23:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * PARAMETERS    : pSSDConfig - Flash driver configuration structure     *
+  24:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                 blkLockIndicator - variable for storing block lock    *
+  25:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                   indicator value                                     *
+  26:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                 blkLockState - variable for storing block lock state  *
+  27:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                   value                                               *
+  28:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * RETURN        : C55_OK - passes                                       *
+  29:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                 C55_ERROR_BLOCK_INDICATOR - wrong indicator value     *
+  30:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                 C55_ERROR_ALTERNATE - interface unsupported           *
+  31:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * DATE          : February 04, 2022                                     *
+  32:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * AUTHOR        : ...                                                   *
+  33:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** * E-mail        : ...                                                   *
+  34:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *                                                                       *
+  35:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *************************************************************************/
+  36:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  37:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** /******************************* CHANGES *********************************
+  38:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****   0.1.0   04.02.2022      G. Cuce       Initial Vesion
+  39:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** *************************************************************************/
+  40:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  41:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** #include "ssd_types.h"
+  42:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** #include "ssd_C55.h"
+  43:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  44:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  45:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  46:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** UINT32 GetLock ( PSSD_CONFIG pSSDConfig,
+  47:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****                  UINT8 blkLockIndicator,
+  48:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****                  UINT32 *blkLockState )
+  49:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** {
+  29              		.loc 1 49 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 40
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 8AB0     		sub	sp, sp, #40
+  35              		.cfi_def_cfa_offset 40
+  36 0002 0390     		str	r0, [sp, #12]
+  37 0004 0B46     		mov	r3, r1
+  38 0006 0192     		str	r2, [sp, #4]
+  39 0008 8DF80B30 		strb	r3, [sp, #11]
+  50:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     volatile UINT32 returnCode;     /* return code */
+  51:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  52:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     UINT32 value;                   /* value of block locking register */
+  53:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     UINT32 mask;                    /* block locking bit mask for the address space */
+  54:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     UINT32 shift;                   /* bit shift value for the block locking field of an address sp
+  55:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     
+  56:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     UINT32 lock0;                   /* lock0 register value */
+  57:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     UINT32 lock1;                   /* lock1 register value */
+  58:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  59:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     returnCode = C55_OK;
+  40              		.loc 1 59 16
+  41 000c 0023     		movs	r3, #0
+  42 000e 0493     		str	r3, [sp, #16]
+  60:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+  61:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     /* Determine whether main or alternate interface is selected */
+  62:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     if ( pSSDConfig->mainInterfaceFlag )
+  43              		.loc 1 62 20
+  44 0010 039B     		ldr	r3, [sp, #12]
+  45 0012 93F84030 		ldrb	r3, [r3, #64]	@ zero_extendqisi2
+  46              		.loc 1 62 8
+  47 0016 002B     		cmp	r3, #0
+  48 0018 0AD0     		beq	.L2
+  63:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     {
+  64:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         lock0 = C55_REG_READ (pSSDConfig->c55RegBase + C55_LOCK0);
+  49              		.loc 1 64 17
+  50 001a 039B     		ldr	r3, [sp, #12]
+  51 001c 1B68     		ldr	r3, [r3]
+  52 001e 1033     		adds	r3, r3, #16
+  53              		.loc 1 64 15
+  54 0020 1B68     		ldr	r3, [r3]
+  55 0022 0693     		str	r3, [sp, #24]
+  65:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         lock1 = C55_REG_READ (pSSDConfig->c55RegBase + C55_LOCK1);
+  56              		.loc 1 65 17
+  57 0024 039B     		ldr	r3, [sp, #12]
+  58 0026 1B68     		ldr	r3, [r3]
+  59 0028 1433     		adds	r3, r3, #20
+  60              		.loc 1 65 15
+  61 002a 1B68     		ldr	r3, [r3]
+  62 002c 0593     		str	r3, [sp, #20]
+  63 002e 09E0     		b	.L3
+  64              	.L2:
+  66:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     }
+  67:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     else
+  68:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     {
+  69:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         lock0 = C55_REG_READ (pSSDConfig->c55RegBase + C55_LOCK0A);
+  65              		.loc 1 69 17
+  66 0030 039B     		ldr	r3, [sp, #12]
+  67 0032 1B68     		ldr	r3, [r3]
+  68 0034 2833     		adds	r3, r3, #40
+  69              		.loc 1 69 15
+  70 0036 1B68     		ldr	r3, [r3]
+  71 0038 0693     		str	r3, [sp, #24]
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         lock1 = C55_REG_READ (pSSDConfig->c55RegBase + C55_LOCK1A);
+  72              		.loc 1 70 17
+  73 003a 039B     		ldr	r3, [sp, #12]
+  74 003c 1B68     		ldr	r3, [r3]
+  75 003e 2C33     		adds	r3, r3, #44
+  76              		.loc 1 70 15
+  77 0040 1B68     		ldr	r3, [r3]
+  78 0042 0593     		str	r3, [sp, #20]
+  79              	.L3:
+  71:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     }
+  72:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     /* Determine which address space is selected */
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     switch (blkLockIndicator)
+  80              		.loc 1 74 5
+  81 0044 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+  82 0048 052B     		cmp	r3, #5
+  83 004a 00F2A280 		bhi	.L4
+  84 004e 01A2     		adr	r2, .L6
+  85 0050 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+  86              		.p2align 2
+  87              	.L6:
+  88 0054 6D000000 		.word	.L11+1
+  89 0058 9D000000 		.word	.L10+1
+  90 005c CB000000 		.word	.L9+1
+  91 0060 F9000000 		.word	.L8+1
+  92 0064 3F010000 		.word	.L7+1
+  93 0068 83010000 		.word	.L5+1
+  94              		.p2align 1
+  95              	.L11:
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     {
+  76:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     case C55_BLOCK_LOW:
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         value = lock0;
+  96              		.loc 1 77 15
+  97 006c 069B     		ldr	r3, [sp, #24]
+  98 006e 0993     		str	r3, [sp, #36]
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         shift = 16;
+  99              		.loc 1 78 15
+ 100 0070 1023     		movs	r3, #16
+ 101 0072 0793     		str	r3, [sp, #28]
+  79:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         mask = (0xFFFFFFFF >> (32 - C55_LOW_BLOCK_NUM(pSSDConfig) + 1 )) << 16;
+ 102              		.loc 1 79 37
+ 103 0074 039B     		ldr	r3, [sp, #12]
+ 104 0076 9A68     		ldr	r2, [r3, #8]
+ 105 0078 039B     		ldr	r3, [sp, #12]
+ 106 007a DB68     		ldr	r3, [r3, #12]
+ 107 007c 1A44     		add	r2, r2, r3
+ 108 007e 039B     		ldr	r3, [sp, #12]
+ 109 0080 1B69     		ldr	r3, [r3, #16]
+ 110 0082 1A44     		add	r2, r2, r3
+ 111 0084 039B     		ldr	r3, [sp, #12]
+ 112 0086 5B69     		ldr	r3, [r3, #20]
+ 113 0088 1344     		add	r3, r3, r2
+ 114              		.loc 1 79 67
+ 115 008a C3F12103 		rsb	r3, r3, #33
+ 116              		.loc 1 79 28
+ 117 008e 4FF0FF32 		mov	r2, #-1
+ 118 0092 22FA03F3 		lsr	r3, r2, r3
+ 119              		.loc 1 79 14
+ 120 0096 1B04     		lsls	r3, r3, #16
+ 121 0098 0893     		str	r3, [sp, #32]
+  80:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         break;
+ 122              		.loc 1 80 9
+ 123 009a 7DE0     		b	.L12
+ 124              	.L10:
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     case C55_BLOCK_MID:
+  83:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         value = lock0;
+ 125              		.loc 1 83 15
+ 126 009c 069B     		ldr	r3, [sp, #24]
+ 127 009e 0993     		str	r3, [sp, #36]
+  84:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         shift = 0;
+ 128              		.loc 1 84 15
+ 129 00a0 0023     		movs	r3, #0
+ 130 00a2 0793     		str	r3, [sp, #28]
+  85:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         mask = 0xFFFFFFFF >> (32 - C55_MID_BLOCK_NUM(pSSDConfig));
+ 131              		.loc 1 85 36
+ 132 00a4 039B     		ldr	r3, [sp, #12]
+ 133 00a6 9A69     		ldr	r2, [r3, #24]
+ 134 00a8 039B     		ldr	r3, [sp, #12]
+ 135 00aa DB69     		ldr	r3, [r3, #28]
+ 136 00ac 1A44     		add	r2, r2, r3
+ 137 00ae 039B     		ldr	r3, [sp, #12]
+ 138 00b0 1B6A     		ldr	r3, [r3, #32]
+ 139 00b2 1A44     		add	r2, r2, r3
+ 140 00b4 039B     		ldr	r3, [sp, #12]
+ 141 00b6 5B6A     		ldr	r3, [r3, #36]
+ 142 00b8 1344     		add	r3, r3, r2
+ 143              		.loc 1 85 34
+ 144 00ba C3F12003 		rsb	r3, r3, #32
+ 145              		.loc 1 85 14
+ 146 00be 4FF0FF32 		mov	r2, #-1
+ 147 00c2 22FA03F3 		lsr	r3, r2, r3
+ 148 00c6 0893     		str	r3, [sp, #32]
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         break;
+ 149              		.loc 1 86 9
+ 150 00c8 66E0     		b	.L12
+ 151              	.L9:
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     case C55_BLOCK_HIGH:
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         value = lock1;
+ 152              		.loc 1 89 15
+ 153 00ca 059B     		ldr	r3, [sp, #20]
+ 154 00cc 0993     		str	r3, [sp, #36]
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         shift = 0;
+ 155              		.loc 1 90 15
+ 156 00ce 0023     		movs	r3, #0
+ 157 00d0 0793     		str	r3, [sp, #28]
+  91:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         mask = 0xFFFFFFFF >> (32 - C55_HIGH_BLOCK_NUM(pSSDConfig));
+ 158              		.loc 1 91 36
+ 159 00d2 039B     		ldr	r3, [sp, #12]
+ 160 00d4 9A6A     		ldr	r2, [r3, #40]
+ 161 00d6 039B     		ldr	r3, [sp, #12]
+ 162 00d8 DB6A     		ldr	r3, [r3, #44]
+ 163 00da 1A44     		add	r2, r2, r3
+ 164 00dc 039B     		ldr	r3, [sp, #12]
+ 165 00de 1B6B     		ldr	r3, [r3, #48]
+ 166 00e0 1A44     		add	r2, r2, r3
+ 167 00e2 039B     		ldr	r3, [sp, #12]
+ 168 00e4 5B6B     		ldr	r3, [r3, #52]
+ 169 00e6 1344     		add	r3, r3, r2
+ 170              		.loc 1 91 34
+ 171 00e8 C3F12003 		rsb	r3, r3, #32
+ 172              		.loc 1 91 14
+ 173 00ec 4FF0FF32 		mov	r2, #-1
+ 174 00f0 22FA03F3 		lsr	r3, r2, r3
+ 175 00f4 0893     		str	r3, [sp, #32]
+  92:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         break;
+ 176              		.loc 1 92 9
+ 177 00f6 4FE0     		b	.L12
+ 178              	.L8:
+  93:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         
+  94:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     case C55_BLOCK_LARGE_FIRST:
+  95:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         if ( pSSDConfig->mainInterfaceFlag )
+ 179              		.loc 1 95 24
+ 180 00f8 039B     		ldr	r3, [sp, #12]
+ 181 00fa 93F84030 		ldrb	r3, [r3, #64]	@ zero_extendqisi2
+ 182              		.loc 1 95 12
+ 183 00fe 002B     		cmp	r3, #0
+ 184 0100 0BD0     		beq	.L13
+  96:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+  97:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             value = C55_REG_READ (pSSDConfig->c55RegBase + C55_LOCK2);
+ 185              		.loc 1 97 21
+ 186 0102 039B     		ldr	r3, [sp, #12]
+ 187 0104 1B68     		ldr	r3, [r3]
+ 188 0106 1833     		adds	r3, r3, #24
+ 189              		.loc 1 97 19
+ 190 0108 1B68     		ldr	r3, [r3]
+ 191 010a 0993     		str	r3, [sp, #36]
+  98:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+  99:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         else
+ 100:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             returnCode = C55_ERROR_ALTERNATE;
+ 102:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             goto EXIT;
+ 103:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         shift = 0;
+ 192              		.loc 1 104 15
+ 193 010c 0023     		movs	r3, #0
+ 194 010e 0793     		str	r3, [sp, #28]
+ 105:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         if ( pSSDConfig->n256KBlockNum >= 32 )
+ 195              		.loc 1 105 24
+ 196 0110 039B     		ldr	r3, [sp, #12]
+ 197 0112 9B6B     		ldr	r3, [r3, #56]
+ 198              		.loc 1 105 12
+ 199 0114 1F2B     		cmp	r3, #31
+ 200 0116 08D9     		bls	.L16
+ 201 0118 03E0     		b	.L24
+ 202              	.L13:
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             goto EXIT;
+ 203              		.loc 1 101 24
+ 204 011a 4FF48073 		mov	r3, #256
+ 205 011e 0493     		str	r3, [sp, #16]
+ 102:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 206              		.loc 1 102 13
+ 207 0120 41E0     		b	.L15
+ 208              	.L24:
+ 106:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             mask = 0xFFFFFFFF;
+ 209              		.loc 1 107 18
+ 210 0122 4FF0FF33 		mov	r3, #-1
+ 211 0126 0893     		str	r3, [sp, #32]
+ 108:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 109:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         else
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             mask = 0xFFFFFFFF >> (32 - pSSDConfig->n256KBlockNum);
+ 112:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         break;
+ 212              		.loc 1 113 9
+ 213 0128 36E0     		b	.L12
+ 214              	.L16:
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 215              		.loc 1 111 50
+ 216 012a 039B     		ldr	r3, [sp, #12]
+ 217 012c 9B6B     		ldr	r3, [r3, #56]
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 218              		.loc 1 111 38
+ 219 012e C3F12003 		rsb	r3, r3, #32
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 220              		.loc 1 111 18
+ 221 0132 4FF0FF32 		mov	r2, #-1
+ 222 0136 22FA03F3 		lsr	r3, r2, r3
+ 223 013a 0893     		str	r3, [sp, #32]
+ 224              		.loc 1 113 9
+ 225 013c 2CE0     		b	.L12
+ 226              	.L7:
+ 114:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         
+ 115:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     case C55_BLOCK_LARGE_SECOND:
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         if ( pSSDConfig->mainInterfaceFlag )
+ 227              		.loc 1 116 24
+ 228 013e 039B     		ldr	r3, [sp, #12]
+ 229 0140 93F84030 		ldrb	r3, [r3, #64]	@ zero_extendqisi2
+ 230              		.loc 1 116 12
+ 231 0144 002B     		cmp	r3, #0
+ 232 0146 0BD0     		beq	.L18
+ 117:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+ 118:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             value = C55_REG_READ (pSSDConfig->c55RegBase + C55_LOCK3);
+ 233              		.loc 1 118 21
+ 234 0148 039B     		ldr	r3, [sp, #12]
+ 235 014a 1B68     		ldr	r3, [r3]
+ 236 014c 1C33     		adds	r3, r3, #28
+ 237              		.loc 1 118 19
+ 238 014e 1B68     		ldr	r3, [r3]
+ 239 0150 0993     		str	r3, [sp, #36]
+ 119:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 120:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         else
+ 121:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+ 122:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             returnCode = C55_ERROR_ALTERNATE;
+ 123:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             goto EXIT;
+ 124:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 125:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         shift = 0;
+ 240              		.loc 1 125 15
+ 241 0152 0023     		movs	r3, #0
+ 242 0154 0793     		str	r3, [sp, #28]
+ 126:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         if ( pSSDConfig->n256KBlockNum > 32 )
+ 243              		.loc 1 126 24
+ 244 0156 039B     		ldr	r3, [sp, #12]
+ 245 0158 9B6B     		ldr	r3, [r3, #56]
+ 246              		.loc 1 126 12
+ 247 015a 202B     		cmp	r3, #32
+ 248 015c 0ED9     		bls	.L20
+ 249 015e 03E0     		b	.L25
+ 250              	.L18:
+ 122:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             goto EXIT;
+ 251              		.loc 1 122 24
+ 252 0160 4FF48073 		mov	r3, #256
+ 253 0164 0493     		str	r3, [sp, #16]
+ 123:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 254              		.loc 1 123 13
+ 255 0166 1EE0     		b	.L15
+ 256              	.L25:
+ 127:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+ 128:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             mask = 0xFFFFFFFF >> (32 - (pSSDConfig->n256KBlockNum - 32));
+ 257              		.loc 1 128 51
+ 258 0168 039B     		ldr	r3, [sp, #12]
+ 259 016a 9B6B     		ldr	r3, [r3, #56]
+ 260              		.loc 1 128 38
+ 261 016c C3F14003 		rsb	r3, r3, #64
+ 262              		.loc 1 128 18
+ 263 0170 4FF0FF32 		mov	r2, #-1
+ 264 0174 22FA03F3 		lsr	r3, r2, r3
+ 265 0178 0893     		str	r3, [sp, #32]
+ 129:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 130:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         else
+ 131:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         {
+ 132:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****             mask = 0x0;
+ 133:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 134:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         break;
+ 266              		.loc 1 134 9
+ 267 017a 0DE0     		b	.L12
+ 268              	.L20:
+ 132:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         }
+ 269              		.loc 1 132 18
+ 270 017c 0023     		movs	r3, #0
+ 271 017e 0893     		str	r3, [sp, #32]
+ 272              		.loc 1 134 9
+ 273 0180 0AE0     		b	.L12
+ 274              	.L5:
+ 135:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         
+ 136:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     case C55_BLOCK_UTEST:
+ 137:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         value = lock0;
+ 275              		.loc 1 137 15
+ 276 0182 069B     		ldr	r3, [sp, #24]
+ 277 0184 0993     		str	r3, [sp, #36]
+ 138:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         shift = 31;
+ 278              		.loc 1 138 15
+ 279 0186 1F23     		movs	r3, #31
+ 280 0188 0793     		str	r3, [sp, #28]
+ 139:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         mask = 0x80000000 /* 0x1 << 31 */;
+ 281              		.loc 1 139 14
+ 282 018a 4FF00043 		mov	r3, #-2147483648
+ 283 018e 0893     		str	r3, [sp, #32]
+ 140:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         break;
+ 284              		.loc 1 140 9
+ 285 0190 02E0     		b	.L12
+ 286              	.L4:
+ 141:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         
+ 142:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     default:
+ 143:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         returnCode = C55_ERROR_BLOCK_INDICATOR;
+ 287              		.loc 1 143 20
+ 288 0192 8023     		movs	r3, #128
+ 289 0194 0493     		str	r3, [sp, #16]
+ 144:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         goto EXIT;
+ 290              		.loc 1 144 9
+ 291 0196 06E0     		b	.L15
+ 292              	.L12:
+ 145:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     }
+ 146:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+ 147:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     /* Mask off the other bits and make proper shift */
+ 148:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     *blkLockState = (value & mask) >> shift;
+ 293              		.loc 1 148 28
+ 294 0198 099A     		ldr	r2, [sp, #36]
+ 295 019a 089B     		ldr	r3, [sp, #32]
+ 296 019c 1A40     		ands	r2, r2, r3
+ 297              		.loc 1 148 36
+ 298 019e 079B     		ldr	r3, [sp, #28]
+ 299 01a0 DA40     		lsrs	r2, r2, r3
+ 300              		.loc 1 148 19
+ 301 01a2 019B     		ldr	r3, [sp, #4]
+ 302 01a4 1A60     		str	r2, [r3]
+ 303              	.L15:
+ 149:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+ 150:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** EXIT:
+ 151:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     if (pSSDConfig->BDMEnable)
+ 304              		.loc 1 151 19
+ 305 01a6 039B     		ldr	r3, [sp, #12]
+ 306 01a8 93F84830 		ldrb	r3, [r3, #72]	@ zero_extendqisi2
+ 307              		.loc 1 151 8
+ 308 01ac 002B     		cmp	r3, #0
+ 309 01ae 04D0     		beq	.L22
+ 152:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     {
+ 153:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         /* save the return code to R3 */
+ 154:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         ASM_KEYWORD(" mov r3, %0 " ::"r"(returnCode));
+ 310              		.loc 1 154 9
+ 311 01b0 049B     		ldr	r3, [sp, #16]
+ 312              		.syntax unified
+ 313              	@ 154 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Get
+ 314 01b2 1B46     		 mov r3, r3 
+ 315              	@ 0 "" 2
+ 155:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         
+ 156:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         asm volatile ( "nop" );
+ 316              		.loc 1 156 9
+ 317              	@ 156 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Get
+ 318 01b4 00BF     		nop
+ 319              	@ 0 "" 2
+ 157:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         asm volatile ( "bkpt #0" );
+ 320              		.loc 1 157 9
+ 321              	@ 157 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Get
+ 322 01b6 00BE     		bkpt #0
+ 323              	@ 0 "" 2
+ 158:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****         asm volatile ( "nop" );
+ 324              		.loc 1 158 9
+ 325              	@ 158 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src/Get
+ 326 01b8 00BF     		nop
+ 327              	@ 0 "" 2
+ 328              		.thumb
+ 329              		.syntax unified
+ 330              	.L22:
+ 159:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+ 160:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     }
+ 161:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** 
+ 162:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c ****     return returnCode;
+ 331              		.loc 1 162 12
+ 332 01ba 049B     		ldr	r3, [sp, #16]
+ 163:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/src\GetLock.c **** }
+ 333              		.loc 1 163 1
+ 334 01bc 1846     		mov	r0, r3
+ 335 01be 0AB0     		add	sp, sp, #40
+ 336              		.cfi_def_cfa_offset 0
+ 337              		@ sp needed
+ 338 01c0 7047     		bx	lr
+ 339              		.cfi_endproc
+ 340              	.LFE0:
+ 342 01c2 00BF     		.text
+ 343              	.Letext0:
+ 344              		.file 2 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+ 345              		.file 3 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/Memories/FLASH/ssd/sr5e1/inc/
+DEFINED SYMBOLS
+                            *ABS*:00000000 GetLock.c
+D:\Users\TMP\cc7g03Jp.s:19     .text.GetLock:00000000 $t
+D:\Users\TMP\cc7g03Jp.s:26     .text.GetLock:00000000 GetLock
+D:\Users\TMP\cc7g03Jp.s:88     .text.GetLock:00000054 $d
+D:\Users\TMP\cc7g03Jp.s:94     .text.GetLock:0000006c $t
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.ssd_types.h.29.f65f270075dc88598f2bc4634b2ba066
+                           .group:00000000 wm4.ssd_C55.h.37.dad650468a97d71aff4dd65ca085590f
+
+NO UNDEFINED SYMBOLS

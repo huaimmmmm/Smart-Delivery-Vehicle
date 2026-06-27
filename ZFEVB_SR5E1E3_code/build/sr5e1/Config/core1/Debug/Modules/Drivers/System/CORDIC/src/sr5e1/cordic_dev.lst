@@ -1,0 +1,2333 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"cordic_dev.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.cordic_dev_get_reg_ptr,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.global	cordic_dev_get_reg_ptr
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	cordic_dev_get_reg_ptr:
+  27              	.LFB456:
+  28              		.file 1 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1/cordi
+   1:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /****************************************************************************
+   2:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+   3:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * Copyright (c) 2023 STMicroelectronics - All Rights Reserved
+   4:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+   5:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * terms SLA0098 at www.st.com.
+   7:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+   8:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  11:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *****************************************************************************/
+  12:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+  13:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @file    cordic_dev.c
+  14:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   CORDIC device specific source file.
+  15:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  16:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @addtogroup DRIVERS
+  17:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @addtogroup SYSTEM
+  18:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @ingroup DRIVERS
+  19:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @addtogroup CORDIC
+  20:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @ingroup SYSTEM
+  21:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @{
+  22:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+  23:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  24:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** #include <cordic.h>
+  25:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** #include <cordic_private.h>
+  26:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** #include <dma.h>
+  27:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** #include <clock.h>
+  28:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** #include <irq.h>
+  29:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** #include <platform.h>
+  30:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  31:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  32:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /* Module local definitions.                                                 */
+  33:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  34:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  35:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  36:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /* Module exported variables.                                                */
+  37:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  38:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  39:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  40:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /* Module local types.                                                       */
+  41:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  42:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  43:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  44:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /* Module local variables.                                                   */
+  45:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  46:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  47:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  48:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /* Module local functions.                                                   */
+  49:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  50:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  51:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  52:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /* Module exported functions.                                                */
+  53:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /*===========================================================================*/
+  54:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  55:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+  56:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   Returns pointer to the CORDIC register block.
+  57:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  58:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @param[in] cdp       pointer to a @p cordic_driver_t structure
+  59:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @return              pointer to the CORDIC register block.
+  60:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  61:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @notapi
+  62:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+  63:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** CORDIC_TypeDef *cordic_dev_get_reg_ptr(cordic_driver_t *cdp) {
+  29              		.loc 1 63 62
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 82B0     		sub	sp, sp, #8
+  35              		.cfi_def_cfa_offset 8
+  36 0002 0190     		str	r0, [sp, #4]
+  64:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  65:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     (void)cdp;
+  66:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  67:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     return CORDIC;
+  37              		.loc 1 67 12
+  38 0004 014B     		ldr	r3, .L3
+  68:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** }
+  39              		.loc 1 68 1
+  40 0006 1846     		mov	r0, r3
+  41 0008 02B0     		add	sp, sp, #8
+  42              		.cfi_def_cfa_offset 0
+  43              		@ sp needed
+  44 000a 7047     		bx	lr
+  45              	.L4:
+  46              		.align	2
+  47              	.L3:
+  48 000c 00340044 		.word	1140864000
+  49              		.cfi_endproc
+  50              	.LFE456:
+  52              		.section	.text.cordic_dev_clock_enable,"ax",%progbits
+  53              		.align	1
+  54              		.p2align 4,,15
+  55              		.global	cordic_dev_clock_enable
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  60              	cordic_dev_clock_enable:
+  61              	.LFB457:
+  69:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  70:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+  71:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   Enables CORDIC clock.
+  72:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  73:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @param[in] cdp       pointer to a @p cordic_driver_t structure
+  74:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  75:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @notapi
+  76:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+  77:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** void cordic_dev_clock_enable(cordic_driver_t *cdp) {
+  62              		.loc 1 77 52
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 16
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              		@ link register save eliminated.
+  67 0000 84B0     		sub	sp, sp, #16
+  68              		.cfi_def_cfa_offset 16
+  69 0002 0190     		str	r0, [sp, #4]
+  70 0004 0123     		movs	r3, #1
+  71 0006 8DF80F30 		strb	r3, [sp, #15]
+  72 000a 9DF80F30 		ldrb	r3, [sp, #15]
+  73 000e 8DF80E30 		strb	r3, [sp, #14]
+  74 0012 4FF40053 		mov	r3, #8192
+  75 0016 0293     		str	r3, [sp, #8]
+  76              	.LBB14:
+  77              	.LBB15:
+  78              	.LBB16:
+  79              	.LBB17:
+  80              		.file 2 "src-gen/sr5e1/clock.h"
+   1:src-gen/sr5e1/clock.h **** /****************************************************************************
+   2:src-gen/sr5e1/clock.h ****  *
+   3:src-gen/sr5e1/clock.h ****  * Copyright (c) 2022 STMicroelectronics - All Rights Reserved
+   4:src-gen/sr5e1/clock.h ****  *
+   5:src-gen/sr5e1/clock.h ****  * License terms: STMicroelectronics Proprietary in accordance with licensing
+   6:src-gen/sr5e1/clock.h ****  * terms SLA0098 at www.st.com.
+   7:src-gen/sr5e1/clock.h ****  *
+   8:src-gen/sr5e1/clock.h ****  * THIS SOFTWARE IS DISTRIBUTED "AS IS," AND ALL WARRANTIES ARE DISCLAIMED,
+   9:src-gen/sr5e1/clock.h ****  * INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  10:src-gen/sr5e1/clock.h ****  *
+  11:src-gen/sr5e1/clock.h ****  *****************************************************************************/
+  12:src-gen/sr5e1/clock.h **** /**
+  13:src-gen/sr5e1/clock.h ****  * @file    clock.h
+  14:src-gen/sr5e1/clock.h ****  * @brief   SR5E1 clock subsystem header file.
+  15:src-gen/sr5e1/clock.h ****  *
+  16:src-gen/sr5e1/clock.h ****  * @addtogroup PLATFORM
+  17:src-gen/sr5e1/clock.h ****  * @addtogroup CLOCK
+  18:src-gen/sr5e1/clock.h ****  * @ingroup PLATFORM
+  19:src-gen/sr5e1/clock.h ****  * @{
+  20:src-gen/sr5e1/clock.h ****  */
+  21:src-gen/sr5e1/clock.h **** 
+  22:src-gen/sr5e1/clock.h **** #ifndef _CLOCK_H_
+  23:src-gen/sr5e1/clock.h **** #define _CLOCK_H_
+  24:src-gen/sr5e1/clock.h **** 
+  25:src-gen/sr5e1/clock.h **** #include <clock_cfg.h>
+  26:src-gen/sr5e1/clock.h **** #include <platform.h>
+  27:src-gen/sr5e1/clock.h **** #include <typedefs.h>
+  28:src-gen/sr5e1/clock.h **** 
+  29:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+  30:src-gen/sr5e1/clock.h **** /* Module constants.                                                         */
+  31:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+  32:src-gen/sr5e1/clock.h **** 
+  33:src-gen/sr5e1/clock.h **** /**
+  34:src-gen/sr5e1/clock.h ****  * @name    RCC CFGR register
+  35:src-gen/sr5e1/clock.h ****  * @{
+  36:src-gen/sr5e1/clock.h ****  */
+  37:src-gen/sr5e1/clock.h **** #define CLOCK_SW_MASK               (3UL << 0U)
+  38:src-gen/sr5e1/clock.h **** #define CLOCK_SW_IRCOSC             (4UL << 0U) /* Internal 16 MHz   */
+  39:src-gen/sr5e1/clock.h **** #define CLOCK_SW_XOSC               (5UL << 0U) /* External 4-40 MHz */
+  40:src-gen/sr5e1/clock.h **** #define CLOCK_SW_PLL0PHI            (6UL << 0U)
+  41:src-gen/sr5e1/clock.h **** #define CLOCK_SW_PLL1PHI            (7UL << 0U)
+  42:src-gen/sr5e1/clock.h **** 
+  43:src-gen/sr5e1/clock.h **** #define CLOCK_SYSPRE_MASK           (511UL << 8U)
+  44:src-gen/sr5e1/clock.h **** #define CLOCK_SYSPRE_FIELD(n)       (((uint32_t)(n)) << 8U)
+  45:src-gen/sr5e1/clock.h **** 
+  46:src-gen/sr5e1/clock.h **** #define CLOCK_MCOSEL_MASK           (15UL << 20U)
+  47:src-gen/sr5e1/clock.h **** #define CLOCK_MCOSEL_NOCLOCK        (0UL << 20U)
+  48:src-gen/sr5e1/clock.h **** #define CLOCK_MCOSEL_LSI            (8UL << 20U)
+  49:src-gen/sr5e1/clock.h **** #define CLOCK_MCOSEL_IRCOSC         (9UL << 20U)
+  50:src-gen/sr5e1/clock.h **** #define CLOCK_MCOSEL_XOSC           (10UL << 20U)
+  51:src-gen/sr5e1/clock.h **** #define CLOCK_MCOSEL_PLL0PHI        (11UL << 20U)
+  52:src-gen/sr5e1/clock.h **** #define CLOCK_MCOSEL_PLL1PHI        (12UL << 20U)
+  53:src-gen/sr5e1/clock.h **** 
+  54:src-gen/sr5e1/clock.h **** #define CLOCK_MCOPRE_MASK           (63UL << 24U)
+  55:src-gen/sr5e1/clock.h **** #define CLOCK_MCOPRE_FIELD(n)       (((uint32_t)(n)) << 24U)
+  56:src-gen/sr5e1/clock.h **** /** @} */
+  57:src-gen/sr5e1/clock.h **** 
+  58:src-gen/sr5e1/clock.h **** /**
+  59:src-gen/sr5e1/clock.h ****  * @name    RCC PLLCFGR register
+  60:src-gen/sr5e1/clock.h ****  * @{
+  61:src-gen/sr5e1/clock.h ****  */
+  62:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0SRC_MASK          (3UL << 0U)
+  63:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0SRC_NOCLOCK       (0UL << 0U)
+  64:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0SRC_IRCOSC        (2UL << 0U)
+  65:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0SRC_XOSC          (3UL << 0U)
+  66:src-gen/sr5e1/clock.h **** 
+  67:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1SRC_MASK          (3UL << 8U)
+  68:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1SRC_NOCLOCK       (0UL << 8U)
+  69:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1SRC_PLL0PHI1      (2UL << 8U)
+  70:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1SRC_XOSC          (3UL << 8U)
+  71:src-gen/sr5e1/clock.h **** /** @} */
+  72:src-gen/sr5e1/clock.h **** 
+  73:src-gen/sr5e1/clock.h **** /**
+  74:src-gen/sr5e1/clock.h ****  * @name    RCC CCIPR1 register
+  75:src-gen/sr5e1/clock.h ****  * @{
+  76:src-gen/sr5e1/clock.h ****  */
+  77:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSEL_MASK          (7UL << 0U)
+  78:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSEL_NOCLOCK       (0UL << 0U)
+  79:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSEL_IRCOSC        (4UL << 0U)
+  80:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSEL_XOSC          (5UL << 0U)
+  81:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSEL_PLL0PHI       (6UL << 0U)
+  82:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSEL_LSI           (7UL << 0U)
+  83:src-gen/sr5e1/clock.h **** 
+  84:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSEL_MASK           (7UL << 4U)
+  85:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSEL_NOCLOCK        (0UL << 4U)
+  86:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSEL_IRCOSC         (4UL << 4U)
+  87:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSEL_XOSC           (5UL << 4U)
+  88:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSEL_PLL0PHI        (6UL << 4U)
+  89:src-gen/sr5e1/clock.h **** 
+  90:src-gen/sr5e1/clock.h **** #define CLOCK_SPISEL_MASK           (7UL << 8U)
+  91:src-gen/sr5e1/clock.h **** #define CLOCK_SPISEL_NOCLOCK        (0UL << 8U)
+  92:src-gen/sr5e1/clock.h **** #define CLOCK_SPISEL_IRCOSC         (4UL << 8U)
+  93:src-gen/sr5e1/clock.h **** #define CLOCK_SPISEL_XOSC           (5UL << 8U)
+  94:src-gen/sr5e1/clock.h **** #define CLOCK_SPISEL_PLL0PHI        (6UL << 8U)
+  95:src-gen/sr5e1/clock.h **** #define CLOCK_SPISEL_I2S_CKIN       (7UL << 8U)
+  96:src-gen/sr5e1/clock.h **** 
+  97:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANSEL_MASK         (7UL << 12U)
+  98:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANSEL_NOCLOCK      (0UL << 12U)
+  99:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANSEL_XOSC         (4UL << 12U)
+ 100:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANSEL_PLL0PHI      (5UL << 12U)
+ 101:src-gen/sr5e1/clock.h **** 
+ 102:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSEL_MASK           (7UL << 16U)
+ 103:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSEL_NOCLOCK        (0UL << 16U)
+ 104:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSEL_XOSC           (4UL << 16U)
+ 105:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSEL_PLL0PHI        (5UL << 16U)
+ 106:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSEL_PLL1PHI        (6UL << 16U)
+ 107:src-gen/sr5e1/clock.h **** 
+ 108:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSEL_MASK         (7UL << 20U)
+ 109:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSEL_NOCLOCK      (0UL << 20U)
+ 110:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSEL_XOSC         (4UL << 20U)
+ 111:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSEL_PLL0PHI      (5UL << 20U)
+ 112:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSEL_PLL1PHI      (6UL << 20U)
+ 113:src-gen/sr5e1/clock.h **** /** @} */
+ 114:src-gen/sr5e1/clock.h **** 
+ 115:src-gen/sr5e1/clock.h **** /**
+ 116:src-gen/sr5e1/clock.h ****  * @name    RCC CCIPR2 register
+ 117:src-gen/sr5e1/clock.h ****  * @{
+ 118:src-gen/sr5e1/clock.h ****  */
+ 119:src-gen/sr5e1/clock.h **** #define CLOCK_UARTPRE_MASK          (31U << 0U)
+ 120:src-gen/sr5e1/clock.h **** #define CLOCK_UARTPRE_FIELD(n)      (((uint32_t)(n)) << 0U)
+ 121:src-gen/sr5e1/clock.h **** 
+ 122:src-gen/sr5e1/clock.h **** #define CLOCK_I2CPRE_MASK           (31U << 5U)
+ 123:src-gen/sr5e1/clock.h **** #define CLOCK_I2CPRE_FIELD(n)       (((uint32_t)(n)) << 5U)
+ 124:src-gen/sr5e1/clock.h **** 
+ 125:src-gen/sr5e1/clock.h **** #define CLOCK_SPIPRE_MASK           (31U << 10U)
+ 126:src-gen/sr5e1/clock.h **** #define CLOCK_SPIPRE_FIELD(n)       (((uint32_t)(n)) << 10U)
+ 127:src-gen/sr5e1/clock.h **** 
+ 128:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANPRE_MASK         (31U << 15U)
+ 129:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANPRE_FIELD(n)     (((uint32_t)(n)) << 15U)
+ 130:src-gen/sr5e1/clock.h **** 
+ 131:src-gen/sr5e1/clock.h **** #define CLOCK_ADCPRE_MASK           (63U << 20U)
+ 132:src-gen/sr5e1/clock.h **** #define CLOCK_ADCPRE_FIELD(n)       (((uint32_t)(n)) << 20U)
+ 133:src-gen/sr5e1/clock.h **** 
+ 134:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCPRE_MASK         (63U << 26U)
+ 135:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCPRE_FIELD(n)     (((uint32_t)(n)) << 26U)
+ 136:src-gen/sr5e1/clock.h **** /** @} */
+ 137:src-gen/sr5e1/clock.h **** 
+ 138:src-gen/sr5e1/clock.h **** /**
+ 139:src-gen/sr5e1/clock.h ****  * @name    RCC LSCFGR register
+ 140:src-gen/sr5e1/clock.h ****  * @{
+ 141:src-gen/sr5e1/clock.h ****  */
+ 142:src-gen/sr5e1/clock.h **** #define CLOCK_RTCSEL_MASK           (3UL << 9U)
+ 143:src-gen/sr5e1/clock.h **** #define CLOCK_RTCSEL_NOCLOCK        (0UL << 9U)
+ 144:src-gen/sr5e1/clock.h **** #define CLOCK_RTCSEL_LSI            (2UL << 9U)  /* LSI after LSIPRE prescaler division */
+ 145:src-gen/sr5e1/clock.h **** #define CLOCK_RTCSEL_XOSC           (3UL << 9U)  /* XOSC divided by 32 */
+ 146:src-gen/sr5e1/clock.h **** 
+ 147:src-gen/sr5e1/clock.h **** #define CLOCK_LSIPRE_MASK           (31UL << 0U)
+ 148:src-gen/sr5e1/clock.h **** #define CLOCK_LSIPRE_FIELD(n)       (((uint32_t)(n)) << 0U)
+ 149:src-gen/sr5e1/clock.h **** /** @} */
+ 150:src-gen/sr5e1/clock.h **** 
+ 151:src-gen/sr5e1/clock.h **** /**
+ 152:src-gen/sr5e1/clock.h ****  * @name    PLLDIG PLL0DV register
+ 153:src-gen/sr5e1/clock.h ****  * @{
+ 154:src-gen/sr5e1/clock.h ****  */
+ 155:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0MFD_MASK          (127UL << 0U)
+ 156:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0MFD_FIELD(n)      (((uint32_t)(n)) << 0U)
+ 157:src-gen/sr5e1/clock.h **** 
+ 158:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PREDIV_MASK       (7UL << 12U)
+ 159:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PREDIV_FIELD(n)   (((uint32_t)(n)) << 12U)
+ 160:src-gen/sr5e1/clock.h **** 
+ 161:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0RFDPHI_MASK       (63UL << 16U)
+ 162:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0RFDPHI_FIELD(n)   (((uint32_t)(n)) << 16U)
+ 163:src-gen/sr5e1/clock.h **** 
+ 164:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0RFDPHI1_MASK      (15UL << 27U)
+ 165:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0RFDPHI1_FIELD(n)  (((uint32_t)(n)) << 27U)
+ 166:src-gen/sr5e1/clock.h **** /** @} */
+ 167:src-gen/sr5e1/clock.h **** 
+ 168:src-gen/sr5e1/clock.h **** /**
+ 169:src-gen/sr5e1/clock.h ****  * @name    PLLDIG PLL1DV register
+ 170:src-gen/sr5e1/clock.h ****  * @{
+ 171:src-gen/sr5e1/clock.h ****  */
+ 172:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1MFD_MASK          (127UL << 0U)
+ 173:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1MFD_FIELD(n)      (((uint32_t)(n)) << 0U)
+ 174:src-gen/sr5e1/clock.h **** 
+ 175:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1RFDPHI_MASK       (63U << 16U)
+ 176:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1RFDPHI_FIELD(n)   (((uint32_t)(n)) << 16U)
+ 177:src-gen/sr5e1/clock.h **** /** @} */
+ 178:src-gen/sr5e1/clock.h **** 
+ 179:src-gen/sr5e1/clock.h **** /**
+ 180:src-gen/sr5e1/clock.h ****  * @name    NVMPC PFCR1 register
+ 181:src-gen/sr5e1/clock.h ****  * @{
+ 182:src-gen/sr5e1/clock.h ****  */
+ 183:src-gen/sr5e1/clock.h **** 
+ 184:src-gen/sr5e1/clock.h **** #define CLOCK_NVMCCBFEN_MASK        (1UL << 0U)
+ 185:src-gen/sr5e1/clock.h **** #define CLOCK_NVMCCBFEN_FIELD(n)    (((uint32_t)(n)) << 0U)
+ 186:src-gen/sr5e1/clock.h **** 
+ 187:src-gen/sr5e1/clock.h **** #define CLOCK_NVMDCBFEN_MASK        (1UL << 1U)
+ 188:src-gen/sr5e1/clock.h **** #define CLOCK_NVMDCBFEN_FIELD(n)    ((n) << 1U)
+ 189:src-gen/sr5e1/clock.h **** 
+ 190:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_MASK          (1FUL << 8U)
+ 191:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_FIELD(n)      (((uint32_t)(n)) << 8U)
+ 192:src-gen/sr5e1/clock.h **** 
+ 193:src-gen/sr5e1/clock.h **** #define CLOCK_NVMAPC_MASK           (7UL << 13U)
+ 194:src-gen/sr5e1/clock.h **** #define CLOCK_NVMAPC_FIELD(n)       (((uint32_t)(n)) << 13U)
+ 195:src-gen/sr5e1/clock.h **** /** @} */
+ 196:src-gen/sr5e1/clock.h **** 
+ 197:src-gen/sr5e1/clock.h **** /**
+ 198:src-gen/sr5e1/clock.h ****  * @name    Internal oscillators
+ 199:src-gen/sr5e1/clock.h ****  * @{
+ 200:src-gen/sr5e1/clock.h ****  */
+ 201:src-gen/sr5e1/clock.h **** #define CLOCK_IRCOSCCLK             16000000UL
+ 202:src-gen/sr5e1/clock.h **** #define CLOCK_LSICLK                1000000UL
+ 203:src-gen/sr5e1/clock.h **** /** @} */
+ 204:src-gen/sr5e1/clock.h **** 
+ 205:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 206:src-gen/sr5e1/clock.h **** /* Module pre-compile time settings.                                         */
+ 207:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 208:src-gen/sr5e1/clock.h **** 
+ 209:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 210:src-gen/sr5e1/clock.h **** /* Derived constants and error checks.                                       */
+ 211:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 212:src-gen/sr5e1/clock.h **** 
+ 213:src-gen/sr5e1/clock.h **** /* Configuration file checks.*/
+ 214:src-gen/sr5e1/clock.h **** #if !defined(SR5E1xxx_CLOCKCONF)
+ 215:src-gen/sr5e1/clock.h **** #error "SR5E1xxx_CLOCKCONF not defined in clock_cfg.h"
+ 216:src-gen/sr5e1/clock.h **** #endif
+ 217:src-gen/sr5e1/clock.h **** 
+ 218:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_SMP_MODE) || defined(__DOXYGEN__)
+ 219:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SMP_MODE not defined in clock_cfg.h"
+ 220:src-gen/sr5e1/clock.h **** #endif
+ 221:src-gen/sr5e1/clock.h **** 
+ 222:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_XOSC_ENABLED) || defined(__DOXYGEN__)
+ 223:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_XOSC_ENABLED not defined in clock_cfg.h"
+ 224:src-gen/sr5e1/clock.h **** #endif
+ 225:src-gen/sr5e1/clock.h **** 
+ 226:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_LSI_ENABLED) || defined(__DOXYGEN__)
+ 227:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_LSI_ENABLED not defined in clock_cfg.h"
+ 228:src-gen/sr5e1/clock.h **** #endif
+ 229:src-gen/sr5e1/clock.h **** 
+ 230:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_XOSCCLK)
+ 231:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_XOSCCLK not defined in clock_cfg.h"
+ 232:src-gen/sr5e1/clock.h **** #endif
+ 233:src-gen/sr5e1/clock.h **** 
+ 234:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_XOSC_BYPASS)
+ 235:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_XOSC_BYPASS not defined in clock_cfg.h"
+ 236:src-gen/sr5e1/clock.h **** #endif
+ 237:src-gen/sr5e1/clock.h **** 
+ 238:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL0SRC) || defined(__DOXYGEN__)
+ 239:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL0SRC not defined in clock_cfg.h"
+ 240:src-gen/sr5e1/clock.h **** #endif
+ 241:src-gen/sr5e1/clock.h **** 
+ 242:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL0MFD_VALUE) || defined(__DOXYGEN__)
+ 243:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL0MFD_VALUE not defined in clock_cfg.h"
+ 244:src-gen/sr5e1/clock.h **** #endif
+ 245:src-gen/sr5e1/clock.h **** 
+ 246:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL0PREDIV_VALUE) || defined(__DOXYGEN__)
+ 247:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL0PREDIV_VALUE not defined in clock_cfg.h"
+ 248:src-gen/sr5e1/clock.h **** #endif
+ 249:src-gen/sr5e1/clock.h **** 
+ 250:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL0RFDPHI_VALUE) || defined(__DOXYGEN__)
+ 251:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL0RFDPHI_VALUE not defined in clock_cfg.h"
+ 252:src-gen/sr5e1/clock.h **** #endif
+ 253:src-gen/sr5e1/clock.h **** 
+ 254:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL0RFDPHI1_VALUE) || defined(__DOXYGEN__)
+ 255:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL0RFDPHI1_VALUE not defined in clock_cfg.h"
+ 256:src-gen/sr5e1/clock.h **** #endif
+ 257:src-gen/sr5e1/clock.h **** 
+ 258:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL1SRC) || defined(__DOXYGEN__)
+ 259:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL1SRC not defined in clock_cfg.h"
+ 260:src-gen/sr5e1/clock.h **** #endif
+ 261:src-gen/sr5e1/clock.h **** 
+ 262:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL1MFD_VALUE) || defined(__DOXYGEN__)
+ 263:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL1MFD_VALUE not defined in clock_cfg.h"
+ 264:src-gen/sr5e1/clock.h **** #endif
+ 265:src-gen/sr5e1/clock.h **** 
+ 266:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_PLL1RFDPHI_VALUE) || defined(__DOXYGEN__)
+ 267:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_PLL1RFDPHI_VALUE not defined in clock_cfg.h"
+ 268:src-gen/sr5e1/clock.h **** #endif
+ 269:src-gen/sr5e1/clock.h **** 
+ 270:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_SW) || defined(__DOXYGEN__)
+ 271:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SW not defined in clock_cfg.h"
+ 272:src-gen/sr5e1/clock.h **** #endif
+ 273:src-gen/sr5e1/clock.h **** 
+ 274:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_SYSPRE_VALUE) || defined(__DOXYGEN__)
+ 275:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SYSPRE_VALUE not defined in clock_cfg.h"
+ 276:src-gen/sr5e1/clock.h **** #endif
+ 277:src-gen/sr5e1/clock.h **** 
+ 278:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_UARTSEL) || defined(__DOXYGEN__)
+ 279:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_UARTSEL not defined in clock_cfg.h"
+ 280:src-gen/sr5e1/clock.h **** #endif
+ 281:src-gen/sr5e1/clock.h **** 
+ 282:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_I2CSEL) || defined(__DOXYGEN__)
+ 283:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_I2CSEL not defined in clock_cfg.h"
+ 284:src-gen/sr5e1/clock.h **** #endif
+ 285:src-gen/sr5e1/clock.h **** 
+ 286:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_SPISEL) || defined(__DOXYGEN__)
+ 287:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SPISEL not defined in clock_cfg.h"
+ 288:src-gen/sr5e1/clock.h **** #endif
+ 289:src-gen/sr5e1/clock.h **** 
+ 290:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_FDCANSEL) || defined(__DOXYGEN__)
+ 291:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_FDCANSEL not defined in clock_cfg.h"
+ 292:src-gen/sr5e1/clock.h **** #endif
+ 293:src-gen/sr5e1/clock.h **** 
+ 294:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_ADCSEL) || defined(__DOXYGEN__)
+ 295:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_ADCSEL not defined in clock_cfg.h"
+ 296:src-gen/sr5e1/clock.h **** #endif
+ 297:src-gen/sr5e1/clock.h **** 
+ 298:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_SDADCSEL) || defined(__DOXYGEN__)
+ 299:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SDADCSEL not defined in clock_cfg.h"
+ 300:src-gen/sr5e1/clock.h **** #endif
+ 301:src-gen/sr5e1/clock.h **** 
+ 302:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_MCOSEL) || defined(__DOXYGEN__)
+ 303:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_MCOSEL not defined in clock_cfg.h"
+ 304:src-gen/sr5e1/clock.h **** #endif
+ 305:src-gen/sr5e1/clock.h **** 
+ 306:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_RTCSEL) || defined(__DOXYGEN__)
+ 307:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_RTCSEL not defined in clock_cfg.h"
+ 308:src-gen/sr5e1/clock.h **** #endif
+ 309:src-gen/sr5e1/clock.h **** 
+ 310:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_UARTPRE_VALUE) || defined(__DOXYGEN__)
+ 311:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_UARTPRE_VALUE not defined in clock_cfg.h"
+ 312:src-gen/sr5e1/clock.h **** #endif
+ 313:src-gen/sr5e1/clock.h **** 
+ 314:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_I2CPRE_VALUE) || defined(__DOXYGEN__)
+ 315:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_I2CPRE_VALUE not defined in clock_cfg.h"
+ 316:src-gen/sr5e1/clock.h **** #endif
+ 317:src-gen/sr5e1/clock.h **** 
+ 318:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_SPIPRE_VALUE) || defined(__DOXYGEN__)
+ 319:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SPIPRE_VALUE not defined in clock_cfg.h"
+ 320:src-gen/sr5e1/clock.h **** #endif
+ 321:src-gen/sr5e1/clock.h **** 
+ 322:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_FDCANPRE_VALUE) || defined(__DOXYGEN__)
+ 323:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_FDCANPRE_VALUE not defined in clock_cfg.h"
+ 324:src-gen/sr5e1/clock.h **** #endif
+ 325:src-gen/sr5e1/clock.h **** 
+ 326:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_ADCPRE_VALUE) || defined(__DOXYGEN__)
+ 327:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_ADCPRE_VALUE not defined in clock_cfg.h"
+ 328:src-gen/sr5e1/clock.h **** #endif
+ 329:src-gen/sr5e1/clock.h **** 
+ 330:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_SDADCPRE_VALUE) || defined(__DOXYGEN__)
+ 331:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SDADCPRE_VALUE not defined in clock_cfg.h"
+ 332:src-gen/sr5e1/clock.h **** #endif
+ 333:src-gen/sr5e1/clock.h **** 
+ 334:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_MCOPRE_VALUE) || defined(__DOXYGEN__)
+ 335:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_MCOPRE_VALUE not defined in clock_cfg.h"
+ 336:src-gen/sr5e1/clock.h **** #endif
+ 337:src-gen/sr5e1/clock.h **** 
+ 338:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_LSIPRE_VALUE) || defined(__DOXYGEN__)
+ 339:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_LSIPRE_VALUE not defined in clock_cfg.h"
+ 340:src-gen/sr5e1/clock.h **** #endif
+ 341:src-gen/sr5e1/clock.h **** 
+ 342:src-gen/sr5e1/clock.h **** /* If SPISEL = I2S_CKIN, the value of I2S clock on the CKIN pin must be
+ 343:src-gen/sr5e1/clock.h ****    specified in the clock configuration file.*/
+ 344:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SPISEL == CLOCK_SPISEL_I2S_CKIN)
+ 345:src-gen/sr5e1/clock.h **** #if !defined(CLOCK_CFG_I2S_CKIN) || defined(__DOXYGEN__)
+ 346:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_I2S_CKIN not defined in clock_cfg.h"
+ 347:src-gen/sr5e1/clock.h **** #endif
+ 348:src-gen/sr5e1/clock.h **** #endif
+ 349:src-gen/sr5e1/clock.h **** 
+ 350:src-gen/sr5e1/clock.h **** /* Clock Limits */
+ 351:src-gen/sr5e1/clock.h **** #define CLOCK_SYSCLK_MAX            300000000UL
+ 352:src-gen/sr5e1/clock.h **** 
+ 353:src-gen/sr5e1/clock.h **** #define CLOCK_XOSCCLK_MAX           40000000UL
+ 354:src-gen/sr5e1/clock.h **** #define CLOCK_XOSCCLK_BYP_MAX       100000000UL
+ 355:src-gen/sr5e1/clock.h **** #define CLOCK_XOSCCLK_MIN           4000000UL
+ 356:src-gen/sr5e1/clock.h **** #define CLOCK_XOSCCLK_BYP_MIN       4000000UL
+ 357:src-gen/sr5e1/clock.h **** 
+ 358:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0IN_MAX            56000000UL
+ 359:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0IN_MIN            8000000UL
+ 360:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PFD_MAX           20000000UL
+ 361:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PFD_MIN           8000000UL
+ 362:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0VCO_MAX           1400000000UL
+ 363:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0VCO_MIN           600000000UL
+ 364:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PHI_MAX           700000000UL
+ 365:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PHI_MIN           4762000UL
+ 366:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PHI1_MAX          175000000UL
+ 367:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PHI1_MIN          20000000UL
+ 368:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1IN_MAX            87500000UL
+ 369:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1IN_MIN            37500000UL
+ 370:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1VCO_MAX           1400000000UL
+ 371:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1VCO_MIN           600000000UL
+ 372:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1PHI_MAX           700000000UL
+ 373:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1PHI_MIN           4762000UL
+ 374:src-gen/sr5e1/clock.h **** 
+ 375:src-gen/sr5e1/clock.h **** #define CLOCK_UARTCLK_MAX           100000000UL
+ 376:src-gen/sr5e1/clock.h **** #define CLOCK_I2CCLK_MAX            100000000UL
+ 377:src-gen/sr5e1/clock.h **** #define CLOCK_SPICLK_MS_SPI1_4_MAX  50000000UL
+ 378:src-gen/sr5e1/clock.h **** #define CLOCK_SPICLK_MS_SPI2_3_MAX  37500000UL
+ 379:src-gen/sr5e1/clock.h **** #define CLOCK_SPICLK_SL_MAX         50000000UL
+ 380:src-gen/sr5e1/clock.h **** #define CLOCK_I2SCLK_MAX            100000000UL
+ 381:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANCLK_MAX          80000000UL
+ 382:src-gen/sr5e1/clock.h **** #define CLOCK_ADCCLK_MAX            40000000UL
+ 383:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCCLK_MAX          16000000UL
+ 384:src-gen/sr5e1/clock.h **** 
+ 385:src-gen/sr5e1/clock.h **** /*Checks on XOSC.*/
+ 386:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_XOSC_ENABLED
+ 387:src-gen/sr5e1/clock.h **** 
+ 388:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_XOSCCLK == 0U
+ 389:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_XOSCCLK is zero in clock_cfg.h"
+ 390:src-gen/sr5e1/clock.h **** #else /* CLOCK_CFG_XOSCCLK != 0 */
+ 391:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_XOSC_BYPASS
+ 392:src-gen/sr5e1/clock.h **** 
+ 393:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_XOSCCLK < CLOCK_XOSCCLK_BYP_MIN) ||                          \
+ 394:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_XOSCCLK > CLOCK_XOSCCLK_BYP_MAX)
+ 395:src-gen/sr5e1/clock.h **** #error "out of limits  CLOCK_XOSCCLK value"
+ 396:src-gen/sr5e1/clock.h **** #endif
+ 397:src-gen/sr5e1/clock.h **** 
+ 398:src-gen/sr5e1/clock.h **** #else /* !CLOCK_CFG_XOSC_BYPASS */
+ 399:src-gen/sr5e1/clock.h **** 
+ 400:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_XOSCCLK < CLOCK_XOSCCLK_MIN) ||                              \
+ 401:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_XOSCCLK > CLOCK_XOSCCLK_MAX)
+ 402:src-gen/sr5e1/clock.h **** #error "out of limits  CLOCK_XOSCCLK value"
+ 403:src-gen/sr5e1/clock.h **** #endif
+ 404:src-gen/sr5e1/clock.h **** 
+ 405:src-gen/sr5e1/clock.h **** #endif /* !CLOCK_CFG_XOSC_BYPASS */
+ 406:src-gen/sr5e1/clock.h **** #endif /* CLOCK_CFG_XOSCCLK != 0 */
+ 407:src-gen/sr5e1/clock.h **** 
+ 408:src-gen/sr5e1/clock.h **** #else /* !CLOCK_CFG_XOSC_ENABLED */
+ 409:src-gen/sr5e1/clock.h **** 
+ 410:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SW == CLOCK_SW_XOSC
+ 411:src-gen/sr5e1/clock.h **** #error "CLOCK_SW requires XOSC"
+ 412:src-gen/sr5e1/clock.h **** #endif
+ 413:src-gen/sr5e1/clock.h **** 
+ 414:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SW == CLOCK_SW_PLL0PHI) &&                                   \
+ 415:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC)
+ 416:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SW or CLOCK_CFG_PLL0SRC require XOSC"
+ 417:src-gen/sr5e1/clock.h **** #endif
+ 418:src-gen/sr5e1/clock.h **** 
+ 419:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SW == CLOCK_SW_PLL1PHI) &&                                   \
+ 420:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_XOSC)
+ 421:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SW or CLOCK_CFG_PLL1SRC require XOSC"
+ 422:src-gen/sr5e1/clock.h **** #endif
+ 423:src-gen/sr5e1/clock.h **** 
+ 424:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SW == CLOCK_SW_PLL1PHI) &&                                   \
+ 425:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_PLL0PHI1) &&                        \
+ 426:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC)
+ 427:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SW or CLOCK_CFG_PLL1SRC require XOSC"
+ 428:src-gen/sr5e1/clock.h **** #endif
+ 429:src-gen/sr5e1/clock.h **** 
+ 430:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_XOSC) ||                              \
+ 431:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_PLL0PHI) &&                          \
+ 432:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC)) ||                          \
+ 433:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_PLL1PHI) &&                          \
+ 434:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_XOSC)) 
+ 435:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_MCOSEL requires XOSC"
+ 436:src-gen/sr5e1/clock.h **** #endif
+ 437:src-gen/sr5e1/clock.h **** 
+ 438:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_XOSC) ||                            \
+ 439:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_PLL0PHI) &&                        \
+ 440:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC))
+ 441:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_UARTSEL requires XOSC"
+ 442:src-gen/sr5e1/clock.h **** #endif
+ 443:src-gen/sr5e1/clock.h **** 
+ 444:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_I2CSEL == CLOCK_I2CSEL_XOSC) ||                              \
+ 445:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_I2CSEL == CLOCK_I2CSEL_PLL0PHI) &&                          \
+ 446:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC))
+ 447:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_I2CSEL requires XOSC"
+ 448:src-gen/sr5e1/clock.h **** #endif
+ 449:src-gen/sr5e1/clock.h **** 
+ 450:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SPISEL == CLOCK_SPISEL_XOSC) ||                              \
+ 451:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_SPISEL == CLOCK_SPISEL_PLL0PHI) &&                          \
+ 452:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC))
+ 453:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SPISEL requires XOSC"
+ 454:src-gen/sr5e1/clock.h **** #endif
+ 455:src-gen/sr5e1/clock.h **** 
+ 456:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_FDCANSEL == CLOCK_FDCANSEL_XOSC) ||                          \
+ 457:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_FDCANSEL == CLOCK_FDCANSEL_PLL0PHI) &&                      \
+ 458:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC))
+ 459:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_FDCANSEL requires XOSC"
+ 460:src-gen/sr5e1/clock.h **** #endif
+ 461:src-gen/sr5e1/clock.h **** 
+ 462:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_XOSC) ||                              \
+ 463:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_PLL0PHI) &&                          \
+ 464:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC)) ||                          \
+ 465:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_PLL1PHI) &&                          \
+ 466:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_XOSC)) 
+ 467:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_ADCSEL requires XOSC"
+ 468:src-gen/sr5e1/clock.h **** #endif
+ 469:src-gen/sr5e1/clock.h **** 
+ 470:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_XOSC) ||                          \
+ 471:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_PLL0PHI) &&                      \
+ 472:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC)) ||                          \
+ 473:src-gen/sr5e1/clock.h ****     ((CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_PLL1PHI) &&                      \
+ 474:src-gen/sr5e1/clock.h ****      (CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_XOSC)) 
+ 475:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_SDADCSEL requires XOSC"
+ 476:src-gen/sr5e1/clock.h **** #endif
+ 477:src-gen/sr5e1/clock.h **** 
+ 478:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_RTCSEL == CLOCK_RTCSEL_XOSC
+ 479:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_RTCSEL requires XOSC"
+ 480:src-gen/sr5e1/clock.h **** #endif
+ 481:src-gen/sr5e1/clock.h **** 
+ 482:src-gen/sr5e1/clock.h **** #endif /* CLOCK_CFG_XOSC_ENABLED */
+ 483:src-gen/sr5e1/clock.h **** 
+ 484:src-gen/sr5e1/clock.h **** /*
+ 485:src-gen/sr5e1/clock.h ****  * LSI related checks.
+ 486:src-gen/sr5e1/clock.h ****  */
+ 487:src-gen/sr5e1/clock.h **** #if !CLOCK_CFG_LSI_ENABLED
+ 488:src-gen/sr5e1/clock.h **** 
+ 489:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_LSI
+ 490:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_UARTSEL requires LSI"
+ 491:src-gen/sr5e1/clock.h **** #endif
+ 492:src-gen/sr5e1/clock.h **** 
+ 493:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_LSI
+ 494:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_MCOSEL requires LSI"
+ 495:src-gen/sr5e1/clock.h **** #endif
+ 496:src-gen/sr5e1/clock.h **** 
+ 497:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_RTCSEL == CLOCK_RTCSEL_LSI
+ 498:src-gen/sr5e1/clock.h **** #error "CLOCK_CFG_RTCSEL requires LSI"
+ 499:src-gen/sr5e1/clock.h **** #endif
+ 500:src-gen/sr5e1/clock.h **** 
+ 501:src-gen/sr5e1/clock.h **** #endif /* !CLOCK_CFG_LSI_ENABLED */
+ 502:src-gen/sr5e1/clock.h **** 
+ 503:src-gen/sr5e1/clock.h **** /* PLL0 enable check.*/
+ 504:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SW == CLOCK_SW_PLL0PHI) ||                                   \
+ 505:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_PLL0PHI1) ||                        \
+ 506:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_PLL0PHI) ||                           \
+ 507:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_PLL0PHI) ||                         \
+ 508:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_I2CSEL == CLOCK_I2CSEL_PLL0PHI) ||                           \
+ 509:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_SPISEL == CLOCK_SPISEL_PLL0PHI) ||                           \
+ 510:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_FDCANSEL == CLOCK_FDCANSEL_PLL0PHI) ||                       \
+ 511:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_PLL0PHI) ||                           \
+ 512:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_PLL0PHI)
+ 513:src-gen/sr5e1/clock.h **** #define CLOCK_ACTIVATE_PLL0         TRUE
+ 514:src-gen/sr5e1/clock.h **** #else
+ 515:src-gen/sr5e1/clock.h **** #define CLOCK_ACTIVATE_PLL0         FALSE
+ 516:src-gen/sr5e1/clock.h **** #endif
+ 517:src-gen/sr5e1/clock.h **** 
+ 518:src-gen/sr5e1/clock.h **** /* PLL0 fields.*/
+ 519:src-gen/sr5e1/clock.h **** #if !((CLOCK_CFG_PLL0MFD_VALUE >= 8U) && (CLOCK_CFG_PLL0MFD_VALUE <= 127U))
+ 520:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL0MFD_VALUE value in clock_cfg.h"
+ 521:src-gen/sr5e1/clock.h **** #endif
+ 522:src-gen/sr5e1/clock.h **** 
+ 523:src-gen/sr5e1/clock.h **** #if !((CLOCK_CFG_PLL0PREDIV_VALUE >= 0U) && (CLOCK_CFG_PLL0PREDIV_VALUE <= 7U))
+ 524:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL0PREDIV_VALUE value in clock_cfg.h"
+ 525:src-gen/sr5e1/clock.h **** #endif
+ 526:src-gen/sr5e1/clock.h **** 
+ 527:src-gen/sr5e1/clock.h **** #if !((CLOCK_CFG_PLL0RFDPHI_VALUE >= 1U) && (CLOCK_CFG_PLL0RFDPHI_VALUE <= 63U))
+ 528:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL0RFDPHI_VALUE value in clock_cfg.h"
+ 529:src-gen/sr5e1/clock.h **** #endif
+ 530:src-gen/sr5e1/clock.h **** 
+ 531:src-gen/sr5e1/clock.h **** #if !((CLOCK_CFG_PLL0RFDPHI1_VALUE >= 4U) && (CLOCK_CFG_PLL0RFDPHI1_VALUE <= 15U))
+ 532:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL0RFDPHI1_VALUE value in clock_cfg.h"
+ 533:src-gen/sr5e1/clock.h **** #endif
+ 534:src-gen/sr5e1/clock.h **** 
+ 535:src-gen/sr5e1/clock.h **** /* PLL0 input clock.*/
+ 536:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_XOSC) || defined(__DOXYGEN__)
+ 537:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0IN                CLOCK_CFG_XOSCCLK
+ 538:src-gen/sr5e1/clock.h **** 
+ 539:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_IRCOSC
+ 540:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0IN                CLOCK_IRCOSCCLK
+ 541:src-gen/sr5e1/clock.h **** 
+ 542:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_PLL0SRC == CLOCK_PLL0SRC_NOCLOCK
+ 543:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0IN                0U
+ 544:src-gen/sr5e1/clock.h **** 
+ 545:src-gen/sr5e1/clock.h **** #else
+ 546:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL0SRC value in clock_cfg.h"
+ 547:src-gen/sr5e1/clock.h **** #endif
+ 548:src-gen/sr5e1/clock.h **** 
+ 549:src-gen/sr5e1/clock.h **** #if (CLOCK_PLL0IN == 0U) && (CLOCK_ACTIVATE_PLL0 == TRUE)
+ 550:src-gen/sr5e1/clock.h **** #error "no PLL input clock"
+ 551:src-gen/sr5e1/clock.h **** #endif
+ 552:src-gen/sr5e1/clock.h **** 
+ 553:src-gen/sr5e1/clock.h **** #if ((CLOCK_PLL0IN != 0U) && (CLOCK_ACTIVATE_PLL0 == TRUE)) &&              \
+ 554:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL0IN < CLOCK_PLL0IN_MIN) || (CLOCK_PLL0IN > CLOCK_PLL0IN_MAX))
+ 555:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL0IN value"
+ 556:src-gen/sr5e1/clock.h **** #endif
+ 557:src-gen/sr5e1/clock.h **** 
+ 558:src-gen/sr5e1/clock.h **** /* PLL0 PFD clock.*/
+ 559:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_PLL0PREDIV_VALUE == 0U)
+ 560:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PFD               0U
+ 561:src-gen/sr5e1/clock.h **** #else
+ 562:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PFD                                                       \
+ 563:src-gen/sr5e1/clock.h ****   (CLOCK_PLL0IN / CLOCK_CFG_PLL0PREDIV_VALUE)
+ 564:src-gen/sr5e1/clock.h **** #endif
+ 565:src-gen/sr5e1/clock.h **** 
+ 566:src-gen/sr5e1/clock.h **** #if (CLOCK_PLL0PFD != 0U) && (CLOCK_ACTIVATE_PLL0 == TRUE) &&               \
+ 567:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL0PFD < CLOCK_PLL0PFD_MIN) || (CLOCK_PLL0PFD > CLOCK_PLL0PFD_MAX))
+ 568:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL0PFD value"
+ 569:src-gen/sr5e1/clock.h **** #endif
+ 570:src-gen/sr5e1/clock.h **** 
+ 571:src-gen/sr5e1/clock.h **** /* PLL0 VCO clock.*/
+ 572:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0VCO                                                       \
+ 573:src-gen/sr5e1/clock.h ****   (2U * CLOCK_CFG_PLL0MFD_VALUE * CLOCK_PLL0PFD)
+ 574:src-gen/sr5e1/clock.h **** 
+ 575:src-gen/sr5e1/clock.h **** #if (CLOCK_PLL0VCO != 0U) && (CLOCK_ACTIVATE_PLL0 == TRUE) &&               \
+ 576:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL0VCO < CLOCK_PLL0VCO_MIN) || (CLOCK_PLL0VCO > CLOCK_PLL0VCO_MAX))
+ 577:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL0VCO value"
+ 578:src-gen/sr5e1/clock.h **** #endif
+ 579:src-gen/sr5e1/clock.h **** 
+ 580:src-gen/sr5e1/clock.h **** /* PLL0 output clocks.*/
+ 581:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PHI                                                       \
+ 582:src-gen/sr5e1/clock.h ****   ((CLOCK_PLL0VCO / CLOCK_CFG_PLL0RFDPHI_VALUE) / 2U)
+ 583:src-gen/sr5e1/clock.h **** 
+ 584:src-gen/sr5e1/clock.h **** #if (CLOCK_ACTIVATE_PLL0 == TRUE) &&                                        \
+ 585:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL0PHI < CLOCK_PLL0PHI_MIN) || (CLOCK_PLL0PHI > CLOCK_PLL0PHI_MAX))
+ 586:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL0PHI value"
+ 587:src-gen/sr5e1/clock.h **** #endif
+ 588:src-gen/sr5e1/clock.h **** 
+ 589:src-gen/sr5e1/clock.h **** #define CLOCK_PLL0PHI1                                                      \
+ 590:src-gen/sr5e1/clock.h ****   ((CLOCK_PLL0VCO / CLOCK_CFG_PLL0RFDPHI1_VALUE) / 2U)
+ 591:src-gen/sr5e1/clock.h **** 
+ 592:src-gen/sr5e1/clock.h **** #if (CLOCK_ACTIVATE_PLL0 == TRUE) &&                                        \
+ 593:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL0PHI1 < CLOCK_PLL0PHI1_MIN) || (CLOCK_PLL0PHI1 > CLOCK_PLL0PHI1_MAX))
+ 594:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL0PHI1 value"
+ 595:src-gen/sr5e1/clock.h **** #endif
+ 596:src-gen/sr5e1/clock.h **** 
+ 597:src-gen/sr5e1/clock.h **** /* PLL1 enable check.*/
+ 598:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SW == CLOCK_SW_PLL1PHI) ||                                   \
+ 599:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_PLL1PHI) ||                           \
+ 600:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_PLL1PHI) ||                           \
+ 601:src-gen/sr5e1/clock.h ****     (CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_PLL1PHI)
+ 602:src-gen/sr5e1/clock.h **** #define CLOCK_ACTIVATE_PLL1         TRUE
+ 603:src-gen/sr5e1/clock.h **** #else
+ 604:src-gen/sr5e1/clock.h **** #define CLOCK_ACTIVATE_PLL1         FALSE
+ 605:src-gen/sr5e1/clock.h **** #endif
+ 606:src-gen/sr5e1/clock.h **** 
+ 607:src-gen/sr5e1/clock.h **** /* PLL1 fields.*/
+ 608:src-gen/sr5e1/clock.h **** #if !((CLOCK_CFG_PLL1MFD_VALUE >= 16U) && (CLOCK_CFG_PLL1MFD_VALUE <= 34U))
+ 609:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL1MFD_VALUE value in clock_cfg.h"
+ 610:src-gen/sr5e1/clock.h **** #endif
+ 611:src-gen/sr5e1/clock.h **** 
+ 612:src-gen/sr5e1/clock.h **** #if !((CLOCK_CFG_PLL1RFDPHI_VALUE >= 1U) && (CLOCK_CFG_PLL1RFDPHI_VALUE <= 63U))
+ 613:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL1RFDPHI_VALUE value in clock_cfg.h"
+ 614:src-gen/sr5e1/clock.h **** #endif
+ 615:src-gen/sr5e1/clock.h **** 
+ 616:src-gen/sr5e1/clock.h **** /* PLL1 input clock.*/
+ 617:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_PLL0PHI1) || defined(__DOXYGEN__)
+ 618:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1IN                CLOCK_PLL0PHI1
+ 619:src-gen/sr5e1/clock.h **** 
+ 620:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_XOSC
+ 621:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1IN                CLOCK_CFG_XOSCCLK
+ 622:src-gen/sr5e1/clock.h **** 
+ 623:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_PLL1SRC == CLOCK_PLL1SRC_NOCLOCK
+ 624:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1IN                0U
+ 625:src-gen/sr5e1/clock.h **** 
+ 626:src-gen/sr5e1/clock.h **** #else
+ 627:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_PLL1SRC value in clock_cfg.h"
+ 628:src-gen/sr5e1/clock.h **** #endif
+ 629:src-gen/sr5e1/clock.h **** 
+ 630:src-gen/sr5e1/clock.h **** #if (CLOCK_PLL1IN == 0U && CLOCK_ACTIVATE_PLL1 == TRUE)
+ 631:src-gen/sr5e1/clock.h **** #error "no PLL input clock"
+ 632:src-gen/sr5e1/clock.h **** #endif
+ 633:src-gen/sr5e1/clock.h **** 
+ 634:src-gen/sr5e1/clock.h **** #if ((CLOCK_PLL1IN != 0U) && (CLOCK_ACTIVATE_PLL1 == TRUE)) &&              \
+ 635:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL1IN < CLOCK_PLL1IN_MIN) || (CLOCK_PLL1IN > CLOCK_PLL1IN_MAX))
+ 636:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL1IN value"
+ 637:src-gen/sr5e1/clock.h **** #endif
+ 638:src-gen/sr5e1/clock.h **** 
+ 639:src-gen/sr5e1/clock.h **** /* PLL1 VCO clock.*/
+ 640:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1VCO                                                       \
+ 641:src-gen/sr5e1/clock.h ****   (CLOCK_PLL1IN * CLOCK_CFG_PLL1MFD_VALUE)
+ 642:src-gen/sr5e1/clock.h **** 
+ 643:src-gen/sr5e1/clock.h **** #if (CLOCK_ACTIVATE_PLL1 == TRUE) &&                                        \
+ 644:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL1VCO < CLOCK_PLL1VCO_MIN) || (CLOCK_PLL1VCO > CLOCK_PLL1VCO_MAX))
+ 645:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL1VCO value"
+ 646:src-gen/sr5e1/clock.h **** #endif
+ 647:src-gen/sr5e1/clock.h **** 
+ 648:src-gen/sr5e1/clock.h **** /* PLL1 output clock.*/
+ 649:src-gen/sr5e1/clock.h **** #define CLOCK_PLL1PHI                                                       \
+ 650:src-gen/sr5e1/clock.h ****   ((CLOCK_PLL1VCO / CLOCK_CFG_PLL1RFDPHI_VALUE) / 2U)
+ 651:src-gen/sr5e1/clock.h **** 
+ 652:src-gen/sr5e1/clock.h **** #if (CLOCK_ACTIVATE_PLL1 == TRUE) &&                                        \
+ 653:src-gen/sr5e1/clock.h ****     ((CLOCK_PLL1PHI < CLOCK_PLL1PHI_MIN) || (CLOCK_PLL1PHI > CLOCK_PLL1PHI_MAX))
+ 654:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_PLL1PHI value"
+ 655:src-gen/sr5e1/clock.h **** #endif
+ 656:src-gen/sr5e1/clock.h **** 
+ 657:src-gen/sr5e1/clock.h **** /* SYSCLK source.*/
+ 658:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SW == CLOCK_SW_IRCOSC) || defined(__DOXYGEN__)
+ 659:src-gen/sr5e1/clock.h **** #define CLOCK_SYSCLK                CLOCK_IRCOSCCLK
+ 660:src-gen/sr5e1/clock.h **** 
+ 661:src-gen/sr5e1/clock.h **** #elif (CLOCK_CFG_SW == CLOCK_SW_XOSC)
+ 662:src-gen/sr5e1/clock.h **** #define CLOCK_SYSCLK                CLOCK_CFG_XOSCCLK
+ 663:src-gen/sr5e1/clock.h **** 
+ 664:src-gen/sr5e1/clock.h **** #elif (CLOCK_CFG_SW == CLOCK_SW_PLL0PHI)
+ 665:src-gen/sr5e1/clock.h **** #define CLOCK_SYSCLK                CLOCK_PLL0PHI
+ 666:src-gen/sr5e1/clock.h **** 
+ 667:src-gen/sr5e1/clock.h **** #elif (CLOCK_CFG_SW == CLOCK_SW_PLL1PHI)
+ 668:src-gen/sr5e1/clock.h **** #define CLOCK_SYSCLK                CLOCK_PLL1PHI
+ 669:src-gen/sr5e1/clock.h **** 
+ 670:src-gen/sr5e1/clock.h **** #else
+ 671:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_SW value in clock_cfg.h"
+ 672:src-gen/sr5e1/clock.h **** #endif
+ 673:src-gen/sr5e1/clock.h **** 
+ 674:src-gen/sr5e1/clock.h **** /* SYSCLK check.*/
+ 675:src-gen/sr5e1/clock.h **** #if CLOCK_SYSCLK > CLOCK_SYSCLK_MAX
+ 676:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_SYSCLK value"
+ 677:src-gen/sr5e1/clock.h **** #endif
+ 678:src-gen/sr5e1/clock.h **** 
+ 679:src-gen/sr5e1/clock.h **** /* SYSCLKDIV source.*/
+ 680:src-gen/sr5e1/clock.h **** #if ((CLOCK_CFG_SYSPRE_VALUE >= 0U) && (CLOCK_CFG_SYSPRE_VALUE <= 511U))
+ 681:src-gen/sr5e1/clock.h **** #define CLOCK_SYSCLKDIV             (CLOCK_SYSCLK / (CLOCK_CFG_SYSPRE_VALUE + 1U))
+ 682:src-gen/sr5e1/clock.h **** #else
+ 683:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_SYSPRE_VALUE value in clock_cfg.h"
+ 684:src-gen/sr5e1/clock.h **** #endif
+ 685:src-gen/sr5e1/clock.h **** 
+ 686:src-gen/sr5e1/clock.h **** /* APB1 frequency.*/
+ 687:src-gen/sr5e1/clock.h **** #define CLOCK_PCLK1                 (CLOCK_SYSCLKDIV / 4U)
+ 688:src-gen/sr5e1/clock.h **** 
+ 689:src-gen/sr5e1/clock.h **** /* APB2 frequency.*/
+ 690:src-gen/sr5e1/clock.h **** #define CLOCK_PCLK2                 (CLOCK_SYSCLKDIV / 2U)
+ 691:src-gen/sr5e1/clock.h **** 
+ 692:src-gen/sr5e1/clock.h **** /**
+ 693:src-gen/sr5e1/clock.h ****  * @brief   TIM clock.
+ 694:src-gen/sr5e1/clock.h ****  */
+ 695:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK1               (CLOCK_PCLK2 * 2U)
+ 696:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK2               (CLOCK_PCLK1 * 2U)
+ 697:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK3               (CLOCK_PCLK1 * 2U)
+ 698:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK4               (CLOCK_PCLK2 * 2U)
+ 699:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK5               (CLOCK_PCLK2 * 2U)
+ 700:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK6               (CLOCK_PCLK1 * 2U)
+ 701:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK7               (CLOCK_PCLK1 * 2U)
+ 702:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK8               (CLOCK_PCLK2 * 2U)
+ 703:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK15              (CLOCK_PCLK2 * 2U)
+ 704:src-gen/sr5e1/clock.h **** #define CLOCK_TIMCLK16              (CLOCK_PCLK2 * 2U)
+ 705:src-gen/sr5e1/clock.h **** #define CLOCK_TIMTSCLK              (CLOCK_PCLK1 * 2U)
+ 706:src-gen/sr5e1/clock.h **** 
+ 707:src-gen/sr5e1/clock.h **** /**
+ 708:src-gen/sr5e1/clock.h ****  * @brief   MCO divider clock frequency.
+ 709:src-gen/sr5e1/clock.h ****  */
+ 710:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_NOCLOCK) || defined(__DOXYGEN__)
+ 711:src-gen/sr5e1/clock.h **** #define CLOCK_MCODIVCLK             0U
+ 712:src-gen/sr5e1/clock.h **** 
+ 713:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_LSI
+ 714:src-gen/sr5e1/clock.h **** #define CLOCK_MCODIVCLK             CLOCK_LSICLK
+ 715:src-gen/sr5e1/clock.h **** 
+ 716:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_IRCOSC
+ 717:src-gen/sr5e1/clock.h **** #define CLOCK_MCODIVCLK             CLOCK_IRCOSCCLK
+ 718:src-gen/sr5e1/clock.h **** 
+ 719:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_XOSC
+ 720:src-gen/sr5e1/clock.h **** #define CLOCK_MCODIVCLK             CLOCK_CFG_XOSCCLK
+ 721:src-gen/sr5e1/clock.h **** 
+ 722:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_PLL0PHI
+ 723:src-gen/sr5e1/clock.h **** #define CLOCK_MCODIVCLK             CLOCK_PLL0PHI
+ 724:src-gen/sr5e1/clock.h **** 
+ 725:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_MCOSEL == CLOCK_MCOSEL_PLL1PHI
+ 726:src-gen/sr5e1/clock.h **** #define CLOCK_MCODIVCLK             CLOCK_PLL1PHI
+ 727:src-gen/sr5e1/clock.h **** 
+ 728:src-gen/sr5e1/clock.h **** #else
+ 729:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_MCOSEL value in clock_cfg.h"
+ 730:src-gen/sr5e1/clock.h **** #endif
+ 731:src-gen/sr5e1/clock.h **** 
+ 732:src-gen/sr5e1/clock.h **** /**
+ 733:src-gen/sr5e1/clock.h ****  * @brief   MCO output pin clock frequency.
+ 734:src-gen/sr5e1/clock.h ****  */
+ 735:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_MCOPRE_VALUE == 0U)
+ 736:src-gen/sr5e1/clock.h **** #define CLOCK_MCOCLK                CLOCK_MCODIVCLK
+ 737:src-gen/sr5e1/clock.h **** #elif ((CLOCK_CFG_MCOPRE_VALUE > 0U) && (CLOCK_CFG_MCOPRE_VALUE <= 63U))
+ 738:src-gen/sr5e1/clock.h **** #define CLOCK_MCOCLK                (CLOCK_MCODIVCLK / (2U * CLOCK_CFG_MCOPRE_VALUE))
+ 739:src-gen/sr5e1/clock.h **** #else
+ 740:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_MCOPRE_VALUE value in clock_cfg.h"
+ 741:src-gen/sr5e1/clock.h **** #endif
+ 742:src-gen/sr5e1/clock.h **** 
+ 743:src-gen/sr5e1/clock.h **** /**
+ 744:src-gen/sr5e1/clock.h ****  * @brief   RTC clock.
+ 745:src-gen/sr5e1/clock.h ****  */
+ 746:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_LSIPRE_VALUE == 0U)
+ 747:src-gen/sr5e1/clock.h **** #define CLOCK_LSIDIVCLK             CLOCK_LSICLK
+ 748:src-gen/sr5e1/clock.h **** #elif ((CLOCK_CFG_LSIPRE_VALUE > 0U) && (CLOCK_CFG_LSIPRE_VALUE <= 31U))
+ 749:src-gen/sr5e1/clock.h **** #define CLOCK_LSIDIVCLK             (CLOCK_LSICLK / (2U * CLOCK_CFG_LSIPRE_VALUE))
+ 750:src-gen/sr5e1/clock.h **** #else
+ 751:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_LSIPRE_VALUE value in clock_cfg.h"
+ 752:src-gen/sr5e1/clock.h **** #endif
+ 753:src-gen/sr5e1/clock.h **** 
+ 754:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_RTCSEL == CLOCK_RTCSEL_NOCLOCK) || defined(__DOXYGEN__)
+ 755:src-gen/sr5e1/clock.h **** #define CLOCK_RTCSELCLK             0U
+ 756:src-gen/sr5e1/clock.h **** 
+ 757:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_RTCSEL == CLOCK_RTCSEL_LSI
+ 758:src-gen/sr5e1/clock.h **** #define CLOCK_RTCSELCLK             CLOCK_LSIDIVCLK
+ 759:src-gen/sr5e1/clock.h **** 
+ 760:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_RTCSEL == CLOCK_RTCSEL_XOSC
+ 761:src-gen/sr5e1/clock.h **** #define CLOCK_RTCSELCLK             CLOCK_CFG_XOSCCLK
+ 762:src-gen/sr5e1/clock.h **** 
+ 763:src-gen/sr5e1/clock.h **** #else
+ 764:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_RTCSEL value in clock_cfg.h"
+ 765:src-gen/sr5e1/clock.h **** #endif
+ 766:src-gen/sr5e1/clock.h **** 
+ 767:src-gen/sr5e1/clock.h **** /**
+ 768:src-gen/sr5e1/clock.h ****  * @brief   UART clock.
+ 769:src-gen/sr5e1/clock.h ****  */
+ 770:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_NOCLOCK) || defined(__DOXYGEN__)
+ 771:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSELCLK            0U
+ 772:src-gen/sr5e1/clock.h **** 
+ 773:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_IRCOSC
+ 774:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSELCLK            CLOCK_IRCOSCCLK
+ 775:src-gen/sr5e1/clock.h **** 
+ 776:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_XOSC
+ 777:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSELCLK            CLOCK_CFG_XOSCCLK
+ 778:src-gen/sr5e1/clock.h **** 
+ 779:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_PLL0PHI
+ 780:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSELCLK            CLOCK_PLL0PHI
+ 781:src-gen/sr5e1/clock.h **** 
+ 782:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_UARTSEL == CLOCK_UARTSEL_LSI
+ 783:src-gen/sr5e1/clock.h **** #define CLOCK_UARTSELCLK            CLOCK_LSICLK
+ 784:src-gen/sr5e1/clock.h **** 
+ 785:src-gen/sr5e1/clock.h **** #else
+ 786:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_UARTSEL value in clock_cfg.h"
+ 787:src-gen/sr5e1/clock.h **** #endif
+ 788:src-gen/sr5e1/clock.h **** 
+ 789:src-gen/sr5e1/clock.h **** #if ((CLOCK_CFG_UARTPRE_VALUE >= 0U) && (CLOCK_CFG_UARTPRE_VALUE <= 31U))
+ 790:src-gen/sr5e1/clock.h **** #define CLOCK_UARTCLK               (CLOCK_UARTSELCLK / (CLOCK_CFG_UARTPRE_VALUE + 1U))
+ 791:src-gen/sr5e1/clock.h **** #else
+ 792:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_UARTPRE_VALUE value in clock_cfg.h"
+ 793:src-gen/sr5e1/clock.h **** #endif
+ 794:src-gen/sr5e1/clock.h **** 
+ 795:src-gen/sr5e1/clock.h **** #if CLOCK_UARTCLK > CLOCK_UARTCLK_MAX
+ 796:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_UARTCLK value"
+ 797:src-gen/sr5e1/clock.h **** #endif
+ 798:src-gen/sr5e1/clock.h **** 
+ 799:src-gen/sr5e1/clock.h **** #define CLOCK_UART1CLK              CLOCK_UARTCLK
+ 800:src-gen/sr5e1/clock.h **** #define CLOCK_UART2CLK              CLOCK_UARTCLK
+ 801:src-gen/sr5e1/clock.h **** #define CLOCK_UART3CLK              CLOCK_UARTCLK
+ 802:src-gen/sr5e1/clock.h **** 
+ 803:src-gen/sr5e1/clock.h **** /**
+ 804:src-gen/sr5e1/clock.h ****  * @brief   I2C clock.
+ 805:src-gen/sr5e1/clock.h ****  */
+ 806:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_I2CSEL == CLOCK_I2CSEL_NOCLOCK) || defined(__DOXYGEN__)
+ 807:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSELCLK             0U
+ 808:src-gen/sr5e1/clock.h **** 
+ 809:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_I2CSEL == CLOCK_I2CSEL_IRCOSC
+ 810:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSELCLK             CLOCK_IRCOSCCLK
+ 811:src-gen/sr5e1/clock.h **** 
+ 812:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_I2CSEL == CLOCK_I2CSEL_XOSC
+ 813:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSELCLK             CLOCK_CFG_XOSCCLK
+ 814:src-gen/sr5e1/clock.h **** 
+ 815:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_I2CSEL == CLOCK_I2CSEL_PLL0PHI
+ 816:src-gen/sr5e1/clock.h **** #define CLOCK_I2CSELCLK             CLOCK_PLL0PHI
+ 817:src-gen/sr5e1/clock.h **** 
+ 818:src-gen/sr5e1/clock.h **** #else
+ 819:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_I2CSEL value in clock_cfg.h"
+ 820:src-gen/sr5e1/clock.h **** #endif
+ 821:src-gen/sr5e1/clock.h **** 
+ 822:src-gen/sr5e1/clock.h **** #if ((CLOCK_CFG_I2CPRE_VALUE >= 0U) && (CLOCK_CFG_I2CPRE_VALUE <= 31U))
+ 823:src-gen/sr5e1/clock.h **** #define CLOCK_I2CCLK                (CLOCK_I2CSELCLK / (CLOCK_CFG_I2CPRE_VALUE + 1U))
+ 824:src-gen/sr5e1/clock.h **** #else
+ 825:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_I2CPRE_VALUE value in clock_cfg.h"
+ 826:src-gen/sr5e1/clock.h **** #endif
+ 827:src-gen/sr5e1/clock.h **** 
+ 828:src-gen/sr5e1/clock.h **** #if CLOCK_I2CCLK > CLOCK_I2CCLK_MAX
+ 829:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_I2CCLK value"
+ 830:src-gen/sr5e1/clock.h **** #endif
+ 831:src-gen/sr5e1/clock.h **** 
+ 832:src-gen/sr5e1/clock.h **** /**
+ 833:src-gen/sr5e1/clock.h ****  * @brief   SPI/I2S clock.
+ 834:src-gen/sr5e1/clock.h ****  */
+ 835:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SPISEL == CLOCK_SPISEL_NOCLOCK) || defined(__DOXYGEN__)
+ 836:src-gen/sr5e1/clock.h **** #define CLOCK_SPISELCLK             0U
+ 837:src-gen/sr5e1/clock.h **** 
+ 838:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_SPISEL == CLOCK_SPISEL_IRCOSC
+ 839:src-gen/sr5e1/clock.h **** #define CLOCK_SPISELCLK             CLOCK_IRCOSCCLK
+ 840:src-gen/sr5e1/clock.h **** 
+ 841:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_SPISEL == CLOCK_SPISEL_XOSC
+ 842:src-gen/sr5e1/clock.h **** #define CLOCK_SPISELCLK             CLOCK_CFG_XOSCCLK
+ 843:src-gen/sr5e1/clock.h **** 
+ 844:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_SPISEL == CLOCK_SPISEL_PLL0PHI
+ 845:src-gen/sr5e1/clock.h **** #define CLOCK_SPISELCLK             CLOCK_PLL0PHI
+ 846:src-gen/sr5e1/clock.h **** 
+ 847:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_SPISEL == CLOCK_SPISEL_I2S_CKIN
+ 848:src-gen/sr5e1/clock.h **** #define CLOCK_SPISELCLK             CLOCK_CFG_I2S_CKIN
+ 849:src-gen/sr5e1/clock.h **** 
+ 850:src-gen/sr5e1/clock.h **** #else
+ 851:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_SPISEL value in clock_cfg.h"
+ 852:src-gen/sr5e1/clock.h **** #endif
+ 853:src-gen/sr5e1/clock.h **** 
+ 854:src-gen/sr5e1/clock.h **** #if ((CLOCK_CFG_SPIPRE_VALUE >= 0U) && (CLOCK_CFG_SPIPRE_VALUE <= 31U))
+ 855:src-gen/sr5e1/clock.h **** #define CLOCK_SPICLK                (CLOCK_SPISELCLK / (CLOCK_CFG_SPIPRE_VALUE + 1U))
+ 856:src-gen/sr5e1/clock.h **** #else
+ 857:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_SPIPRE_VALUE value in clock_cfg.h"
+ 858:src-gen/sr5e1/clock.h **** #endif
+ 859:src-gen/sr5e1/clock.h **** 
+ 860:src-gen/sr5e1/clock.h **** #define CLOCK_SPI1CLK               CLOCK_PCLK2
+ 861:src-gen/sr5e1/clock.h **** #define CLOCK_SPI2CLK               CLOCK_PCLK1
+ 862:src-gen/sr5e1/clock.h **** #define CLOCK_SPI3CLK               CLOCK_PCLK1
+ 863:src-gen/sr5e1/clock.h **** #define CLOCK_SPI4CLK               CLOCK_PCLK2
+ 864:src-gen/sr5e1/clock.h **** #define CLOCK_I2S2CLK               CLOCK_SPICLK
+ 865:src-gen/sr5e1/clock.h **** #define CLOCK_I2S3CLK               CLOCK_SPICLK
+ 866:src-gen/sr5e1/clock.h **** 
+ 867:src-gen/sr5e1/clock.h **** /**
+ 868:src-gen/sr5e1/clock.h ****  * @brief   FDCAN clock.
+ 869:src-gen/sr5e1/clock.h ****  */
+ 870:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_FDCANSEL == CLOCK_FDCANSEL_NOCLOCK) || defined(__DOXYGEN__)
+ 871:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANSELCLK           0U
+ 872:src-gen/sr5e1/clock.h **** 
+ 873:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_FDCANSEL == CLOCK_FDCANSEL_XOSC
+ 874:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANSELCLK           CLOCK_CFG_XOSCCLK
+ 875:src-gen/sr5e1/clock.h **** 
+ 876:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_FDCANSEL == CLOCK_FDCANSEL_PLL0PHI
+ 877:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANSELCLK           CLOCK_PLL0PHI
+ 878:src-gen/sr5e1/clock.h **** 
+ 879:src-gen/sr5e1/clock.h **** #else
+ 880:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_FDCANSEL value in clock_cfg.h"
+ 881:src-gen/sr5e1/clock.h **** #endif
+ 882:src-gen/sr5e1/clock.h **** 
+ 883:src-gen/sr5e1/clock.h **** #if ((CLOCK_CFG_FDCANPRE_VALUE >= 0U) && (CLOCK_CFG_FDCANPRE_VALUE <= 31U))
+ 884:src-gen/sr5e1/clock.h **** #define CLOCK_FDCANCLK              (CLOCK_FDCANSELCLK / (CLOCK_CFG_FDCANPRE_VALUE + 1U))
+ 885:src-gen/sr5e1/clock.h **** #else
+ 886:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_FDCANPRE_VALUE value in clock_cfg.h"
+ 887:src-gen/sr5e1/clock.h **** #endif
+ 888:src-gen/sr5e1/clock.h **** 
+ 889:src-gen/sr5e1/clock.h **** #if CLOCK_FDCANCLK > CLOCK_FDCANCLK_MAX
+ 890:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_FDCANCLK value"
+ 891:src-gen/sr5e1/clock.h **** #endif
+ 892:src-gen/sr5e1/clock.h **** 
+ 893:src-gen/sr5e1/clock.h **** /**
+ 894:src-gen/sr5e1/clock.h ****  * @brief   ADC clock.
+ 895:src-gen/sr5e1/clock.h ****  */
+ 896:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_NOCLOCK) || defined(__DOXYGEN__)
+ 897:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSELCLK             0U
+ 898:src-gen/sr5e1/clock.h **** 
+ 899:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_XOSC
+ 900:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSELCLK             CLOCK_CFG_XOSCCLK
+ 901:src-gen/sr5e1/clock.h **** 
+ 902:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_PLL0PHI
+ 903:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSELCLK             CLOCK_PLL0PHI
+ 904:src-gen/sr5e1/clock.h **** 
+ 905:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_ADCSEL == CLOCK_ADCSEL_PLL1PHI
+ 906:src-gen/sr5e1/clock.h **** #define CLOCK_ADCSELCLK             CLOCK_PLL1PHI
+ 907:src-gen/sr5e1/clock.h **** 
+ 908:src-gen/sr5e1/clock.h **** #else
+ 909:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_ADCSEL value in clock_cfg.h"
+ 910:src-gen/sr5e1/clock.h **** #endif
+ 911:src-gen/sr5e1/clock.h **** /* The range of values of ADCPRE must be verified */
+ 912:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_ADCPRE_VALUE == 0U)
+ 913:src-gen/sr5e1/clock.h **** #define CLOCK_ADCCLK                CLOCK_ADCSELCLK
+ 914:src-gen/sr5e1/clock.h **** #elif ((CLOCK_CFG_ADCPRE_VALUE > 0U) && (CLOCK_CFG_ADCPRE_VALUE <= 63U))
+ 915:src-gen/sr5e1/clock.h **** #define CLOCK_ADCCLK                (CLOCK_ADCSELCLK / (2U * CLOCK_CFG_ADCPRE_VALUE))
+ 916:src-gen/sr5e1/clock.h **** #else
+ 917:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_ADCPRE_VALUE value in clock_cfg.h"
+ 918:src-gen/sr5e1/clock.h **** #endif
+ 919:src-gen/sr5e1/clock.h **** 
+ 920:src-gen/sr5e1/clock.h **** #if CLOCK_ADCCLK > CLOCK_ADCCLK_MAX
+ 921:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_ADCCLK value"
+ 922:src-gen/sr5e1/clock.h **** #endif
+ 923:src-gen/sr5e1/clock.h **** 
+ 924:src-gen/sr5e1/clock.h **** #define CLOCK_ADC12CLK              CLOCK_ADCCLK
+ 925:src-gen/sr5e1/clock.h **** #define CLOCK_ADC345CLK             CLOCK_ADCCLK
+ 926:src-gen/sr5e1/clock.h **** 
+ 927:src-gen/sr5e1/clock.h **** /**
+ 928:src-gen/sr5e1/clock.h ****  * @brief   SDADC clock.
+ 929:src-gen/sr5e1/clock.h ****  */
+ 930:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_NOCLOCK) || defined(__DOXYGEN__)
+ 931:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSELCLK           0U
+ 932:src-gen/sr5e1/clock.h **** 
+ 933:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_XOSC
+ 934:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSELCLK           CLOCK_CFG_XOSCCLK
+ 935:src-gen/sr5e1/clock.h **** 
+ 936:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_PLL0PHI
+ 937:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSELCLK           CLOCK_PLL0PHI
+ 938:src-gen/sr5e1/clock.h **** 
+ 939:src-gen/sr5e1/clock.h **** #elif CLOCK_CFG_SDADCSEL == CLOCK_SDADCSEL_PLL1PHI
+ 940:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCSELCLK           CLOCK_PLL1PHI
+ 941:src-gen/sr5e1/clock.h **** 
+ 942:src-gen/sr5e1/clock.h **** #else
+ 943:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_SDADCSEL value in clock_cfg.h"
+ 944:src-gen/sr5e1/clock.h **** #endif
+ 945:src-gen/sr5e1/clock.h **** /* The range of values of SDADCPRE must be verified */
+ 946:src-gen/sr5e1/clock.h **** #if (CLOCK_CFG_SDADCPRE_VALUE == 0U)
+ 947:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCCLK              CLOCK_SDADCSELCLK
+ 948:src-gen/sr5e1/clock.h **** #elif ((CLOCK_CFG_SDADCPRE_VALUE > 0U) && (CLOCK_CFG_SDADCPRE_VALUE <= 63U))
+ 949:src-gen/sr5e1/clock.h **** #define CLOCK_SDADCCLK              (CLOCK_SDADCSELCLK / (2U * CLOCK_CFG_SDADCPRE_VALUE))
+ 950:src-gen/sr5e1/clock.h **** #else
+ 951:src-gen/sr5e1/clock.h **** #error "invalid CLOCK_CFG_SDADCPRE_VALUE value in clock_cfg.h"
+ 952:src-gen/sr5e1/clock.h **** #endif
+ 953:src-gen/sr5e1/clock.h **** 
+ 954:src-gen/sr5e1/clock.h **** #if CLOCK_SDADCCLK > CLOCK_SDADCCLK_MAX
+ 955:src-gen/sr5e1/clock.h **** #error "out of limits CLOCK_SDADCCLK value"
+ 956:src-gen/sr5e1/clock.h **** #endif
+ 957:src-gen/sr5e1/clock.h **** 
+ 958:src-gen/sr5e1/clock.h **** /* Flash wait state (APC = 0) settings.*/
+ 959:src-gen/sr5e1/clock.h **** #if (CLOCK_SYSCLKDIV <= 136000000UL) || defined(__DOXYGEN__)
+ 960:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_VALUE         3U /* 0 < core frequency < 136MHz  */
+ 961:src-gen/sr5e1/clock.h **** 
+ 962:src-gen/sr5e1/clock.h **** #elif (CLOCK_SYSCLKDIV <= 170000000UL)
+ 963:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_VALUE         4U /* 136MHz < core_freq <= 170MHz */
+ 964:src-gen/sr5e1/clock.h **** 
+ 965:src-gen/sr5e1/clock.h **** #elif (CLOCK_SYSCLKDIV <= 204000000UL)
+ 966:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_VALUE         5U /* 170MHz < core_freq <= 204MHz */
+ 967:src-gen/sr5e1/clock.h **** 
+ 968:src-gen/sr5e1/clock.h **** #elif (CLOCK_SYSCLKDIV <= 238000000UL)
+ 969:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_VALUE         6U /* 204MHz < core_freq <= 238MHz */
+ 970:src-gen/sr5e1/clock.h **** 
+ 971:src-gen/sr5e1/clock.h **** #elif (CLOCK_SYSCLKDIV <= 273000000UL)
+ 972:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_VALUE         7U /* 238MHz < core_freq <= 273MHz */
+ 973:src-gen/sr5e1/clock.h **** 
+ 974:src-gen/sr5e1/clock.h **** #else
+ 975:src-gen/sr5e1/clock.h **** #define CLOCK_NVMRWSC_VALUE         8U /* 273MHz < core_freq <= 307MHz */
+ 976:src-gen/sr5e1/clock.h **** 
+ 977:src-gen/sr5e1/clock.h **** #endif
+ 978:src-gen/sr5e1/clock.h **** 
+ 979:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 980:src-gen/sr5e1/clock.h **** /* Module data structures and types.                                         */
+ 981:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 982:src-gen/sr5e1/clock.h **** 
+ 983:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 984:src-gen/sr5e1/clock.h **** /* Module macros.                                                            */
+ 985:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 986:src-gen/sr5e1/clock.h **** 
+ 987:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 988:src-gen/sr5e1/clock.h **** /* External declarations.                                                    */
+ 989:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+ 990:src-gen/sr5e1/clock.h **** 
+ 991:src-gen/sr5e1/clock.h **** /**
+ 992:src-gen/sr5e1/clock.h ****  * @brief   CMSIS system core clock variable.
+ 993:src-gen/sr5e1/clock.h ****  */
+ 994:src-gen/sr5e1/clock.h **** extern uint32_t SystemCoreClock;
+ 995:src-gen/sr5e1/clock.h **** 
+ 996:src-gen/sr5e1/clock.h **** #ifdef __cplusplus
+ 997:src-gen/sr5e1/clock.h **** extern "C" {
+ 998:src-gen/sr5e1/clock.h **** #endif
+ 999:src-gen/sr5e1/clock.h **** 
+1000:src-gen/sr5e1/clock.h **** /**
+1001:src-gen/sr5e1/clock.h ****  * @brief   Initializes clock
+1002:src-gen/sr5e1/clock.h ****  *
+1003:src-gen/sr5e1/clock.h ****  * @api
+1004:src-gen/sr5e1/clock.h ****  */
+1005:src-gen/sr5e1/clock.h **** void clock_init(void);
+1006:src-gen/sr5e1/clock.h **** 
+1007:src-gen/sr5e1/clock.h **** #ifdef __cplusplus
+1008:src-gen/sr5e1/clock.h **** }
+1009:src-gen/sr5e1/clock.h **** #endif
+1010:src-gen/sr5e1/clock.h **** 
+1011:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+1012:src-gen/sr5e1/clock.h **** /* Module inline functions.                                                  */
+1013:src-gen/sr5e1/clock.h **** /*===========================================================================*/
+1014:src-gen/sr5e1/clock.h **** 
+1015:src-gen/sr5e1/clock.h **** /**
+1016:src-gen/sr5e1/clock.h ****  * @brief   Enables AHB1 peripherals clock [Low Word]
+1017:src-gen/sr5e1/clock.h ****  *
+1018:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1019:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1020:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be enabled
+1021:src-gen/sr5e1/clock.h ****  * @return              value of register AHB1LENR after the update
+1022:src-gen/sr5e1/clock.h ****  *
+1023:src-gen/sr5e1/clock.h ****  * @api
+1024:src-gen/sr5e1/clock.h ****  */
+1025:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_AHB1L(bool smode, uint32_t m) {
+1026:src-gen/sr5e1/clock.h **** 
+1027:src-gen/sr5e1/clock.h ****     RCC->AHB1LENR |= m;
+  81              		.loc 2 1027 19
+  82 0018 4FF08843 		mov	r3, #1140850688
+  83 001c 1A6F     		ldr	r2, [r3, #112]
+  84 001e 4FF08841 		mov	r1, #1140850688
+  85 0022 029B     		ldr	r3, [sp, #8]
+  86 0024 1343     		orrs	r3, r3, r2
+  87 0026 0B67     		str	r3, [r1, #112]
+1028:src-gen/sr5e1/clock.h ****     if (smode) {
+  88              		.loc 2 1028 8
+  89 0028 9DF80E30 		ldrb	r3, [sp, #14]	@ zero_extendqisi2
+  90 002c 002B     		cmp	r3, #0
+  91 002e 14D0     		beq	.L6
+1029:src-gen/sr5e1/clock.h ****         RCC->C1_AHB1LSMENR |= m;
+  92              		.loc 2 1029 28
+  93 0030 4FF08843 		mov	r3, #1140850688
+  94 0034 D3F89020 		ldr	r2, [r3, #144]
+  95 0038 4FF08841 		mov	r1, #1140850688
+  96 003c 029B     		ldr	r3, [sp, #8]
+  97 003e 1343     		orrs	r3, r3, r2
+  98 0040 C1F89030 		str	r3, [r1, #144]
+1030:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1031:src-gen/sr5e1/clock.h ****         RCC->C2_AHB1LSMENR |= m;
+  99              		.loc 2 1031 28
+ 100 0044 4FF08843 		mov	r3, #1140850688
+ 101 0048 D3F8B020 		ldr	r2, [r3, #176]
+ 102 004c 4FF08841 		mov	r1, #1140850688
+ 103 0050 029B     		ldr	r3, [sp, #8]
+ 104 0052 1343     		orrs	r3, r3, r2
+ 105 0054 C1F8B030 		str	r3, [r1, #176]
+ 106 0058 15E0     		b	.L7
+ 107              	.L6:
+1032:src-gen/sr5e1/clock.h **** #endif
+1033:src-gen/sr5e1/clock.h ****     }
+1034:src-gen/sr5e1/clock.h ****     else {
+1035:src-gen/sr5e1/clock.h ****         RCC->C1_AHB1LSMENR &= ~m;
+ 108              		.loc 2 1035 28
+ 109 005a 4FF08843 		mov	r3, #1140850688
+ 110 005e D3F89020 		ldr	r2, [r3, #144]
+ 111              		.loc 2 1035 31
+ 112 0062 029B     		ldr	r3, [sp, #8]
+ 113 0064 DB43     		mvns	r3, r3
+ 114              		.loc 2 1035 28
+ 115 0066 4FF08841 		mov	r1, #1140850688
+ 116 006a 1340     		ands	r3, r3, r2
+ 117 006c C1F89030 		str	r3, [r1, #144]
+1036:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1037:src-gen/sr5e1/clock.h ****         RCC->C2_AHB1LSMENR &= ~m;
+ 118              		.loc 2 1037 28
+ 119 0070 4FF08843 		mov	r3, #1140850688
+ 120 0074 D3F8B020 		ldr	r2, [r3, #176]
+ 121              		.loc 2 1037 31
+ 122 0078 029B     		ldr	r3, [sp, #8]
+ 123 007a DB43     		mvns	r3, r3
+ 124              		.loc 2 1037 28
+ 125 007c 4FF08841 		mov	r1, #1140850688
+ 126 0080 1340     		ands	r3, r3, r2
+ 127 0082 C1F8B030 		str	r3, [r1, #176]
+ 128              	.L7:
+1038:src-gen/sr5e1/clock.h **** #endif
+1039:src-gen/sr5e1/clock.h ****     }
+1040:src-gen/sr5e1/clock.h **** 
+1041:src-gen/sr5e1/clock.h ****     return RCC->AHB1LENR;
+ 129              		.loc 2 1041 15
+ 130 0086 4FF08843 		mov	r3, #1140850688
+ 131 008a 1B6F     		ldr	r3, [r3, #112]
+ 132              	.LBE17:
+ 133              	.LBE16:
+1042:src-gen/sr5e1/clock.h **** }
+1043:src-gen/sr5e1/clock.h **** 
+1044:src-gen/sr5e1/clock.h **** /**
+1045:src-gen/sr5e1/clock.h ****  * @brief   Disables AHB1 peripherals clock [Low Word]
+1046:src-gen/sr5e1/clock.h ****  *
+1047:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be disabled
+1048:src-gen/sr5e1/clock.h ****  * @return              value of register AHB1LENR after the update
+1049:src-gen/sr5e1/clock.h ****  *
+1050:src-gen/sr5e1/clock.h ****  * @api
+1051:src-gen/sr5e1/clock.h ****  */
+1052:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_AHB1L(uint32_t m) {
+1053:src-gen/sr5e1/clock.h **** 
+1054:src-gen/sr5e1/clock.h ****     RCC->AHB1LENR &= ~m;
+1055:src-gen/sr5e1/clock.h ****     RCC->C1_AHB1LSMENR &= ~m;
+1056:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1057:src-gen/sr5e1/clock.h ****     RCC->C2_AHB1LSMENR &= ~m;
+1058:src-gen/sr5e1/clock.h **** #endif
+1059:src-gen/sr5e1/clock.h **** 
+1060:src-gen/sr5e1/clock.h ****     return RCC->AHB1LENR;
+1061:src-gen/sr5e1/clock.h **** }
+1062:src-gen/sr5e1/clock.h **** 
+1063:src-gen/sr5e1/clock.h **** /**
+1064:src-gen/sr5e1/clock.h ****  * @brief   Checks if AHB1 peripheral clock [Low Word] is enabled
+1065:src-gen/sr5e1/clock.h ****  *
+1066:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be checked
+1067:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1068:src-gen/sr5e1/clock.h ****  *
+1069:src-gen/sr5e1/clock.h ****  * @api
+1070:src-gen/sr5e1/clock.h ****  */
+1071:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_AHB1L(uint32_t m) {
+1072:src-gen/sr5e1/clock.h **** 
+1073:src-gen/sr5e1/clock.h ****     return (((RCC->AHB1LENR & m) == m) ? true : false);
+1074:src-gen/sr5e1/clock.h **** }
+1075:src-gen/sr5e1/clock.h **** 
+1076:src-gen/sr5e1/clock.h **** /**
+1077:src-gen/sr5e1/clock.h ****  * @brief   Resets AHB1 peripherals [Low Word]
+1078:src-gen/sr5e1/clock.h ****  *
+1079:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral to reset
+1080:src-gen/sr5e1/clock.h ****  *
+1081:src-gen/sr5e1/clock.h ****  * @api
+1082:src-gen/sr5e1/clock.h ****  */
+1083:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_AHB1L(uint32_t m) {
+1084:src-gen/sr5e1/clock.h **** 
+1085:src-gen/sr5e1/clock.h ****     RCC->AHB1LRSTR |= m;
+1086:src-gen/sr5e1/clock.h ****     RCC->AHB1LRSTR &= ~m;
+1087:src-gen/sr5e1/clock.h ****     (void)RCC->AHB1LRSTR;
+1088:src-gen/sr5e1/clock.h **** }
+1089:src-gen/sr5e1/clock.h **** 
+1090:src-gen/sr5e1/clock.h **** /**
+1091:src-gen/sr5e1/clock.h ****  * @brief   Enables AHB1 peripherals clock [High Word]
+1092:src-gen/sr5e1/clock.h ****  *
+1093:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1094:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1095:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be enabled
+1096:src-gen/sr5e1/clock.h ****  * @return              value of register AHB1HENR after the update
+1097:src-gen/sr5e1/clock.h ****  *
+1098:src-gen/sr5e1/clock.h ****  * @api
+1099:src-gen/sr5e1/clock.h ****  */
+1100:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_AHB1H(bool smode, uint32_t m) {
+1101:src-gen/sr5e1/clock.h **** 
+1102:src-gen/sr5e1/clock.h ****     RCC->AHB1HENR |= m;
+1103:src-gen/sr5e1/clock.h ****     if (smode) {
+1104:src-gen/sr5e1/clock.h ****         RCC->C1_AHB1HSMENR |= m;
+1105:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1106:src-gen/sr5e1/clock.h ****         RCC->C2_AHB1HSMENR |= m;
+1107:src-gen/sr5e1/clock.h **** #endif
+1108:src-gen/sr5e1/clock.h ****     }
+1109:src-gen/sr5e1/clock.h ****     else {
+1110:src-gen/sr5e1/clock.h ****         RCC->C1_AHB1HSMENR &= ~m;
+1111:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1112:src-gen/sr5e1/clock.h ****         RCC->C2_AHB1HSMENR &= ~m;
+1113:src-gen/sr5e1/clock.h **** #endif
+1114:src-gen/sr5e1/clock.h ****     }
+1115:src-gen/sr5e1/clock.h **** 
+1116:src-gen/sr5e1/clock.h ****     return RCC->AHB1HENR;
+1117:src-gen/sr5e1/clock.h **** }
+1118:src-gen/sr5e1/clock.h **** 
+1119:src-gen/sr5e1/clock.h **** /**
+1120:src-gen/sr5e1/clock.h ****  * @brief   Disables AHB1 peripherals clock [High Word]
+1121:src-gen/sr5e1/clock.h ****  *
+1122:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be disabled
+1123:src-gen/sr5e1/clock.h ****  * @return              value of register AHB1HENR after the update
+1124:src-gen/sr5e1/clock.h ****  *
+1125:src-gen/sr5e1/clock.h ****  * @api
+1126:src-gen/sr5e1/clock.h ****  */
+1127:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_AHB1H(uint32_t m) {
+1128:src-gen/sr5e1/clock.h **** 
+1129:src-gen/sr5e1/clock.h ****     RCC->AHB1HENR &= ~m;
+1130:src-gen/sr5e1/clock.h ****     RCC->C1_AHB1HSMENR &= ~m;
+1131:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1132:src-gen/sr5e1/clock.h ****     RCC->C2_AHB1HSMENR &= ~m;
+1133:src-gen/sr5e1/clock.h **** #endif
+1134:src-gen/sr5e1/clock.h **** 
+1135:src-gen/sr5e1/clock.h ****     return RCC->AHB1HENR;
+1136:src-gen/sr5e1/clock.h **** }
+1137:src-gen/sr5e1/clock.h **** 
+1138:src-gen/sr5e1/clock.h **** /**
+1139:src-gen/sr5e1/clock.h ****  * @brief   Checks if AHB1 peripheral clock [High Word] is enabled
+1140:src-gen/sr5e1/clock.h ****  *
+1141:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be checked
+1142:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1143:src-gen/sr5e1/clock.h ****  *
+1144:src-gen/sr5e1/clock.h ****  * @api
+1145:src-gen/sr5e1/clock.h ****  */
+1146:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_AHB1H(uint32_t m) {
+1147:src-gen/sr5e1/clock.h **** 
+1148:src-gen/sr5e1/clock.h ****     return (((RCC->AHB1HENR & m) == m) ? true : false);
+1149:src-gen/sr5e1/clock.h **** }
+1150:src-gen/sr5e1/clock.h **** 
+1151:src-gen/sr5e1/clock.h **** /**
+1152:src-gen/sr5e1/clock.h ****  * @brief   Resets AHB1 peripherals [High Word]
+1153:src-gen/sr5e1/clock.h ****  *
+1154:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral to reset
+1155:src-gen/sr5e1/clock.h ****  *
+1156:src-gen/sr5e1/clock.h ****  * @api
+1157:src-gen/sr5e1/clock.h ****  */
+1158:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_AHB1H(uint32_t m) {
+1159:src-gen/sr5e1/clock.h **** 
+1160:src-gen/sr5e1/clock.h ****     RCC->AHB1HRSTR |= m;
+1161:src-gen/sr5e1/clock.h ****     RCC->AHB1HRSTR &= ~m;
+1162:src-gen/sr5e1/clock.h ****     (void)RCC->AHB1HRSTR;
+1163:src-gen/sr5e1/clock.h **** }
+1164:src-gen/sr5e1/clock.h **** 
+1165:src-gen/sr5e1/clock.h **** /**
+1166:src-gen/sr5e1/clock.h ****  * @brief   Enables AHB2 peripherals clock [Low Word]
+1167:src-gen/sr5e1/clock.h ****  *
+1168:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1169:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1170:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be enabled
+1171:src-gen/sr5e1/clock.h ****  * @return              value of register AHB2LENR after the update
+1172:src-gen/sr5e1/clock.h ****  *
+1173:src-gen/sr5e1/clock.h ****  * @api
+1174:src-gen/sr5e1/clock.h ****  */
+1175:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_AHB2L(bool smode, uint32_t m) {
+1176:src-gen/sr5e1/clock.h **** 
+1177:src-gen/sr5e1/clock.h ****     RCC->AHB2LENR |= m;
+1178:src-gen/sr5e1/clock.h ****     if (smode) {
+1179:src-gen/sr5e1/clock.h ****         RCC->C1_AHB2LSMENR |= m;
+1180:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1181:src-gen/sr5e1/clock.h ****         RCC->C2_AHB2LSMENR |= m;
+1182:src-gen/sr5e1/clock.h **** #endif
+1183:src-gen/sr5e1/clock.h ****     }
+1184:src-gen/sr5e1/clock.h ****     else {
+1185:src-gen/sr5e1/clock.h ****         RCC->C1_AHB2LSMENR &= ~m;
+1186:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1187:src-gen/sr5e1/clock.h ****         RCC->C2_AHB2LSMENR &= ~m;
+1188:src-gen/sr5e1/clock.h **** #endif
+1189:src-gen/sr5e1/clock.h ****     }
+1190:src-gen/sr5e1/clock.h **** 
+1191:src-gen/sr5e1/clock.h ****     return RCC->AHB2LENR;
+1192:src-gen/sr5e1/clock.h **** }
+1193:src-gen/sr5e1/clock.h **** 
+1194:src-gen/sr5e1/clock.h **** /**
+1195:src-gen/sr5e1/clock.h ****  * @brief   Disables AHB2 peripherals clock [Low Word]
+1196:src-gen/sr5e1/clock.h ****  *
+1197:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be disabled
+1198:src-gen/sr5e1/clock.h ****  * @return              value of register AHB2LENR after the update
+1199:src-gen/sr5e1/clock.h ****  *
+1200:src-gen/sr5e1/clock.h ****  * @api
+1201:src-gen/sr5e1/clock.h ****  */
+1202:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_AHB2L(uint32_t m) {
+1203:src-gen/sr5e1/clock.h **** 
+1204:src-gen/sr5e1/clock.h ****     RCC->AHB2LENR &= ~m;
+1205:src-gen/sr5e1/clock.h ****     RCC->C1_AHB2LSMENR &= ~m;
+1206:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1207:src-gen/sr5e1/clock.h ****     RCC->C2_AHB2LSMENR &= ~m;
+1208:src-gen/sr5e1/clock.h **** #endif
+1209:src-gen/sr5e1/clock.h **** 
+1210:src-gen/sr5e1/clock.h ****     return RCC->AHB2LENR;
+1211:src-gen/sr5e1/clock.h **** }
+1212:src-gen/sr5e1/clock.h **** 
+1213:src-gen/sr5e1/clock.h **** /**
+1214:src-gen/sr5e1/clock.h ****  * @brief   Checks if AHB2 peripheral clock [Low Word] is enabled
+1215:src-gen/sr5e1/clock.h ****  *
+1216:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be checked
+1217:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1218:src-gen/sr5e1/clock.h ****  *
+1219:src-gen/sr5e1/clock.h ****  * @api
+1220:src-gen/sr5e1/clock.h ****  */
+1221:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_AHB2L(uint32_t m) {
+1222:src-gen/sr5e1/clock.h **** 
+1223:src-gen/sr5e1/clock.h ****     return (((RCC->AHB2LENR & m) == m) ? true : false);
+1224:src-gen/sr5e1/clock.h **** }
+1225:src-gen/sr5e1/clock.h **** 
+1226:src-gen/sr5e1/clock.h **** /**
+1227:src-gen/sr5e1/clock.h ****  * @brief   Resets AHB2 peripherals [Low Word]
+1228:src-gen/sr5e1/clock.h ****  *
+1229:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral to reset
+1230:src-gen/sr5e1/clock.h ****  *
+1231:src-gen/sr5e1/clock.h ****  * @api
+1232:src-gen/sr5e1/clock.h ****  */
+1233:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_AHB2L(uint32_t m) {
+1234:src-gen/sr5e1/clock.h **** 
+1235:src-gen/sr5e1/clock.h ****     RCC->AHB2LRSTR |= m;
+1236:src-gen/sr5e1/clock.h ****     RCC->AHB2LRSTR &= ~m;
+1237:src-gen/sr5e1/clock.h ****     (void)RCC->AHB2LRSTR;
+1238:src-gen/sr5e1/clock.h **** }
+1239:src-gen/sr5e1/clock.h **** 
+1240:src-gen/sr5e1/clock.h **** /**
+1241:src-gen/sr5e1/clock.h ****  * @brief   Enables AHB2 peripherals clock [High Word]
+1242:src-gen/sr5e1/clock.h ****  *
+1243:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1244:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1245:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be enabled
+1246:src-gen/sr5e1/clock.h ****  * @return              value of register AHB2HENR after the update
+1247:src-gen/sr5e1/clock.h ****  *
+1248:src-gen/sr5e1/clock.h ****  * @api
+1249:src-gen/sr5e1/clock.h ****  */
+1250:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_AHB2H(bool smode, uint32_t m) {
+1251:src-gen/sr5e1/clock.h **** 
+1252:src-gen/sr5e1/clock.h ****     RCC->AHB2HENR |= m;
+1253:src-gen/sr5e1/clock.h ****     if (smode) {
+1254:src-gen/sr5e1/clock.h ****         RCC->C1_AHB2HSMENR |= m;
+1255:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1256:src-gen/sr5e1/clock.h ****         RCC->C2_AHB2HSMENR |= m;
+1257:src-gen/sr5e1/clock.h **** #endif
+1258:src-gen/sr5e1/clock.h ****     }
+1259:src-gen/sr5e1/clock.h ****     else {
+1260:src-gen/sr5e1/clock.h ****         RCC->C1_AHB2HSMENR &= ~m;
+1261:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1262:src-gen/sr5e1/clock.h ****         RCC->C2_AHB2HSMENR &= ~m;
+1263:src-gen/sr5e1/clock.h **** #endif
+1264:src-gen/sr5e1/clock.h ****     }
+1265:src-gen/sr5e1/clock.h **** 
+1266:src-gen/sr5e1/clock.h ****     return RCC->AHB2HENR;
+1267:src-gen/sr5e1/clock.h **** }
+1268:src-gen/sr5e1/clock.h **** 
+1269:src-gen/sr5e1/clock.h **** /**
+1270:src-gen/sr5e1/clock.h ****  * @brief   Disables AHB2 peripherals clock [High Word]
+1271:src-gen/sr5e1/clock.h ****  *
+1272:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be disabled
+1273:src-gen/sr5e1/clock.h ****  * @return              value of register AHB2HENR after the update
+1274:src-gen/sr5e1/clock.h ****  *
+1275:src-gen/sr5e1/clock.h ****  * @api
+1276:src-gen/sr5e1/clock.h ****  */
+1277:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_AHB2H(uint32_t m) {
+1278:src-gen/sr5e1/clock.h **** 
+1279:src-gen/sr5e1/clock.h ****     RCC->AHB2HENR &= ~m;
+1280:src-gen/sr5e1/clock.h ****     RCC->C1_AHB2HSMENR &= ~m;
+1281:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1282:src-gen/sr5e1/clock.h ****     RCC->C2_AHB2HSMENR &= ~m;
+1283:src-gen/sr5e1/clock.h **** #endif
+1284:src-gen/sr5e1/clock.h **** 
+1285:src-gen/sr5e1/clock.h ****     return RCC->AHB2HENR;
+1286:src-gen/sr5e1/clock.h **** }
+1287:src-gen/sr5e1/clock.h **** 
+1288:src-gen/sr5e1/clock.h **** /**
+1289:src-gen/sr5e1/clock.h ****  * @brief   Checks if AHB2 peripheral clock [High Word] is enabled
+1290:src-gen/sr5e1/clock.h ****  *
+1291:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be checked
+1292:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1293:src-gen/sr5e1/clock.h ****  *
+1294:src-gen/sr5e1/clock.h ****  * @api
+1295:src-gen/sr5e1/clock.h ****  */
+1296:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_AHB2H(uint32_t m) {
+1297:src-gen/sr5e1/clock.h **** 
+1298:src-gen/sr5e1/clock.h ****     return (((RCC->AHB2HENR & m) == m) ? true : false);
+1299:src-gen/sr5e1/clock.h **** }
+1300:src-gen/sr5e1/clock.h **** 
+1301:src-gen/sr5e1/clock.h **** /**
+1302:src-gen/sr5e1/clock.h ****  * @brief   Resets AHB2 peripherals [High Word]
+1303:src-gen/sr5e1/clock.h ****  *
+1304:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral to reset
+1305:src-gen/sr5e1/clock.h ****  *
+1306:src-gen/sr5e1/clock.h ****  * @api
+1307:src-gen/sr5e1/clock.h ****  */
+1308:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_AHB2H(uint32_t m) {
+1309:src-gen/sr5e1/clock.h **** 
+1310:src-gen/sr5e1/clock.h ****     RCC->AHB2HRSTR |= m;
+1311:src-gen/sr5e1/clock.h ****     RCC->AHB2HRSTR &= ~m;
+1312:src-gen/sr5e1/clock.h ****     (void)RCC->AHB2HRSTR;
+1313:src-gen/sr5e1/clock.h **** }
+1314:src-gen/sr5e1/clock.h **** 
+1315:src-gen/sr5e1/clock.h **** /**
+1316:src-gen/sr5e1/clock.h ****  * @brief   Enables APB1 peripherals clock [Low Word]
+1317:src-gen/sr5e1/clock.h ****  *
+1318:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1319:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1320:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be enabled
+1321:src-gen/sr5e1/clock.h ****  * @return              value of register APB1LENR after the update
+1322:src-gen/sr5e1/clock.h ****  *
+1323:src-gen/sr5e1/clock.h ****  * @api
+1324:src-gen/sr5e1/clock.h ****  */
+1325:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_APB1L(bool smode, uint32_t m) {
+1326:src-gen/sr5e1/clock.h **** 
+1327:src-gen/sr5e1/clock.h ****     RCC->APB1LENR |= m;
+1328:src-gen/sr5e1/clock.h ****     if (smode) {
+1329:src-gen/sr5e1/clock.h ****         RCC->C1_APB1LSMENR |= m;
+1330:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1331:src-gen/sr5e1/clock.h ****         RCC->C2_APB1LSMENR |= m;
+1332:src-gen/sr5e1/clock.h **** #endif
+1333:src-gen/sr5e1/clock.h ****     }
+1334:src-gen/sr5e1/clock.h ****     else {
+1335:src-gen/sr5e1/clock.h ****         RCC->C1_APB1LSMENR &= ~m;
+1336:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1337:src-gen/sr5e1/clock.h ****         RCC->C2_APB1LSMENR &= ~m;
+1338:src-gen/sr5e1/clock.h **** #endif
+1339:src-gen/sr5e1/clock.h ****     }
+1340:src-gen/sr5e1/clock.h **** 
+1341:src-gen/sr5e1/clock.h ****     return RCC->APB1LENR;
+1342:src-gen/sr5e1/clock.h **** }
+1343:src-gen/sr5e1/clock.h **** 
+1344:src-gen/sr5e1/clock.h **** /**
+1345:src-gen/sr5e1/clock.h ****  * @brief   Disables APB1 peripherals clock [Low Word]
+1346:src-gen/sr5e1/clock.h ****  *
+1347:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be disabled
+1348:src-gen/sr5e1/clock.h ****  * @return              value of register APB1LENR after the update
+1349:src-gen/sr5e1/clock.h ****  *
+1350:src-gen/sr5e1/clock.h ****  * @api
+1351:src-gen/sr5e1/clock.h ****  */
+1352:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_APB1L(uint32_t m) {
+1353:src-gen/sr5e1/clock.h **** 
+1354:src-gen/sr5e1/clock.h ****     RCC->APB1LENR &= ~m;
+1355:src-gen/sr5e1/clock.h ****     RCC->C1_APB1LSMENR &= ~m;
+1356:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1357:src-gen/sr5e1/clock.h ****     RCC->C2_APB1LSMENR &= ~m;
+1358:src-gen/sr5e1/clock.h **** #endif
+1359:src-gen/sr5e1/clock.h **** 
+1360:src-gen/sr5e1/clock.h ****     return RCC->APB1LENR;
+1361:src-gen/sr5e1/clock.h **** }
+1362:src-gen/sr5e1/clock.h **** 
+1363:src-gen/sr5e1/clock.h **** /**
+1364:src-gen/sr5e1/clock.h ****  * @brief   Checks if APB1 peripheral clock [Low Word] is enabled
+1365:src-gen/sr5e1/clock.h ****  *
+1366:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be checked
+1367:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1368:src-gen/sr5e1/clock.h ****  *
+1369:src-gen/sr5e1/clock.h ****  * @api
+1370:src-gen/sr5e1/clock.h ****  */
+1371:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_APB1L(uint32_t m) {
+1372:src-gen/sr5e1/clock.h **** 
+1373:src-gen/sr5e1/clock.h ****     return (((RCC->APB1LENR & m) == m) ? true : false);
+1374:src-gen/sr5e1/clock.h **** }
+1375:src-gen/sr5e1/clock.h **** 
+1376:src-gen/sr5e1/clock.h **** /**
+1377:src-gen/sr5e1/clock.h ****  * @brief   Resets APB1 peripherals [Low Word]
+1378:src-gen/sr5e1/clock.h ****  *
+1379:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral to reset
+1380:src-gen/sr5e1/clock.h ****  *
+1381:src-gen/sr5e1/clock.h ****  * @api
+1382:src-gen/sr5e1/clock.h ****  */
+1383:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_APB1L(uint32_t m) {
+1384:src-gen/sr5e1/clock.h **** 
+1385:src-gen/sr5e1/clock.h ****     RCC->APB1LRSTR |= m;
+1386:src-gen/sr5e1/clock.h ****     RCC->APB1LRSTR &= ~m;
+1387:src-gen/sr5e1/clock.h ****     (void)RCC->APB1LRSTR;
+1388:src-gen/sr5e1/clock.h **** }
+1389:src-gen/sr5e1/clock.h **** 
+1390:src-gen/sr5e1/clock.h **** /**
+1391:src-gen/sr5e1/clock.h ****  * @brief   Enables APB2 peripherals clock [Low Word]
+1392:src-gen/sr5e1/clock.h ****  *
+1393:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1394:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1395:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be enabled
+1396:src-gen/sr5e1/clock.h ****  * @return              value of register APB2LENR after the update
+1397:src-gen/sr5e1/clock.h ****  *
+1398:src-gen/sr5e1/clock.h ****  * @api
+1399:src-gen/sr5e1/clock.h ****  */
+1400:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_APB2L(bool smode, uint32_t m) {
+1401:src-gen/sr5e1/clock.h **** 
+1402:src-gen/sr5e1/clock.h ****     RCC->APB2LENR |= m;
+1403:src-gen/sr5e1/clock.h ****     if (smode) {
+1404:src-gen/sr5e1/clock.h ****         RCC->C1_APB2LSMENR |= m;
+1405:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1406:src-gen/sr5e1/clock.h ****         RCC->C2_APB2LSMENR |= m;
+1407:src-gen/sr5e1/clock.h **** #endif
+1408:src-gen/sr5e1/clock.h ****     }
+1409:src-gen/sr5e1/clock.h ****     else {
+1410:src-gen/sr5e1/clock.h ****         RCC->C1_APB2LSMENR &= ~m;
+1411:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1412:src-gen/sr5e1/clock.h ****         RCC->C2_APB2LSMENR &= ~m;
+1413:src-gen/sr5e1/clock.h **** #endif
+1414:src-gen/sr5e1/clock.h ****     }
+1415:src-gen/sr5e1/clock.h **** 
+1416:src-gen/sr5e1/clock.h ****     return RCC->APB2LENR;
+1417:src-gen/sr5e1/clock.h **** }
+1418:src-gen/sr5e1/clock.h **** 
+1419:src-gen/sr5e1/clock.h **** /**
+1420:src-gen/sr5e1/clock.h ****  * @brief   Disables APB2 peripherals clock [Low Word]
+1421:src-gen/sr5e1/clock.h ****  *
+1422:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be disabled
+1423:src-gen/sr5e1/clock.h ****  * @return              value of register APB2LENR after the update
+1424:src-gen/sr5e1/clock.h ****  *
+1425:src-gen/sr5e1/clock.h ****  * @api
+1426:src-gen/sr5e1/clock.h ****  */
+1427:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_APB2L(uint32_t m) {
+1428:src-gen/sr5e1/clock.h **** 
+1429:src-gen/sr5e1/clock.h ****     RCC->APB2LENR &= ~m;
+1430:src-gen/sr5e1/clock.h ****     RCC->C1_APB2LSMENR &= ~m;
+1431:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1432:src-gen/sr5e1/clock.h ****     RCC->C2_APB2LSMENR &= ~m;
+1433:src-gen/sr5e1/clock.h **** #endif
+1434:src-gen/sr5e1/clock.h **** 
+1435:src-gen/sr5e1/clock.h ****     return RCC->APB2LENR;
+1436:src-gen/sr5e1/clock.h **** }
+1437:src-gen/sr5e1/clock.h **** 
+1438:src-gen/sr5e1/clock.h **** /**
+1439:src-gen/sr5e1/clock.h ****  * @brief   Checks if APB2 peripheral clock [Low Word] is enabled
+1440:src-gen/sr5e1/clock.h ****  *
+1441:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be checked
+1442:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1443:src-gen/sr5e1/clock.h ****  *
+1444:src-gen/sr5e1/clock.h ****  * @api
+1445:src-gen/sr5e1/clock.h ****  */
+1446:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_APB2L(uint32_t m) {
+1447:src-gen/sr5e1/clock.h **** 
+1448:src-gen/sr5e1/clock.h ****     return (((RCC->APB2LENR & m) == m) ? true : false);
+1449:src-gen/sr5e1/clock.h **** }
+1450:src-gen/sr5e1/clock.h **** 
+1451:src-gen/sr5e1/clock.h **** /**
+1452:src-gen/sr5e1/clock.h ****  * @brief   Resets APB2 peripherals [Low Word]
+1453:src-gen/sr5e1/clock.h ****  *
+1454:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral to reset
+1455:src-gen/sr5e1/clock.h ****  *
+1456:src-gen/sr5e1/clock.h ****  * @api
+1457:src-gen/sr5e1/clock.h ****  */
+1458:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_APB2L(uint32_t m) {
+1459:src-gen/sr5e1/clock.h **** 
+1460:src-gen/sr5e1/clock.h ****     RCC->APB2LRSTR |= m;
+1461:src-gen/sr5e1/clock.h ****     RCC->APB2LRSTR &= ~m;
+1462:src-gen/sr5e1/clock.h ****     (void)RCC->APB2LRSTR;
+1463:src-gen/sr5e1/clock.h **** }
+1464:src-gen/sr5e1/clock.h **** 
+1465:src-gen/sr5e1/clock.h **** /**
+1466:src-gen/sr5e1/clock.h ****  * @brief   Enables APB2 peripherals clock [High Word]
+1467:src-gen/sr5e1/clock.h ****  *
+1468:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1469:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1470:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be enabled
+1471:src-gen/sr5e1/clock.h ****  * @return              value of register APB2HENR after the update
+1472:src-gen/sr5e1/clock.h ****  *
+1473:src-gen/sr5e1/clock.h ****  * @api
+1474:src-gen/sr5e1/clock.h ****  */
+1475:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_APB2H(bool smode, uint32_t m) {
+1476:src-gen/sr5e1/clock.h **** 
+1477:src-gen/sr5e1/clock.h ****     RCC->APB2HENR |= m;
+1478:src-gen/sr5e1/clock.h ****     if (smode) {
+1479:src-gen/sr5e1/clock.h ****         RCC->C1_APB2HSMENR |= m;
+1480:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1481:src-gen/sr5e1/clock.h ****         RCC->C2_APB2HSMENR |= m;
+1482:src-gen/sr5e1/clock.h **** #endif
+1483:src-gen/sr5e1/clock.h ****     }
+1484:src-gen/sr5e1/clock.h ****     else {
+1485:src-gen/sr5e1/clock.h ****         RCC->C1_APB2HSMENR &= ~m;
+1486:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1487:src-gen/sr5e1/clock.h ****         RCC->C2_APB2HSMENR &= ~m;
+1488:src-gen/sr5e1/clock.h **** #endif
+1489:src-gen/sr5e1/clock.h ****     }
+1490:src-gen/sr5e1/clock.h **** 
+1491:src-gen/sr5e1/clock.h ****     return RCC->APB2HENR;
+1492:src-gen/sr5e1/clock.h **** }
+1493:src-gen/sr5e1/clock.h **** 
+1494:src-gen/sr5e1/clock.h **** /**
+1495:src-gen/sr5e1/clock.h ****  * @brief   Disables APB2 peripherals clock [High Word]
+1496:src-gen/sr5e1/clock.h ****  *
+1497:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be disabled
+1498:src-gen/sr5e1/clock.h ****  * @return              value of register APB2HENR after the update
+1499:src-gen/sr5e1/clock.h ****  *
+1500:src-gen/sr5e1/clock.h ****  * @api
+1501:src-gen/sr5e1/clock.h ****  */
+1502:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_APB2H(uint32_t m) {
+1503:src-gen/sr5e1/clock.h **** 
+1504:src-gen/sr5e1/clock.h ****     RCC->APB2HENR &= ~m;
+1505:src-gen/sr5e1/clock.h ****     RCC->C1_APB2HSMENR &= ~m;
+1506:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+1507:src-gen/sr5e1/clock.h ****     RCC->C2_APB2HSMENR &= ~m;
+1508:src-gen/sr5e1/clock.h **** #endif
+1509:src-gen/sr5e1/clock.h **** 
+1510:src-gen/sr5e1/clock.h ****     return RCC->APB2HENR;
+1511:src-gen/sr5e1/clock.h **** }
+1512:src-gen/sr5e1/clock.h **** 
+1513:src-gen/sr5e1/clock.h **** /**
+1514:src-gen/sr5e1/clock.h ****  * @brief   Checks if APB2 peripheral clock [High Word] is enabled
+1515:src-gen/sr5e1/clock.h ****  *
+1516:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral clock to be checked
+1517:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1518:src-gen/sr5e1/clock.h ****  *
+1519:src-gen/sr5e1/clock.h ****  * @api
+1520:src-gen/sr5e1/clock.h ****  */
+1521:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_APB2H(uint32_t m) {
+1522:src-gen/sr5e1/clock.h **** 
+1523:src-gen/sr5e1/clock.h ****     return (((RCC->APB2HENR & m) == m) ? true : false);
+1524:src-gen/sr5e1/clock.h **** }
+1525:src-gen/sr5e1/clock.h **** 
+1526:src-gen/sr5e1/clock.h **** /**
+1527:src-gen/sr5e1/clock.h ****  * @brief   Resets APB2 peripherals [High Word]
+1528:src-gen/sr5e1/clock.h ****  *
+1529:src-gen/sr5e1/clock.h ****  * @param[in] m         peripheral to reset
+1530:src-gen/sr5e1/clock.h ****  *
+1531:src-gen/sr5e1/clock.h ****  * @api
+1532:src-gen/sr5e1/clock.h ****  */
+1533:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_APB2H(uint32_t m) {
+1534:src-gen/sr5e1/clock.h **** 
+1535:src-gen/sr5e1/clock.h ****     RCC->APB2HRSTR |= m;
+1536:src-gen/sr5e1/clock.h ****     RCC->APB2HRSTR &= ~m;
+1537:src-gen/sr5e1/clock.h ****     (void)RCC->APB2HRSTR;
+1538:src-gen/sr5e1/clock.h **** }
+1539:src-gen/sr5e1/clock.h **** 
+1540:src-gen/sr5e1/clock.h **** /**
+1541:src-gen/sr5e1/clock.h ****  * @brief   Enables CMU clock
+1542:src-gen/sr5e1/clock.h ****  *
+1543:src-gen/sr5e1/clock.h ****  * @param[in] m         CMU clock to be enabled
+1544:src-gen/sr5e1/clock.h ****  * @return              value of register CMUR after the update
+1545:src-gen/sr5e1/clock.h ****  *
+1546:src-gen/sr5e1/clock.h ****  * @api
+1547:src-gen/sr5e1/clock.h ****  */
+1548:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_enable_CMU(uint32_t m) {
+1549:src-gen/sr5e1/clock.h **** 
+1550:src-gen/sr5e1/clock.h ****     RCC->CMUR |= m;
+1551:src-gen/sr5e1/clock.h **** 
+1552:src-gen/sr5e1/clock.h ****     return RCC->CMUR;
+1553:src-gen/sr5e1/clock.h **** }
+1554:src-gen/sr5e1/clock.h **** 
+1555:src-gen/sr5e1/clock.h **** /**
+1556:src-gen/sr5e1/clock.h ****  * @brief   Disables CMU clock
+1557:src-gen/sr5e1/clock.h ****  *
+1558:src-gen/sr5e1/clock.h ****  * @param[in] m         CMU clock to be disabled
+1559:src-gen/sr5e1/clock.h ****  * @return              value of register CMUR after the update
+1560:src-gen/sr5e1/clock.h ****  *
+1561:src-gen/sr5e1/clock.h ****  * @api
+1562:src-gen/sr5e1/clock.h ****  */
+1563:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE uint32_t clock_disable_CMU(uint32_t m) {
+1564:src-gen/sr5e1/clock.h **** 
+1565:src-gen/sr5e1/clock.h ****     RCC->CMUR &= ~m;
+1566:src-gen/sr5e1/clock.h **** 
+1567:src-gen/sr5e1/clock.h ****     return RCC->CMUR;
+1568:src-gen/sr5e1/clock.h **** }
+1569:src-gen/sr5e1/clock.h **** 
+1570:src-gen/sr5e1/clock.h **** /**
+1571:src-gen/sr5e1/clock.h ****  * @brief   Checks if CMU clock is enabled
+1572:src-gen/sr5e1/clock.h ****  *
+1573:src-gen/sr5e1/clock.h ****  * @param[in] m         CMU clock to be checked
+1574:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1575:src-gen/sr5e1/clock.h ****  *
+1576:src-gen/sr5e1/clock.h ****  * @api
+1577:src-gen/sr5e1/clock.h ****  */
+1578:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_CMU(uint32_t m) {
+1579:src-gen/sr5e1/clock.h **** 
+1580:src-gen/sr5e1/clock.h ****     return (((RCC->CMUR & m) == m) ? true : false);
+1581:src-gen/sr5e1/clock.h **** }
+1582:src-gen/sr5e1/clock.h **** 
+1583:src-gen/sr5e1/clock.h **** /**
+1584:src-gen/sr5e1/clock.h ****  * @brief   Resets CMU
+1585:src-gen/sr5e1/clock.h ****  *
+1586:src-gen/sr5e1/clock.h ****  * @param[in] m         CMU to reset
+1587:src-gen/sr5e1/clock.h ****  *
+1588:src-gen/sr5e1/clock.h ****  * @api
+1589:src-gen/sr5e1/clock.h ****  */
+1590:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_CMU(uint32_t m) {
+1591:src-gen/sr5e1/clock.h **** 
+1592:src-gen/sr5e1/clock.h ****     RCC->CMUR |= m;
+1593:src-gen/sr5e1/clock.h ****     (void)RCC->CMUR;
+1594:src-gen/sr5e1/clock.h **** }
+1595:src-gen/sr5e1/clock.h **** 
+1596:src-gen/sr5e1/clock.h **** /**
+1597:src-gen/sr5e1/clock.h ****  * @brief   Enables DMA1 clock
+1598:src-gen/sr5e1/clock.h ****  *
+1599:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1600:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1601:src-gen/sr5e1/clock.h ****  *
+1602:src-gen/sr5e1/clock.h ****  * @api
+1603:src-gen/sr5e1/clock.h ****  */
+1604:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_enable_DMA1(bool smode) {
+1605:src-gen/sr5e1/clock.h **** 
+1606:src-gen/sr5e1/clock.h ****     clock_enable_AHB2L(smode, RCC_AHB2LENR_DMA1);
+1607:src-gen/sr5e1/clock.h **** }
+1608:src-gen/sr5e1/clock.h **** 
+1609:src-gen/sr5e1/clock.h **** /**
+1610:src-gen/sr5e1/clock.h ****  * @brief   Disables DMA1 clock
+1611:src-gen/sr5e1/clock.h ****  *
+1612:src-gen/sr5e1/clock.h ****  * @api
+1613:src-gen/sr5e1/clock.h ****  */
+1614:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_disable_DMA1(void) {
+1615:src-gen/sr5e1/clock.h **** 
+1616:src-gen/sr5e1/clock.h ****     clock_disable_AHB2L(RCC_AHB2LENR_DMA1);
+1617:src-gen/sr5e1/clock.h **** }
+1618:src-gen/sr5e1/clock.h **** 
+1619:src-gen/sr5e1/clock.h **** /**
+1620:src-gen/sr5e1/clock.h ****  * @brief   Checks if DMA1 clock is enabled
+1621:src-gen/sr5e1/clock.h ****  *
+1622:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1623:src-gen/sr5e1/clock.h ****  *
+1624:src-gen/sr5e1/clock.h ****  * @api
+1625:src-gen/sr5e1/clock.h ****  */
+1626:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_DMA1(void) {
+1627:src-gen/sr5e1/clock.h **** 
+1628:src-gen/sr5e1/clock.h ****     return is_clock_enable_AHB2L(RCC_AHB2LENR_DMA1);
+1629:src-gen/sr5e1/clock.h **** }
+1630:src-gen/sr5e1/clock.h **** 
+1631:src-gen/sr5e1/clock.h **** /**
+1632:src-gen/sr5e1/clock.h ****  * @brief   Resets DMA1
+1633:src-gen/sr5e1/clock.h ****  *
+1634:src-gen/sr5e1/clock.h ****  * @api
+1635:src-gen/sr5e1/clock.h ****  */
+1636:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_DMA1(void) {
+1637:src-gen/sr5e1/clock.h **** 
+1638:src-gen/sr5e1/clock.h ****     clock_reset_AHB2L(RCC_AHB2LRSTR_DMA1);
+1639:src-gen/sr5e1/clock.h **** }
+1640:src-gen/sr5e1/clock.h **** 
+1641:src-gen/sr5e1/clock.h **** /**
+1642:src-gen/sr5e1/clock.h ****  * @brief   Enables DMA2 clock
+1643:src-gen/sr5e1/clock.h ****  *
+1644:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1645:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1646:src-gen/sr5e1/clock.h ****  *
+1647:src-gen/sr5e1/clock.h ****  * @api
+1648:src-gen/sr5e1/clock.h ****  */
+1649:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_enable_DMA2(bool smode) {
+1650:src-gen/sr5e1/clock.h **** 
+1651:src-gen/sr5e1/clock.h ****     clock_enable_AHB1L(smode, RCC_AHB1LENR_DMA2);
+1652:src-gen/sr5e1/clock.h **** }
+1653:src-gen/sr5e1/clock.h **** 
+1654:src-gen/sr5e1/clock.h **** /**
+1655:src-gen/sr5e1/clock.h ****  * @brief   Disables DMA2 clock
+1656:src-gen/sr5e1/clock.h ****  *
+1657:src-gen/sr5e1/clock.h ****  * @api
+1658:src-gen/sr5e1/clock.h ****  */
+1659:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_disable_DMA2(void) {
+1660:src-gen/sr5e1/clock.h **** 
+1661:src-gen/sr5e1/clock.h ****     clock_disable_AHB1L(RCC_AHB1LENR_DMA2);
+1662:src-gen/sr5e1/clock.h **** }
+1663:src-gen/sr5e1/clock.h **** 
+1664:src-gen/sr5e1/clock.h **** /**
+1665:src-gen/sr5e1/clock.h ****  * @brief   Checks if DMA2 clock is enabled
+1666:src-gen/sr5e1/clock.h ****  *
+1667:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1668:src-gen/sr5e1/clock.h ****  *
+1669:src-gen/sr5e1/clock.h ****  * @api
+1670:src-gen/sr5e1/clock.h ****  */
+1671:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_DMA2(void) {
+1672:src-gen/sr5e1/clock.h **** 
+1673:src-gen/sr5e1/clock.h ****     return is_clock_enable_AHB1L(RCC_AHB1LENR_DMA2);
+1674:src-gen/sr5e1/clock.h **** }
+1675:src-gen/sr5e1/clock.h **** 
+1676:src-gen/sr5e1/clock.h **** /**
+1677:src-gen/sr5e1/clock.h ****  * @brief   Resets DMA2
+1678:src-gen/sr5e1/clock.h ****  *
+1679:src-gen/sr5e1/clock.h ****  * @api
+1680:src-gen/sr5e1/clock.h ****  */
+1681:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_DMA2(void) {
+1682:src-gen/sr5e1/clock.h **** 
+1683:src-gen/sr5e1/clock.h ****     clock_reset_AHB1L(RCC_AHB1LRSTR_DMA2);
+1684:src-gen/sr5e1/clock.h **** }
+1685:src-gen/sr5e1/clock.h **** 
+1686:src-gen/sr5e1/clock.h **** /**
+1687:src-gen/sr5e1/clock.h ****  * @brief   Enables DMAMUX1 clock
+1688:src-gen/sr5e1/clock.h ****  *
+1689:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1690:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1691:src-gen/sr5e1/clock.h ****  *
+1692:src-gen/sr5e1/clock.h ****  * @api
+1693:src-gen/sr5e1/clock.h ****  */
+1694:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_enable_DMAMUX1(bool smode) {
+1695:src-gen/sr5e1/clock.h **** 
+1696:src-gen/sr5e1/clock.h ****     clock_enable_AHB2L(smode, RCC_AHB2LENR_DMAMUX1);
+1697:src-gen/sr5e1/clock.h **** }
+1698:src-gen/sr5e1/clock.h **** 
+1699:src-gen/sr5e1/clock.h **** /**
+1700:src-gen/sr5e1/clock.h ****  * @brief   Disables DMAMUX1 clock
+1701:src-gen/sr5e1/clock.h ****  *
+1702:src-gen/sr5e1/clock.h ****  * @api
+1703:src-gen/sr5e1/clock.h ****  */
+1704:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_disable_DMAMUX1(void) {
+1705:src-gen/sr5e1/clock.h **** 
+1706:src-gen/sr5e1/clock.h ****     clock_disable_AHB2L(RCC_AHB2LENR_DMAMUX1);
+1707:src-gen/sr5e1/clock.h **** }
+1708:src-gen/sr5e1/clock.h **** 
+1709:src-gen/sr5e1/clock.h **** /**
+1710:src-gen/sr5e1/clock.h ****  * @brief   Checks if DMAMUX1 clock is enabled
+1711:src-gen/sr5e1/clock.h ****  *
+1712:src-gen/sr5e1/clock.h ****  * @return              true if the clock is enabled, false otherwise
+1713:src-gen/sr5e1/clock.h ****  *
+1714:src-gen/sr5e1/clock.h ****  * @api
+1715:src-gen/sr5e1/clock.h ****  */
+1716:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE bool is_clock_enable_DMAMUX1(void) {
+1717:src-gen/sr5e1/clock.h **** 
+1718:src-gen/sr5e1/clock.h ****     return is_clock_enable_AHB2L(RCC_AHB2LENR_DMAMUX1);
+1719:src-gen/sr5e1/clock.h **** }
+1720:src-gen/sr5e1/clock.h **** 
+1721:src-gen/sr5e1/clock.h **** /**
+1722:src-gen/sr5e1/clock.h ****  * @brief   Resets DMAMUX1
+1723:src-gen/sr5e1/clock.h ****  *
+1724:src-gen/sr5e1/clock.h ****  * @api
+1725:src-gen/sr5e1/clock.h ****  */
+1726:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_reset_DMAMUX1(void) {
+1727:src-gen/sr5e1/clock.h **** 
+1728:src-gen/sr5e1/clock.h ****     clock_reset_AHB2L(RCC_AHB2LRSTR_DMAMUX1);
+1729:src-gen/sr5e1/clock.h **** }
+1730:src-gen/sr5e1/clock.h **** 
+1731:src-gen/sr5e1/clock.h **** /**
+1732:src-gen/sr5e1/clock.h ****  * @brief   Enables CORDIC clock
+1733:src-gen/sr5e1/clock.h ****  *
+1734:src-gen/sr5e1/clock.h ****  * @param[in] smode     sleep mode (if true, peripheral clock is enabled in
+1735:src-gen/sr5e1/clock.h ****  *                      sleep mode)
+1736:src-gen/sr5e1/clock.h ****  *
+1737:src-gen/sr5e1/clock.h ****  * @api
+1738:src-gen/sr5e1/clock.h ****  */
+1739:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_enable_CORDIC(bool smode) {
+1740:src-gen/sr5e1/clock.h **** 
+1741:src-gen/sr5e1/clock.h ****     clock_enable_AHB1L(smode, RCC_AHB1LENR_CORDIC);
+1742:src-gen/sr5e1/clock.h **** }
+ 134              		.loc 2 1742 1
+ 135 008c 00BF     		nop
+ 136              	.LBE15:
+ 137              	.LBE14:
+  78:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  79:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     (void)cdp;
+  80:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  81:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     clock_enable_CORDIC(true);
+  82:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** }
+ 138              		.loc 1 82 1
+ 139 008e 00BF     		nop
+ 140 0090 04B0     		add	sp, sp, #16
+ 141              		.cfi_def_cfa_offset 0
+ 142              		@ sp needed
+ 143 0092 7047     		bx	lr
+ 144              		.cfi_endproc
+ 145              	.LFE457:
+ 147              		.section	.text.cordic_dev_clock_disable,"ax",%progbits
+ 148              		.align	1
+ 149              		.p2align 4,,15
+ 150              		.global	cordic_dev_clock_disable
+ 151              		.syntax unified
+ 152              		.thumb
+ 153              		.thumb_func
+ 155              	cordic_dev_clock_disable:
+ 156              	.LFB458:
+  83:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  84:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+  85:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   Disables CORDIC clock.
+  86:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  87:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @param[in] cdp       pointer to a @p cordic_driver_t structure
+  88:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+  89:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @notapi
+  90:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+  91:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** void cordic_dev_clock_disable(cordic_driver_t *cdp) {
+ 157              		.loc 1 91 53
+ 158              		.cfi_startproc
+ 159              		@ args = 0, pretend = 0, frame = 16
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161              		@ link register save eliminated.
+ 162 0000 84B0     		sub	sp, sp, #16
+ 163              		.cfi_def_cfa_offset 16
+ 164 0002 0190     		str	r0, [sp, #4]
+ 165 0004 4FF40053 		mov	r3, #8192
+ 166 0008 0393     		str	r3, [sp, #12]
+ 167              	.LBB18:
+ 168              	.LBB19:
+ 169              	.LBB20:
+ 170              	.LBB21:
+1054:src-gen/sr5e1/clock.h ****     RCC->C1_AHB1LSMENR &= ~m;
+ 171              		.loc 2 1054 19
+ 172 000a 4FF08843 		mov	r3, #1140850688
+ 173 000e 1A6F     		ldr	r2, [r3, #112]
+1054:src-gen/sr5e1/clock.h ****     RCC->C1_AHB1LSMENR &= ~m;
+ 174              		.loc 2 1054 22
+ 175 0010 039B     		ldr	r3, [sp, #12]
+ 176 0012 DB43     		mvns	r3, r3
+1054:src-gen/sr5e1/clock.h ****     RCC->C1_AHB1LSMENR &= ~m;
+ 177              		.loc 2 1054 19
+ 178 0014 4FF08841 		mov	r1, #1140850688
+ 179 0018 1340     		ands	r3, r3, r2
+ 180 001a 0B67     		str	r3, [r1, #112]
+1055:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+ 181              		.loc 2 1055 24
+ 182 001c 4FF08843 		mov	r3, #1140850688
+ 183 0020 D3F89020 		ldr	r2, [r3, #144]
+1055:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+ 184              		.loc 2 1055 27
+ 185 0024 039B     		ldr	r3, [sp, #12]
+ 186 0026 DB43     		mvns	r3, r3
+1055:src-gen/sr5e1/clock.h **** #if CLOCK_CFG_SMP_MODE == TRUE
+ 187              		.loc 2 1055 24
+ 188 0028 4FF08841 		mov	r1, #1140850688
+ 189 002c 1340     		ands	r3, r3, r2
+ 190 002e C1F89030 		str	r3, [r1, #144]
+1057:src-gen/sr5e1/clock.h **** #endif
+ 191              		.loc 2 1057 24
+ 192 0032 4FF08843 		mov	r3, #1140850688
+ 193 0036 D3F8B020 		ldr	r2, [r3, #176]
+1057:src-gen/sr5e1/clock.h **** #endif
+ 194              		.loc 2 1057 27
+ 195 003a 039B     		ldr	r3, [sp, #12]
+ 196 003c DB43     		mvns	r3, r3
+1057:src-gen/sr5e1/clock.h **** #endif
+ 197              		.loc 2 1057 24
+ 198 003e 4FF08841 		mov	r1, #1140850688
+ 199 0042 1340     		ands	r3, r3, r2
+ 200 0044 C1F8B030 		str	r3, [r1, #176]
+1060:src-gen/sr5e1/clock.h **** }
+ 201              		.loc 2 1060 15
+ 202 0048 4FF08843 		mov	r3, #1140850688
+ 203 004c 1B6F     		ldr	r3, [r3, #112]
+ 204              	.LBE21:
+ 205              	.LBE20:
+1743:src-gen/sr5e1/clock.h **** 
+1744:src-gen/sr5e1/clock.h **** /**
+1745:src-gen/sr5e1/clock.h ****  * @brief   Disables CORDIC clock
+1746:src-gen/sr5e1/clock.h ****  *
+1747:src-gen/sr5e1/clock.h ****  * @api
+1748:src-gen/sr5e1/clock.h ****  */
+1749:src-gen/sr5e1/clock.h **** __STATIC_FORCEINLINE void clock_disable_CORDIC(void) {
+1750:src-gen/sr5e1/clock.h **** 
+1751:src-gen/sr5e1/clock.h ****     clock_disable_AHB1L(RCC_AHB1LENR_CORDIC);
+1752:src-gen/sr5e1/clock.h **** }
+ 206              		.loc 2 1752 1
+ 207 004e 00BF     		nop
+ 208              	.LBE19:
+ 209              	.LBE18:
+  92:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  93:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     (void)cdp;
+  94:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  95:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     clock_disable_CORDIC();
+  96:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** }
+ 210              		.loc 1 96 1
+ 211 0050 00BF     		nop
+ 212 0052 04B0     		add	sp, sp, #16
+ 213              		.cfi_def_cfa_offset 0
+ 214              		@ sp needed
+ 215 0054 7047     		bx	lr
+ 216              		.cfi_endproc
+ 217              	.LFE458:
+ 219 0056 00BF     		.section	.text.cordic_dev_get_dma_wr_trigger,"ax",%progbits
+ 220              		.align	1
+ 221              		.p2align 4,,15
+ 222              		.global	cordic_dev_get_dma_wr_trigger
+ 223              		.syntax unified
+ 224              		.thumb
+ 225              		.thumb_func
+ 227              	cordic_dev_get_dma_wr_trigger:
+ 228              	.LFB459:
+  97:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+  98:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+  99:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   Returns CORDCI DMA Write trigger.
+ 100:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+ 101:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @param[in] cdp       pointer to a @p cordic_driver_t structure
+ 102:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @return              DMA Write trigger.
+ 103:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+ 104:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @notapi
+ 105:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+ 106:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** uint32_t cordic_dev_get_dma_wr_trigger(cordic_driver_t *cdp) {
+ 229              		.loc 1 106 62
+ 230              		.cfi_startproc
+ 231              		@ args = 0, pretend = 0, frame = 8
+ 232              		@ frame_needed = 0, uses_anonymous_args = 0
+ 233              		@ link register save eliminated.
+ 234 0000 82B0     		sub	sp, sp, #8
+ 235              		.cfi_def_cfa_offset 8
+ 236 0002 0190     		str	r0, [sp, #4]
+ 107:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 108:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     (void)cdp;
+ 109:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 110:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     return DMAMUX1_CORDIC_WRITE;
+ 237              		.loc 1 110 12
+ 238 0004 7123     		movs	r3, #113
+ 111:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** }
+ 239              		.loc 1 111 1
+ 240 0006 1846     		mov	r0, r3
+ 241 0008 02B0     		add	sp, sp, #8
+ 242              		.cfi_def_cfa_offset 0
+ 243              		@ sp needed
+ 244 000a 7047     		bx	lr
+ 245              		.cfi_endproc
+ 246              	.LFE459:
+ 248              		.section	.text.cordic_dev_get_dma_rd_trigger,"ax",%progbits
+ 249              		.align	1
+ 250              		.p2align 4,,15
+ 251              		.global	cordic_dev_get_dma_rd_trigger
+ 252              		.syntax unified
+ 253              		.thumb
+ 254              		.thumb_func
+ 256              	cordic_dev_get_dma_rd_trigger:
+ 257              	.LFB460:
+ 112:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 113:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+ 114:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   Returns CORDCI DMA Read trigger.
+ 115:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+ 116:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @param[in] cdp       pointer to a @p cordic_driver_t structure
+ 117:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @return              DMA Read trigger.
+ 118:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+ 119:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @notapi
+ 120:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+ 121:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** uint32_t cordic_dev_get_dma_rd_trigger(cordic_driver_t *cdp) {
+ 258              		.loc 1 121 62
+ 259              		.cfi_startproc
+ 260              		@ args = 0, pretend = 0, frame = 8
+ 261              		@ frame_needed = 0, uses_anonymous_args = 0
+ 262              		@ link register save eliminated.
+ 263 0000 82B0     		sub	sp, sp, #8
+ 264              		.cfi_def_cfa_offset 8
+ 265 0002 0190     		str	r0, [sp, #4]
+ 122:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 123:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     (void)cdp;
+ 124:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 125:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     return DMAMUX1_CORDIC_READ;
+ 266              		.loc 1 125 12
+ 267 0004 7023     		movs	r3, #112
+ 126:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** }
+ 268              		.loc 1 126 1
+ 269 0006 1846     		mov	r0, r3
+ 270 0008 02B0     		add	sp, sp, #8
+ 271              		.cfi_def_cfa_offset 0
+ 272              		@ sp needed
+ 273 000a 7047     		bx	lr
+ 274              		.cfi_endproc
+ 275              	.LFE460:
+ 277              		.section	.text.cordic_dev_get_vector,"ax",%progbits
+ 278              		.align	1
+ 279              		.p2align 4,,15
+ 280              		.global	cordic_dev_get_vector
+ 281              		.syntax unified
+ 282              		.thumb
+ 283              		.thumb_func
+ 285              	cordic_dev_get_vector:
+ 286              	.LFB461:
+ 127:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 128:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+ 129:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   Returns CORDIC interrupt vector.
+ 130:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+ 131:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @param[in] cdp       pointer to a @p cordic_driver_t structure
+ 132:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @return              CORDIC interrupt vector
+ 133:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+ 134:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @notapi
+ 135:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+ 136:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** IRQn_Type cordic_dev_get_vector(cordic_driver_t *cdp) {
+ 287              		.loc 1 136 55
+ 288              		.cfi_startproc
+ 289              		@ args = 0, pretend = 0, frame = 8
+ 290              		@ frame_needed = 0, uses_anonymous_args = 0
+ 291              		@ link register save eliminated.
+ 292 0000 82B0     		sub	sp, sp, #8
+ 293              		.cfi_def_cfa_offset 8
+ 294 0002 0190     		str	r0, [sp, #4]
+ 137:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 138:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     (void)cdp;
+ 139:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 140:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     return IRQ_CORDIC_VECTOR;
+ 295              		.loc 1 140 12
+ 296 0004 6023     		movs	r3, #96
+ 141:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** }
+ 297              		.loc 1 141 1
+ 298 0006 1846     		mov	r0, r3
+ 299 0008 02B0     		add	sp, sp, #8
+ 300              		.cfi_def_cfa_offset 0
+ 301              		@ sp needed
+ 302 000a 7047     		bx	lr
+ 303              		.cfi_endproc
+ 304              	.LFE461:
+ 306              		.section	.text.Vector1C0,"ax",%progbits
+ 307              		.align	1
+ 308              		.p2align 4,,15
+ 309              		.global	Vector1C0
+ 310              		.syntax unified
+ 311              		.thumb
+ 312              		.thumb_func
+ 314              	Vector1C0:
+ 315              	.LFB462:
+ 142:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 143:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** /**
+ 144:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @brief   CORDIC interrupt handler.
+ 145:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  *
+ 146:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  * @isr
+ 147:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****  */
+ 148:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** IRQ_HANDLER(IRQ_CORDIC_HANDLER) {
+ 316              		.loc 1 148 33
+ 317              		.cfi_startproc
+ 318              		@ args = 0, pretend = 0, frame = 0
+ 319              		@ frame_needed = 0, uses_anonymous_args = 0
+ 320 0000 08B5     		push	{r3, lr}
+ 321              		.cfi_def_cfa_offset 8
+ 322              		.cfi_offset 3, -8
+ 323              		.cfi_offset 14, -4
+ 149:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 150:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     IRQ_PROLOGUE();
+ 151:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 152:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     __cordic_serve_interrupt(&DRV_CORDIC);
+ 324              		.loc 1 152 5
+ 325 0002 0248     		ldr	r0, .L18
+ 326 0004 FFF7FEFF 		bl	__cordic_serve_interrupt
+ 153:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** 
+ 154:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c ****     IRQ_EPILOGUE();
+ 155:C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/src/sr5e1\cordic_dev.c **** }
+ 327              		.loc 1 155 1
+ 328 0008 00BF     		nop
+ 329 000a 08BD     		pop	{r3, pc}
+ 330              	.L19:
+ 331              		.align	2
+ 332              	.L18:
+ 333 000c 00000000 		.word	DRV_CORDIC
+ 334              		.cfi_endproc
+ 335              	.LFE462:
+ 337              		.text
+ 338              	.Letext0:
+ 339              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 340              		.file 4 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 341              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/include/cordic.
+ 342              		.file 6 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/include/cordic_
+ 343              		.file 7 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/sr5e1xx.h"
+ 344              		.file 8 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_CORD
+ 345              		.file 9 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_DMA.
+ 346              		.file 10 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_DMA
+ 347              		.file 11 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_RCC
+ 348              		.file 12 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/DMA/include/dma.h"
+ 349              		.file 13 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Drivers/System/CORDIC/include/sr5e1/
+DEFINED SYMBOLS
+                            *ABS*:00000000 cordic_dev.c
+D:\Users\TMP\ccUBFrZF.s:19     .text.cordic_dev_get_reg_ptr:00000000 $t
+D:\Users\TMP\ccUBFrZF.s:26     .text.cordic_dev_get_reg_ptr:00000000 cordic_dev_get_reg_ptr
+D:\Users\TMP\ccUBFrZF.s:48     .text.cordic_dev_get_reg_ptr:0000000c $d
+D:\Users\TMP\ccUBFrZF.s:53     .text.cordic_dev_clock_enable:00000000 $t
+D:\Users\TMP\ccUBFrZF.s:60     .text.cordic_dev_clock_enable:00000000 cordic_dev_clock_enable
+D:\Users\TMP\ccUBFrZF.s:148    .text.cordic_dev_clock_disable:00000000 $t
+D:\Users\TMP\ccUBFrZF.s:155    .text.cordic_dev_clock_disable:00000000 cordic_dev_clock_disable
+D:\Users\TMP\ccUBFrZF.s:220    .text.cordic_dev_get_dma_wr_trigger:00000000 $t
+D:\Users\TMP\ccUBFrZF.s:227    .text.cordic_dev_get_dma_wr_trigger:00000000 cordic_dev_get_dma_wr_trigger
+D:\Users\TMP\ccUBFrZF.s:249    .text.cordic_dev_get_dma_rd_trigger:00000000 $t
+D:\Users\TMP\ccUBFrZF.s:256    .text.cordic_dev_get_dma_rd_trigger:00000000 cordic_dev_get_dma_rd_trigger
+D:\Users\TMP\ccUBFrZF.s:278    .text.cordic_dev_get_vector:00000000 $t
+D:\Users\TMP\ccUBFrZF.s:285    .text.cordic_dev_get_vector:00000000 cordic_dev_get_vector
+D:\Users\TMP\ccUBFrZF.s:307    .text.Vector1C0:00000000 $t
+D:\Users\TMP\ccUBFrZF.s:314    .text.Vector1C0:00000000 Vector1C0
+D:\Users\TMP\ccUBFrZF.s:333    .text.Vector1C0:0000000c $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stddef.h.39.27677723d43e5b5a7afdf8d798429f1d
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.features.h.33.5bd1eea2d80518b50f7af0b5ce6750e0
+                           .group:00000000 wm4._default_types.h.15.247e5cd201eca3442cbf5404108c4935
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.dmamux.h.25.337aea179f6dbcc87c52aae26d38f76e
+                           .group:00000000 wm4.clock_cfg.h.24.0aed3cee9ecce947225a304181294191
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.clock.h.37.80236c5607fdd9eb9275e5111a4191c3
+                           .group:00000000 wm4.irq.h.37.78714f25754c8b09d1428599101f6cc7
+                           .group:00000000 wm4.dma.h.40.f77dd217a06ceba13a3cfdd4102a73c1
+
+UNDEFINED SYMBOLS
+__cordic_serve_interrupt
+DRV_CORDIC

@@ -1,0 +1,3527 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_driver_soft_spi.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	soft_spi_obj_list
+  19              		.section	.data.soft_spi_obj_list,"aw"
+  20              		.align	2
+  23              	soft_spi_obj_list:
+  24 0000 FF0F     		.short	4095
+  25 0002 FF0F     		.short	4095
+  26 0004 FF0F     		.short	4095
+  27 0006 FF0F     		.short	4095
+  28 0008 00000000 		.word	0
+  29 000c 00000000 		.word	0
+  30 0010 FF0F     		.short	4095
+  31 0012 FF0F     		.short	4095
+  32 0014 FF0F     		.short	4095
+  33 0016 FF0F     		.short	4095
+  34 0018 00000000 		.word	0
+  35 001c 00000000 		.word	0
+  36 0020 FF0F     		.short	4095
+  37 0022 FF0F     		.short	4095
+  38 0024 FF0F     		.short	4095
+  39 0026 FF0F     		.short	4095
+  40 0028 00000000 		.word	0
+  41 002c 00000000 		.word	0
+  42 0030 FF0F     		.short	4095
+  43 0032 FF0F     		.short	4095
+  44 0034 FF0F     		.short	4095
+  45 0036 FF0F     		.short	4095
+  46 0038 00000000 		.word	0
+  47 003c 00000000 		.word	0
+  48              		.section	.text.zf_soft_spi_assert_handler,"ax",%progbits
+  49              		.align	1
+  50              		.p2align 4,,15
+  51              		.global	zf_soft_spi_assert_handler
+  52              		.syntax unified
+  53              		.thumb
+  54              		.thumb_func
+  56              	zf_soft_spi_assert_handler:
+  57              	.LFB172:
+  58              		.file 1 "libraries/zf_driver/zf_driver_soft_spi.c"
+   1:libraries/zf_driver/zf_driver_soft_spi.c **** /**************************************************************************************************
+   2:libraries/zf_driver/zf_driver_soft_spi.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_driver/zf_driver_soft_spi.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_driver/zf_driver_soft_spi.c **** *
+   5:libraries/zf_driver/zf_driver_soft_spi.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_driver/zf_driver_soft_spi.c **** *
+   7:libraries/zf_driver/zf_driver_soft_spi.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_driver/zf_driver_soft_spi.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_driver/zf_driver_soft_spi.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_driver/zf_driver_soft_spi.c **** *
+  11:libraries/zf_driver/zf_driver_soft_spi.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_driver/zf_driver_soft_spi.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_driver/zf_driver_soft_spi.c **** * 更多细节请参见 GPL
+  14:libraries/zf_driver/zf_driver_soft_spi.c **** *
+  15:libraries/zf_driver/zf_driver_soft_spi.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_driver/zf_driver_soft_spi.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_driver/zf_driver_soft_spi.c **** *
+  18:libraries/zf_driver/zf_driver_soft_spi.c **** * 额外注明：
+  19:libraries/zf_driver/zf_driver_soft_spi.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_driver/zf_driver_soft_spi.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_driver/zf_driver_soft_spi.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_driver/zf_driver_soft_spi.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_driver/zf_driver_soft_spi.c **** *
+  24:libraries/zf_driver/zf_driver_soft_spi.c **** * 文件名称          zf_driver_soft_spi
+  25:libraries/zf_driver/zf_driver_soft_spi.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_driver/zf_driver_soft_spi.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_driver/zf_driver_soft_spi.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_driver/zf_driver_soft_spi.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_driver/zf_driver_soft_spi.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_driver/zf_driver_soft_spi.c **** ***************************************************************************************************
+  31:libraries/zf_driver/zf_driver_soft_spi.c **** 
+  32:libraries/zf_driver/zf_driver_soft_spi.c **** // zf_common 层引用
+  33:libraries/zf_driver/zf_driver_soft_spi.c **** #include "zf_common_debug.h"
+  34:libraries/zf_driver/zf_driver_soft_spi.c **** #include "zf_common_memory.h"
+  35:libraries/zf_driver/zf_driver_soft_spi.c **** 
+  36:libraries/zf_driver/zf_driver_soft_spi.c **** // zf_driver 层引用
+  37:libraries/zf_driver/zf_driver_soft_spi.c **** #include "zf_driver_gpio.h"
+  38:libraries/zf_driver/zf_driver_soft_spi.c **** 
+  39:libraries/zf_driver/zf_driver_soft_spi.c **** // 自身头文件
+  40:libraries/zf_driver/zf_driver_soft_spi.c **** #include "zf_driver_soft_spi.h"
+  41:libraries/zf_driver/zf_driver_soft_spi.c **** 
+  42:libraries/zf_driver/zf_driver_soft_spi.c **** // 此处定义 本文件用使用的变量与对象等 这里不允许用户修改
+  43:libraries/zf_driver/zf_driver_soft_spi.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  44:libraries/zf_driver/zf_driver_soft_spi.c **** AT_ZF_LIB_SECTION_START
+  45:libraries/zf_driver/zf_driver_soft_spi.c **** // 存储于预开辟的内存池中的管理信息 本部分对于用户来说是不开放的
+  46:libraries/zf_driver/zf_driver_soft_spi.c **** AT_ZF_LIB_SECTION zf_soft_spi_obj_struct soft_spi_obj_list[SOFT_SPI_MAX] =
+  47:libraries/zf_driver/zf_driver_soft_spi.c **** {
+  48:libraries/zf_driver/zf_driver_soft_spi.c ****     {.sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pin = PIN_NULL, .cs_pin = PIN_NULL, .delay = 
+  49:libraries/zf_driver/zf_driver_soft_spi.c ****     {.sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pin = PIN_NULL, .cs_pin = PIN_NULL, .delay = 
+  50:libraries/zf_driver/zf_driver_soft_spi.c ****     {.sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pin = PIN_NULL, .cs_pin = PIN_NULL, .delay = 
+  51:libraries/zf_driver/zf_driver_soft_spi.c ****     {.sck_pin = PIN_NULL, .mosi_pin = PIN_NULL, .miso_pin = PIN_NULL, .cs_pin = PIN_NULL, .delay = 
+  52:libraries/zf_driver/zf_driver_soft_spi.c **** };
+  53:libraries/zf_driver/zf_driver_soft_spi.c **** AT_ZF_LIB_SECTION_END
+  54:libraries/zf_driver/zf_driver_soft_spi.c **** // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Part   End <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  55:libraries/zf_driver/zf_driver_soft_spi.c **** 
+  56:libraries/zf_driver/zf_driver_soft_spi.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  57:libraries/zf_driver/zf_driver_soft_spi.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  58:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+  59:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 延时
+  60:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     void
+  61:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     void
+  62:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_delay(1);
+  63:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     内部调用
+  64:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+  65:libraries/zf_driver/zf_driver_soft_spi.c **** //static void zf_soft_spi_delay (uint32 delay)
+  66:libraries/zf_driver/zf_driver_soft_spi.c **** //{
+  67:libraries/zf_driver/zf_driver_soft_spi.c **** //    volatile uint32 count = delay;
+  68:libraries/zf_driver/zf_driver_soft_spi.c **** //    while(count --);
+  69:libraries/zf_driver/zf_driver_soft_spi.c **** //}
+  70:libraries/zf_driver/zf_driver_soft_spi.c **** #define zf_soft_spi_delay(x)  for(vuint32 i = x; i --; )
+  71:libraries/zf_driver/zf_driver_soft_spi.c **** 
+  72:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+  73:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 断言处理
+  74:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     *file               文件路径
+  75:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     line                报错行
+  76:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     *tips               输出信息
+  77:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / GPIO_OPERATION_DONE - 完成 其
+  78:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_assert_handler(file, line, tips);
+  79:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+  80:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+  81:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_assert_handler (char *file, int line, char *tips)
+  82:libraries/zf_driver/zf_driver_soft_spi.c **** {
+  59              		.loc 1 82 1
+  60              		.cfi_startproc
+  61              		@ args = 0, pretend = 0, frame = 16
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63 0000 00B5     		push	{lr}
+  64              		.cfi_def_cfa_offset 4
+  65              		.cfi_offset 14, -4
+  66 0002 87B0     		sub	sp, sp, #28
+  67              		.cfi_def_cfa_offset 32
+  68 0004 0590     		str	r0, [sp, #20]
+  69 0006 0491     		str	r1, [sp, #16]
+  70 0008 0392     		str	r2, [sp, #12]
+  83:libraries/zf_driver/zf_driver_soft_spi.c ****     debug_message_handler(DEBUG_OUTPUT_LEVEL_ASSERT, ZF_FALSE, tips, file, line);
+  71              		.loc 1 83 5
+  72 000a 049B     		ldr	r3, [sp, #16]
+  73 000c 0093     		str	r3, [sp]
+  74 000e 059B     		ldr	r3, [sp, #20]
+  75 0010 039A     		ldr	r2, [sp, #12]
+  76 0012 0021     		movs	r1, #0
+  77 0014 0220     		movs	r0, #2
+  78 0016 FFF7FEFF 		bl	debug_message_handler
+  79              	.L2:
+  84:libraries/zf_driver/zf_driver_soft_spi.c ****     while(1);
+  80              		.loc 1 84 10 discriminator 1
+  81 001a FEE7     		b	.L2
+  82              		.cfi_endproc
+  83              	.LFE172:
+  85              		.section	.rodata
+  86              		.align	2
+  87              	.LC0:
+  88 0000 6C696272 		.ascii	"libraries/zf_driver/zf_driver_soft_spi.c\000"
+  88      61726965 
+  88      732F7A66 
+  88      5F647269 
+  88      7665722F 
+  89              		.section	.text.zf_soft_spi_transfer_start,"ax",%progbits
+  90              		.align	1
+  91              		.p2align 4,,15
+  92              		.syntax unified
+  93              		.thumb
+  94              		.thumb_func
+  96              	zf_soft_spi_transfer_start:
+  97              	.LFB173:
+  85:libraries/zf_driver/zf_driver_soft_spi.c ****     return ZF_ERROR;
+  86:libraries/zf_driver/zf_driver_soft_spi.c **** }
+  87:libraries/zf_driver/zf_driver_soft_spi.c **** 
+  88:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+  89:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 传输开始 拉低 CS 信号 信号线进入工作状态
+  90:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+  91:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     void
+  92:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_transfer_start(soft_spi_index);
+  93:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     内部调用
+  94:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+  95:libraries/zf_driver/zf_driver_soft_spi.c **** static void zf_soft_spi_transfer_start (zf_soft_spi_index_enum soft_spi_index)
+  96:libraries/zf_driver/zf_driver_soft_spi.c **** {
+  98              		.loc 1 96 1
+  99              		.cfi_startproc
+ 100              		@ args = 0, pretend = 0, frame = 8
+ 101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 102 0000 00B5     		push	{lr}
+ 103              		.cfi_def_cfa_offset 4
+ 104              		.cfi_offset 14, -4
+ 105 0002 83B0     		sub	sp, sp, #12
+ 106              		.cfi_def_cfa_offset 16
+ 107 0004 0346     		mov	r3, r0
+ 108 0006 8DF80730 		strb	r3, [sp, #7]
+  97:libraries/zf_driver/zf_driver_soft_spi.c ****     if(soft_spi_obj_list[soft_spi_index].use_cs)
+ 109              		.loc 1 97 41
+ 110 000a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 111 000e 664A     		ldr	r2, .L13
+ 112 0010 1B01     		lsls	r3, r3, #4
+ 113 0012 1344     		add	r3, r3, r2
+ 114 0014 0833     		adds	r3, r3, #8
+ 115 0016 9B79     		ldrb	r3, [r3, #6]
+ 116 0018 C3F30303 		ubfx	r3, r3, #0, #4
+ 117 001c DBB2     		uxtb	r3, r3
+ 118              		.loc 1 97 7
+ 119 001e 002B     		cmp	r3, #0
+ 120 0020 39D0     		beq	.L4
+  98:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+  99:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_gpio_low(soft_spi_obj_list[soft_spi_index].cs_pin);
+ 121              		.loc 1 99 9
+ 122 0022 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 123 0026 604A     		ldr	r2, .L13
+ 124 0028 1B01     		lsls	r3, r3, #4
+ 125 002a 1344     		add	r3, r3, r2
+ 126 002c 0633     		adds	r3, r3, #6
+ 127 002e 1B88     		ldrh	r3, [r3]
+ 128 0030 40F6FF72 		movw	r2, #4095
+ 129 0034 9342     		cmp	r3, r2
+ 130 0036 29D0     		beq	.L5
+ 131              		.loc 1 99 9 is_stmt 0 discriminator 1
+ 132 0038 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 133 003c 5A4A     		ldr	r2, .L13
+ 134 003e 1B01     		lsls	r3, r3, #4
+ 135 0040 1344     		add	r3, r3, r2
+ 136 0042 0633     		adds	r3, r3, #6
+ 137 0044 1B88     		ldrh	r3, [r3]
+ 138 0046 5B09     		lsrs	r3, r3, #5
+ 139 0048 9BB2     		uxth	r3, r3
+ 140 004a 1A46     		mov	r2, r3
+ 141 004c 574B     		ldr	r3, .L13+4
+ 142 004e 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 143 0052 9969     		ldr	r1, [r3, #24]
+ 144 0054 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 145 0058 534A     		ldr	r2, .L13
+ 146 005a 1B01     		lsls	r3, r3, #4
+ 147 005c 1344     		add	r3, r3, r2
+ 148 005e 0633     		adds	r3, r3, #6
+ 149 0060 1B88     		ldrh	r3, [r3]
+ 150 0062 03F01F03 		and	r3, r3, #31
+ 151 0066 4FF48032 		mov	r2, #65536
+ 152 006a 9A40     		lsls	r2, r2, r3
+ 153 006c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 154 0070 4D48     		ldr	r0, .L13
+ 155 0072 1B01     		lsls	r3, r3, #4
+ 156 0074 0344     		add	r3, r3, r0
+ 157 0076 0633     		adds	r3, r3, #6
+ 158 0078 1B88     		ldrh	r3, [r3]
+ 159 007a 5B09     		lsrs	r3, r3, #5
+ 160 007c 9BB2     		uxth	r3, r3
+ 161 007e 1846     		mov	r0, r3
+ 162 0080 4A4B     		ldr	r3, .L13+4
+ 163 0082 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 164 0086 0A43     		orrs	r2, r2, r1
+ 165 0088 9A61     		str	r2, [r3, #24]
+ 166 008a 04E0     		b	.L4
+ 167              	.L5:
+ 168              		.loc 1 99 9 discriminator 2
+ 169 008c 0022     		movs	r2, #0
+ 170 008e 6321     		movs	r1, #99
+ 171 0090 4748     		ldr	r0, .L13+8
+ 172 0092 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 173              	.L4:
+ 100:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 101:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 102:libraries/zf_driver/zf_driver_soft_spi.c ****     if(     0 == soft_spi_obj_list[soft_spi_index].mode
+ 174              		.loc 1 102 51 is_stmt 1
+ 175 0096 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 176 009a 434A     		ldr	r2, .L13
+ 177 009c 1B01     		lsls	r3, r3, #4
+ 178 009e 1344     		add	r3, r3, r2
+ 179 00a0 0833     		adds	r3, r3, #8
+ 180 00a2 1B79     		ldrb	r3, [r3, #4]
+ 181 00a4 C3F30303 		ubfx	r3, r3, #0, #4
+ 182 00a8 DBB2     		uxtb	r3, r3
+ 183              		.loc 1 102 7
+ 184 00aa 002B     		cmp	r3, #0
+ 185 00ac 0BD0     		beq	.L6
+ 103:libraries/zf_driver/zf_driver_soft_spi.c ****         ||  1 == soft_spi_obj_list[soft_spi_index].mode)                        // CPOL = 0 SCK 空
+ 186              		.loc 1 103 51
+ 187 00ae 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 188 00b2 3D4A     		ldr	r2, .L13
+ 189 00b4 1B01     		lsls	r3, r3, #4
+ 190 00b6 1344     		add	r3, r3, r2
+ 191 00b8 0833     		adds	r3, r3, #8
+ 192 00ba 1B79     		ldrb	r3, [r3, #4]
+ 193 00bc C3F30303 		ubfx	r3, r3, #0, #4
+ 194 00c0 DBB2     		uxtb	r3, r3
+ 195              		.loc 1 103 9
+ 196 00c2 012B     		cmp	r3, #1
+ 197 00c4 36D1     		bne	.L7
+ 198              	.L6:
+ 104:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 105:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_gpio_low(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 199              		.loc 1 105 9
+ 200 00c6 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 201 00ca 374A     		ldr	r2, .L13
+ 202 00cc 1B01     		lsls	r3, r3, #4
+ 203 00ce 1344     		add	r3, r3, r2
+ 204 00d0 1B88     		ldrh	r3, [r3]
+ 205 00d2 40F6FF72 		movw	r2, #4095
+ 206 00d6 9342     		cmp	r3, r2
+ 207 00d8 26D0     		beq	.L8
+ 208              		.loc 1 105 9 is_stmt 0 discriminator 1
+ 209 00da 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 210 00de 324A     		ldr	r2, .L13
+ 211 00e0 1B01     		lsls	r3, r3, #4
+ 212 00e2 1344     		add	r3, r3, r2
+ 213 00e4 1B88     		ldrh	r3, [r3]
+ 214 00e6 5B09     		lsrs	r3, r3, #5
+ 215 00e8 9BB2     		uxth	r3, r3
+ 216 00ea 1A46     		mov	r2, r3
+ 217 00ec 2F4B     		ldr	r3, .L13+4
+ 218 00ee 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 219 00f2 9969     		ldr	r1, [r3, #24]
+ 220 00f4 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 221 00f8 2B4A     		ldr	r2, .L13
+ 222 00fa 1B01     		lsls	r3, r3, #4
+ 223 00fc 1344     		add	r3, r3, r2
+ 224 00fe 1B88     		ldrh	r3, [r3]
+ 225 0100 03F01F03 		and	r3, r3, #31
+ 226 0104 4FF48032 		mov	r2, #65536
+ 227 0108 9A40     		lsls	r2, r2, r3
+ 228 010a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 229 010e 2648     		ldr	r0, .L13
+ 230 0110 1B01     		lsls	r3, r3, #4
+ 231 0112 0344     		add	r3, r3, r0
+ 232 0114 1B88     		ldrh	r3, [r3]
+ 233 0116 5B09     		lsrs	r3, r3, #5
+ 234 0118 9BB2     		uxth	r3, r3
+ 235 011a 1846     		mov	r0, r3
+ 236 011c 234B     		ldr	r3, .L13+4
+ 237 011e 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 238 0122 0A43     		orrs	r2, r2, r1
+ 239 0124 9A61     		str	r2, [r3, #24]
+ 240 0126 3BE0     		b	.L10
+ 241              	.L8:
+ 242              		.loc 1 105 9 discriminator 2
+ 243 0128 0022     		movs	r2, #0
+ 244 012a 6921     		movs	r1, #105
+ 245 012c 2048     		ldr	r0, .L13+8
+ 246 012e FFF7FEFF 		bl	zf_gpio_assert_handler
+ 247 0132 35E0     		b	.L10
+ 248              	.L7:
+ 106:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 107:libraries/zf_driver/zf_driver_soft_spi.c ****     else                                                                        // CPOL = 1 SCK 空
+ 108:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 109:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_gpio_high(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 249              		.loc 1 109 9 is_stmt 1
+ 250 0134 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 251 0138 1B4A     		ldr	r2, .L13
+ 252 013a 1B01     		lsls	r3, r3, #4
+ 253 013c 1344     		add	r3, r3, r2
+ 254 013e 1B88     		ldrh	r3, [r3]
+ 255 0140 40F6FF72 		movw	r2, #4095
+ 256 0144 9342     		cmp	r3, r2
+ 257 0146 25D0     		beq	.L11
+ 258              		.loc 1 109 9 is_stmt 0 discriminator 1
+ 259 0148 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 260 014c 164A     		ldr	r2, .L13
+ 261 014e 1B01     		lsls	r3, r3, #4
+ 262 0150 1344     		add	r3, r3, r2
+ 263 0152 1B88     		ldrh	r3, [r3]
+ 264 0154 5B09     		lsrs	r3, r3, #5
+ 265 0156 9BB2     		uxth	r3, r3
+ 266 0158 1A46     		mov	r2, r3
+ 267 015a 144B     		ldr	r3, .L13+4
+ 268 015c 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 269 0160 9969     		ldr	r1, [r3, #24]
+ 270 0162 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 271 0166 104A     		ldr	r2, .L13
+ 272 0168 1B01     		lsls	r3, r3, #4
+ 273 016a 1344     		add	r3, r3, r2
+ 274 016c 1B88     		ldrh	r3, [r3]
+ 275 016e 03F01F03 		and	r3, r3, #31
+ 276 0172 0122     		movs	r2, #1
+ 277 0174 9A40     		lsls	r2, r2, r3
+ 278 0176 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 279 017a 0B48     		ldr	r0, .L13
+ 280 017c 1B01     		lsls	r3, r3, #4
+ 281 017e 0344     		add	r3, r3, r0
+ 282 0180 1B88     		ldrh	r3, [r3]
+ 283 0182 5B09     		lsrs	r3, r3, #5
+ 284 0184 9BB2     		uxth	r3, r3
+ 285 0186 1846     		mov	r0, r3
+ 286 0188 084B     		ldr	r3, .L13+4
+ 287 018a 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 288 018e 0A43     		orrs	r2, r2, r1
+ 289 0190 9A61     		str	r2, [r3, #24]
+ 110:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 111:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 290              		.loc 1 111 1 is_stmt 1 discriminator 1
+ 291 0192 05E0     		b	.L12
+ 292              	.L11:
+ 109:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 293              		.loc 1 109 9 discriminator 2
+ 294 0194 0022     		movs	r2, #0
+ 295 0196 6D21     		movs	r1, #109
+ 296 0198 0548     		ldr	r0, .L13+8
+ 297 019a FFF7FEFF 		bl	zf_gpio_assert_handler
+ 298              		.loc 1 111 1 discriminator 2
+ 299 019e FFE7     		b	.L12
+ 300              	.L10:
+ 301              	.L12:
+ 302              		.loc 1 111 1 is_stmt 0
+ 303 01a0 00BF     		nop
+ 304 01a2 03B0     		add	sp, sp, #12
+ 305              		.cfi_def_cfa_offset 4
+ 306              		@ sp needed
+ 307 01a4 5DF804FB 		ldr	pc, [sp], #4
+ 308              	.L14:
+ 309              		.align	2
+ 310              	.L13:
+ 311 01a8 00000000 		.word	soft_spi_obj_list
+ 312 01ac 00000000 		.word	gpio_group_list
+ 313 01b0 00000000 		.word	.LC0
+ 314              		.cfi_endproc
+ 315              	.LFE173:
+ 317              		.section	.text.zf_soft_spi_transfer_stop,"ax",%progbits
+ 318              		.align	1
+ 319              		.p2align 4,,15
+ 320              		.syntax unified
+ 321              		.thumb
+ 322              		.thumb_func
+ 324              	zf_soft_spi_transfer_stop:
+ 325              	.LFB174:
+ 112:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 113:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 114:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 传输停止 拉高 CS 信号
+ 115:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 116:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     void
+ 117:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_transfer_stop(soft_spi_index);
+ 118:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     内部调用
+ 119:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 120:libraries/zf_driver/zf_driver_soft_spi.c **** static void zf_soft_spi_transfer_stop (zf_soft_spi_index_enum soft_spi_index)
+ 121:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 326              		.loc 1 121 1 is_stmt 1
+ 327              		.cfi_startproc
+ 328              		@ args = 0, pretend = 0, frame = 8
+ 329              		@ frame_needed = 0, uses_anonymous_args = 0
+ 330 0000 00B5     		push	{lr}
+ 331              		.cfi_def_cfa_offset 4
+ 332              		.cfi_offset 14, -4
+ 333 0002 83B0     		sub	sp, sp, #12
+ 334              		.cfi_def_cfa_offset 16
+ 335 0004 0346     		mov	r3, r0
+ 336 0006 8DF80730 		strb	r3, [sp, #7]
+ 122:libraries/zf_driver/zf_driver_soft_spi.c ****     if(soft_spi_obj_list[soft_spi_index].use_cs)
+ 337              		.loc 1 122 41
+ 338 000a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 339 000e 234A     		ldr	r2, .L19
+ 340 0010 1B01     		lsls	r3, r3, #4
+ 341 0012 1344     		add	r3, r3, r2
+ 342 0014 0833     		adds	r3, r3, #8
+ 343 0016 9B79     		ldrb	r3, [r3, #6]
+ 344 0018 C3F30303 		ubfx	r3, r3, #0, #4
+ 345 001c DBB2     		uxtb	r3, r3
+ 346              		.loc 1 122 7
+ 347 001e 002B     		cmp	r3, #0
+ 348 0020 38D0     		beq	.L18
+ 123:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 124:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_gpio_high(soft_spi_obj_list[soft_spi_index].cs_pin);
+ 349              		.loc 1 124 9
+ 350 0022 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 351 0026 1D4A     		ldr	r2, .L19
+ 352 0028 1B01     		lsls	r3, r3, #4
+ 353 002a 1344     		add	r3, r3, r2
+ 354 002c 0633     		adds	r3, r3, #6
+ 355 002e 1B88     		ldrh	r3, [r3]
+ 356 0030 40F6FF72 		movw	r2, #4095
+ 357 0034 9342     		cmp	r3, r2
+ 358 0036 28D0     		beq	.L17
+ 359              		.loc 1 124 9 is_stmt 0 discriminator 1
+ 360 0038 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 361 003c 174A     		ldr	r2, .L19
+ 362 003e 1B01     		lsls	r3, r3, #4
+ 363 0040 1344     		add	r3, r3, r2
+ 364 0042 0633     		adds	r3, r3, #6
+ 365 0044 1B88     		ldrh	r3, [r3]
+ 366 0046 5B09     		lsrs	r3, r3, #5
+ 367 0048 9BB2     		uxth	r3, r3
+ 368 004a 1A46     		mov	r2, r3
+ 369 004c 144B     		ldr	r3, .L19+4
+ 370 004e 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 371 0052 9969     		ldr	r1, [r3, #24]
+ 372 0054 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 373 0058 104A     		ldr	r2, .L19
+ 374 005a 1B01     		lsls	r3, r3, #4
+ 375 005c 1344     		add	r3, r3, r2
+ 376 005e 0633     		adds	r3, r3, #6
+ 377 0060 1B88     		ldrh	r3, [r3]
+ 378 0062 03F01F03 		and	r3, r3, #31
+ 379 0066 0122     		movs	r2, #1
+ 380 0068 9A40     		lsls	r2, r2, r3
+ 381 006a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 382 006e 0B48     		ldr	r0, .L19
+ 383 0070 1B01     		lsls	r3, r3, #4
+ 384 0072 0344     		add	r3, r3, r0
+ 385 0074 0633     		adds	r3, r3, #6
+ 386 0076 1B88     		ldrh	r3, [r3]
+ 387 0078 5B09     		lsrs	r3, r3, #5
+ 388 007a 9BB2     		uxth	r3, r3
+ 389 007c 1846     		mov	r0, r3
+ 390 007e 084B     		ldr	r3, .L19+4
+ 391 0080 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 392 0084 0A43     		orrs	r2, r2, r1
+ 393 0086 9A61     		str	r2, [r3, #24]
+ 125:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 126:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 394              		.loc 1 126 1 is_stmt 1 discriminator 1
+ 395 0088 04E0     		b	.L18
+ 396              	.L17:
+ 124:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 397              		.loc 1 124 9 discriminator 2
+ 398 008a 0022     		movs	r2, #0
+ 399 008c 7C21     		movs	r1, #124
+ 400 008e 0548     		ldr	r0, .L19+8
+ 401 0090 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 402              	.L18:
+ 403              		.loc 1 126 1
+ 404 0094 00BF     		nop
+ 405 0096 03B0     		add	sp, sp, #12
+ 406              		.cfi_def_cfa_offset 4
+ 407              		@ sp needed
+ 408 0098 5DF804FB 		ldr	pc, [sp], #4
+ 409              	.L20:
+ 410              		.align	2
+ 411              	.L19:
+ 412 009c 00000000 		.word	soft_spi_obj_list
+ 413 00a0 00000000 		.word	gpio_group_list
+ 414 00a4 00000000 		.word	.LC0
+ 415              		.cfi_endproc
+ 416              	.LFE174:
+ 418              		.section	.text.zf_soft_spi_8bit_data_handler,"ax",%progbits
+ 419              		.align	1
+ 420              		.p2align 4,,15
+ 421              		.syntax unified
+ 422              		.thumb
+ 423              		.thumb_func
+ 425              	zf_soft_spi_8bit_data_handler:
+ 426              	.LFB175:
+ 127:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 128:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 129:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 8bit 数据读写
+ 130:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 131:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     data_in             输入指针
+ 132:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     data_out            输出指针
+ 133:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     len                 数据长度
+ 134:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     void
+ 135:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_8bit_data_handler(soft_spi_index, data_in, data_out, len);
+ 136:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     内部调用
+ 137:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 138:libraries/zf_driver/zf_driver_soft_spi.c **** static void zf_soft_spi_8bit_data_handler (zf_soft_spi_index_enum soft_spi_index, const uint8 *data
+ 139:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 427              		.loc 1 139 1
+ 428              		.cfi_startproc
+ 429              		@ args = 0, pretend = 0, frame = 40
+ 430              		@ frame_needed = 0, uses_anonymous_args = 0
+ 431 0000 00B5     		push	{lr}
+ 432              		.cfi_def_cfa_offset 4
+ 433              		.cfi_offset 14, -4
+ 434 0002 8BB0     		sub	sp, sp, #44
+ 435              		.cfi_def_cfa_offset 48
+ 436 0004 0291     		str	r1, [sp, #8]
+ 437 0006 0192     		str	r2, [sp, #4]
+ 438 0008 0093     		str	r3, [sp]
+ 439 000a 0346     		mov	r3, r0
+ 440 000c 8DF80F30 		strb	r3, [sp, #15]
+ 140:libraries/zf_driver/zf_driver_soft_spi.c ****     uint8 temp = 0;
+ 441              		.loc 1 140 11
+ 442 0010 0023     		movs	r3, #0
+ 443 0012 8DF82730 		strb	r3, [sp, #39]
+ 141:libraries/zf_driver/zf_driver_soft_spi.c ****     uint8 write_data = 0;
+ 444              		.loc 1 141 11
+ 445 0016 0023     		movs	r3, #0
+ 446 0018 8DF82630 		strb	r3, [sp, #38]
+ 142:libraries/zf_driver/zf_driver_soft_spi.c ****     uint8 read_data = 0;
+ 447              		.loc 1 142 11
+ 448 001c 0023     		movs	r3, #0
+ 449 001e 8DF82530 		strb	r3, [sp, #37]
+ 143:libraries/zf_driver/zf_driver_soft_spi.c ****     uint8 mask_data = 0;
+ 450              		.loc 1 143 11
+ 451 0022 0023     		movs	r3, #0
+ 452 0024 8DF82430 		strb	r3, [sp, #36]
+ 144:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 145:libraries/zf_driver/zf_driver_soft_spi.c ****     while(len --)
+ 453              		.loc 1 145 10
+ 454 0028 19E2     		b	.L22
+ 455              	.L48:
+ 146:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 147:libraries/zf_driver/zf_driver_soft_spi.c ****         if(NULL != data_in)
+ 456              		.loc 1 147 11
+ 457 002a 029B     		ldr	r3, [sp, #8]
+ 458 002c 002B     		cmp	r3, #0
+ 459 002e 05D0     		beq	.L23
+ 148:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 149:libraries/zf_driver/zf_driver_soft_spi.c ****             write_data = *data_in ++;
+ 460              		.loc 1 149 35
+ 461 0030 029B     		ldr	r3, [sp, #8]
+ 462 0032 5A1C     		adds	r2, r3, #1
+ 463 0034 0292     		str	r2, [sp, #8]
+ 464              		.loc 1 149 24
+ 465 0036 1B78     		ldrb	r3, [r3]
+ 466 0038 8DF82630 		strb	r3, [sp, #38]
+ 467              	.L23:
+ 150:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 151:libraries/zf_driver/zf_driver_soft_spi.c ****         if(0 == soft_spi_obj_list[soft_spi_index].mode % 2)                     // CPHA = 0 第一�
+ 468              		.loc 1 151 50
+ 469 003c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 470 0040 B94A     		ldr	r2, .L49
+ 471 0042 1B01     		lsls	r3, r3, #4
+ 472 0044 1344     		add	r3, r3, r2
+ 473 0046 0833     		adds	r3, r3, #8
+ 474 0048 1B79     		ldrb	r3, [r3, #4]
+ 475 004a C3F30303 		ubfx	r3, r3, #0, #4
+ 476 004e DBB2     		uxtb	r3, r3
+ 477              		.loc 1 151 56
+ 478 0050 03F00103 		and	r3, r3, #1
+ 479              		.loc 1 151 11
+ 480 0054 002B     		cmp	r3, #0
+ 481 0056 40F0F880 		bne	.L24
+ 152:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 153:libraries/zf_driver/zf_driver_soft_spi.c ****             for(temp = 8; 0 < temp; temp --)
+ 482              		.loc 1 153 22
+ 483 005a 0823     		movs	r3, #8
+ 484 005c 8DF82730 		strb	r3, [sp, #39]
+ 485              		.loc 1 153 13
+ 486 0060 EDE0     		b	.L25
+ 487              	.L35:
+ 154:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 155:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].format)
+ 488              		.loc 1 155 53
+ 489 0062 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 490 0066 B04A     		ldr	r2, .L49
+ 491 0068 1B01     		lsls	r3, r3, #4
+ 492 006a 1344     		add	r3, r3, r2
+ 493 006c 0833     		adds	r3, r3, #8
+ 494 006e 5B79     		ldrb	r3, [r3, #5]
+ 495 0070 C3F30303 		ubfx	r3, r3, #0, #4
+ 496 0074 DBB2     		uxtb	r3, r3
+ 497              		.loc 1 155 19
+ 498 0076 002B     		cmp	r3, #0
+ 499 0078 09D0     		beq	.L26
+ 156:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 157:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x01 << (8 - temp);
+ 500              		.loc 1 157 44
+ 501 007a 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 502 007e C3F10803 		rsb	r3, r3, #8
+ 503              		.loc 1 157 38
+ 504 0082 0122     		movs	r2, #1
+ 505 0084 02FA03F3 		lsl	r3, r2, r3
+ 506              		.loc 1 157 31
+ 507 0088 8DF82430 		strb	r3, [sp, #36]
+ 508 008c 08E0     		b	.L27
+ 509              	.L26:
+ 158:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 159:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 160:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 161:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x80 >> (8 - temp);
+ 510              		.loc 1 161 44
+ 511 008e 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 512 0092 C3F10803 		rsb	r3, r3, #8
+ 513              		.loc 1 161 38
+ 514 0096 8022     		movs	r2, #128
+ 515 0098 42FA03F3 		asr	r3, r2, r3
+ 516              		.loc 1 161 31
+ 517 009c 8DF82430 		strb	r3, [sp, #36]
+ 518              	.L27:
+ 162:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 163:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(mask_data & write_data)
+ 519              		.loc 1 163 20
+ 520 00a0 9DF82420 		ldrb	r2, [sp, #36]
+ 521 00a4 9DF82630 		ldrb	r3, [sp, #38]
+ 522 00a8 1340     		ands	r3, r3, r2
+ 523 00aa DBB2     		uxtb	r3, r3
+ 524              		.loc 1 163 19
+ 525 00ac 002B     		cmp	r3, #0
+ 526 00ae 39D0     		beq	.L28
+ 164:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 165:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_high(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 527              		.loc 1 165 21
+ 528 00b0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 529 00b4 9C4A     		ldr	r2, .L49
+ 530 00b6 1B01     		lsls	r3, r3, #4
+ 531 00b8 1344     		add	r3, r3, r2
+ 532 00ba 0233     		adds	r3, r3, #2
+ 533 00bc 1B88     		ldrh	r3, [r3]
+ 534 00be 40F6FF72 		movw	r2, #4095
+ 535 00c2 9342     		cmp	r3, r2
+ 536 00c4 28D0     		beq	.L29
+ 537              		.loc 1 165 21 is_stmt 0 discriminator 1
+ 538 00c6 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 539 00ca 974A     		ldr	r2, .L49
+ 540 00cc 1B01     		lsls	r3, r3, #4
+ 541 00ce 1344     		add	r3, r3, r2
+ 542 00d0 0233     		adds	r3, r3, #2
+ 543 00d2 1B88     		ldrh	r3, [r3]
+ 544 00d4 5B09     		lsrs	r3, r3, #5
+ 545 00d6 9BB2     		uxth	r3, r3
+ 546 00d8 1A46     		mov	r2, r3
+ 547 00da 944B     		ldr	r3, .L49+4
+ 548 00dc 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 549 00e0 9969     		ldr	r1, [r3, #24]
+ 550 00e2 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 551 00e6 904A     		ldr	r2, .L49
+ 552 00e8 1B01     		lsls	r3, r3, #4
+ 553 00ea 1344     		add	r3, r3, r2
+ 554 00ec 0233     		adds	r3, r3, #2
+ 555 00ee 1B88     		ldrh	r3, [r3]
+ 556 00f0 03F01F03 		and	r3, r3, #31
+ 557 00f4 0122     		movs	r2, #1
+ 558 00f6 9A40     		lsls	r2, r2, r3
+ 559 00f8 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 560 00fc 8A48     		ldr	r0, .L49
+ 561 00fe 1B01     		lsls	r3, r3, #4
+ 562 0100 0344     		add	r3, r3, r0
+ 563 0102 0233     		adds	r3, r3, #2
+ 564 0104 1B88     		ldrh	r3, [r3]
+ 565 0106 5B09     		lsrs	r3, r3, #5
+ 566 0108 9BB2     		uxth	r3, r3
+ 567 010a 1846     		mov	r0, r3
+ 568 010c 874B     		ldr	r3, .L49+4
+ 569 010e 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 570 0112 0A43     		orrs	r2, r2, r1
+ 571 0114 9A61     		str	r2, [r3, #24]
+ 572 0116 3FE0     		b	.L30
+ 573              	.L29:
+ 574              		.loc 1 165 21 discriminator 2
+ 575 0118 0022     		movs	r2, #0
+ 576 011a A521     		movs	r1, #165
+ 577 011c 8448     		ldr	r0, .L49+8
+ 578 011e FFF7FEFF 		bl	zf_gpio_assert_handler
+ 579 0122 39E0     		b	.L30
+ 580              	.L28:
+ 166:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 167:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 168:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 169:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_low(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 581              		.loc 1 169 21 is_stmt 1
+ 582 0124 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 583 0128 7F4A     		ldr	r2, .L49
+ 584 012a 1B01     		lsls	r3, r3, #4
+ 585 012c 1344     		add	r3, r3, r2
+ 586 012e 0233     		adds	r3, r3, #2
+ 587 0130 1B88     		ldrh	r3, [r3]
+ 588 0132 40F6FF72 		movw	r2, #4095
+ 589 0136 9342     		cmp	r3, r2
+ 590 0138 29D0     		beq	.L31
+ 591              		.loc 1 169 21 is_stmt 0 discriminator 1
+ 592 013a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 593 013e 7A4A     		ldr	r2, .L49
+ 594 0140 1B01     		lsls	r3, r3, #4
+ 595 0142 1344     		add	r3, r3, r2
+ 596 0144 0233     		adds	r3, r3, #2
+ 597 0146 1B88     		ldrh	r3, [r3]
+ 598 0148 5B09     		lsrs	r3, r3, #5
+ 599 014a 9BB2     		uxth	r3, r3
+ 600 014c 1A46     		mov	r2, r3
+ 601 014e 774B     		ldr	r3, .L49+4
+ 602 0150 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 603 0154 9969     		ldr	r1, [r3, #24]
+ 604 0156 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 605 015a 734A     		ldr	r2, .L49
+ 606 015c 1B01     		lsls	r3, r3, #4
+ 607 015e 1344     		add	r3, r3, r2
+ 608 0160 0233     		adds	r3, r3, #2
+ 609 0162 1B88     		ldrh	r3, [r3]
+ 610 0164 03F01F03 		and	r3, r3, #31
+ 611 0168 4FF48032 		mov	r2, #65536
+ 612 016c 9A40     		lsls	r2, r2, r3
+ 613 016e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 614 0172 6D48     		ldr	r0, .L49
+ 615 0174 1B01     		lsls	r3, r3, #4
+ 616 0176 0344     		add	r3, r3, r0
+ 617 0178 0233     		adds	r3, r3, #2
+ 618 017a 1B88     		ldrh	r3, [r3]
+ 619 017c 5B09     		lsrs	r3, r3, #5
+ 620 017e 9BB2     		uxth	r3, r3
+ 621 0180 1846     		mov	r0, r3
+ 622 0182 6A4B     		ldr	r3, .L49+4
+ 623 0184 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 624 0188 0A43     		orrs	r2, r2, r1
+ 625 018a 9A61     		str	r2, [r3, #24]
+ 626 018c 04E0     		b	.L30
+ 627              	.L31:
+ 628              		.loc 1 169 21 discriminator 2
+ 629 018e 0022     		movs	r2, #0
+ 630 0190 A921     		movs	r1, #169
+ 631 0192 6748     		ldr	r0, .L49+8
+ 632 0194 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 633              	.L30:
+ 634              	.LBB2:
+ 170:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 171:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 635              		.loc 1 171 17 is_stmt 1
+ 636 0198 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 637 019c 624A     		ldr	r2, .L49
+ 638 019e 1B01     		lsls	r3, r3, #4
+ 639 01a0 1344     		add	r3, r3, r2
+ 640 01a2 0833     		adds	r3, r3, #8
+ 641 01a4 1B68     		ldr	r3, [r3]
+ 642 01a6 0893     		str	r3, [sp, #32]
+ 643 01a8 00BF     		nop
+ 644              	.L32:
+ 645              		.loc 1 171 17 is_stmt 0 discriminator 2
+ 646 01aa 089B     		ldr	r3, [sp, #32]
+ 647 01ac 5A1E     		subs	r2, r3, #1
+ 648 01ae 0892     		str	r2, [sp, #32]
+ 649 01b0 002B     		cmp	r3, #0
+ 650 01b2 FAD1     		bne	.L32
+ 651              	.LBE2:
+ 172:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 652              		.loc 1 172 17 is_stmt 1
+ 653 01b4 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 654 01b8 5B4A     		ldr	r2, .L49
+ 655 01ba 1B01     		lsls	r3, r3, #4
+ 656 01bc 1344     		add	r3, r3, r2
+ 657 01be 1B88     		ldrh	r3, [r3]
+ 658 01c0 1846     		mov	r0, r3
+ 659 01c2 FFF7FEFF 		bl	zf_gpio_toggle_level
+ 173:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].use_miso)
+ 660              		.loc 1 173 53
+ 661 01c6 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 662 01ca 574A     		ldr	r2, .L49
+ 663 01cc 1B01     		lsls	r3, r3, #4
+ 664 01ce 1344     		add	r3, r3, r2
+ 665 01d0 0833     		adds	r3, r3, #8
+ 666 01d2 5B79     		ldrb	r3, [r3, #5]
+ 667 01d4 C3F30313 		ubfx	r3, r3, #4, #4
+ 668 01d8 DBB2     		uxtb	r3, r3
+ 669              		.loc 1 173 19
+ 670 01da 002B     		cmp	r3, #0
+ 671 01dc 13D0     		beq	.L33
+ 174:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 175:libraries/zf_driver/zf_driver_soft_spi.c ****                     if(zf_gpio_get_level(soft_spi_obj_list[soft_spi_index].miso_pin))
+ 672              		.loc 1 175 24
+ 673 01de 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 674 01e2 514A     		ldr	r2, .L49
+ 675 01e4 1B01     		lsls	r3, r3, #4
+ 676 01e6 1344     		add	r3, r3, r2
+ 677 01e8 0433     		adds	r3, r3, #4
+ 678 01ea 1B88     		ldrh	r3, [r3]
+ 679 01ec 1846     		mov	r0, r3
+ 680 01ee FFF7FEFF 		bl	zf_gpio_get_level
+ 681 01f2 0346     		mov	r3, r0
+ 682              		.loc 1 175 23
+ 683 01f4 002B     		cmp	r3, #0
+ 684 01f6 06D0     		beq	.L33
+ 176:libraries/zf_driver/zf_driver_soft_spi.c ****                     {
+ 177:libraries/zf_driver/zf_driver_soft_spi.c ****                         read_data |= mask_data;
+ 685              		.loc 1 177 35
+ 686 01f8 9DF82520 		ldrb	r2, [sp, #37]
+ 687 01fc 9DF82430 		ldrb	r3, [sp, #36]
+ 688 0200 1343     		orrs	r3, r3, r2
+ 689 0202 8DF82530 		strb	r3, [sp, #37]
+ 690              	.L33:
+ 691              	.LBB3:
+ 178:libraries/zf_driver/zf_driver_soft_spi.c ****                     }
+ 179:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 180:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 692              		.loc 1 180 17
+ 693 0206 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 694 020a 474A     		ldr	r2, .L49
+ 695 020c 1B01     		lsls	r3, r3, #4
+ 696 020e 1344     		add	r3, r3, r2
+ 697 0210 0833     		adds	r3, r3, #8
+ 698 0212 1B68     		ldr	r3, [r3]
+ 699 0214 0793     		str	r3, [sp, #28]
+ 700 0216 00BF     		nop
+ 701              	.L34:
+ 702              		.loc 1 180 17 is_stmt 0 discriminator 2
+ 703 0218 079B     		ldr	r3, [sp, #28]
+ 704 021a 5A1E     		subs	r2, r3, #1
+ 705 021c 0792     		str	r2, [sp, #28]
+ 706 021e 002B     		cmp	r3, #0
+ 707 0220 FAD1     		bne	.L34
+ 708              	.LBE3:
+ 181:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 709              		.loc 1 181 17 is_stmt 1 discriminator 2
+ 710 0222 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 711 0226 404A     		ldr	r2, .L49
+ 712 0228 1B01     		lsls	r3, r3, #4
+ 713 022a 1344     		add	r3, r3, r2
+ 714 022c 1B88     		ldrh	r3, [r3]
+ 715 022e 1846     		mov	r0, r3
+ 716 0230 FFF7FEFF 		bl	zf_gpio_toggle_level
+ 153:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 717              		.loc 1 153 42 discriminator 2
+ 718 0234 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 719 0238 013B     		subs	r3, r3, #1
+ 720 023a 8DF82730 		strb	r3, [sp, #39]
+ 721              	.L25:
+ 153:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 722              		.loc 1 153 13 discriminator 1
+ 723 023e 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 724 0242 002B     		cmp	r3, #0
+ 725 0244 7FF40DAF 		bne	.L35
+ 726 0248 FDE0     		b	.L36
+ 727              	.L24:
+ 182:libraries/zf_driver/zf_driver_soft_spi.c ****             }
+ 183:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 184:libraries/zf_driver/zf_driver_soft_spi.c ****         else                                                                    // CPHA = 1 第二�
+ 185:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 186:libraries/zf_driver/zf_driver_soft_spi.c ****             for(temp = 8; 0 < temp; temp --)
+ 728              		.loc 1 186 22
+ 729 024a 0823     		movs	r3, #8
+ 730 024c 8DF82730 		strb	r3, [sp, #39]
+ 731              		.loc 1 186 13
+ 732 0250 F4E0     		b	.L37
+ 733              	.L47:
+ 187:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 188:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 734              		.loc 1 188 17
+ 735 0252 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 736 0256 344A     		ldr	r2, .L49
+ 737 0258 1B01     		lsls	r3, r3, #4
+ 738 025a 1344     		add	r3, r3, r2
+ 739 025c 1B88     		ldrh	r3, [r3]
+ 740 025e 1846     		mov	r0, r3
+ 741 0260 FFF7FEFF 		bl	zf_gpio_toggle_level
+ 189:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].format)
+ 742              		.loc 1 189 53
+ 743 0264 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 744 0268 2F4A     		ldr	r2, .L49
+ 745 026a 1B01     		lsls	r3, r3, #4
+ 746 026c 1344     		add	r3, r3, r2
+ 747 026e 0833     		adds	r3, r3, #8
+ 748 0270 5B79     		ldrb	r3, [r3, #5]
+ 749 0272 C3F30303 		ubfx	r3, r3, #0, #4
+ 750 0276 DBB2     		uxtb	r3, r3
+ 751              		.loc 1 189 19
+ 752 0278 002B     		cmp	r3, #0
+ 753 027a 09D0     		beq	.L38
+ 190:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 191:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x01 << (8 - temp);
+ 754              		.loc 1 191 44
+ 755 027c 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 756 0280 C3F10803 		rsb	r3, r3, #8
+ 757              		.loc 1 191 38
+ 758 0284 0122     		movs	r2, #1
+ 759 0286 02FA03F3 		lsl	r3, r2, r3
+ 760              		.loc 1 191 31
+ 761 028a 8DF82430 		strb	r3, [sp, #36]
+ 762 028e 08E0     		b	.L39
+ 763              	.L38:
+ 192:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 193:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 194:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 195:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x80 >> (8 - temp);
+ 764              		.loc 1 195 44
+ 765 0290 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 766 0294 C3F10803 		rsb	r3, r3, #8
+ 767              		.loc 1 195 38
+ 768 0298 8022     		movs	r2, #128
+ 769 029a 42FA03F3 		asr	r3, r2, r3
+ 770              		.loc 1 195 31
+ 771 029e 8DF82430 		strb	r3, [sp, #36]
+ 772              	.L39:
+ 196:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 197:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(mask_data & write_data)
+ 773              		.loc 1 197 20
+ 774 02a2 9DF82420 		ldrb	r2, [sp, #36]
+ 775 02a6 9DF82630 		ldrb	r3, [sp, #38]
+ 776 02aa 1340     		ands	r3, r3, r2
+ 777 02ac DBB2     		uxtb	r3, r3
+ 778              		.loc 1 197 19
+ 779 02ae 002B     		cmp	r3, #0
+ 780 02b0 40D0     		beq	.L40
+ 198:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 199:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_high(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 781              		.loc 1 199 21
+ 782 02b2 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 783 02b6 1C4A     		ldr	r2, .L49
+ 784 02b8 1B01     		lsls	r3, r3, #4
+ 785 02ba 1344     		add	r3, r3, r2
+ 786 02bc 0233     		adds	r3, r3, #2
+ 787 02be 1B88     		ldrh	r3, [r3]
+ 788 02c0 40F6FF72 		movw	r2, #4095
+ 789 02c4 9342     		cmp	r3, r2
+ 790 02c6 28D0     		beq	.L41
+ 791              		.loc 1 199 21 is_stmt 0 discriminator 1
+ 792 02c8 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 793 02cc 164A     		ldr	r2, .L49
+ 794 02ce 1B01     		lsls	r3, r3, #4
+ 795 02d0 1344     		add	r3, r3, r2
+ 796 02d2 0233     		adds	r3, r3, #2
+ 797 02d4 1B88     		ldrh	r3, [r3]
+ 798 02d6 5B09     		lsrs	r3, r3, #5
+ 799 02d8 9BB2     		uxth	r3, r3
+ 800 02da 1A46     		mov	r2, r3
+ 801 02dc 134B     		ldr	r3, .L49+4
+ 802 02de 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 803 02e2 9969     		ldr	r1, [r3, #24]
+ 804 02e4 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 805 02e8 0F4A     		ldr	r2, .L49
+ 806 02ea 1B01     		lsls	r3, r3, #4
+ 807 02ec 1344     		add	r3, r3, r2
+ 808 02ee 0233     		adds	r3, r3, #2
+ 809 02f0 1B88     		ldrh	r3, [r3]
+ 810 02f2 03F01F03 		and	r3, r3, #31
+ 811 02f6 0122     		movs	r2, #1
+ 812 02f8 9A40     		lsls	r2, r2, r3
+ 813 02fa 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 814 02fe 0A48     		ldr	r0, .L49
+ 815 0300 1B01     		lsls	r3, r3, #4
+ 816 0302 0344     		add	r3, r3, r0
+ 817 0304 0233     		adds	r3, r3, #2
+ 818 0306 1B88     		ldrh	r3, [r3]
+ 819 0308 5B09     		lsrs	r3, r3, #5
+ 820 030a 9BB2     		uxth	r3, r3
+ 821 030c 1846     		mov	r0, r3
+ 822 030e 074B     		ldr	r3, .L49+4
+ 823 0310 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 824 0314 0A43     		orrs	r2, r2, r1
+ 825 0316 9A61     		str	r2, [r3, #24]
+ 826 0318 46E0     		b	.L42
+ 827              	.L41:
+ 828              		.loc 1 199 21 discriminator 2
+ 829 031a 0022     		movs	r2, #0
+ 830 031c C721     		movs	r1, #199
+ 831 031e 0448     		ldr	r0, .L49+8
+ 832 0320 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 833 0324 40E0     		b	.L42
+ 834              	.L50:
+ 835 0326 00BF     		.align	2
+ 836              	.L49:
+ 837 0328 00000000 		.word	soft_spi_obj_list
+ 838 032c 00000000 		.word	gpio_group_list
+ 839 0330 00000000 		.word	.LC0
+ 840              	.L40:
+ 200:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 201:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 202:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 203:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_low(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 841              		.loc 1 203 21 is_stmt 1
+ 842 0334 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 843 0338 4E4A     		ldr	r2, .L51
+ 844 033a 1B01     		lsls	r3, r3, #4
+ 845 033c 1344     		add	r3, r3, r2
+ 846 033e 0233     		adds	r3, r3, #2
+ 847 0340 1B88     		ldrh	r3, [r3]
+ 848 0342 40F6FF72 		movw	r2, #4095
+ 849 0346 9342     		cmp	r3, r2
+ 850 0348 29D0     		beq	.L43
+ 851              		.loc 1 203 21 is_stmt 0 discriminator 1
+ 852 034a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 853 034e 494A     		ldr	r2, .L51
+ 854 0350 1B01     		lsls	r3, r3, #4
+ 855 0352 1344     		add	r3, r3, r2
+ 856 0354 0233     		adds	r3, r3, #2
+ 857 0356 1B88     		ldrh	r3, [r3]
+ 858 0358 5B09     		lsrs	r3, r3, #5
+ 859 035a 9BB2     		uxth	r3, r3
+ 860 035c 1A46     		mov	r2, r3
+ 861 035e 464B     		ldr	r3, .L51+4
+ 862 0360 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 863 0364 9969     		ldr	r1, [r3, #24]
+ 864 0366 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 865 036a 424A     		ldr	r2, .L51
+ 866 036c 1B01     		lsls	r3, r3, #4
+ 867 036e 1344     		add	r3, r3, r2
+ 868 0370 0233     		adds	r3, r3, #2
+ 869 0372 1B88     		ldrh	r3, [r3]
+ 870 0374 03F01F03 		and	r3, r3, #31
+ 871 0378 4FF48032 		mov	r2, #65536
+ 872 037c 9A40     		lsls	r2, r2, r3
+ 873 037e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 874 0382 3C48     		ldr	r0, .L51
+ 875 0384 1B01     		lsls	r3, r3, #4
+ 876 0386 0344     		add	r3, r3, r0
+ 877 0388 0233     		adds	r3, r3, #2
+ 878 038a 1B88     		ldrh	r3, [r3]
+ 879 038c 5B09     		lsrs	r3, r3, #5
+ 880 038e 9BB2     		uxth	r3, r3
+ 881 0390 1846     		mov	r0, r3
+ 882 0392 394B     		ldr	r3, .L51+4
+ 883 0394 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 884 0398 0A43     		orrs	r2, r2, r1
+ 885 039a 9A61     		str	r2, [r3, #24]
+ 886 039c 04E0     		b	.L42
+ 887              	.L43:
+ 888              		.loc 1 203 21 discriminator 2
+ 889 039e 0022     		movs	r2, #0
+ 890 03a0 CB21     		movs	r1, #203
+ 891 03a2 3648     		ldr	r0, .L51+8
+ 892 03a4 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 893              	.L42:
+ 894              	.LBB4:
+ 204:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 205:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 895              		.loc 1 205 17 is_stmt 1
+ 896 03a8 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 897 03ac 314A     		ldr	r2, .L51
+ 898 03ae 1B01     		lsls	r3, r3, #4
+ 899 03b0 1344     		add	r3, r3, r2
+ 900 03b2 0833     		adds	r3, r3, #8
+ 901 03b4 1B68     		ldr	r3, [r3]
+ 902 03b6 0693     		str	r3, [sp, #24]
+ 903 03b8 00BF     		nop
+ 904              	.L44:
+ 905              		.loc 1 205 17 is_stmt 0 discriminator 2
+ 906 03ba 069B     		ldr	r3, [sp, #24]
+ 907 03bc 5A1E     		subs	r2, r3, #1
+ 908 03be 0692     		str	r2, [sp, #24]
+ 909 03c0 002B     		cmp	r3, #0
+ 910 03c2 FAD1     		bne	.L44
+ 911              	.LBE4:
+ 206:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 912              		.loc 1 206 17 is_stmt 1
+ 913 03c4 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 914 03c8 2A4A     		ldr	r2, .L51
+ 915 03ca 1B01     		lsls	r3, r3, #4
+ 916 03cc 1344     		add	r3, r3, r2
+ 917 03ce 1B88     		ldrh	r3, [r3]
+ 918 03d0 1846     		mov	r0, r3
+ 919 03d2 FFF7FEFF 		bl	zf_gpio_toggle_level
+ 207:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].use_miso)
+ 920              		.loc 1 207 53
+ 921 03d6 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 922 03da 264A     		ldr	r2, .L51
+ 923 03dc 1B01     		lsls	r3, r3, #4
+ 924 03de 1344     		add	r3, r3, r2
+ 925 03e0 0833     		adds	r3, r3, #8
+ 926 03e2 5B79     		ldrb	r3, [r3, #5]
+ 927 03e4 C3F30313 		ubfx	r3, r3, #4, #4
+ 928 03e8 DBB2     		uxtb	r3, r3
+ 929              		.loc 1 207 19
+ 930 03ea 002B     		cmp	r3, #0
+ 931 03ec 13D0     		beq	.L45
+ 208:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 209:libraries/zf_driver/zf_driver_soft_spi.c ****                     if(zf_gpio_get_level(soft_spi_obj_list[soft_spi_index].miso_pin))
+ 932              		.loc 1 209 24
+ 933 03ee 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 934 03f2 204A     		ldr	r2, .L51
+ 935 03f4 1B01     		lsls	r3, r3, #4
+ 936 03f6 1344     		add	r3, r3, r2
+ 937 03f8 0433     		adds	r3, r3, #4
+ 938 03fa 1B88     		ldrh	r3, [r3]
+ 939 03fc 1846     		mov	r0, r3
+ 940 03fe FFF7FEFF 		bl	zf_gpio_get_level
+ 941 0402 0346     		mov	r3, r0
+ 942              		.loc 1 209 23
+ 943 0404 002B     		cmp	r3, #0
+ 944 0406 06D0     		beq	.L45
+ 210:libraries/zf_driver/zf_driver_soft_spi.c ****                     {
+ 211:libraries/zf_driver/zf_driver_soft_spi.c ****                         read_data |= mask_data;
+ 945              		.loc 1 211 35
+ 946 0408 9DF82520 		ldrb	r2, [sp, #37]
+ 947 040c 9DF82430 		ldrb	r3, [sp, #36]
+ 948 0410 1343     		orrs	r3, r3, r2
+ 949 0412 8DF82530 		strb	r3, [sp, #37]
+ 950              	.L45:
+ 951              	.LBB5:
+ 212:libraries/zf_driver/zf_driver_soft_spi.c ****                     }
+ 213:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 214:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 952              		.loc 1 214 17
+ 953 0416 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 954 041a 164A     		ldr	r2, .L51
+ 955 041c 1B01     		lsls	r3, r3, #4
+ 956 041e 1344     		add	r3, r3, r2
+ 957 0420 0833     		adds	r3, r3, #8
+ 958 0422 1B68     		ldr	r3, [r3]
+ 959 0424 0593     		str	r3, [sp, #20]
+ 960 0426 00BF     		nop
+ 961              	.L46:
+ 962              		.loc 1 214 17 is_stmt 0 discriminator 2
+ 963 0428 059B     		ldr	r3, [sp, #20]
+ 964 042a 5A1E     		subs	r2, r3, #1
+ 965 042c 0592     		str	r2, [sp, #20]
+ 966 042e 002B     		cmp	r3, #0
+ 967 0430 FAD1     		bne	.L46
+ 968              	.LBE5:
+ 186:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 969              		.loc 1 186 42 is_stmt 1 discriminator 2
+ 970 0432 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 971 0436 013B     		subs	r3, r3, #1
+ 972 0438 8DF82730 		strb	r3, [sp, #39]
+ 973              	.L37:
+ 186:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 974              		.loc 1 186 13 discriminator 1
+ 975 043c 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 976 0440 002B     		cmp	r3, #0
+ 977 0442 7FF406AF 		bne	.L47
+ 978              	.L36:
+ 215:libraries/zf_driver/zf_driver_soft_spi.c ****             }
+ 216:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 217:libraries/zf_driver/zf_driver_soft_spi.c ****         if(NULL != data_out)
+ 979              		.loc 1 217 11
+ 980 0446 019B     		ldr	r3, [sp, #4]
+ 981 0448 002B     		cmp	r3, #0
+ 982 044a 08D0     		beq	.L22
+ 218:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 219:libraries/zf_driver/zf_driver_soft_spi.c ****             *data_out ++ = read_data;
+ 983              		.loc 1 219 23
+ 984 044c 019B     		ldr	r3, [sp, #4]
+ 985 044e 5A1C     		adds	r2, r3, #1
+ 986 0450 0192     		str	r2, [sp, #4]
+ 987              		.loc 1 219 26
+ 988 0452 9DF82520 		ldrb	r2, [sp, #37]
+ 989 0456 1A70     		strb	r2, [r3]
+ 220:libraries/zf_driver/zf_driver_soft_spi.c ****             read_data = 0;
+ 990              		.loc 1 220 23
+ 991 0458 0023     		movs	r3, #0
+ 992 045a 8DF82530 		strb	r3, [sp, #37]
+ 993              	.L22:
+ 145:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 994              		.loc 1 145 15
+ 995 045e 009B     		ldr	r3, [sp]
+ 996 0460 5A1E     		subs	r2, r3, #1
+ 997 0462 0092     		str	r2, [sp]
+ 145:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 998              		.loc 1 145 10
+ 999 0464 002B     		cmp	r3, #0
+ 1000 0466 7FF4E0AD 		bne	.L48
+ 221:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 222:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 223:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 1001              		.loc 1 223 1
+ 1002 046a 00BF     		nop
+ 1003 046c 00BF     		nop
+ 1004 046e 0BB0     		add	sp, sp, #44
+ 1005              		.cfi_def_cfa_offset 4
+ 1006              		@ sp needed
+ 1007 0470 5DF804FB 		ldr	pc, [sp], #4
+ 1008              	.L52:
+ 1009              		.align	2
+ 1010              	.L51:
+ 1011 0474 00000000 		.word	soft_spi_obj_list
+ 1012 0478 00000000 		.word	gpio_group_list
+ 1013 047c 00000000 		.word	.LC0
+ 1014              		.cfi_endproc
+ 1015              	.LFE175:
+ 1017              		.section	.text.zf_soft_spi_16bit_data_handler,"ax",%progbits
+ 1018              		.align	1
+ 1019              		.p2align 4,,15
+ 1020              		.syntax unified
+ 1021              		.thumb
+ 1022              		.thumb_func
+ 1024              	zf_soft_spi_16bit_data_handler:
+ 1025              	.LFB176:
+ 224:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 225:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 226:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 16bit 数据读写
+ 227:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 228:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     data_in             输入指针
+ 229:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     data_out            输出指针
+ 230:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     len                 数据长度
+ 231:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     void
+ 232:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_16bit_data_handler(soft_spi_index, data_in, data_out, len);
+ 233:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     内部调用
+ 234:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 235:libraries/zf_driver/zf_driver_soft_spi.c **** static void zf_soft_spi_16bit_data_handler (zf_soft_spi_index_enum soft_spi_index, const uint16 *da
+ 236:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 1026              		.loc 1 236 1
+ 1027              		.cfi_startproc
+ 1028              		@ args = 0, pretend = 0, frame = 40
+ 1029              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1030 0000 00B5     		push	{lr}
+ 1031              		.cfi_def_cfa_offset 4
+ 1032              		.cfi_offset 14, -4
+ 1033 0002 8BB0     		sub	sp, sp, #44
+ 1034              		.cfi_def_cfa_offset 48
+ 1035 0004 0291     		str	r1, [sp, #8]
+ 1036 0006 0192     		str	r2, [sp, #4]
+ 1037 0008 0093     		str	r3, [sp]
+ 1038 000a 0346     		mov	r3, r0
+ 1039 000c 8DF80F30 		strb	r3, [sp, #15]
+ 237:libraries/zf_driver/zf_driver_soft_spi.c ****     uint8 temp = 0;
+ 1040              		.loc 1 237 11
+ 1041 0010 0023     		movs	r3, #0
+ 1042 0012 8DF82730 		strb	r3, [sp, #39]
+ 238:libraries/zf_driver/zf_driver_soft_spi.c ****     uint16 write_data = 0;
+ 1043              		.loc 1 238 12
+ 1044 0016 0023     		movs	r3, #0
+ 1045 0018 ADF82430 		strh	r3, [sp, #36]	@ movhi
+ 239:libraries/zf_driver/zf_driver_soft_spi.c ****     uint16 read_data = 0;
+ 1046              		.loc 1 239 12
+ 1047 001c 0023     		movs	r3, #0
+ 1048 001e ADF82230 		strh	r3, [sp, #34]	@ movhi
+ 240:libraries/zf_driver/zf_driver_soft_spi.c ****     uint16 mask_data = 0;
+ 1049              		.loc 1 240 12
+ 1050 0022 0023     		movs	r3, #0
+ 1051 0024 ADF82030 		strh	r3, [sp, #32]	@ movhi
+ 241:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 242:libraries/zf_driver/zf_driver_soft_spi.c ****     while(len --)
+ 1052              		.loc 1 242 10
+ 1053 0028 1EE2     		b	.L54
+ 1054              	.L80:
+ 243:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 244:libraries/zf_driver/zf_driver_soft_spi.c ****         if(NULL != data_in)
+ 1055              		.loc 1 244 11
+ 1056 002a 029B     		ldr	r3, [sp, #8]
+ 1057 002c 002B     		cmp	r3, #0
+ 1058 002e 05D0     		beq	.L55
+ 245:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 246:libraries/zf_driver/zf_driver_soft_spi.c ****             write_data = *data_in ++;
+ 1059              		.loc 1 246 35
+ 1060 0030 029B     		ldr	r3, [sp, #8]
+ 1061 0032 9A1C     		adds	r2, r3, #2
+ 1062 0034 0292     		str	r2, [sp, #8]
+ 1063              		.loc 1 246 24
+ 1064 0036 1B88     		ldrh	r3, [r3]	@ movhi
+ 1065 0038 ADF82430 		strh	r3, [sp, #36]	@ movhi
+ 1066              	.L55:
+ 247:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 248:libraries/zf_driver/zf_driver_soft_spi.c ****         if(0 == soft_spi_obj_list[soft_spi_index].mode % 2)                     // CPHA = 0 第一�
+ 1067              		.loc 1 248 50
+ 1068 003c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1069 0040 BB4A     		ldr	r2, .L81
+ 1070 0042 1B01     		lsls	r3, r3, #4
+ 1071 0044 1344     		add	r3, r3, r2
+ 1072 0046 0833     		adds	r3, r3, #8
+ 1073 0048 1B79     		ldrb	r3, [r3, #4]
+ 1074 004a C3F30303 		ubfx	r3, r3, #0, #4
+ 1075 004e DBB2     		uxtb	r3, r3
+ 1076              		.loc 1 248 56
+ 1077 0050 03F00103 		and	r3, r3, #1
+ 1078              		.loc 1 248 11
+ 1079 0054 002B     		cmp	r3, #0
+ 1080 0056 40F0FB80 		bne	.L56
+ 249:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 250:libraries/zf_driver/zf_driver_soft_spi.c ****             for(temp = 16; 0 < temp; temp --)
+ 1081              		.loc 1 250 22
+ 1082 005a 1023     		movs	r3, #16
+ 1083 005c 8DF82730 		strb	r3, [sp, #39]
+ 1084              		.loc 1 250 13
+ 1085 0060 F0E0     		b	.L57
+ 1086              	.L67:
+ 251:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 252:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].format)
+ 1087              		.loc 1 252 53
+ 1088 0062 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1089 0066 B24A     		ldr	r2, .L81
+ 1090 0068 1B01     		lsls	r3, r3, #4
+ 1091 006a 1344     		add	r3, r3, r2
+ 1092 006c 0833     		adds	r3, r3, #8
+ 1093 006e 5B79     		ldrb	r3, [r3, #5]
+ 1094 0070 C3F30303 		ubfx	r3, r3, #0, #4
+ 1095 0074 DBB2     		uxtb	r3, r3
+ 1096              		.loc 1 252 19
+ 1097 0076 002B     		cmp	r3, #0
+ 1098 0078 09D0     		beq	.L58
+ 253:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 254:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x0001 << (16 - temp);
+ 1099              		.loc 1 254 47
+ 1100 007a 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1101 007e C3F11003 		rsb	r3, r3, #16
+ 1102              		.loc 1 254 40
+ 1103 0082 0122     		movs	r2, #1
+ 1104 0084 02FA03F3 		lsl	r3, r2, r3
+ 1105              		.loc 1 254 31
+ 1106 0088 ADF82030 		strh	r3, [sp, #32]	@ movhi
+ 1107 008c 09E0     		b	.L59
+ 1108              	.L58:
+ 255:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 256:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 257:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 258:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x8000 >> (16 - temp);
+ 1109              		.loc 1 258 47
+ 1110 008e 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1111 0092 C3F11003 		rsb	r3, r3, #16
+ 1112              		.loc 1 258 40
+ 1113 0096 4FF40042 		mov	r2, #32768
+ 1114 009a 42FA03F3 		asr	r3, r2, r3
+ 1115              		.loc 1 258 31
+ 1116 009e ADF82030 		strh	r3, [sp, #32]	@ movhi
+ 1117              	.L59:
+ 259:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 260:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(mask_data & write_data)
+ 1118              		.loc 1 260 20
+ 1119 00a2 BDF82020 		ldrh	r2, [sp, #32]	@ movhi
+ 1120 00a6 BDF82430 		ldrh	r3, [sp, #36]	@ movhi
+ 1121 00aa 1340     		ands	r3, r3, r2
+ 1122 00ac 9BB2     		uxth	r3, r3
+ 1123              		.loc 1 260 19
+ 1124 00ae 002B     		cmp	r3, #0
+ 1125 00b0 3AD0     		beq	.L60
+ 261:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 262:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_high(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 1126              		.loc 1 262 21
+ 1127 00b2 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1128 00b6 9E4A     		ldr	r2, .L81
+ 1129 00b8 1B01     		lsls	r3, r3, #4
+ 1130 00ba 1344     		add	r3, r3, r2
+ 1131 00bc 0233     		adds	r3, r3, #2
+ 1132 00be 1B88     		ldrh	r3, [r3]
+ 1133 00c0 40F6FF72 		movw	r2, #4095
+ 1134 00c4 9342     		cmp	r3, r2
+ 1135 00c6 28D0     		beq	.L61
+ 1136              		.loc 1 262 21 is_stmt 0 discriminator 1
+ 1137 00c8 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1138 00cc 984A     		ldr	r2, .L81
+ 1139 00ce 1B01     		lsls	r3, r3, #4
+ 1140 00d0 1344     		add	r3, r3, r2
+ 1141 00d2 0233     		adds	r3, r3, #2
+ 1142 00d4 1B88     		ldrh	r3, [r3]
+ 1143 00d6 5B09     		lsrs	r3, r3, #5
+ 1144 00d8 9BB2     		uxth	r3, r3
+ 1145 00da 1A46     		mov	r2, r3
+ 1146 00dc 954B     		ldr	r3, .L81+4
+ 1147 00de 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 1148 00e2 9969     		ldr	r1, [r3, #24]
+ 1149 00e4 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1150 00e8 914A     		ldr	r2, .L81
+ 1151 00ea 1B01     		lsls	r3, r3, #4
+ 1152 00ec 1344     		add	r3, r3, r2
+ 1153 00ee 0233     		adds	r3, r3, #2
+ 1154 00f0 1B88     		ldrh	r3, [r3]
+ 1155 00f2 03F01F03 		and	r3, r3, #31
+ 1156 00f6 0122     		movs	r2, #1
+ 1157 00f8 9A40     		lsls	r2, r2, r3
+ 1158 00fa 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1159 00fe 8C48     		ldr	r0, .L81
+ 1160 0100 1B01     		lsls	r3, r3, #4
+ 1161 0102 0344     		add	r3, r3, r0
+ 1162 0104 0233     		adds	r3, r3, #2
+ 1163 0106 1B88     		ldrh	r3, [r3]
+ 1164 0108 5B09     		lsrs	r3, r3, #5
+ 1165 010a 9BB2     		uxth	r3, r3
+ 1166 010c 1846     		mov	r0, r3
+ 1167 010e 894B     		ldr	r3, .L81+4
+ 1168 0110 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 1169 0114 0A43     		orrs	r2, r2, r1
+ 1170 0116 9A61     		str	r2, [r3, #24]
+ 1171 0118 41E0     		b	.L62
+ 1172              	.L61:
+ 1173              		.loc 1 262 21 discriminator 2
+ 1174 011a 0022     		movs	r2, #0
+ 1175 011c 4FF48371 		mov	r1, #262
+ 1176 0120 8548     		ldr	r0, .L81+8
+ 1177 0122 FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1178 0126 3AE0     		b	.L62
+ 1179              	.L60:
+ 263:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 264:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 265:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 266:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_low(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 1180              		.loc 1 266 21 is_stmt 1
+ 1181 0128 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1182 012c 804A     		ldr	r2, .L81
+ 1183 012e 1B01     		lsls	r3, r3, #4
+ 1184 0130 1344     		add	r3, r3, r2
+ 1185 0132 0233     		adds	r3, r3, #2
+ 1186 0134 1B88     		ldrh	r3, [r3]
+ 1187 0136 40F6FF72 		movw	r2, #4095
+ 1188 013a 9342     		cmp	r3, r2
+ 1189 013c 29D0     		beq	.L63
+ 1190              		.loc 1 266 21 is_stmt 0 discriminator 1
+ 1191 013e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1192 0142 7B4A     		ldr	r2, .L81
+ 1193 0144 1B01     		lsls	r3, r3, #4
+ 1194 0146 1344     		add	r3, r3, r2
+ 1195 0148 0233     		adds	r3, r3, #2
+ 1196 014a 1B88     		ldrh	r3, [r3]
+ 1197 014c 5B09     		lsrs	r3, r3, #5
+ 1198 014e 9BB2     		uxth	r3, r3
+ 1199 0150 1A46     		mov	r2, r3
+ 1200 0152 784B     		ldr	r3, .L81+4
+ 1201 0154 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 1202 0158 9969     		ldr	r1, [r3, #24]
+ 1203 015a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1204 015e 744A     		ldr	r2, .L81
+ 1205 0160 1B01     		lsls	r3, r3, #4
+ 1206 0162 1344     		add	r3, r3, r2
+ 1207 0164 0233     		adds	r3, r3, #2
+ 1208 0166 1B88     		ldrh	r3, [r3]
+ 1209 0168 03F01F03 		and	r3, r3, #31
+ 1210 016c 4FF48032 		mov	r2, #65536
+ 1211 0170 9A40     		lsls	r2, r2, r3
+ 1212 0172 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1213 0176 6E48     		ldr	r0, .L81
+ 1214 0178 1B01     		lsls	r3, r3, #4
+ 1215 017a 0344     		add	r3, r3, r0
+ 1216 017c 0233     		adds	r3, r3, #2
+ 1217 017e 1B88     		ldrh	r3, [r3]
+ 1218 0180 5B09     		lsrs	r3, r3, #5
+ 1219 0182 9BB2     		uxth	r3, r3
+ 1220 0184 1846     		mov	r0, r3
+ 1221 0186 6B4B     		ldr	r3, .L81+4
+ 1222 0188 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 1223 018c 0A43     		orrs	r2, r2, r1
+ 1224 018e 9A61     		str	r2, [r3, #24]
+ 1225 0190 05E0     		b	.L62
+ 1226              	.L63:
+ 1227              		.loc 1 266 21 discriminator 2
+ 1228 0192 0022     		movs	r2, #0
+ 1229 0194 4FF48571 		mov	r1, #266
+ 1230 0198 6748     		ldr	r0, .L81+8
+ 1231 019a FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1232              	.L62:
+ 1233              	.LBB6:
+ 267:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 268:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 1234              		.loc 1 268 17 is_stmt 1
+ 1235 019e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1236 01a2 634A     		ldr	r2, .L81
+ 1237 01a4 1B01     		lsls	r3, r3, #4
+ 1238 01a6 1344     		add	r3, r3, r2
+ 1239 01a8 0833     		adds	r3, r3, #8
+ 1240 01aa 1B68     		ldr	r3, [r3]
+ 1241 01ac 0793     		str	r3, [sp, #28]
+ 1242 01ae 00BF     		nop
+ 1243              	.L64:
+ 1244              		.loc 1 268 17 is_stmt 0 discriminator 2
+ 1245 01b0 079B     		ldr	r3, [sp, #28]
+ 1246 01b2 5A1E     		subs	r2, r3, #1
+ 1247 01b4 0792     		str	r2, [sp, #28]
+ 1248 01b6 002B     		cmp	r3, #0
+ 1249 01b8 FAD1     		bne	.L64
+ 1250              	.LBE6:
+ 269:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 1251              		.loc 1 269 17 is_stmt 1
+ 1252 01ba 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1253 01be 5C4A     		ldr	r2, .L81
+ 1254 01c0 1B01     		lsls	r3, r3, #4
+ 1255 01c2 1344     		add	r3, r3, r2
+ 1256 01c4 1B88     		ldrh	r3, [r3]
+ 1257 01c6 1846     		mov	r0, r3
+ 1258 01c8 FFF7FEFF 		bl	zf_gpio_toggle_level
+ 270:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].use_miso)
+ 1259              		.loc 1 270 53
+ 1260 01cc 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1261 01d0 574A     		ldr	r2, .L81
+ 1262 01d2 1B01     		lsls	r3, r3, #4
+ 1263 01d4 1344     		add	r3, r3, r2
+ 1264 01d6 0833     		adds	r3, r3, #8
+ 1265 01d8 5B79     		ldrb	r3, [r3, #5]
+ 1266 01da C3F30313 		ubfx	r3, r3, #4, #4
+ 1267 01de DBB2     		uxtb	r3, r3
+ 1268              		.loc 1 270 19
+ 1269 01e0 002B     		cmp	r3, #0
+ 1270 01e2 13D0     		beq	.L65
+ 271:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 272:libraries/zf_driver/zf_driver_soft_spi.c ****                     if(zf_gpio_get_level(soft_spi_obj_list[soft_spi_index].miso_pin))
+ 1271              		.loc 1 272 24
+ 1272 01e4 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1273 01e8 514A     		ldr	r2, .L81
+ 1274 01ea 1B01     		lsls	r3, r3, #4
+ 1275 01ec 1344     		add	r3, r3, r2
+ 1276 01ee 0433     		adds	r3, r3, #4
+ 1277 01f0 1B88     		ldrh	r3, [r3]
+ 1278 01f2 1846     		mov	r0, r3
+ 1279 01f4 FFF7FEFF 		bl	zf_gpio_get_level
+ 1280 01f8 0346     		mov	r3, r0
+ 1281              		.loc 1 272 23
+ 1282 01fa 002B     		cmp	r3, #0
+ 1283 01fc 06D0     		beq	.L65
+ 273:libraries/zf_driver/zf_driver_soft_spi.c ****                     {
+ 274:libraries/zf_driver/zf_driver_soft_spi.c ****                         read_data |= mask_data;
+ 1284              		.loc 1 274 35
+ 1285 01fe BDF82220 		ldrh	r2, [sp, #34]	@ movhi
+ 1286 0202 BDF82030 		ldrh	r3, [sp, #32]	@ movhi
+ 1287 0206 1343     		orrs	r3, r3, r2
+ 1288 0208 ADF82230 		strh	r3, [sp, #34]	@ movhi
+ 1289              	.L65:
+ 1290              	.LBB7:
+ 275:libraries/zf_driver/zf_driver_soft_spi.c ****                     }
+ 276:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 277:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 1291              		.loc 1 277 17
+ 1292 020c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1293 0210 474A     		ldr	r2, .L81
+ 1294 0212 1B01     		lsls	r3, r3, #4
+ 1295 0214 1344     		add	r3, r3, r2
+ 1296 0216 0833     		adds	r3, r3, #8
+ 1297 0218 1B68     		ldr	r3, [r3]
+ 1298 021a 0693     		str	r3, [sp, #24]
+ 1299 021c 00BF     		nop
+ 1300              	.L66:
+ 1301              		.loc 1 277 17 is_stmt 0 discriminator 2
+ 1302 021e 069B     		ldr	r3, [sp, #24]
+ 1303 0220 5A1E     		subs	r2, r3, #1
+ 1304 0222 0692     		str	r2, [sp, #24]
+ 1305 0224 002B     		cmp	r3, #0
+ 1306 0226 FAD1     		bne	.L66
+ 1307              	.LBE7:
+ 278:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 1308              		.loc 1 278 17 is_stmt 1 discriminator 2
+ 1309 0228 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1310 022c 404A     		ldr	r2, .L81
+ 1311 022e 1B01     		lsls	r3, r3, #4
+ 1312 0230 1344     		add	r3, r3, r2
+ 1313 0232 1B88     		ldrh	r3, [r3]
+ 1314 0234 1846     		mov	r0, r3
+ 1315 0236 FFF7FEFF 		bl	zf_gpio_toggle_level
+ 250:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 1316              		.loc 1 250 43 discriminator 2
+ 1317 023a 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1318 023e 013B     		subs	r3, r3, #1
+ 1319 0240 8DF82730 		strb	r3, [sp, #39]
+ 1320              	.L57:
+ 250:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 1321              		.loc 1 250 13 discriminator 1
+ 1322 0244 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1323 0248 002B     		cmp	r3, #0
+ 1324 024a 7FF40AAF 		bne	.L67
+ 1325 024e FFE0     		b	.L68
+ 1326              	.L56:
+ 279:libraries/zf_driver/zf_driver_soft_spi.c ****             }
+ 280:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 281:libraries/zf_driver/zf_driver_soft_spi.c ****         else                                                                    // CPHA = 1 第二�
+ 282:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 283:libraries/zf_driver/zf_driver_soft_spi.c ****             for(temp = 16; 0 < temp; temp --)
+ 1327              		.loc 1 283 22
+ 1328 0250 1023     		movs	r3, #16
+ 1329 0252 8DF82730 		strb	r3, [sp, #39]
+ 1330              		.loc 1 283 13
+ 1331 0256 F6E0     		b	.L69
+ 1332              	.L79:
+ 284:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 285:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 1333              		.loc 1 285 17
+ 1334 0258 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1335 025c 344A     		ldr	r2, .L81
+ 1336 025e 1B01     		lsls	r3, r3, #4
+ 1337 0260 1344     		add	r3, r3, r2
+ 1338 0262 1B88     		ldrh	r3, [r3]
+ 1339 0264 1846     		mov	r0, r3
+ 1340 0266 FFF7FEFF 		bl	zf_gpio_toggle_level
+ 286:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].format)
+ 1341              		.loc 1 286 53
+ 1342 026a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1343 026e 304A     		ldr	r2, .L81
+ 1344 0270 1B01     		lsls	r3, r3, #4
+ 1345 0272 1344     		add	r3, r3, r2
+ 1346 0274 0833     		adds	r3, r3, #8
+ 1347 0276 5B79     		ldrb	r3, [r3, #5]
+ 1348 0278 C3F30303 		ubfx	r3, r3, #0, #4
+ 1349 027c DBB2     		uxtb	r3, r3
+ 1350              		.loc 1 286 19
+ 1351 027e 002B     		cmp	r3, #0
+ 1352 0280 09D0     		beq	.L70
+ 287:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 288:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x0001 << (16 - temp);
+ 1353              		.loc 1 288 47
+ 1354 0282 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1355 0286 C3F11003 		rsb	r3, r3, #16
+ 1356              		.loc 1 288 40
+ 1357 028a 0122     		movs	r2, #1
+ 1358 028c 02FA03F3 		lsl	r3, r2, r3
+ 1359              		.loc 1 288 31
+ 1360 0290 ADF82030 		strh	r3, [sp, #32]	@ movhi
+ 1361 0294 09E0     		b	.L71
+ 1362              	.L70:
+ 289:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 290:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 291:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 292:libraries/zf_driver/zf_driver_soft_spi.c ****                     mask_data = 0x8000 >> (16 - temp);
+ 1363              		.loc 1 292 47
+ 1364 0296 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1365 029a C3F11003 		rsb	r3, r3, #16
+ 1366              		.loc 1 292 40
+ 1367 029e 4FF40042 		mov	r2, #32768
+ 1368 02a2 42FA03F3 		asr	r3, r2, r3
+ 1369              		.loc 1 292 31
+ 1370 02a6 ADF82030 		strh	r3, [sp, #32]	@ movhi
+ 1371              	.L71:
+ 293:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 294:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(mask_data & write_data)
+ 1372              		.loc 1 294 20
+ 1373 02aa BDF82020 		ldrh	r2, [sp, #32]	@ movhi
+ 1374 02ae BDF82430 		ldrh	r3, [sp, #36]	@ movhi
+ 1375 02b2 1340     		ands	r3, r3, r2
+ 1376 02b4 9BB2     		uxth	r3, r3
+ 1377              		.loc 1 294 19
+ 1378 02b6 002B     		cmp	r3, #0
+ 1379 02b8 40D0     		beq	.L72
+ 295:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 296:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_high(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 1380              		.loc 1 296 21
+ 1381 02ba 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1382 02be 1C4A     		ldr	r2, .L81
+ 1383 02c0 1B01     		lsls	r3, r3, #4
+ 1384 02c2 1344     		add	r3, r3, r2
+ 1385 02c4 0233     		adds	r3, r3, #2
+ 1386 02c6 1B88     		ldrh	r3, [r3]
+ 1387 02c8 40F6FF72 		movw	r2, #4095
+ 1388 02cc 9342     		cmp	r3, r2
+ 1389 02ce 28D0     		beq	.L73
+ 1390              		.loc 1 296 21 is_stmt 0 discriminator 1
+ 1391 02d0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1392 02d4 164A     		ldr	r2, .L81
+ 1393 02d6 1B01     		lsls	r3, r3, #4
+ 1394 02d8 1344     		add	r3, r3, r2
+ 1395 02da 0233     		adds	r3, r3, #2
+ 1396 02dc 1B88     		ldrh	r3, [r3]
+ 1397 02de 5B09     		lsrs	r3, r3, #5
+ 1398 02e0 9BB2     		uxth	r3, r3
+ 1399 02e2 1A46     		mov	r2, r3
+ 1400 02e4 134B     		ldr	r3, .L81+4
+ 1401 02e6 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 1402 02ea 9969     		ldr	r1, [r3, #24]
+ 1403 02ec 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1404 02f0 0F4A     		ldr	r2, .L81
+ 1405 02f2 1B01     		lsls	r3, r3, #4
+ 1406 02f4 1344     		add	r3, r3, r2
+ 1407 02f6 0233     		adds	r3, r3, #2
+ 1408 02f8 1B88     		ldrh	r3, [r3]
+ 1409 02fa 03F01F03 		and	r3, r3, #31
+ 1410 02fe 0122     		movs	r2, #1
+ 1411 0300 9A40     		lsls	r2, r2, r3
+ 1412 0302 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1413 0306 0A48     		ldr	r0, .L81
+ 1414 0308 1B01     		lsls	r3, r3, #4
+ 1415 030a 0344     		add	r3, r3, r0
+ 1416 030c 0233     		adds	r3, r3, #2
+ 1417 030e 1B88     		ldrh	r3, [r3]
+ 1418 0310 5B09     		lsrs	r3, r3, #5
+ 1419 0312 9BB2     		uxth	r3, r3
+ 1420 0314 1846     		mov	r0, r3
+ 1421 0316 074B     		ldr	r3, .L81+4
+ 1422 0318 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 1423 031c 0A43     		orrs	r2, r2, r1
+ 1424 031e 9A61     		str	r2, [r3, #24]
+ 1425 0320 47E0     		b	.L74
+ 1426              	.L73:
+ 1427              		.loc 1 296 21 discriminator 2
+ 1428 0322 0022     		movs	r2, #0
+ 1429 0324 4FF49471 		mov	r1, #296
+ 1430 0328 0348     		ldr	r0, .L81+8
+ 1431 032a FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1432 032e 40E0     		b	.L74
+ 1433              	.L82:
+ 1434              		.align	2
+ 1435              	.L81:
+ 1436 0330 00000000 		.word	soft_spi_obj_list
+ 1437 0334 00000000 		.word	gpio_group_list
+ 1438 0338 00000000 		.word	.LC0
+ 1439              	.L72:
+ 297:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 298:libraries/zf_driver/zf_driver_soft_spi.c ****                 else
+ 299:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 300:libraries/zf_driver/zf_driver_soft_spi.c ****                     zf_gpio_low(soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 1440              		.loc 1 300 21 is_stmt 1
+ 1441 033c 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1442 0340 4F4A     		ldr	r2, .L83
+ 1443 0342 1B01     		lsls	r3, r3, #4
+ 1444 0344 1344     		add	r3, r3, r2
+ 1445 0346 0233     		adds	r3, r3, #2
+ 1446 0348 1B88     		ldrh	r3, [r3]
+ 1447 034a 40F6FF72 		movw	r2, #4095
+ 1448 034e 9342     		cmp	r3, r2
+ 1449 0350 29D0     		beq	.L75
+ 1450              		.loc 1 300 21 is_stmt 0 discriminator 1
+ 1451 0352 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1452 0356 4A4A     		ldr	r2, .L83
+ 1453 0358 1B01     		lsls	r3, r3, #4
+ 1454 035a 1344     		add	r3, r3, r2
+ 1455 035c 0233     		adds	r3, r3, #2
+ 1456 035e 1B88     		ldrh	r3, [r3]
+ 1457 0360 5B09     		lsrs	r3, r3, #5
+ 1458 0362 9BB2     		uxth	r3, r3
+ 1459 0364 1A46     		mov	r2, r3
+ 1460 0366 474B     		ldr	r3, .L83+4
+ 1461 0368 53F82230 		ldr	r3, [r3, r2, lsl #2]
+ 1462 036c 9969     		ldr	r1, [r3, #24]
+ 1463 036e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1464 0372 434A     		ldr	r2, .L83
+ 1465 0374 1B01     		lsls	r3, r3, #4
+ 1466 0376 1344     		add	r3, r3, r2
+ 1467 0378 0233     		adds	r3, r3, #2
+ 1468 037a 1B88     		ldrh	r3, [r3]
+ 1469 037c 03F01F03 		and	r3, r3, #31
+ 1470 0380 4FF48032 		mov	r2, #65536
+ 1471 0384 9A40     		lsls	r2, r2, r3
+ 1472 0386 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1473 038a 3D48     		ldr	r0, .L83
+ 1474 038c 1B01     		lsls	r3, r3, #4
+ 1475 038e 0344     		add	r3, r3, r0
+ 1476 0390 0233     		adds	r3, r3, #2
+ 1477 0392 1B88     		ldrh	r3, [r3]
+ 1478 0394 5B09     		lsrs	r3, r3, #5
+ 1479 0396 9BB2     		uxth	r3, r3
+ 1480 0398 1846     		mov	r0, r3
+ 1481 039a 3A4B     		ldr	r3, .L83+4
+ 1482 039c 53F82030 		ldr	r3, [r3, r0, lsl #2]
+ 1483 03a0 0A43     		orrs	r2, r2, r1
+ 1484 03a2 9A61     		str	r2, [r3, #24]
+ 1485 03a4 05E0     		b	.L74
+ 1486              	.L75:
+ 1487              		.loc 1 300 21 discriminator 2
+ 1488 03a6 0022     		movs	r2, #0
+ 1489 03a8 4FF49671 		mov	r1, #300
+ 1490 03ac 3648     		ldr	r0, .L83+8
+ 1491 03ae FFF7FEFF 		bl	zf_gpio_assert_handler
+ 1492              	.L74:
+ 1493              	.LBB8:
+ 301:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 302:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 1494              		.loc 1 302 17 is_stmt 1
+ 1495 03b2 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1496 03b6 324A     		ldr	r2, .L83
+ 1497 03b8 1B01     		lsls	r3, r3, #4
+ 1498 03ba 1344     		add	r3, r3, r2
+ 1499 03bc 0833     		adds	r3, r3, #8
+ 1500 03be 1B68     		ldr	r3, [r3]
+ 1501 03c0 0593     		str	r3, [sp, #20]
+ 1502 03c2 00BF     		nop
+ 1503              	.L76:
+ 1504              		.loc 1 302 17 is_stmt 0 discriminator 2
+ 1505 03c4 059B     		ldr	r3, [sp, #20]
+ 1506 03c6 5A1E     		subs	r2, r3, #1
+ 1507 03c8 0592     		str	r2, [sp, #20]
+ 1508 03ca 002B     		cmp	r3, #0
+ 1509 03cc FAD1     		bne	.L76
+ 1510              	.LBE8:
+ 303:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_gpio_toggle_level(soft_spi_obj_list[soft_spi_index].sck_pin);
+ 1511              		.loc 1 303 17 is_stmt 1
+ 1512 03ce 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1513 03d2 2B4A     		ldr	r2, .L83
+ 1514 03d4 1B01     		lsls	r3, r3, #4
+ 1515 03d6 1344     		add	r3, r3, r2
+ 1516 03d8 1B88     		ldrh	r3, [r3]
+ 1517 03da 1846     		mov	r0, r3
+ 1518 03dc FFF7FEFF 		bl	zf_gpio_toggle_level
+ 304:libraries/zf_driver/zf_driver_soft_spi.c ****                 if(soft_spi_obj_list[soft_spi_index].use_miso)
+ 1519              		.loc 1 304 53
+ 1520 03e0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1521 03e4 264A     		ldr	r2, .L83
+ 1522 03e6 1B01     		lsls	r3, r3, #4
+ 1523 03e8 1344     		add	r3, r3, r2
+ 1524 03ea 0833     		adds	r3, r3, #8
+ 1525 03ec 5B79     		ldrb	r3, [r3, #5]
+ 1526 03ee C3F30313 		ubfx	r3, r3, #4, #4
+ 1527 03f2 DBB2     		uxtb	r3, r3
+ 1528              		.loc 1 304 19
+ 1529 03f4 002B     		cmp	r3, #0
+ 1530 03f6 13D0     		beq	.L77
+ 305:libraries/zf_driver/zf_driver_soft_spi.c ****                 {
+ 306:libraries/zf_driver/zf_driver_soft_spi.c ****                     if(zf_gpio_get_level(soft_spi_obj_list[soft_spi_index].miso_pin))
+ 1531              		.loc 1 306 24
+ 1532 03f8 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1533 03fc 204A     		ldr	r2, .L83
+ 1534 03fe 1B01     		lsls	r3, r3, #4
+ 1535 0400 1344     		add	r3, r3, r2
+ 1536 0402 0433     		adds	r3, r3, #4
+ 1537 0404 1B88     		ldrh	r3, [r3]
+ 1538 0406 1846     		mov	r0, r3
+ 1539 0408 FFF7FEFF 		bl	zf_gpio_get_level
+ 1540 040c 0346     		mov	r3, r0
+ 1541              		.loc 1 306 23
+ 1542 040e 002B     		cmp	r3, #0
+ 1543 0410 06D0     		beq	.L77
+ 307:libraries/zf_driver/zf_driver_soft_spi.c ****                     {
+ 308:libraries/zf_driver/zf_driver_soft_spi.c ****                         read_data |= mask_data;
+ 1544              		.loc 1 308 35
+ 1545 0412 BDF82220 		ldrh	r2, [sp, #34]	@ movhi
+ 1546 0416 BDF82030 		ldrh	r3, [sp, #32]	@ movhi
+ 1547 041a 1343     		orrs	r3, r3, r2
+ 1548 041c ADF82230 		strh	r3, [sp, #34]	@ movhi
+ 1549              	.L77:
+ 1550              	.LBB9:
+ 309:libraries/zf_driver/zf_driver_soft_spi.c ****                     }
+ 310:libraries/zf_driver/zf_driver_soft_spi.c ****                 }
+ 311:libraries/zf_driver/zf_driver_soft_spi.c ****                 zf_soft_spi_delay(soft_spi_obj_list[soft_spi_index].delay);
+ 1551              		.loc 1 311 17
+ 1552 0420 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1553 0424 164A     		ldr	r2, .L83
+ 1554 0426 1B01     		lsls	r3, r3, #4
+ 1555 0428 1344     		add	r3, r3, r2
+ 1556 042a 0833     		adds	r3, r3, #8
+ 1557 042c 1B68     		ldr	r3, [r3]
+ 1558 042e 0493     		str	r3, [sp, #16]
+ 1559 0430 00BF     		nop
+ 1560              	.L78:
+ 1561              		.loc 1 311 17 is_stmt 0 discriminator 2
+ 1562 0432 049B     		ldr	r3, [sp, #16]
+ 1563 0434 5A1E     		subs	r2, r3, #1
+ 1564 0436 0492     		str	r2, [sp, #16]
+ 1565 0438 002B     		cmp	r3, #0
+ 1566 043a FAD1     		bne	.L78
+ 1567              	.LBE9:
+ 283:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 1568              		.loc 1 283 43 is_stmt 1 discriminator 2
+ 1569 043c 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1570 0440 013B     		subs	r3, r3, #1
+ 1571 0442 8DF82730 		strb	r3, [sp, #39]
+ 1572              	.L69:
+ 283:libraries/zf_driver/zf_driver_soft_spi.c ****             {
+ 1573              		.loc 1 283 13 discriminator 1
+ 1574 0446 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1575 044a 002B     		cmp	r3, #0
+ 1576 044c 7FF404AF 		bne	.L79
+ 1577              	.L68:
+ 312:libraries/zf_driver/zf_driver_soft_spi.c ****             }
+ 313:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 314:libraries/zf_driver/zf_driver_soft_spi.c ****         if(NULL != data_out)
+ 1578              		.loc 1 314 11
+ 1579 0450 019B     		ldr	r3, [sp, #4]
+ 1580 0452 002B     		cmp	r3, #0
+ 1581 0454 08D0     		beq	.L54
+ 315:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 316:libraries/zf_driver/zf_driver_soft_spi.c ****             *data_out ++ = read_data;
+ 1582              		.loc 1 316 23
+ 1583 0456 019B     		ldr	r3, [sp, #4]
+ 1584 0458 9A1C     		adds	r2, r3, #2
+ 1585 045a 0192     		str	r2, [sp, #4]
+ 1586              		.loc 1 316 26
+ 1587 045c BDF82220 		ldrh	r2, [sp, #34]	@ movhi
+ 1588 0460 1A80     		strh	r2, [r3]	@ movhi
+ 317:libraries/zf_driver/zf_driver_soft_spi.c ****             read_data = 0;
+ 1589              		.loc 1 317 23
+ 1590 0462 0023     		movs	r3, #0
+ 1591 0464 ADF82230 		strh	r3, [sp, #34]	@ movhi
+ 1592              	.L54:
+ 242:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 1593              		.loc 1 242 15
+ 1594 0468 009B     		ldr	r3, [sp]
+ 1595 046a 5A1E     		subs	r2, r3, #1
+ 1596 046c 0092     		str	r2, [sp]
+ 242:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 1597              		.loc 1 242 10
+ 1598 046e 002B     		cmp	r3, #0
+ 1599 0470 7FF4DBAD 		bne	.L80
+ 318:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 319:libraries/zf_driver/zf_driver_soft_spi.c ****     }
+ 320:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 1600              		.loc 1 320 1
+ 1601 0474 00BF     		nop
+ 1602 0476 00BF     		nop
+ 1603 0478 0BB0     		add	sp, sp, #44
+ 1604              		.cfi_def_cfa_offset 4
+ 1605              		@ sp needed
+ 1606 047a 5DF804FB 		ldr	pc, [sp], #4
+ 1607              	.L84:
+ 1608 047e 00BF     		.align	2
+ 1609              	.L83:
+ 1610 0480 00000000 		.word	soft_spi_obj_list
+ 1611 0484 00000000 		.word	gpio_group_list
+ 1612 0488 00000000 		.word	.LC0
+ 1613              		.cfi_endproc
+ 1614              	.LFE176:
+ 1616              		.section	.text.zf_soft_spi_transfer_8bit_array,"ax",%progbits
+ 1617              		.align	1
+ 1618              		.p2align 4,,15
+ 1619              		.global	zf_soft_spi_transfer_8bit_array
+ 1620              		.syntax unified
+ 1621              		.thumb
+ 1622              		.thumb_func
+ 1624              	zf_soft_spi_transfer_8bit_array:
+ 1625              	.LFB177:
+ 321:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 322:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 323:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 8bit 数据传输 发送与接收数据是同时进行的
+ 324:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 325:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     *write_buffer       发送数据存放缓冲区
+ 326:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     *read_buffer        读取数据存放缓冲区
+ 327:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     len                 发送的字节数
+ 328:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 329:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_transfer_8bit_array(soft_spi_index, write_buffer, read_buffer, len)
+ 330:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 331:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 332:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_transfer_8bit_array (zf_soft_spi_index_enum soft_spi_index, const uint8 *write_bu
+ 333:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 1626              		.loc 1 333 1
+ 1627              		.cfi_startproc
+ 1628              		@ args = 0, pretend = 0, frame = 24
+ 1629              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1630 0000 00B5     		push	{lr}
+ 1631              		.cfi_def_cfa_offset 4
+ 1632              		.cfi_offset 14, -4
+ 1633 0002 87B0     		sub	sp, sp, #28
+ 1634              		.cfi_def_cfa_offset 32
+ 1635 0004 0291     		str	r1, [sp, #8]
+ 1636 0006 0192     		str	r2, [sp, #4]
+ 1637 0008 0093     		str	r3, [sp]
+ 1638 000a 0346     		mov	r3, r0
+ 1639 000c 8DF80F30 		strb	r3, [sp, #15]
+ 334:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 1640              		.loc 1 334 38
+ 1641 0010 0123     		movs	r3, #1
+ 1642 0012 8DF81730 		strb	r3, [sp, #23]
+ 335:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 336:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 337:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 338:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(soft_spi_obj_list[soft_spi_index].delay))
+ 1643              		.loc 1 338 12
+ 1644 0016 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1645 001a 284A     		ldr	r2, .L91
+ 1646 001c 1B01     		lsls	r3, r3, #4
+ 1647 001e 1344     		add	r3, r3, r2
+ 1648 0020 0833     		adds	r3, r3, #8
+ 1649 0022 1B68     		ldr	r3, [r3]
+ 1650              		.loc 1 338 11
+ 1651 0024 002B     		cmp	r3, #0
+ 1652 0026 0CD1     		bne	.L86
+ 1653              		.loc 1 338 12 discriminator 1
+ 1654 0028 0022     		movs	r2, #0
+ 1655 002a 4FF4A971 		mov	r1, #338
+ 1656 002e 2448     		ldr	r0, .L91+4
+ 1657 0030 FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 1658 0034 0346     		mov	r3, r0
+ 1659 0036 002B     		cmp	r3, #0
+ 1660 0038 03D0     		beq	.L86
+ 339:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 340:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 341:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_NOT_INIT;                      // SOFT_SPI 模块�
+ 1661              		.loc 1 341 26
+ 1662 003a 2123     		movs	r3, #33
+ 1663 003c 8DF81730 		strb	r3, [sp, #23]
+ 342:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1664              		.loc 1 342 13
+ 1665 0040 36E0     		b	.L87
+ 1666              	.L86:
+ 343:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 344:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert((NULL != write_buffer) || (NULL != read_buffer)))
+ 1667              		.loc 1 344 11
+ 1668 0042 029B     		ldr	r3, [sp, #8]
+ 1669 0044 002B     		cmp	r3, #0
+ 1670 0046 0FD1     		bne	.L88
+ 1671              		.loc 1 344 12 discriminator 1
+ 1672 0048 019B     		ldr	r3, [sp, #4]
+ 1673 004a 002B     		cmp	r3, #0
+ 1674 004c 0CD1     		bne	.L88
+ 1675              		.loc 1 344 12 is_stmt 0 discriminator 2
+ 1676 004e 0022     		movs	r2, #0
+ 1677 0050 4FF4AC71 		mov	r1, #344
+ 1678 0054 1A48     		ldr	r0, .L91+4
+ 1679 0056 FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 1680 005a 0346     		mov	r3, r0
+ 1681 005c 002B     		cmp	r3, #0
+ 1682 005e 03D0     		beq	.L88
+ 345:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 346:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 347:libraries/zf_driver/zf_driver_soft_spi.c ****             // 不可以对空指针进行操作
+ 348:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_DATA_BUFFER_NULL;                     // IIC 数据指针
+ 1683              		.loc 1 348 26 is_stmt 1
+ 1684 0060 2523     		movs	r3, #37
+ 1685 0062 8DF81730 		strb	r3, [sp, #23]
+ 349:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1686              		.loc 1 349 13
+ 1687 0066 23E0     		b	.L87
+ 1688              	.L88:
+ 350:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 351:libraries/zf_driver/zf_driver_soft_spi.c ****         if(!soft_spi_obj_list[soft_spi_index].enable)
+ 1689              		.loc 1 351 46
+ 1690 0068 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1691 006c 134A     		ldr	r2, .L91
+ 1692 006e 1B01     		lsls	r3, r3, #4
+ 1693 0070 1344     		add	r3, r3, r2
+ 1694 0072 0833     		adds	r3, r3, #8
+ 1695 0074 1B79     		ldrb	r3, [r3, #4]
+ 1696 0076 C3F30313 		ubfx	r3, r3, #4, #4
+ 1697 007a DBB2     		uxtb	r3, r3
+ 1698              		.loc 1 351 11
+ 1699 007c 002B     		cmp	r3, #0
+ 1700 007e 03D1     		bne	.L89
+ 352:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 353:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_WARNING_MODULE_DISABLE;                     // SOFT_SPI 模块�
+ 1701              		.loc 1 353 26
+ 1702 0080 1023     		movs	r3, #16
+ 1703 0082 8DF81730 		strb	r3, [sp, #23]
+ 354:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1704              		.loc 1 354 13
+ 1705 0086 13E0     		b	.L87
+ 1706              	.L89:
+ 355:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 356:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 357:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_soft_spi_transfer_start(soft_spi_index);
+ 1707              		.loc 1 357 9
+ 1708 0088 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1709 008c 1846     		mov	r0, r3
+ 1710 008e FFF7FEFF 		bl	zf_soft_spi_transfer_start
+ 358:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_soft_spi_8bit_data_handler(soft_spi_index, write_buffer, read_buffer, len);
+ 1711              		.loc 1 358 9
+ 1712 0092 9DF80F00 		ldrb	r0, [sp, #15]	@ zero_extendqisi2
+ 1713 0096 009B     		ldr	r3, [sp]
+ 1714 0098 019A     		ldr	r2, [sp, #4]
+ 1715 009a 0299     		ldr	r1, [sp, #8]
+ 1716 009c FFF7FEFF 		bl	zf_soft_spi_8bit_data_handler
+ 359:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_soft_spi_transfer_stop(soft_spi_index);
+ 1717              		.loc 1 359 9
+ 1718 00a0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1719 00a4 1846     		mov	r0, r3
+ 1720 00a6 FFF7FEFF 		bl	zf_soft_spi_transfer_stop
+ 360:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 361:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 1721              		.loc 1 361 22
+ 1722 00aa 0023     		movs	r3, #0
+ 1723 00ac 8DF81730 		strb	r3, [sp, #23]
+ 1724              	.L87:
+ 362:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 363:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 364:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 1725              		.loc 1 364 12
+ 1726 00b0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 365:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 1727              		.loc 1 365 1
+ 1728 00b4 1846     		mov	r0, r3
+ 1729 00b6 07B0     		add	sp, sp, #28
+ 1730              		.cfi_def_cfa_offset 4
+ 1731              		@ sp needed
+ 1732 00b8 5DF804FB 		ldr	pc, [sp], #4
+ 1733              	.L92:
+ 1734              		.align	2
+ 1735              	.L91:
+ 1736 00bc 00000000 		.word	soft_spi_obj_list
+ 1737 00c0 00000000 		.word	.LC0
+ 1738              		.cfi_endproc
+ 1739              	.LFE177:
+ 1741              		.section	.text.zf_soft_spi_transfer_16bit_array,"ax",%progbits
+ 1742              		.align	1
+ 1743              		.p2align 4,,15
+ 1744              		.global	zf_soft_spi_transfer_16bit_array
+ 1745              		.syntax unified
+ 1746              		.thumb
+ 1747              		.thumb_func
+ 1749              	zf_soft_spi_transfer_16bit_array:
+ 1750              	.LFB178:
+ 366:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 367:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 368:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 16bit 数据传输 发送与接收数据是同时进行的
+ 369:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 370:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     *write_buffer       发送数据存放缓冲区
+ 371:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     *read_buffer        读取数据存放缓冲区
+ 372:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     len                 发送的字节数
+ 373:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 374:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_transfer_16bit_array(soft_spi_index, write_buffer, read_buffer, len
+ 375:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 376:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 377:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_transfer_16bit_array (zf_soft_spi_index_enum soft_spi_index, const uint16 *write_
+ 378:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 1751              		.loc 1 378 1
+ 1752              		.cfi_startproc
+ 1753              		@ args = 0, pretend = 0, frame = 24
+ 1754              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1755 0000 00B5     		push	{lr}
+ 1756              		.cfi_def_cfa_offset 4
+ 1757              		.cfi_offset 14, -4
+ 1758 0002 87B0     		sub	sp, sp, #28
+ 1759              		.cfi_def_cfa_offset 32
+ 1760 0004 0291     		str	r1, [sp, #8]
+ 1761 0006 0192     		str	r2, [sp, #4]
+ 1762 0008 0093     		str	r3, [sp]
+ 1763 000a 0346     		mov	r3, r0
+ 1764 000c 8DF80F30 		strb	r3, [sp, #15]
+ 379:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 1765              		.loc 1 379 38
+ 1766 0010 0123     		movs	r3, #1
+ 1767 0012 8DF81730 		strb	r3, [sp, #23]
+ 380:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 381:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 382:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 383:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(soft_spi_obj_list[soft_spi_index].delay))
+ 1768              		.loc 1 383 12
+ 1769 0016 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1770 001a 284A     		ldr	r2, .L99
+ 1771 001c 1B01     		lsls	r3, r3, #4
+ 1772 001e 1344     		add	r3, r3, r2
+ 1773 0020 0833     		adds	r3, r3, #8
+ 1774 0022 1B68     		ldr	r3, [r3]
+ 1775              		.loc 1 383 11
+ 1776 0024 002B     		cmp	r3, #0
+ 1777 0026 0CD1     		bne	.L94
+ 1778              		.loc 1 383 12 discriminator 1
+ 1779 0028 0022     		movs	r2, #0
+ 1780 002a 40F27F11 		movw	r1, #383
+ 1781 002e 2448     		ldr	r0, .L99+4
+ 1782 0030 FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 1783 0034 0346     		mov	r3, r0
+ 1784 0036 002B     		cmp	r3, #0
+ 1785 0038 03D0     		beq	.L94
+ 384:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 385:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 386:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_NOT_INIT;                      // SOFT_SPI 模块�
+ 1786              		.loc 1 386 26
+ 1787 003a 2123     		movs	r3, #33
+ 1788 003c 8DF81730 		strb	r3, [sp, #23]
+ 387:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1789              		.loc 1 387 13
+ 1790 0040 36E0     		b	.L95
+ 1791              	.L94:
+ 388:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 389:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert((NULL != write_buffer) || (NULL != read_buffer)))
+ 1792              		.loc 1 389 11
+ 1793 0042 029B     		ldr	r3, [sp, #8]
+ 1794 0044 002B     		cmp	r3, #0
+ 1795 0046 0FD1     		bne	.L96
+ 1796              		.loc 1 389 12 discriminator 1
+ 1797 0048 019B     		ldr	r3, [sp, #4]
+ 1798 004a 002B     		cmp	r3, #0
+ 1799 004c 0CD1     		bne	.L96
+ 1800              		.loc 1 389 12 is_stmt 0 discriminator 2
+ 1801 004e 0022     		movs	r2, #0
+ 1802 0050 40F28511 		movw	r1, #389
+ 1803 0054 1A48     		ldr	r0, .L99+4
+ 1804 0056 FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 1805 005a 0346     		mov	r3, r0
+ 1806 005c 002B     		cmp	r3, #0
+ 1807 005e 03D0     		beq	.L96
+ 390:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 391:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明传入数据指针为 NULL 空指针
+ 392:libraries/zf_driver/zf_driver_soft_spi.c ****             // 不可以对空指针进行操作
+ 393:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_DATA_BUFFER_NULL;                     // IIC 数据指针
+ 1808              		.loc 1 393 26 is_stmt 1
+ 1809 0060 2523     		movs	r3, #37
+ 1810 0062 8DF81730 		strb	r3, [sp, #23]
+ 394:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1811              		.loc 1 394 13
+ 1812 0066 23E0     		b	.L95
+ 1813              	.L96:
+ 395:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 396:libraries/zf_driver/zf_driver_soft_spi.c ****         if(!soft_spi_obj_list[soft_spi_index].enable)
+ 1814              		.loc 1 396 46
+ 1815 0068 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1816 006c 134A     		ldr	r2, .L99
+ 1817 006e 1B01     		lsls	r3, r3, #4
+ 1818 0070 1344     		add	r3, r3, r2
+ 1819 0072 0833     		adds	r3, r3, #8
+ 1820 0074 1B79     		ldrb	r3, [r3, #4]
+ 1821 0076 C3F30313 		ubfx	r3, r3, #4, #4
+ 1822 007a DBB2     		uxtb	r3, r3
+ 1823              		.loc 1 396 11
+ 1824 007c 002B     		cmp	r3, #0
+ 1825 007e 03D1     		bne	.L97
+ 397:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 398:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_WARNING_MODULE_DISABLE;                     // SOFT_SPI 模块�
+ 1826              		.loc 1 398 26
+ 1827 0080 1023     		movs	r3, #16
+ 1828 0082 8DF81730 		strb	r3, [sp, #23]
+ 399:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1829              		.loc 1 399 13
+ 1830 0086 13E0     		b	.L95
+ 1831              	.L97:
+ 400:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 401:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 402:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_soft_spi_transfer_start(soft_spi_index);
+ 1832              		.loc 1 402 9
+ 1833 0088 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1834 008c 1846     		mov	r0, r3
+ 1835 008e FFF7FEFF 		bl	zf_soft_spi_transfer_start
+ 403:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_soft_spi_16bit_data_handler(soft_spi_index, write_buffer, read_buffer, len);
+ 1836              		.loc 1 403 9
+ 1837 0092 9DF80F00 		ldrb	r0, [sp, #15]	@ zero_extendqisi2
+ 1838 0096 009B     		ldr	r3, [sp]
+ 1839 0098 019A     		ldr	r2, [sp, #4]
+ 1840 009a 0299     		ldr	r1, [sp, #8]
+ 1841 009c FFF7FEFF 		bl	zf_soft_spi_16bit_data_handler
+ 404:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_soft_spi_transfer_stop(soft_spi_index);
+ 1842              		.loc 1 404 9
+ 1843 00a0 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 1844 00a4 1846     		mov	r0, r3
+ 1845 00a6 FFF7FEFF 		bl	zf_soft_spi_transfer_stop
+ 405:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 406:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 1846              		.loc 1 406 22
+ 1847 00aa 0023     		movs	r3, #0
+ 1848 00ac 8DF81730 		strb	r3, [sp, #23]
+ 1849              	.L95:
+ 407:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 408:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 409:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 1850              		.loc 1 409 12
+ 1851 00b0 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 410:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 1852              		.loc 1 410 1
+ 1853 00b4 1846     		mov	r0, r3
+ 1854 00b6 07B0     		add	sp, sp, #28
+ 1855              		.cfi_def_cfa_offset 4
+ 1856              		@ sp needed
+ 1857 00b8 5DF804FB 		ldr	pc, [sp], #4
+ 1858              	.L100:
+ 1859              		.align	2
+ 1860              	.L99:
+ 1861 00bc 00000000 		.word	soft_spi_obj_list
+ 1862 00c0 00000000 		.word	.LC0
+ 1863              		.cfi_endproc
+ 1864              	.LFE178:
+ 1866              		.section	.text.zf_soft_spi_set_config,"ax",%progbits
+ 1867              		.align	1
+ 1868              		.p2align 4,,15
+ 1869              		.global	zf_soft_spi_set_config
+ 1870              		.syntax unified
+ 1871              		.thumb
+ 1872              		.thumb_func
+ 1874              	zf_soft_spi_set_config:
+ 1875              	.LFB179:
+ 411:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 412:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 413:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 接口配置设置
+ 414:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 415:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     item                SOFT_SPI 参照   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 416:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 417:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_set_config(soft_spi_index, item);
+ 418:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 419:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 420:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_set_config (zf_soft_spi_index_enum soft_spi_index, zf_soft_spi_config_item_enum i
+ 421:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 1876              		.loc 1 421 1
+ 1877              		.cfi_startproc
+ 1878              		@ args = 0, pretend = 0, frame = 16
+ 1879              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1880 0000 00B5     		push	{lr}
+ 1881              		.cfi_def_cfa_offset 4
+ 1882              		.cfi_offset 14, -4
+ 1883 0002 85B0     		sub	sp, sp, #20
+ 1884              		.cfi_def_cfa_offset 24
+ 1885 0004 0346     		mov	r3, r0
+ 1886 0006 0A46     		mov	r2, r1
+ 1887 0008 8DF80730 		strb	r3, [sp, #7]
+ 1888 000c 1346     		mov	r3, r2
+ 1889 000e 8DF80630 		strb	r3, [sp, #6]
+ 422:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 1890              		.loc 1 422 38
+ 1891 0012 0123     		movs	r3, #1
+ 1892 0014 8DF80F30 		strb	r3, [sp, #15]
+ 423:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 424:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 425:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 426:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(soft_spi_obj_list[soft_spi_index].delay))
+ 1893              		.loc 1 426 12
+ 1894 0018 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1895 001c 164A     		ldr	r2, .L105
+ 1896 001e 1B01     		lsls	r3, r3, #4
+ 1897 0020 1344     		add	r3, r3, r2
+ 1898 0022 0833     		adds	r3, r3, #8
+ 1899 0024 1B68     		ldr	r3, [r3]
+ 1900              		.loc 1 426 11
+ 1901 0026 002B     		cmp	r3, #0
+ 1902 0028 0CD1     		bne	.L102
+ 1903              		.loc 1 426 12 discriminator 1
+ 1904 002a 0022     		movs	r2, #0
+ 1905 002c 4FF4D571 		mov	r1, #426
+ 1906 0030 1248     		ldr	r0, .L105+4
+ 1907 0032 FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 1908 0036 0346     		mov	r3, r0
+ 1909 0038 002B     		cmp	r3, #0
+ 1910 003a 03D0     		beq	.L102
+ 427:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 428:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 429:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_NOT_INIT;                      // SOFT_SPI 模块�
+ 1911              		.loc 1 429 26
+ 1912 003c 2123     		movs	r3, #33
+ 1913 003e 8DF80F30 		strb	r3, [sp, #15]
+ 430:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1914              		.loc 1 430 13
+ 1915 0042 12E0     		b	.L103
+ 1916              	.L102:
+ 431:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 432:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 433:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].format = item;
+ 1917              		.loc 1 433 42
+ 1918 0044 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1919              		.loc 1 433 50
+ 1920 0048 9DF80620 		ldrb	r2, [sp, #6]
+ 1921 004c 02F00F02 		and	r2, r2, #15
+ 1922 0050 D1B2     		uxtb	r1, r2
+ 1923 0052 094A     		ldr	r2, .L105
+ 1924 0054 1B01     		lsls	r3, r3, #4
+ 1925 0056 1344     		add	r3, r3, r2
+ 1926 0058 03F10802 		add	r2, r3, #8
+ 1927 005c 5379     		ldrb	r3, [r2, #5]
+ 1928 005e 61F30303 		bfi	r3, r1, #0, #4
+ 1929 0062 5371     		strb	r3, [r2, #5]
+ 434:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 435:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 1930              		.loc 1 435 22
+ 1931 0064 0023     		movs	r3, #0
+ 1932 0066 8DF80F30 		strb	r3, [sp, #15]
+ 1933              	.L103:
+ 436:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 437:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 438:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 1934              		.loc 1 438 12
+ 1935 006a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 439:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 1936              		.loc 1 439 1
+ 1937 006e 1846     		mov	r0, r3
+ 1938 0070 05B0     		add	sp, sp, #20
+ 1939              		.cfi_def_cfa_offset 4
+ 1940              		@ sp needed
+ 1941 0072 5DF804FB 		ldr	pc, [sp], #4
+ 1942              	.L106:
+ 1943 0076 00BF     		.align	2
+ 1944              	.L105:
+ 1945 0078 00000000 		.word	soft_spi_obj_list
+ 1946 007c 00000000 		.word	.LC0
+ 1947              		.cfi_endproc
+ 1948              	.LFE179:
+ 1950              		.section	.text.zf_soft_spi_set_speed,"ax",%progbits
+ 1951              		.align	1
+ 1952              		.p2align 4,,15
+ 1953              		.global	zf_soft_spi_set_speed
+ 1954              		.syntax unified
+ 1955              		.thumb
+ 1956              		.thumb_func
+ 1958              	zf_soft_spi_set_speed:
+ 1959              	.LFB180:
+ 440:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 441:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 442:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 接口配置速度
+ 443:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 444:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     delay               SOFT_SPI 延时 就是时钟高电平时间 越短 SPI 速�
+ 445:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 446:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_set_config(soft_spi_index, item);
+ 447:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 448:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 449:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_set_speed (zf_soft_spi_index_enum soft_spi_index, uint32 delay)
+ 450:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 1960              		.loc 1 450 1
+ 1961              		.cfi_startproc
+ 1962              		@ args = 0, pretend = 0, frame = 16
+ 1963              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1964 0000 00B5     		push	{lr}
+ 1965              		.cfi_def_cfa_offset 4
+ 1966              		.cfi_offset 14, -4
+ 1967 0002 85B0     		sub	sp, sp, #20
+ 1968              		.cfi_def_cfa_offset 24
+ 1969 0004 0346     		mov	r3, r0
+ 1970 0006 0091     		str	r1, [sp]
+ 1971 0008 8DF80730 		strb	r3, [sp, #7]
+ 451:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 1972              		.loc 1 451 38
+ 1973 000c 0123     		movs	r3, #1
+ 1974 000e 8DF80F30 		strb	r3, [sp, #15]
+ 452:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 453:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 454:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 455:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(soft_spi_obj_list[soft_spi_index].delay))
+ 1975              		.loc 1 455 12
+ 1976 0012 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1977 0016 1A4A     		ldr	r2, .L112
+ 1978 0018 1B01     		lsls	r3, r3, #4
+ 1979 001a 1344     		add	r3, r3, r2
+ 1980 001c 0833     		adds	r3, r3, #8
+ 1981 001e 1B68     		ldr	r3, [r3]
+ 1982              		.loc 1 455 11
+ 1983 0020 002B     		cmp	r3, #0
+ 1984 0022 0CD1     		bne	.L108
+ 1985              		.loc 1 455 12 discriminator 1
+ 1986 0024 0022     		movs	r2, #0
+ 1987 0026 40F2C711 		movw	r1, #455
+ 1988 002a 1648     		ldr	r0, .L112+4
+ 1989 002c FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 1990 0030 0346     		mov	r3, r0
+ 1991 0032 002B     		cmp	r3, #0
+ 1992 0034 03D0     		beq	.L108
+ 456:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 457:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 458:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_NOT_INIT;                      // SOFT_SPI 模块�
+ 1993              		.loc 1 458 26
+ 1994 0036 2123     		movs	r3, #33
+ 1995 0038 8DF80F30 		strb	r3, [sp, #15]
+ 459:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 1996              		.loc 1 459 13
+ 1997 003c 1AE0     		b	.L109
+ 1998              	.L108:
+ 460:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 461:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(0 != delay))
+ 1999              		.loc 1 461 11
+ 2000 003e 009B     		ldr	r3, [sp]
+ 2001 0040 002B     		cmp	r3, #0
+ 2002 0042 0CD1     		bne	.L110
+ 2003              		.loc 1 461 12 discriminator 1
+ 2004 0044 0022     		movs	r2, #0
+ 2005 0046 40F2CD11 		movw	r1, #461
+ 2006 004a 0E48     		ldr	r0, .L112+4
+ 2007 004c FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2008 0050 0346     		mov	r3, r0
+ 2009 0052 002B     		cmp	r3, #0
+ 2010 0054 03D0     		beq	.L110
+ 462:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 463:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明输入的 SOFT_SPI 的脉宽时间单位为 0
+ 464:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_SPEED_UNSUPPORTED;                    // SOFT_SPI 传输�
+ 2011              		.loc 1 464 26
+ 2012 0056 2223     		movs	r3, #34
+ 2013 0058 8DF80F30 		strb	r3, [sp, #15]
+ 465:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2014              		.loc 1 465 13
+ 2015 005c 0AE0     		b	.L109
+ 2016              	.L110:
+ 466:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 467:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 468:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].delay = delay;
+ 2017              		.loc 1 468 42
+ 2018 005e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2019              		.loc 1 468 49
+ 2020 0062 074A     		ldr	r2, .L112
+ 2021 0064 1B01     		lsls	r3, r3, #4
+ 2022 0066 1344     		add	r3, r3, r2
+ 2023 0068 0833     		adds	r3, r3, #8
+ 2024 006a 009A     		ldr	r2, [sp]
+ 2025 006c 1A60     		str	r2, [r3]
+ 469:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 470:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 2026              		.loc 1 470 22
+ 2027 006e 0023     		movs	r3, #0
+ 2028 0070 8DF80F30 		strb	r3, [sp, #15]
+ 2029              	.L109:
+ 471:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 472:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 473:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 2030              		.loc 1 473 12
+ 2031 0074 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 474:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 2032              		.loc 1 474 1
+ 2033 0078 1846     		mov	r0, r3
+ 2034 007a 05B0     		add	sp, sp, #20
+ 2035              		.cfi_def_cfa_offset 4
+ 2036              		@ sp needed
+ 2037 007c 5DF804FB 		ldr	pc, [sp], #4
+ 2038              	.L113:
+ 2039              		.align	2
+ 2040              	.L112:
+ 2041 0080 00000000 		.word	soft_spi_obj_list
+ 2042 0084 00000000 		.word	.LC0
+ 2043              		.cfi_endproc
+ 2044              	.LFE180:
+ 2046              		.section	.text.zf_soft_spi_enable,"ax",%progbits
+ 2047              		.align	1
+ 2048              		.p2align 4,,15
+ 2049              		.global	zf_soft_spi_enable
+ 2050              		.syntax unified
+ 2051              		.thumb
+ 2052              		.thumb_func
+ 2054              	zf_soft_spi_enable:
+ 2055              	.LFB181:
+ 475:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 476:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 477:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 接口 使能
+ 478:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 479:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 480:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_enable(soft_spi_index);
+ 481:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 482:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 483:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_enable (zf_soft_spi_index_enum soft_spi_index)
+ 484:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 2056              		.loc 1 484 1
+ 2057              		.cfi_startproc
+ 2058              		@ args = 0, pretend = 0, frame = 16
+ 2059              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2060 0000 00B5     		push	{lr}
+ 2061              		.cfi_def_cfa_offset 4
+ 2062              		.cfi_offset 14, -4
+ 2063 0002 85B0     		sub	sp, sp, #20
+ 2064              		.cfi_def_cfa_offset 24
+ 2065 0004 0346     		mov	r3, r0
+ 2066 0006 8DF80730 		strb	r3, [sp, #7]
+ 485:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 2067              		.loc 1 485 38
+ 2068 000a 0123     		movs	r3, #1
+ 2069 000c 8DF80F30 		strb	r3, [sp, #15]
+ 486:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 487:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 488:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 489:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(soft_spi_obj_list[soft_spi_index].delay))
+ 2070              		.loc 1 489 12
+ 2071 0010 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2072 0014 144A     		ldr	r2, .L118
+ 2073 0016 1B01     		lsls	r3, r3, #4
+ 2074 0018 1344     		add	r3, r3, r2
+ 2075 001a 0833     		adds	r3, r3, #8
+ 2076 001c 1B68     		ldr	r3, [r3]
+ 2077              		.loc 1 489 11
+ 2078 001e 002B     		cmp	r3, #0
+ 2079 0020 0CD1     		bne	.L115
+ 2080              		.loc 1 489 12 discriminator 1
+ 2081 0022 0022     		movs	r2, #0
+ 2082 0024 40F2E911 		movw	r1, #489
+ 2083 0028 1048     		ldr	r0, .L118+4
+ 2084 002a FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2085 002e 0346     		mov	r3, r0
+ 2086 0030 002B     		cmp	r3, #0
+ 2087 0032 03D0     		beq	.L115
+ 490:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 491:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 492:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_NOT_INIT;                      // SOFT_SPI 模块�
+ 2088              		.loc 1 492 26
+ 2089 0034 2123     		movs	r3, #33
+ 2090 0036 8DF80F30 		strb	r3, [sp, #15]
+ 493:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2091              		.loc 1 493 13
+ 2092 003a 0EE0     		b	.L116
+ 2093              	.L115:
+ 494:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 495:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].enable = ZF_ENABLE;
+ 2094              		.loc 1 495 42
+ 2095 003c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2096              		.loc 1 495 50
+ 2097 0040 094A     		ldr	r2, .L118
+ 2098 0042 1B01     		lsls	r3, r3, #4
+ 2099 0044 1344     		add	r3, r3, r2
+ 2100 0046 03F10802 		add	r2, r3, #8
+ 2101 004a 1379     		ldrb	r3, [r2, #4]
+ 2102 004c 0121     		movs	r1, #1
+ 2103 004e 61F30713 		bfi	r3, r1, #4, #4
+ 2104 0052 1371     		strb	r3, [r2, #4]
+ 496:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 497:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 2105              		.loc 1 497 22
+ 2106 0054 0023     		movs	r3, #0
+ 2107 0056 8DF80F30 		strb	r3, [sp, #15]
+ 2108              	.L116:
+ 498:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 499:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 500:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 2109              		.loc 1 500 12
+ 2110 005a 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 501:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 2111              		.loc 1 501 1
+ 2112 005e 1846     		mov	r0, r3
+ 2113 0060 05B0     		add	sp, sp, #20
+ 2114              		.cfi_def_cfa_offset 4
+ 2115              		@ sp needed
+ 2116 0062 5DF804FB 		ldr	pc, [sp], #4
+ 2117              	.L119:
+ 2118 0066 00BF     		.align	2
+ 2119              	.L118:
+ 2120 0068 00000000 		.word	soft_spi_obj_list
+ 2121 006c 00000000 		.word	.LC0
+ 2122              		.cfi_endproc
+ 2123              	.LFE181:
+ 2125              		.section	.text.zf_soft_spi_disable,"ax",%progbits
+ 2126              		.align	1
+ 2127              		.p2align 4,,15
+ 2128              		.global	zf_soft_spi_disable
+ 2129              		.syntax unified
+ 2130              		.thumb
+ 2131              		.thumb_func
+ 2133              	zf_soft_spi_disable:
+ 2134              	.LFB182:
+ 502:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 503:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 504:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 接口 禁止
+ 505:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 506:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 507:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_disable(soft_spi_index);
+ 508:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 509:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 510:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_disable (zf_soft_spi_index_enum soft_spi_index)
+ 511:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 2135              		.loc 1 511 1
+ 2136              		.cfi_startproc
+ 2137              		@ args = 0, pretend = 0, frame = 16
+ 2138              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2139 0000 00B5     		push	{lr}
+ 2140              		.cfi_def_cfa_offset 4
+ 2141              		.cfi_offset 14, -4
+ 2142 0002 85B0     		sub	sp, sp, #20
+ 2143              		.cfi_def_cfa_offset 24
+ 2144 0004 0346     		mov	r3, r0
+ 2145 0006 8DF80730 		strb	r3, [sp, #7]
+ 512:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 2146              		.loc 1 512 38
+ 2147 000a 0123     		movs	r3, #1
+ 2148 000c 8DF80F30 		strb	r3, [sp, #15]
+ 513:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 514:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 515:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 516:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(soft_spi_obj_list[soft_spi_index].delay))
+ 2149              		.loc 1 516 12
+ 2150 0010 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2151 0014 134A     		ldr	r2, .L124
+ 2152 0016 1B01     		lsls	r3, r3, #4
+ 2153 0018 1344     		add	r3, r3, r2
+ 2154 001a 0833     		adds	r3, r3, #8
+ 2155 001c 1B68     		ldr	r3, [r3]
+ 2156              		.loc 1 516 11
+ 2157 001e 002B     		cmp	r3, #0
+ 2158 0020 0CD1     		bne	.L121
+ 2159              		.loc 1 516 12 discriminator 1
+ 2160 0022 0022     		movs	r2, #0
+ 2161 0024 4FF40171 		mov	r1, #516
+ 2162 0028 0F48     		ldr	r0, .L124+4
+ 2163 002a FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2164 002e 0346     		mov	r3, r0
+ 2165 0030 002B     		cmp	r3, #0
+ 2166 0032 03D0     		beq	.L121
+ 517:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 518:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 519:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_NOT_INIT;                      // SOFT_SPI 模块�
+ 2167              		.loc 1 519 26
+ 2168 0034 2123     		movs	r3, #33
+ 2169 0036 8DF80F30 		strb	r3, [sp, #15]
+ 520:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2170              		.loc 1 520 13
+ 2171 003a 0DE0     		b	.L122
+ 2172              	.L121:
+ 521:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 522:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].enable = ZF_DISABLE;
+ 2173              		.loc 1 522 42
+ 2174 003c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2175              		.loc 1 522 50
+ 2176 0040 084A     		ldr	r2, .L124
+ 2177 0042 1B01     		lsls	r3, r3, #4
+ 2178 0044 1344     		add	r3, r3, r2
+ 2179 0046 03F10802 		add	r2, r3, #8
+ 2180 004a 1379     		ldrb	r3, [r2, #4]
+ 2181 004c 6FF30713 		bfc	r3, #4, #4
+ 2182 0050 1371     		strb	r3, [r2, #4]
+ 523:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 524:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 2183              		.loc 1 524 22
+ 2184 0052 0023     		movs	r3, #0
+ 2185 0054 8DF80F30 		strb	r3, [sp, #15]
+ 2186              	.L122:
+ 525:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 526:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 527:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 2187              		.loc 1 527 12
+ 2188 0058 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 528:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 2189              		.loc 1 528 1
+ 2190 005c 1846     		mov	r0, r3
+ 2191 005e 05B0     		add	sp, sp, #20
+ 2192              		.cfi_def_cfa_offset 4
+ 2193              		@ sp needed
+ 2194 0060 5DF804FB 		ldr	pc, [sp], #4
+ 2195              	.L125:
+ 2196              		.align	2
+ 2197              	.L124:
+ 2198 0064 00000000 		.word	soft_spi_obj_list
+ 2199 0068 00000000 		.word	.LC0
+ 2200              		.cfi_endproc
+ 2201              	.LFE182:
+ 2203              		.section	.text.zf_soft_spi_deinit,"ax",%progbits
+ 2204              		.align	1
+ 2205              		.p2align 4,,15
+ 2206              		.global	zf_soft_spi_deinit
+ 2207              		.syntax unified
+ 2208              		.thumb
+ 2209              		.thumb_func
+ 2211              	zf_soft_spi_deinit:
+ 2212              	.LFB183:
+ 529:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 530:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 531:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 接口注销初始化
+ 532:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 533:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 534:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_deinit(soft_spi_index);
+ 535:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 536:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 537:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_deinit (zf_soft_spi_index_enum soft_spi_index)
+ 538:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 2213              		.loc 1 538 1
+ 2214              		.cfi_startproc
+ 2215              		@ args = 0, pretend = 0, frame = 16
+ 2216              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2217 0000 00B5     		push	{lr}
+ 2218              		.cfi_def_cfa_offset 4
+ 2219              		.cfi_offset 14, -4
+ 2220 0002 85B0     		sub	sp, sp, #20
+ 2221              		.cfi_def_cfa_offset 24
+ 2222 0004 0346     		mov	r3, r0
+ 2223 0006 8DF80730 		strb	r3, [sp, #7]
+ 539:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 2224              		.loc 1 539 38
+ 2225 000a 0123     		movs	r3, #1
+ 2226 000c 8DF80F30 		strb	r3, [sp, #15]
+ 540:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 541:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 542:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 543:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(soft_spi_obj_list[soft_spi_index].delay))
+ 2227              		.loc 1 543 12
+ 2228 0010 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2229 0014 454A     		ldr	r2, .L132
+ 2230 0016 1B01     		lsls	r3, r3, #4
+ 2231 0018 1344     		add	r3, r3, r2
+ 2232 001a 0833     		adds	r3, r3, #8
+ 2233 001c 1B68     		ldr	r3, [r3]
+ 2234              		.loc 1 543 11
+ 2235 001e 002B     		cmp	r3, #0
+ 2236 0020 0CD1     		bne	.L127
+ 2237              		.loc 1 543 12 discriminator 1
+ 2238 0022 0022     		movs	r2, #0
+ 2239 0024 40F21F21 		movw	r1, #543
+ 2240 0028 4148     		ldr	r0, .L132+4
+ 2241 002a FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2242 002e 0346     		mov	r3, r0
+ 2243 0030 002B     		cmp	r3, #0
+ 2244 0032 03D0     		beq	.L127
+ 544:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 545:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块没有初始化过 是不允许直接�
+ 546:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_NOT_INIT;                      // SOFT_SPI 模块�
+ 2245              		.loc 1 546 26
+ 2246 0034 2123     		movs	r3, #33
+ 2247 0036 8DF80F30 		strb	r3, [sp, #15]
+ 547:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2248              		.loc 1 547 13
+ 2249 003a 70E0     		b	.L128
+ 2250              	.L127:
+ 548:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 549:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 550:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_gpio_deinit((zf_gpio_pin_enum)soft_spi_obj_list[soft_spi_index].sck_pin);
+ 2251              		.loc 1 550 9
+ 2252 003c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2253              		.loc 1 550 75
+ 2254 0040 3A4A     		ldr	r2, .L132
+ 2255 0042 1B01     		lsls	r3, r3, #4
+ 2256 0044 1344     		add	r3, r3, r2
+ 2257 0046 1B88     		ldrh	r3, [r3]
+ 2258              		.loc 1 550 9
+ 2259 0048 1846     		mov	r0, r3
+ 2260 004a FFF7FEFF 		bl	zf_gpio_deinit
+ 551:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_gpio_deinit((zf_gpio_pin_enum)soft_spi_obj_list[soft_spi_index].mosi_pin);
+ 2261              		.loc 1 551 9
+ 2262 004e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2263              		.loc 1 551 75
+ 2264 0052 364A     		ldr	r2, .L132
+ 2265 0054 1B01     		lsls	r3, r3, #4
+ 2266 0056 1344     		add	r3, r3, r2
+ 2267 0058 0233     		adds	r3, r3, #2
+ 2268 005a 1B88     		ldrh	r3, [r3]
+ 2269              		.loc 1 551 9
+ 2270 005c 1846     		mov	r0, r3
+ 2271 005e FFF7FEFF 		bl	zf_gpio_deinit
+ 552:libraries/zf_driver/zf_driver_soft_spi.c ****         if(soft_spi_obj_list[soft_spi_index].use_miso)
+ 2272              		.loc 1 552 45
+ 2273 0062 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2274 0066 314A     		ldr	r2, .L132
+ 2275 0068 1B01     		lsls	r3, r3, #4
+ 2276 006a 1344     		add	r3, r3, r2
+ 2277 006c 0833     		adds	r3, r3, #8
+ 2278 006e 5B79     		ldrb	r3, [r3, #5]
+ 2279 0070 C3F30313 		ubfx	r3, r3, #4, #4
+ 2280 0074 DBB2     		uxtb	r3, r3
+ 2281              		.loc 1 552 11
+ 2282 0076 002B     		cmp	r3, #0
+ 2283 0078 09D0     		beq	.L129
+ 553:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 554:libraries/zf_driver/zf_driver_soft_spi.c ****             zf_gpio_deinit((zf_gpio_pin_enum)soft_spi_obj_list[soft_spi_index].miso_pin);
+ 2284              		.loc 1 554 13
+ 2285 007a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2286              		.loc 1 554 79
+ 2287 007e 2B4A     		ldr	r2, .L132
+ 2288 0080 1B01     		lsls	r3, r3, #4
+ 2289 0082 1344     		add	r3, r3, r2
+ 2290 0084 0433     		adds	r3, r3, #4
+ 2291 0086 1B88     		ldrh	r3, [r3]
+ 2292              		.loc 1 554 13
+ 2293 0088 1846     		mov	r0, r3
+ 2294 008a FFF7FEFF 		bl	zf_gpio_deinit
+ 2295              	.L129:
+ 555:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 556:libraries/zf_driver/zf_driver_soft_spi.c ****         if(soft_spi_obj_list[soft_spi_index].use_cs)
+ 2296              		.loc 1 556 45
+ 2297 008e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2298 0092 264A     		ldr	r2, .L132
+ 2299 0094 1B01     		lsls	r3, r3, #4
+ 2300 0096 1344     		add	r3, r3, r2
+ 2301 0098 0833     		adds	r3, r3, #8
+ 2302 009a 9B79     		ldrb	r3, [r3, #6]
+ 2303 009c C3F30303 		ubfx	r3, r3, #0, #4
+ 2304 00a0 DBB2     		uxtb	r3, r3
+ 2305              		.loc 1 556 11
+ 2306 00a2 002B     		cmp	r3, #0
+ 2307 00a4 09D0     		beq	.L130
+ 557:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 558:libraries/zf_driver/zf_driver_soft_spi.c ****             zf_gpio_deinit((zf_gpio_pin_enum)soft_spi_obj_list[soft_spi_index].cs_pin);
+ 2308              		.loc 1 558 13
+ 2309 00a6 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2310              		.loc 1 558 79
+ 2311 00aa 204A     		ldr	r2, .L132
+ 2312 00ac 1B01     		lsls	r3, r3, #4
+ 2313 00ae 1344     		add	r3, r3, r2
+ 2314 00b0 0633     		adds	r3, r3, #6
+ 2315 00b2 1B88     		ldrh	r3, [r3]
+ 2316              		.loc 1 558 13
+ 2317 00b4 1846     		mov	r0, r3
+ 2318 00b6 FFF7FEFF 		bl	zf_gpio_deinit
+ 2319              	.L130:
+ 559:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 560:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].sck_pin       = 0xFF  ;
+ 2320              		.loc 1 560 42
+ 2321 00ba 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2322              		.loc 1 560 57
+ 2323 00be 1B4A     		ldr	r2, .L132
+ 2324 00c0 1B01     		lsls	r3, r3, #4
+ 2325 00c2 1344     		add	r3, r3, r2
+ 2326 00c4 FF22     		movs	r2, #255
+ 2327 00c6 1A80     		strh	r2, [r3]	@ movhi
+ 561:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].mosi_pin      = 0xFF  ;
+ 2328              		.loc 1 561 42
+ 2329 00c8 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2330              		.loc 1 561 57
+ 2331 00cc 174A     		ldr	r2, .L132
+ 2332 00ce 1B01     		lsls	r3, r3, #4
+ 2333 00d0 1344     		add	r3, r3, r2
+ 2334 00d2 0233     		adds	r3, r3, #2
+ 2335 00d4 FF22     		movs	r2, #255
+ 2336 00d6 1A80     		strh	r2, [r3]	@ movhi
+ 562:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].miso_pin      = 0xFF  ;
+ 2337              		.loc 1 562 42
+ 2338 00d8 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2339              		.loc 1 562 57
+ 2340 00dc 134A     		ldr	r2, .L132
+ 2341 00de 1B01     		lsls	r3, r3, #4
+ 2342 00e0 1344     		add	r3, r3, r2
+ 2343 00e2 0433     		adds	r3, r3, #4
+ 2344 00e4 FF22     		movs	r2, #255
+ 2345 00e6 1A80     		strh	r2, [r3]	@ movhi
+ 563:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].cs_pin        = 0xFF  ;
+ 2346              		.loc 1 563 42
+ 2347 00e8 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2348              		.loc 1 563 57
+ 2349 00ec 0F4A     		ldr	r2, .L132
+ 2350 00ee 1B01     		lsls	r3, r3, #4
+ 2351 00f0 1344     		add	r3, r3, r2
+ 2352 00f2 0633     		adds	r3, r3, #6
+ 2353 00f4 FF22     		movs	r2, #255
+ 2354 00f6 1A80     		strh	r2, [r3]	@ movhi
+ 564:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].delay         = 0     ;
+ 2355              		.loc 1 564 42
+ 2356 00f8 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2357              		.loc 1 564 57
+ 2358 00fc 0B4A     		ldr	r2, .L132
+ 2359 00fe 1B01     		lsls	r3, r3, #4
+ 2360 0100 1344     		add	r3, r3, r2
+ 2361 0102 0833     		adds	r3, r3, #8
+ 2362 0104 0022     		movs	r2, #0
+ 2363 0106 1A60     		str	r2, [r3]
+ 565:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].config_info   = 0     ;
+ 2364              		.loc 1 565 42
+ 2365 0108 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2366              		.loc 1 565 57
+ 2367 010c 074A     		ldr	r2, .L132
+ 2368 010e 1B01     		lsls	r3, r3, #4
+ 2369 0110 1344     		add	r3, r3, r2
+ 2370 0112 0C33     		adds	r3, r3, #12
+ 2371 0114 0022     		movs	r2, #0
+ 2372 0116 1A60     		str	r2, [r3]
+ 566:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 567:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 2373              		.loc 1 567 22
+ 2374 0118 0023     		movs	r3, #0
+ 2375 011a 8DF80F30 		strb	r3, [sp, #15]
+ 2376              	.L128:
+ 568:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 569:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 570:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 2377              		.loc 1 570 12
+ 2378 011e 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 571:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 2379              		.loc 1 571 1
+ 2380 0122 1846     		mov	r0, r3
+ 2381 0124 05B0     		add	sp, sp, #20
+ 2382              		.cfi_def_cfa_offset 4
+ 2383              		@ sp needed
+ 2384 0126 5DF804FB 		ldr	pc, [sp], #4
+ 2385              	.L133:
+ 2386 012a 00BF     		.align	2
+ 2387              	.L132:
+ 2388 012c 00000000 		.word	soft_spi_obj_list
+ 2389 0130 00000000 		.word	.LC0
+ 2390              		.cfi_endproc
+ 2391              	.LFE183:
+ 2393              		.section	.text.zf_soft_spi_init,"ax",%progbits
+ 2394              		.align	1
+ 2395              		.p2align 4,,15
+ 2396              		.global	zf_soft_spi_init
+ 2397              		.syntax unified
+ 2398              		.thumb
+ 2399              		.thumb_func
+ 2401              	zf_soft_spi_init:
+ 2402              	.LFB184:
+ 572:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 573:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 574:libraries/zf_driver/zf_driver_soft_spi.c **** // 函数简介     SOFT_SPI 接口初始化
+ 575:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     soft_spi_index      SOFT_SPI 索引   (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 576:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     mode                SPI 模式        (详见 zf_driver_soft_spi.h 内 zf_soft_
+ 577:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     delay               SOFT_SPI 延时 就是时钟高电平时间 越短 SPI 速�
+ 578:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     sck_pin             选择 SCK 引脚   (详见 zf_driver_gpio.h 内 zf_gpio_pi
+ 579:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     mosi_pin            选择 MOSI 引脚  (详见 zf_driver_gpio.h 内 zf_gpio_pi
+ 580:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     miso_pin            选择 MISO 引脚  如果不需要这个引脚 就填 PIN_
+ 581:libraries/zf_driver/zf_driver_soft_spi.c **** // 参数说明     cs_pin              选择 CS 引脚    如果不需要这个引脚 就填 PIN_
+ 582:libraries/zf_driver/zf_driver_soft_spi.c **** // 返回参数     uint8               操作状态 ZF_NO_ERROR / SOFT_SPI_OPERATION_DONE - 完成
+ 583:libraries/zf_driver/zf_driver_soft_spi.c **** // 使用示例     zf_soft_spi_init(soft_spi_index, mode, delay, sck_pin, mosi_pin, miso_pin, cs_p
+ 584:libraries/zf_driver/zf_driver_soft_spi.c **** // 备注信息     
+ 585:libraries/zf_driver/zf_driver_soft_spi.c **** //-------------------------------------------------------------------------------------------------
+ 586:libraries/zf_driver/zf_driver_soft_spi.c **** uint8 zf_soft_spi_init (zf_soft_spi_index_enum soft_spi_index, zf_soft_spi_mode_enum mode, uint32 d
+ 587:libraries/zf_driver/zf_driver_soft_spi.c **** {
+ 2403              		.loc 1 587 1
+ 2404              		.cfi_startproc
+ 2405              		@ args = 12, pretend = 0, frame = 16
+ 2406              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2407 0000 00B5     		push	{lr}
+ 2408              		.cfi_def_cfa_offset 4
+ 2409              		.cfi_offset 14, -4
+ 2410 0002 85B0     		sub	sp, sp, #20
+ 2411              		.cfi_def_cfa_offset 24
+ 2412 0004 0092     		str	r2, [sp]
+ 2413 0006 1A46     		mov	r2, r3
+ 2414 0008 0346     		mov	r3, r0
+ 2415 000a 8DF80730 		strb	r3, [sp, #7]
+ 2416 000e 0B46     		mov	r3, r1
+ 2417 0010 8DF80630 		strb	r3, [sp, #6]
+ 2418 0014 1346     		mov	r3, r2	@ movhi
+ 2419 0016 ADF80430 		strh	r3, [sp, #4]	@ movhi
+ 588:libraries/zf_driver/zf_driver_soft_spi.c ****     zf_soft_spi_operation_state_enum return_state = SOFT_SPI_ERROR_UNKNOW;
+ 2420              		.loc 1 588 38
+ 2421 001a 0123     		movs	r3, #1
+ 2422 001c 8DF80F30 		strb	r3, [sp, #15]
+ 589:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 590:libraries/zf_driver/zf_driver_soft_spi.c ****     do
+ 591:libraries/zf_driver/zf_driver_soft_spi.c ****     {
+ 592:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(!soft_spi_obj_list[soft_spi_index].delay))
+ 2423              		.loc 1 592 12
+ 2424 0020 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2425 0024 924A     		ldr	r2, .L151
+ 2426 0026 1B01     		lsls	r3, r3, #4
+ 2427 0028 1344     		add	r3, r3, r2
+ 2428 002a 0833     		adds	r3, r3, #8
+ 2429 002c 1B68     		ldr	r3, [r3]
+ 2430              		.loc 1 592 11
+ 2431 002e 002B     		cmp	r3, #0
+ 2432 0030 0CD0     		beq	.L135
+ 2433              		.loc 1 592 12 discriminator 1
+ 2434 0032 0022     		movs	r2, #0
+ 2435 0034 4FF41471 		mov	r1, #592
+ 2436 0038 8E48     		ldr	r0, .L151+4
+ 2437 003a FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2438 003e 0346     		mov	r3, r0
+ 2439 0040 002B     		cmp	r3, #0
+ 2440 0042 03D0     		beq	.L135
+ 593:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 594:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明本模块已经被初始化过一次 重复初�
+ 595:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MODULE_OCCUPIED;                      // SOFT_SPI 模块�
+ 2441              		.loc 1 595 26
+ 2442 0044 2023     		movs	r3, #32
+ 2443 0046 8DF80F30 		strb	r3, [sp, #15]
+ 596:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2444              		.loc 1 596 13
+ 2445 004a 0BE1     		b	.L136
+ 2446              	.L135:
+ 597:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 598:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(0 != delay))
+ 2447              		.loc 1 598 11
+ 2448 004c 009B     		ldr	r3, [sp]
+ 2449 004e 002B     		cmp	r3, #0
+ 2450 0050 0CD1     		bne	.L137
+ 2451              		.loc 1 598 12 discriminator 1
+ 2452 0052 0022     		movs	r2, #0
+ 2453 0054 40F25621 		movw	r1, #598
+ 2454 0058 8648     		ldr	r0, .L151+4
+ 2455 005a FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2456 005e 0346     		mov	r3, r0
+ 2457 0060 002B     		cmp	r3, #0
+ 2458 0062 03D0     		beq	.L137
+ 599:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 600:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明输入的 SOFT_SPI 的脉宽时间单位为 0
+ 601:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_SPEED_UNSUPPORTED;                    // SOFT_SPI 传输�
+ 2459              		.loc 1 601 26
+ 2460 0064 2223     		movs	r3, #34
+ 2461 0066 8DF80F30 		strb	r3, [sp, #15]
+ 602:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2462              		.loc 1 602 13
+ 2463 006a FBE0     		b	.L136
+ 2464              	.L137:
+ 603:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 604:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 605:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert((PIN_NULL != sck_pin) && (sck_pin != mosi_pin) && (sck_pin != miso_pi
+ 2465              		.loc 1 605 11
+ 2466 006c BDF80430 		ldrh	r3, [sp, #4]
+ 2467 0070 40F6FF72 		movw	r2, #4095
+ 2468 0074 9342     		cmp	r3, r2
+ 2469 0076 11D0     		beq	.L138
+ 2470              		.loc 1 605 12 discriminator 2
+ 2471 0078 BDF80420 		ldrh	r2, [sp, #4]
+ 2472 007c BDF81830 		ldrh	r3, [sp, #24]
+ 2473 0080 9A42     		cmp	r2, r3
+ 2474 0082 0BD0     		beq	.L138
+ 2475              		.loc 1 605 12 is_stmt 0 discriminator 4
+ 2476 0084 BDF80420 		ldrh	r2, [sp, #4]
+ 2477 0088 BDF81C30 		ldrh	r3, [sp, #28]
+ 2478 008c 9A42     		cmp	r2, r3
+ 2479 008e 05D0     		beq	.L138
+ 2480              		.loc 1 605 12 discriminator 6
+ 2481 0090 BDF80420 		ldrh	r2, [sp, #4]
+ 2482 0094 BDF82030 		ldrh	r3, [sp, #32]
+ 2483 0098 9A42     		cmp	r2, r3
+ 2484 009a 0CD1     		bne	.L139
+ 2485              	.L138:
+ 2486              		.loc 1 605 12 discriminator 7
+ 2487 009c 0022     		movs	r2, #0
+ 2488 009e 40F25D21 		movw	r1, #605
+ 2489 00a2 7448     		ldr	r0, .L151+4
+ 2490 00a4 FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2491 00a8 0346     		mov	r3, r0
+ 2492 00aa 002B     		cmp	r3, #0
+ 2493 00ac 03D0     		beq	.L139
+ 606:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 607:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明输入的 sck_pin 引脚为 PIN_NULL 或与其�
+ 608:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_SCK_PIN_ILLEGAL;                      // SOFT_SPI 传输�
+ 2494              		.loc 1 608 26 is_stmt 1
+ 2495 00ae 2323     		movs	r3, #35
+ 2496 00b0 8DF80F30 		strb	r3, [sp, #15]
+ 609:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2497              		.loc 1 609 13
+ 2498 00b4 D6E0     		b	.L136
+ 2499              	.L139:
+ 610:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 611:libraries/zf_driver/zf_driver_soft_spi.c ****         if(zf_soft_spi_assert(PIN_NULL != mosi_pin))
+ 2500              		.loc 1 611 11
+ 2501 00b6 BDF81830 		ldrh	r3, [sp, #24]
+ 2502 00ba 40F6FF72 		movw	r2, #4095
+ 2503 00be 9342     		cmp	r3, r2
+ 2504 00c0 0CD1     		bne	.L140
+ 2505              		.loc 1 611 12 discriminator 1
+ 2506 00c2 0022     		movs	r2, #0
+ 2507 00c4 40F26321 		movw	r1, #611
+ 2508 00c8 6A48     		ldr	r0, .L151+4
+ 2509 00ca FFF7FEFF 		bl	zf_soft_spi_assert_handler
+ 2510 00ce 0346     		mov	r3, r0
+ 2511 00d0 002B     		cmp	r3, #0
+ 2512 00d2 03D0     		beq	.L140
+ 612:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 613:libraries/zf_driver/zf_driver_soft_spi.c ****             // 此处如果断言报错 那么证明输入的 mosi_pin 引脚为 PIN_NULL
+ 614:libraries/zf_driver/zf_driver_soft_spi.c ****             return_state = SOFT_SPI_ERROR_MOSI_PIN_ILLEGAL;                     // SOFT_SPI 传输�
+ 2513              		.loc 1 614 26
+ 2514 00d4 2423     		movs	r3, #36
+ 2515 00d6 8DF80F30 		strb	r3, [sp, #15]
+ 615:libraries/zf_driver/zf_driver_soft_spi.c ****             break;
+ 2516              		.loc 1 615 13
+ 2517 00da C3E0     		b	.L136
+ 2518              	.L140:
+ 616:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 617:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 618:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].mode              = mode;
+ 2519              		.loc 1 618 42
+ 2520 00dc 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2521              		.loc 1 618 61
+ 2522 00e0 9DF80620 		ldrb	r2, [sp, #6]
+ 2523 00e4 02F00F02 		and	r2, r2, #15
+ 2524 00e8 D1B2     		uxtb	r1, r2
+ 2525 00ea 614A     		ldr	r2, .L151
+ 2526 00ec 1B01     		lsls	r3, r3, #4
+ 2527 00ee 1344     		add	r3, r3, r2
+ 2528 00f0 03F10802 		add	r2, r3, #8
+ 2529 00f4 1379     		ldrb	r3, [r2, #4]
+ 2530 00f6 61F30303 		bfi	r3, r1, #0, #4
+ 2531 00fa 1371     		strb	r3, [r2, #4]
+ 619:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].enable            = ZF_ENABLE;
+ 2532              		.loc 1 619 42
+ 2533 00fc 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2534              		.loc 1 619 61
+ 2535 0100 5B4A     		ldr	r2, .L151
+ 2536 0102 1B01     		lsls	r3, r3, #4
+ 2537 0104 1344     		add	r3, r3, r2
+ 2538 0106 03F10802 		add	r2, r3, #8
+ 2539 010a 1379     		ldrb	r3, [r2, #4]
+ 2540 010c 0121     		movs	r1, #1
+ 2541 010e 61F30713 		bfi	r3, r1, #4, #4
+ 2542 0112 1371     		strb	r3, [r2, #4]
+ 620:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].delay             = delay;
+ 2543              		.loc 1 620 42
+ 2544 0114 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2545              		.loc 1 620 61
+ 2546 0118 554A     		ldr	r2, .L151
+ 2547 011a 1B01     		lsls	r3, r3, #4
+ 2548 011c 1344     		add	r3, r3, r2
+ 2549 011e 0833     		adds	r3, r3, #8
+ 2550 0120 009A     		ldr	r2, [sp]
+ 2551 0122 1A60     		str	r2, [r3]
+ 621:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 622:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].sck_pin = sck_pin;
+ 2552              		.loc 1 622 42
+ 2553 0124 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2554              		.loc 1 622 51
+ 2555 0128 514A     		ldr	r2, .L151
+ 2556 012a 1B01     		lsls	r3, r3, #4
+ 2557 012c 1344     		add	r3, r3, r2
+ 2558 012e BDF80420 		ldrh	r2, [sp, #4]	@ movhi
+ 2559 0132 1A80     		strh	r2, [r3]	@ movhi
+ 623:libraries/zf_driver/zf_driver_soft_spi.c ****         soft_spi_obj_list[soft_spi_index].mosi_pin = mosi_pin;
+ 2560              		.loc 1 623 42
+ 2561 0134 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2562              		.loc 1 623 52
+ 2563 0138 4D4A     		ldr	r2, .L151
+ 2564 013a 1B01     		lsls	r3, r3, #4
+ 2565 013c 1344     		add	r3, r3, r2
+ 2566 013e 0233     		adds	r3, r3, #2
+ 2567 0140 BDF81820 		ldrh	r2, [sp, #24]	@ movhi
+ 2568 0144 1A80     		strh	r2, [r3]	@ movhi
+ 624:libraries/zf_driver/zf_driver_soft_spi.c ****         if(0 == mode || 1 == mode)
+ 2569              		.loc 1 624 11
+ 2570 0146 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 2571 014a 002B     		cmp	r3, #0
+ 2572 014c 03D0     		beq	.L141
+ 2573              		.loc 1 624 22 discriminator 1
+ 2574 014e 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 2575 0152 012B     		cmp	r3, #1
+ 2576 0154 07D1     		bne	.L142
+ 2577              	.L141:
+ 625:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 626:libraries/zf_driver/zf_driver_soft_spi.c ****             zf_gpio_init(sck_pin, GPO_PUSH_PULL, GPIO_LOW);
+ 2578              		.loc 1 626 13
+ 2579 0156 BDF80430 		ldrh	r3, [sp, #4]
+ 2580 015a 0022     		movs	r2, #0
+ 2581 015c 1021     		movs	r1, #16
+ 2582 015e 1846     		mov	r0, r3
+ 2583 0160 FFF7FEFF 		bl	zf_gpio_init
+ 2584 0164 06E0     		b	.L143
+ 2585              	.L142:
+ 627:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 628:libraries/zf_driver/zf_driver_soft_spi.c ****         else
+ 629:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 630:libraries/zf_driver/zf_driver_soft_spi.c ****             zf_gpio_init(sck_pin, GPO_PUSH_PULL, GPIO_HIGH);
+ 2586              		.loc 1 630 13
+ 2587 0166 BDF80430 		ldrh	r3, [sp, #4]
+ 2588 016a 0122     		movs	r2, #1
+ 2589 016c 1021     		movs	r1, #16
+ 2590 016e 1846     		mov	r0, r3
+ 2591 0170 FFF7FEFF 		bl	zf_gpio_init
+ 2592              	.L143:
+ 631:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 632:libraries/zf_driver/zf_driver_soft_spi.c ****         zf_gpio_init(mosi_pin, GPO_PUSH_PULL, GPIO_HIGH);
+ 2593              		.loc 1 632 9
+ 2594 0174 BDF81830 		ldrh	r3, [sp, #24]
+ 2595 0178 0122     		movs	r2, #1
+ 2596 017a 1021     		movs	r1, #16
+ 2597 017c 1846     		mov	r0, r3
+ 2598 017e FFF7FEFF 		bl	zf_gpio_init
+ 633:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 634:libraries/zf_driver/zf_driver_soft_spi.c ****         if(mosi_pin == miso_pin || PIN_NULL == miso_pin)
+ 2599              		.loc 1 634 11
+ 2600 0182 BDF81820 		ldrh	r2, [sp, #24]
+ 2601 0186 BDF81C30 		ldrh	r3, [sp, #28]
+ 2602 018a 9A42     		cmp	r2, r3
+ 2603 018c 05D0     		beq	.L144
+ 2604              		.loc 1 634 33 discriminator 1
+ 2605 018e BDF81C30 		ldrh	r3, [sp, #28]
+ 2606 0192 40F6FF72 		movw	r2, #4095
+ 2607 0196 9342     		cmp	r3, r2
+ 2608 0198 0BD1     		bne	.L145
+ 2609              	.L144:
+ 635:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 636:libraries/zf_driver/zf_driver_soft_spi.c ****             soft_spi_obj_list[soft_spi_index].use_miso = 0;
+ 2610              		.loc 1 636 46
+ 2611 019a 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2612              		.loc 1 636 56
+ 2613 019e 344A     		ldr	r2, .L151
+ 2614 01a0 1B01     		lsls	r3, r3, #4
+ 2615 01a2 1344     		add	r3, r3, r2
+ 2616 01a4 03F10802 		add	r2, r3, #8
+ 2617 01a8 5379     		ldrb	r3, [r2, #5]
+ 2618 01aa 6FF30713 		bfc	r3, #4, #4
+ 2619 01ae 5371     		strb	r3, [r2, #5]
+ 2620 01b0 1BE0     		b	.L146
+ 2621              	.L145:
+ 637:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 638:libraries/zf_driver/zf_driver_soft_spi.c ****         else
+ 639:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 640:libraries/zf_driver/zf_driver_soft_spi.c ****             soft_spi_obj_list[soft_spi_index].use_miso = 1;
+ 2622              		.loc 1 640 46
+ 2623 01b2 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2624              		.loc 1 640 56
+ 2625 01b6 2E4A     		ldr	r2, .L151
+ 2626 01b8 1B01     		lsls	r3, r3, #4
+ 2627 01ba 1344     		add	r3, r3, r2
+ 2628 01bc 03F10802 		add	r2, r3, #8
+ 2629 01c0 5379     		ldrb	r3, [r2, #5]
+ 2630 01c2 0121     		movs	r1, #1
+ 2631 01c4 61F30713 		bfi	r3, r1, #4, #4
+ 2632 01c8 5371     		strb	r3, [r2, #5]
+ 641:libraries/zf_driver/zf_driver_soft_spi.c ****             soft_spi_obj_list[soft_spi_index].miso_pin = miso_pin;
+ 2633              		.loc 1 641 46
+ 2634 01ca 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2635              		.loc 1 641 56
+ 2636 01ce 284A     		ldr	r2, .L151
+ 2637 01d0 1B01     		lsls	r3, r3, #4
+ 2638 01d2 1344     		add	r3, r3, r2
+ 2639 01d4 0433     		adds	r3, r3, #4
+ 2640 01d6 BDF81C20 		ldrh	r2, [sp, #28]	@ movhi
+ 2641 01da 1A80     		strh	r2, [r3]	@ movhi
+ 642:libraries/zf_driver/zf_driver_soft_spi.c ****             zf_gpio_init(miso_pin, GPI_FLOATING_IN, GPIO_HIGH);
+ 2642              		.loc 1 642 13
+ 2643 01dc BDF81C30 		ldrh	r3, [sp, #28]
+ 2644 01e0 0122     		movs	r2, #1
+ 2645 01e2 0121     		movs	r1, #1
+ 2646 01e4 1846     		mov	r0, r3
+ 2647 01e6 FFF7FEFF 		bl	zf_gpio_init
+ 2648              	.L146:
+ 643:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 644:libraries/zf_driver/zf_driver_soft_spi.c ****         if(mosi_pin == cs_pin || miso_pin == cs_pin || PIN_NULL == cs_pin)
+ 2649              		.loc 1 644 11
+ 2650 01ea BDF81820 		ldrh	r2, [sp, #24]
+ 2651 01ee BDF82030 		ldrh	r3, [sp, #32]
+ 2652 01f2 9A42     		cmp	r2, r3
+ 2653 01f4 0BD0     		beq	.L147
+ 2654              		.loc 1 644 31 discriminator 1
+ 2655 01f6 BDF81C20 		ldrh	r2, [sp, #28]
+ 2656 01fa BDF82030 		ldrh	r3, [sp, #32]
+ 2657 01fe 9A42     		cmp	r2, r3
+ 2658 0200 05D0     		beq	.L147
+ 2659              		.loc 1 644 53 discriminator 2
+ 2660 0202 BDF82030 		ldrh	r3, [sp, #32]
+ 2661 0206 40F6FF72 		movw	r2, #4095
+ 2662 020a 9342     		cmp	r3, r2
+ 2663 020c 0BD1     		bne	.L148
+ 2664              	.L147:
+ 645:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 646:libraries/zf_driver/zf_driver_soft_spi.c ****             soft_spi_obj_list[soft_spi_index].use_cs = 0;
+ 2665              		.loc 1 646 46
+ 2666 020e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2667              		.loc 1 646 54
+ 2668 0212 174A     		ldr	r2, .L151
+ 2669 0214 1B01     		lsls	r3, r3, #4
+ 2670 0216 1344     		add	r3, r3, r2
+ 2671 0218 03F10802 		add	r2, r3, #8
+ 2672 021c 9379     		ldrb	r3, [r2, #6]
+ 2673 021e 6FF30303 		bfc	r3, #0, #4
+ 2674 0222 9371     		strb	r3, [r2, #6]
+ 2675 0224 1BE0     		b	.L149
+ 2676              	.L148:
+ 647:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 648:libraries/zf_driver/zf_driver_soft_spi.c ****         else
+ 649:libraries/zf_driver/zf_driver_soft_spi.c ****         {
+ 650:libraries/zf_driver/zf_driver_soft_spi.c ****             soft_spi_obj_list[soft_spi_index].use_cs = 1;
+ 2677              		.loc 1 650 46
+ 2678 0226 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2679              		.loc 1 650 54
+ 2680 022a 114A     		ldr	r2, .L151
+ 2681 022c 1B01     		lsls	r3, r3, #4
+ 2682 022e 1344     		add	r3, r3, r2
+ 2683 0230 03F10802 		add	r2, r3, #8
+ 2684 0234 9379     		ldrb	r3, [r2, #6]
+ 2685 0236 0121     		movs	r1, #1
+ 2686 0238 61F30303 		bfi	r3, r1, #0, #4
+ 2687 023c 9371     		strb	r3, [r2, #6]
+ 651:libraries/zf_driver/zf_driver_soft_spi.c ****             soft_spi_obj_list[soft_spi_index].cs_pin = cs_pin;
+ 2688              		.loc 1 651 46
+ 2689 023e 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 2690              		.loc 1 651 54
+ 2691 0242 0B4A     		ldr	r2, .L151
+ 2692 0244 1B01     		lsls	r3, r3, #4
+ 2693 0246 1344     		add	r3, r3, r2
+ 2694 0248 0633     		adds	r3, r3, #6
+ 2695 024a BDF82020 		ldrh	r2, [sp, #32]	@ movhi
+ 2696 024e 1A80     		strh	r2, [r3]	@ movhi
+ 652:libraries/zf_driver/zf_driver_soft_spi.c ****             zf_gpio_init(cs_pin, GPO_PUSH_PULL, GPIO_HIGH);
+ 2697              		.loc 1 652 13
+ 2698 0250 BDF82030 		ldrh	r3, [sp, #32]
+ 2699 0254 0122     		movs	r2, #1
+ 2700 0256 1021     		movs	r1, #16
+ 2701 0258 1846     		mov	r0, r3
+ 2702 025a FFF7FEFF 		bl	zf_gpio_init
+ 2703              	.L149:
+ 653:libraries/zf_driver/zf_driver_soft_spi.c ****         }
+ 654:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 655:libraries/zf_driver/zf_driver_soft_spi.c ****         return_state = SOFT_SPI_OPERATION_DONE;
+ 2704              		.loc 1 655 22
+ 2705 025e 0023     		movs	r3, #0
+ 2706 0260 8DF80F30 		strb	r3, [sp, #15]
+ 2707              	.L136:
+ 656:libraries/zf_driver/zf_driver_soft_spi.c ****     }while(0);
+ 657:libraries/zf_driver/zf_driver_soft_spi.c **** 
+ 658:libraries/zf_driver/zf_driver_soft_spi.c ****     return return_state;
+ 2708              		.loc 1 658 12
+ 2709 0264 9DF80F30 		ldrb	r3, [sp, #15]	@ zero_extendqisi2
+ 659:libraries/zf_driver/zf_driver_soft_spi.c **** }
+ 2710              		.loc 1 659 1
+ 2711 0268 1846     		mov	r0, r3
+ 2712 026a 05B0     		add	sp, sp, #20
+ 2713              		.cfi_def_cfa_offset 4
+ 2714              		@ sp needed
+ 2715 026c 5DF804FB 		ldr	pc, [sp], #4
+ 2716              	.L152:
+ 2717              		.align	2
+ 2718              	.L151:
+ 2719 0270 00000000 		.word	soft_spi_obj_list
+ 2720 0274 00000000 		.word	.LC0
+ 2721              		.cfi_endproc
+ 2722              	.LFE184:
+ 2724              		.text
+ 2725              	.Letext0:
+ 2726              		.file 2 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 2727              		.file 3 "c:\\stellarstudio-7.0\\sdks\\tools-1.4.0\\toolchain\\arm\\mingw64_nt\\10.3-2021.10\\arm-n
+ 2728              		.file 4 "libraries/zf_common/zf_common_typedef.h"
+ 2729              		.file 5 "C:/StellarStudio-7.0/SDKS/StellarESDK-1.7.0/Modules/Platform/MCU/include/sr5e1/SR5E1_GPIO
+ 2730              		.file 6 "libraries/zf_driver/zf_driver_gpio.h"
+ 2731              		.file 7 "libraries/zf_driver/zf_driver_soft_spi.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_driver_soft_spi.c
+D:\Users\TMP\cc5QzwOu.s:23     .data.soft_spi_obj_list:00000000 soft_spi_obj_list
+D:\Users\TMP\cc5QzwOu.s:20     .data.soft_spi_obj_list:00000000 $d
+D:\Users\TMP\cc5QzwOu.s:49     .text.zf_soft_spi_assert_handler:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:56     .text.zf_soft_spi_assert_handler:00000000 zf_soft_spi_assert_handler
+D:\Users\TMP\cc5QzwOu.s:86     .rodata:00000000 $d
+D:\Users\TMP\cc5QzwOu.s:90     .text.zf_soft_spi_transfer_start:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:96     .text.zf_soft_spi_transfer_start:00000000 zf_soft_spi_transfer_start
+D:\Users\TMP\cc5QzwOu.s:311    .text.zf_soft_spi_transfer_start:000001a8 $d
+D:\Users\TMP\cc5QzwOu.s:318    .text.zf_soft_spi_transfer_stop:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:324    .text.zf_soft_spi_transfer_stop:00000000 zf_soft_spi_transfer_stop
+D:\Users\TMP\cc5QzwOu.s:412    .text.zf_soft_spi_transfer_stop:0000009c $d
+D:\Users\TMP\cc5QzwOu.s:419    .text.zf_soft_spi_8bit_data_handler:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:425    .text.zf_soft_spi_8bit_data_handler:00000000 zf_soft_spi_8bit_data_handler
+D:\Users\TMP\cc5QzwOu.s:837    .text.zf_soft_spi_8bit_data_handler:00000328 $d
+D:\Users\TMP\cc5QzwOu.s:842    .text.zf_soft_spi_8bit_data_handler:00000334 $t
+D:\Users\TMP\cc5QzwOu.s:1011   .text.zf_soft_spi_8bit_data_handler:00000474 $d
+D:\Users\TMP\cc5QzwOu.s:1018   .text.zf_soft_spi_16bit_data_handler:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:1024   .text.zf_soft_spi_16bit_data_handler:00000000 zf_soft_spi_16bit_data_handler
+D:\Users\TMP\cc5QzwOu.s:1436   .text.zf_soft_spi_16bit_data_handler:00000330 $d
+D:\Users\TMP\cc5QzwOu.s:1441   .text.zf_soft_spi_16bit_data_handler:0000033c $t
+D:\Users\TMP\cc5QzwOu.s:1610   .text.zf_soft_spi_16bit_data_handler:00000480 $d
+D:\Users\TMP\cc5QzwOu.s:1617   .text.zf_soft_spi_transfer_8bit_array:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:1624   .text.zf_soft_spi_transfer_8bit_array:00000000 zf_soft_spi_transfer_8bit_array
+D:\Users\TMP\cc5QzwOu.s:1736   .text.zf_soft_spi_transfer_8bit_array:000000bc $d
+D:\Users\TMP\cc5QzwOu.s:1742   .text.zf_soft_spi_transfer_16bit_array:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:1749   .text.zf_soft_spi_transfer_16bit_array:00000000 zf_soft_spi_transfer_16bit_array
+D:\Users\TMP\cc5QzwOu.s:1861   .text.zf_soft_spi_transfer_16bit_array:000000bc $d
+D:\Users\TMP\cc5QzwOu.s:1867   .text.zf_soft_spi_set_config:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:1874   .text.zf_soft_spi_set_config:00000000 zf_soft_spi_set_config
+D:\Users\TMP\cc5QzwOu.s:1945   .text.zf_soft_spi_set_config:00000078 $d
+D:\Users\TMP\cc5QzwOu.s:1951   .text.zf_soft_spi_set_speed:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:1958   .text.zf_soft_spi_set_speed:00000000 zf_soft_spi_set_speed
+D:\Users\TMP\cc5QzwOu.s:2041   .text.zf_soft_spi_set_speed:00000080 $d
+D:\Users\TMP\cc5QzwOu.s:2047   .text.zf_soft_spi_enable:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:2054   .text.zf_soft_spi_enable:00000000 zf_soft_spi_enable
+D:\Users\TMP\cc5QzwOu.s:2120   .text.zf_soft_spi_enable:00000068 $d
+D:\Users\TMP\cc5QzwOu.s:2126   .text.zf_soft_spi_disable:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:2133   .text.zf_soft_spi_disable:00000000 zf_soft_spi_disable
+D:\Users\TMP\cc5QzwOu.s:2198   .text.zf_soft_spi_disable:00000064 $d
+D:\Users\TMP\cc5QzwOu.s:2204   .text.zf_soft_spi_deinit:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:2211   .text.zf_soft_spi_deinit:00000000 zf_soft_spi_deinit
+D:\Users\TMP\cc5QzwOu.s:2388   .text.zf_soft_spi_deinit:0000012c $d
+D:\Users\TMP\cc5QzwOu.s:2394   .text.zf_soft_spi_init:00000000 $t
+D:\Users\TMP\cc5QzwOu.s:2401   .text.zf_soft_spi_init:00000000 zf_soft_spi_init
+D:\Users\TMP\cc5QzwOu.s:2719   .text.zf_soft_spi_init:00000270 $d
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_debug.h.54.7de98ab63ba67fc6e363c3203ae3fb74
+                           .group:00000000 wm4.zf_common_memory.h.33.d43647290a4d62164ff2ec77cadb89d8
+                           .group:00000000 wm4.sr5e1xx.h.22.e5c808533cc52ed19fb0830cd7d98924
+                           .group:00000000 wm4.cmsis_version.h.32.0f826810625204eca22a19868bdc7586
+                           .group:00000000 wm4.core_cm7.h.66.8ab2de36917d6fcae18019067fda13e0
+                           .group:00000000 wm4.cmsis_gcc.h.26.498d0ad17a45fc9ef20fdc01caf02259
+                           .group:00000000 wm4.core_cm7.h.174.43edb295ecdaadad738f48ba6011ffad
+                           .group:00000000 wm4.mpu_armv7.h.32.83326921a797fa9d6f70449916b4b839
+                           .group:00000000 wm4.cachel1_armv7.h.32.abd77761a989e008b0c60891114a33c7
+                           .group:00000000 wm4.SR5E1_ADC.h.14.21608e6aff125ba995dd767d6d8dc311
+                           .group:00000000 wm4.SR5E1_CEM.h.14.01fe5742c8f1ae35b1f3af05932f702e
+                           .group:00000000 wm4.SR5E1_CMU.h.14.2617b38b159abe38028862394531e06d
+                           .group:00000000 wm4.SR5E1_COMP.h.14.4b6fdfe4f5f7fd9bedf3a99b98bdf4cd
+                           .group:00000000 wm4.SR5E1_CORDIC.h.14.354fbf7c9eaf6963d38eaa25cf28ffe8
+                           .group:00000000 wm4.SR5E1_CRC.h.14.c64d0f7767671ddb92e9ead0a1162100
+                           .group:00000000 wm4.SR5E1_DAC.h.14.8c26a0ff04b0cfeb55306cc3f22187b8
+                           .group:00000000 wm4.SR5E1_DBGMCU.h.14.427df893d53a8044654f017ba01c25ed
+                           .group:00000000 wm4.SR5E1_DMA.h.14.a7f9a92f844b40a86965798c2e64240b
+                           .group:00000000 wm4.SR5E1_DMAMUX.h.14.471b3b4dfd4d41515f1df49493698866
+                           .group:00000000 wm4.SR5E1_EXTI.h.14.a325ea3fe89cd84894660551c33241ea
+                           .group:00000000 wm4.SR5E1_FCCU.h.14.0ebf0f0f36e079d28613ad2c80e17e23
+                           .group:00000000 wm4.SR5E1_FDCAN.h.14.ac57101fad5dbc798bfb93f34c899de7
+                           .group:00000000 wm4.SR5E1_FLASH_REG_ITF.h.14.d23d1d44923f9b20b8c8fdb51d66aefd
+                           .group:00000000 wm4.SR5E1_GPIO.h.14.1c84071e130d7c64b62470ab0e18a1f1
+                           .group:00000000 wm4.SR5E1_HRTIM.h.24.03932387d2522e6bd5c772a4edaf2f5d
+                           .group:00000000 wm4.SR5E1_HSEM.h.14.cbe70eee519f01b16452c3f8c99d8df1
+                           .group:00000000 wm4.SR5E1_I2C.h.14.350ba3e0f4fd57828457efa80135c36c
+                           .group:00000000 wm4.SR5E1_IMA.h.14.62b7088985ab2b7ce9b030a02daa1f7d
+                           .group:00000000 wm4.SR5E1_IWDG.h.14.20b7c5f05cf7ae94464c360d7af3660d
+                           .group:00000000 wm4.SR5E1_MEMU.h.14.04bad7ae4c52ce334a4fc900aad2ae5b
+                           .group:00000000 wm4.SR5E1_NVM_CTRL.h.14.5f442617f0628d4f16258f211c614ef9
+                           .group:00000000 wm4.SR5E1_PLLDIG.h.14.bd87a8e6917eee17dae2f312c8e5fa53
+                           .group:00000000 wm4.SR5E1_PMC_DIG.h.14.54173b566c6656344766ec4ef46c9281
+                           .group:00000000 wm4.SR5E1_RCC.h.14.56734803c71534de286e793a53649740
+                           .group:00000000 wm4.SR5E1_RTC.h.14.47037cbc7d8175dbf2be1dc0bb955e3f
+                           .group:00000000 wm4.SR5E1_SD_ADC.h.14.552b97d0b8f3c1fd4df6d8964b2f1a80
+                           .group:00000000 wm4.SR5E1_SMPU.h.14.8ce5bb6d5d7c579cd725f492f46e9085
+                           .group:00000000 wm4.SR5E1_SPI.h.14.42d52112e540f85ade4d9135f8b87d72
+                           .group:00000000 wm4.SR5E1_SSCM.h.14.8e6a2ad0ce5fca422fc3d69939b6125b
+                           .group:00000000 wm4.SR5E1_SYSCFG.h.14.02b969490118ce4069914b5e94f7ca65
+                           .group:00000000 wm4.SR5E1_TDM.h.14.a40ed7928cad243a57fd233fccf01ad2
+                           .group:00000000 wm4.SR5E1_TIM.h.14.f17572f4c16f3f152b8164ad25c34f5b
+                           .group:00000000 wm4.SR5E1_UART.h.14.eec3ab82b02b3bdb3de500483675b83f
+                           .group:00000000 wm4.SR5E1_WWDG.h.14.59b45efc70e442cc6ef03702aad4ad88
+                           .group:00000000 wm4.typedefs.h.36.07fe3956b4e751037cfee70edcd0b397
+                           .group:00000000 wm4.irq_numbers.h.38.6294b95aed1bf7b3a2cda0eed8ce8f57
+                           .group:00000000 wm4.regs.h.23.2ac145b4f57126d16daed5fbd86d99c6
+                           .group:00000000 wm4.gpio.h.38.4f37c988f6412e2fcf390b4a4a9849b1
+                           .group:00000000 wm4.zf_driver_gpio.h.65.5a4d2084c62fed7c22fdca02e748c198
+                           .group:00000000 wm4.zf_driver_soft_spi.h.33.a938287c023905d97cafe56e4be63674
+
+UNDEFINED SYMBOLS
+debug_message_handler
+zf_gpio_assert_handler
+gpio_group_list
+zf_gpio_toggle_level
+zf_gpio_get_level
+zf_gpio_deinit
+zf_gpio_init

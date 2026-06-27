@@ -1,0 +1,2952 @@
+   1              		.cpu cortex-m7
+   2              		.arch armv7e-m
+   3              		.fpu fpv5-d16
+   4              		.eabi_attribute 28, 1
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 1
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"zf_common_fifo.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.zf_fifo_clear,"ax",%progbits
+  19              		.align	1
+  20              		.p2align 4,,15
+  21              		.global	zf_fifo_clear
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	zf_fifo_clear:
+  27              	.LFB3:
+  28              		.file 1 "libraries/zf_common/zf_common_fifo.c"
+   1:libraries/zf_common/zf_common_fifo.c **** /**************************************************************************************************
+   2:libraries/zf_common/zf_common_fifo.c **** * Stellar-SR5E1E3 Opensource Library 即（Stellar-SR5E1E3 开源库）是一个基于官方 SDK �
+   3:libraries/zf_common/zf_common_fifo.c **** * Copyright (c) 2022 SEEKFREE 逐飞科技
+   4:libraries/zf_common/zf_common_fifo.c **** *
+   5:libraries/zf_common/zf_common_fifo.c **** * 本文件是 Stellar-SR5E1E3 开源库的一部分
+   6:libraries/zf_common/zf_common_fifo.c **** *
+   7:libraries/zf_common/zf_common_fifo.c **** * Stellar-SR5E1E3 开源库 是免费软件
+   8:libraries/zf_common/zf_common_fifo.c **** * 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公
+   9:libraries/zf_common/zf_common_fifo.c **** * 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/�
+  10:libraries/zf_common/zf_common_fifo.c **** *
+  11:libraries/zf_common/zf_common_fifo.c **** * 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+  12:libraries/zf_common/zf_common_fifo.c **** * 甚至没有隐含的适销性或适合特定用途的保证
+  13:libraries/zf_common/zf_common_fifo.c **** * 更多细节请参见 GPL
+  14:libraries/zf_common/zf_common_fifo.c **** *
+  15:libraries/zf_common/zf_common_fifo.c **** * 您应该在收到本开源库的同时收到一份 GPL 的副本
+  16:libraries/zf_common/zf_common_fifo.c **** * 如果没有，请参阅<https://www.gnu.org/licenses/>
+  17:libraries/zf_common/zf_common_fifo.c **** *
+  18:libraries/zf_common/zf_common_fifo.c **** * 额外注明：
+  19:libraries/zf_common/zf_common_fifo.c **** * 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+  20:libraries/zf_common/zf_common_fifo.c **** * 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+  21:libraries/zf_common/zf_common_fifo.c **** * 许可证副本在 libraries 文件夹下 即该文件夹下的 LICENSE 文件
+  22:libraries/zf_common/zf_common_fifo.c **** * 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（
+  23:libraries/zf_common/zf_common_fifo.c **** *
+  24:libraries/zf_common/zf_common_fifo.c **** * 文件名称          zf_common_fifo
+  25:libraries/zf_common/zf_common_fifo.c **** * 公司名称          成都逐飞科技有限公司
+  26:libraries/zf_common/zf_common_fifo.c **** * 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+  27:libraries/zf_common/zf_common_fifo.c **** * 开发环境          StellarStudio 7.0.0
+  28:libraries/zf_common/zf_common_fifo.c **** * 适用平台          Stellar-SR5E1E3
+  29:libraries/zf_common/zf_common_fifo.c **** * 店铺链接          https://www.seekfree.cn/
+  30:libraries/zf_common/zf_common_fifo.c **** ***************************************************************************************************
+  31:libraries/zf_common/zf_common_fifo.c **** 
+  32:libraries/zf_common/zf_common_fifo.c **** // 自身头文件
+  33:libraries/zf_common/zf_common_fifo.c **** #include "zf_common_fifo.h"
+  34:libraries/zf_common/zf_common_fifo.c **** 
+  35:libraries/zf_common/zf_common_fifo.c **** // 此处定义 本文件的所有函数具体定义 这里不允许用户修改
+  36:libraries/zf_common/zf_common_fifo.c **** // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Part Start >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  37:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+  38:libraries/zf_common/zf_common_fifo.c **** // 函数简介     FIFO 重置缓冲器 清空当前 FIFO 对象的内存
+  39:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+  40:libraries/zf_common/zf_common_fifo.c **** // 返回参数     void
+  41:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_fifo_clear(fifo);
+  42:libraries/zf_common/zf_common_fifo.c **** // 备注信息     它会在下次调用写入状态时生效
+  43:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+  44:libraries/zf_common/zf_common_fifo.c **** void zf_fifo_clear (zf_fifo_obj_struct *fifo)
+  45:libraries/zf_common/zf_common_fifo.c **** {
+  29              		.loc 1 45 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 82B0     		sub	sp, sp, #8
+  35              		.cfi_def_cfa_offset 8
+  36 0002 0190     		str	r0, [sp, #4]
+  46:libraries/zf_common/zf_common_fifo.c ****     do
+  47:libraries/zf_common/zf_common_fifo.c ****     {
+  48:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo)                                                        // 如果 FIFO 对�
+  37              		.loc 1 48 11
+  38 0004 019B     		ldr	r3, [sp, #4]
+  39 0006 002B     		cmp	r3, #0
+  40 0008 0CD0     		beq	.L5
+  49:libraries/zf_common/zf_common_fifo.c ****         {
+  50:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+  51:libraries/zf_common/zf_common_fifo.c ****         }
+  52:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+  41              		.loc 1 52 21
+  42 000a 019B     		ldr	r3, [sp, #4]
+  43 000c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+  44 000e 03F00103 		and	r3, r3, #1
+  45 0012 DBB2     		uxtb	r3, r3
+  46              		.loc 1 52 11
+  47 0014 002B     		cmp	r3, #0
+  48 0016 07D0     		beq	.L6
+  53:libraries/zf_common/zf_common_fifo.c ****         {
+  54:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+  55:libraries/zf_common/zf_common_fifo.c ****         }
+  56:libraries/zf_common/zf_common_fifo.c **** 
+  57:libraries/zf_common/zf_common_fifo.c ****         fifo->clean_state = ZF_TRUE;                                            // 清空操作仅�
+  49              		.loc 1 57 27
+  50 0018 019A     		ldr	r2, [sp, #4]
+  51 001a 537C     		ldrb	r3, [r2, #17]
+  52 001c 43F01003 		orr	r3, r3, #16
+  53 0020 5374     		strb	r3, [r2, #17]
+  58:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+  59:libraries/zf_common/zf_common_fifo.c **** }
+  54              		.loc 1 59 1
+  55 0022 02E0     		b	.L7
+  56              	.L5:
+  50:libraries/zf_common/zf_common_fifo.c ****         }
+  57              		.loc 1 50 13
+  58 0024 00BF     		nop
+  59 0026 00E0     		b	.L7
+  60              	.L6:
+  54:libraries/zf_common/zf_common_fifo.c ****         }
+  61              		.loc 1 54 13
+  62 0028 00BF     		nop
+  63              	.L7:
+  64              		.loc 1 59 1
+  65 002a 00BF     		nop
+  66 002c 02B0     		add	sp, sp, #8
+  67              		.cfi_def_cfa_offset 0
+  68              		@ sp needed
+  69 002e 7047     		bx	lr
+  70              		.cfi_endproc
+  71              	.LFE3:
+  73              		.global	__aeabi_ldivmod
+  74              		.section	.text.zf_fifo_used,"ax",%progbits
+  75              		.align	1
+  76              		.p2align 4,,15
+  77              		.global	zf_fifo_used
+  78              		.syntax unified
+  79              		.thumb
+  80              		.thumb_func
+  82              	zf_fifo_used:
+  83              	.LFB4:
+  60:libraries/zf_common/zf_common_fifo.c **** 
+  61:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+  62:libraries/zf_common/zf_common_fifo.c **** // 函数简介     FIFO 查询当前数据个数
+  63:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+  64:libraries/zf_common/zf_common_fifo.c **** // 返回参数     uint32              已使用长度
+  65:libraries/zf_common/zf_common_fifo.c **** // 使用示例     uint32 len = zf_fifo_used(fifo);
+  66:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+  67:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+  68:libraries/zf_common/zf_common_fifo.c **** uint32 zf_fifo_used (zf_fifo_obj_struct *fifo)
+  69:libraries/zf_common/zf_common_fifo.c **** {
+  84              		.loc 1 69 1
+  85              		.cfi_startproc
+  86              		@ args = 0, pretend = 0, frame = 32
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  89              		.cfi_def_cfa_offset 36
+  90              		.cfi_offset 4, -36
+  91              		.cfi_offset 5, -32
+  92              		.cfi_offset 6, -28
+  93              		.cfi_offset 7, -24
+  94              		.cfi_offset 8, -20
+  95              		.cfi_offset 9, -16
+  96              		.cfi_offset 10, -12
+  97              		.cfi_offset 11, -8
+  98              		.cfi_offset 14, -4
+  99 0004 89B0     		sub	sp, sp, #36
+ 100              		.cfi_def_cfa_offset 72
+ 101 0006 0390     		str	r0, [sp, #12]
+  70:libraries/zf_common/zf_common_fifo.c ****     int64 used_lenght = 0;
+ 102              		.loc 1 70 11
+ 103 0008 4FF00002 		mov	r2, #0
+ 104 000c 4FF00003 		mov	r3, #0
+ 105 0010 CDE90623 		strd	r2, [sp, #24]
+ 106              	.LBB2:
+  71:libraries/zf_common/zf_common_fifo.c **** 
+  72:libraries/zf_common/zf_common_fifo.c ****     do
+  73:libraries/zf_common/zf_common_fifo.c ****     {
+  74:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo)                                                        // 如果 FIFO 对�
+ 107              		.loc 1 74 11
+ 108 0014 039B     		ldr	r3, [sp, #12]
+ 109 0016 002B     		cmp	r3, #0
+ 110 0018 57D0     		beq	.L16
+  75:libraries/zf_common/zf_common_fifo.c ****         {
+  76:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+  77:libraries/zf_common/zf_common_fifo.c ****         }
+  78:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+ 111              		.loc 1 78 21
+ 112 001a 039B     		ldr	r3, [sp, #12]
+ 113 001c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 114 001e 03F00103 		and	r3, r3, #1
+ 115 0022 DBB2     		uxtb	r3, r3
+ 116              		.loc 1 78 11
+ 117 0024 002B     		cmp	r3, #0
+ 118 0026 52D0     		beq	.L17
+  79:libraries/zf_common/zf_common_fifo.c ****         {
+  80:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+  81:libraries/zf_common/zf_common_fifo.c ****         }
+  82:libraries/zf_common/zf_common_fifo.c **** 
+  83:libraries/zf_common/zf_common_fifo.c ****         if(fifo->clean_state)                                                   // 清空指令置�
+ 119              		.loc 1 83 12
+ 120 0028 039B     		ldr	r3, [sp, #12]
+ 121 002a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 122 002c 03F01003 		and	r3, r3, #16
+ 123 0030 DBB2     		uxtb	r3, r3
+ 124              		.loc 1 83 11
+ 125 0032 002B     		cmp	r3, #0
+ 126 0034 4DD1     		bne	.L18
+  84:libraries/zf_common/zf_common_fifo.c ****         {
+  85:libraries/zf_common/zf_common_fifo.c ****             break;
+  86:libraries/zf_common/zf_common_fifo.c ****         }
+  87:libraries/zf_common/zf_common_fifo.c **** 
+  88:libraries/zf_common/zf_common_fifo.c ****         uint32  buffer_lenght   = fifo->tail_ptr - fifo->base_ptr;
+ 127              		.loc 1 88 39
+ 128 0036 039B     		ldr	r3, [sp, #12]
+ 129 0038 5A68     		ldr	r2, [r3, #4]
+ 130              		.loc 1 88 56
+ 131 003a 039B     		ldr	r3, [sp, #12]
+ 132 003c 1B68     		ldr	r3, [r3]
+ 133              		.loc 1 88 17
+ 134 003e D31A     		subs	r3, r2, r3
+ 135 0040 0593     		str	r3, [sp, #20]
+  89:libraries/zf_common/zf_common_fifo.c ****         uint8   state_backup    = fifo->lock_state;                             // 缓存锁定状�
+ 136              		.loc 1 89 39
+ 137 0042 039B     		ldr	r3, [sp, #12]
+ 138 0044 5B7C     		ldrb	r3, [r3, #17]
+ 139 0046 C3F3C003 		ubfx	r3, r3, #3, #1
+ 140 004a DBB2     		uxtb	r3, r3
+ 141              		.loc 1 89 17
+ 142 004c 8DF81330 		strb	r3, [sp, #19]
+  90:libraries/zf_common/zf_common_fifo.c ****         
+  91:libraries/zf_common/zf_common_fifo.c ****         fifo->lock_state        = ZF_TRUE;                                      // 锁定当前状�
+ 143              		.loc 1 91 33
+ 144 0050 039A     		ldr	r2, [sp, #12]
+ 145 0052 537C     		ldrb	r3, [r2, #17]
+ 146 0054 43F00803 		orr	r3, r3, #8
+ 147 0058 5374     		strb	r3, [r2, #17]
+  92:libraries/zf_common/zf_common_fifo.c ****         if(fifo->full_state)                                                    // 检查 FIFO 缓�
+ 148              		.loc 1 92 12
+ 149 005a 039B     		ldr	r3, [sp, #12]
+ 150 005c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 151 005e 03F02003 		and	r3, r3, #32
+ 152 0062 DBB2     		uxtb	r3, r3
+ 153              		.loc 1 92 11
+ 154 0064 002B     		cmp	r3, #0
+ 155 0066 06D0     		beq	.L13
+  93:libraries/zf_common/zf_common_fifo.c ****         {
+  94:libraries/zf_common/zf_common_fifo.c ****             used_lenght         = buffer_lenght;                                // 如果缓冲满�
+ 156              		.loc 1 94 33
+ 157 0068 059B     		ldr	r3, [sp, #20]
+ 158 006a 0022     		movs	r2, #0
+ 159 006c 9A46     		mov	r10, r3
+ 160 006e 9346     		mov	fp, r2
+ 161 0070 CDE906AB 		strd	r10, [sp, #24]
+ 162 0074 1EE0     		b	.L14
+ 163              	.L13:
+  95:libraries/zf_common/zf_common_fifo.c ****         }
+  96:libraries/zf_common/zf_common_fifo.c ****         else
+  97:libraries/zf_common/zf_common_fifo.c ****         {
+  98:libraries/zf_common/zf_common_fifo.c ****             used_lenght         = fifo->write_ptr - fifo->read_ptr;             // 计算读写指�
+ 164              		.loc 1 98 39
+ 165 0076 039B     		ldr	r3, [sp, #12]
+ 166 0078 9A68     		ldr	r2, [r3, #8]
+ 167              		.loc 1 98 57
+ 168 007a 039B     		ldr	r3, [sp, #12]
+ 169 007c DB68     		ldr	r3, [r3, #12]
+ 170              		.loc 1 98 51
+ 171 007e D31A     		subs	r3, r2, r3
+ 172              		.loc 1 98 33
+ 173 0080 0022     		movs	r2, #0
+ 174 0082 9846     		mov	r8, r3
+ 175 0084 9146     		mov	r9, r2
+ 176 0086 CDE90689 		strd	r8, [sp, #24]
+  99:libraries/zf_common/zf_common_fifo.c ****             used_lenght         = (used_lenght + buffer_lenght) % buffer_lenght;// 换算得到实�
+ 177              		.loc 1 99 48
+ 178 008a 059B     		ldr	r3, [sp, #20]
+ 179 008c 0022     		movs	r2, #0
+ 180 008e 1C46     		mov	r4, r3
+ 181 0090 1546     		mov	r5, r2
+ 182 0092 DDE90623 		ldrd	r2, [sp, #24]
+ 183 0096 A618     		adds	r6, r4, r2
+ 184 0098 45EB0307 		adc	r7, r5, r3
+ 185              		.loc 1 99 65
+ 186 009c 059B     		ldr	r3, [sp, #20]
+ 187 009e 0022     		movs	r2, #0
+ 188 00a0 0093     		str	r3, [sp]
+ 189 00a2 0192     		str	r2, [sp, #4]
+ 190              		.loc 1 99 33
+ 191 00a4 DDE90023 		ldrd	r2, [sp]
+ 192 00a8 3046     		mov	r0, r6
+ 193 00aa 3946     		mov	r1, r7
+ 194 00ac FFF7FEFF 		bl	__aeabi_ldivmod
+ 195 00b0 CDE90623 		strd	r2, [sp, #24]
+ 196              	.L14:
+ 100:libraries/zf_common/zf_common_fifo.c ****         }
+ 101:libraries/zf_common/zf_common_fifo.c ****         fifo->lock_state        = state_backup;                                 // 恢复锁定原�
+ 197              		.loc 1 101 33
+ 198 00b4 9DF81330 		ldrb	r3, [sp, #19]
+ 199 00b8 03F00103 		and	r3, r3, #1
+ 200 00bc D9B2     		uxtb	r1, r3
+ 201 00be 039A     		ldr	r2, [sp, #12]
+ 202 00c0 537C     		ldrb	r3, [r2, #17]
+ 203 00c2 61F3C303 		bfi	r3, r1, #3, #1
+ 204 00c6 5374     		strb	r3, [r2, #17]
+ 205 00c8 04E0     		b	.L10
+ 206              	.L16:
+  76:libraries/zf_common/zf_common_fifo.c ****         }
+ 207              		.loc 1 76 13
+ 208 00ca 00BF     		nop
+ 209 00cc 02E0     		b	.L10
+ 210              	.L17:
+  80:libraries/zf_common/zf_common_fifo.c ****         }
+ 211              		.loc 1 80 13
+ 212 00ce 00BF     		nop
+ 213 00d0 00E0     		b	.L10
+ 214              	.L18:
+  85:libraries/zf_common/zf_common_fifo.c ****         }
+ 215              		.loc 1 85 13
+ 216 00d2 00BF     		nop
+ 217              	.L10:
+ 218              	.LBE2:
+ 102:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 103:libraries/zf_common/zf_common_fifo.c **** 
+ 104:libraries/zf_common/zf_common_fifo.c ****     return used_lenght;                                                         // 返回实际数�
+ 219              		.loc 1 104 12
+ 220 00d4 069B     		ldr	r3, [sp, #24]
+ 105:libraries/zf_common/zf_common_fifo.c **** }
+ 221              		.loc 1 105 1
+ 222 00d6 1846     		mov	r0, r3
+ 223 00d8 09B0     		add	sp, sp, #36
+ 224              		.cfi_def_cfa_offset 36
+ 225              		@ sp needed
+ 226 00da BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 227              		.cfi_endproc
+ 228              	.LFE4:
+ 230 00de 00BF     		.section	.text.zf_fifo_write_element,"ax",%progbits
+ 231              		.align	1
+ 232              		.p2align 4,,15
+ 233              		.global	zf_fifo_write_element
+ 234              		.syntax unified
+ 235              		.thumb
+ 236              		.thumb_func
+ 238              	zf_fifo_write_element:
+ 239              	.LFB5:
+ 106:libraries/zf_common/zf_common_fifo.c **** 
+ 107:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 108:libraries/zf_common/zf_common_fifo.c **** // 函数简介     向 FIFO 中写入数据
+ 109:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+ 110:libraries/zf_common/zf_common_fifo.c **** // 参数说明     dat                 数据
+ 111:libraries/zf_common/zf_common_fifo.c **** // 返回参数     uint8               操作状态            (详见 zf_common_fifo.h 中枚举 
+ 112:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_fifo_write_element(fifo, dat);
+ 113:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+ 114:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 115:libraries/zf_common/zf_common_fifo.c **** uint8 zf_fifo_write_element (zf_fifo_obj_struct *fifo, uint32 dat)
+ 116:libraries/zf_common/zf_common_fifo.c **** {
+ 240              		.loc 1 116 1
+ 241              		.cfi_startproc
+ 242              		@ args = 0, pretend = 0, frame = 24
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244 0000 00B5     		push	{lr}
+ 245              		.cfi_def_cfa_offset 4
+ 246              		.cfi_offset 14, -4
+ 247 0002 87B0     		sub	sp, sp, #28
+ 248              		.cfi_def_cfa_offset 32
+ 249 0004 0190     		str	r0, [sp, #4]
+ 250 0006 0091     		str	r1, [sp]
+ 117:libraries/zf_common/zf_common_fifo.c ****     zf_fifo_error_code_enum return_state = FIFO_OPERATION_ERROR_UNKNOW;
+ 251              		.loc 1 117 29
+ 252 0008 0123     		movs	r3, #1
+ 253 000a 8DF81730 		strb	r3, [sp, #23]
+ 254              	.LBB3:
+ 118:libraries/zf_common/zf_common_fifo.c **** 
+ 119:libraries/zf_common/zf_common_fifo.c ****     do
+ 120:libraries/zf_common/zf_common_fifo.c ****     {
+ 121:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo)                                                        // 如果 FIFO 对�
+ 255              		.loc 1 121 11
+ 256 000e 019B     		ldr	r3, [sp, #4]
+ 257 0010 002B     		cmp	r3, #0
+ 258 0012 03D1     		bne	.L20
+ 122:libraries/zf_common/zf_common_fifo.c ****         {
+ 123:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_ILLEGAL_PARAMETER;       // 非法参数
+ 259              		.loc 1 123 33
+ 260 0014 0223     		movs	r3, #2
+ 261 0016 8DF81730 		strb	r3, [sp, #23]
+ 124:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 262              		.loc 1 124 13
+ 263 001a 81E0     		b	.L21
+ 264              	.L20:
+ 125:libraries/zf_common/zf_common_fifo.c ****         }
+ 126:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+ 265              		.loc 1 126 21
+ 266 001c 019B     		ldr	r3, [sp, #4]
+ 267 001e 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 268 0020 03F00103 		and	r3, r3, #1
+ 269 0024 DBB2     		uxtb	r3, r3
+ 270              		.loc 1 126 11
+ 271 0026 002B     		cmp	r3, #0
+ 272 0028 03D1     		bne	.L22
+ 127:libraries/zf_common/zf_common_fifo.c ****         {
+ 128:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_OBJECT_UNINIT;           // FIFO 对象未�
+ 273              		.loc 1 128 33
+ 274 002a 0323     		movs	r3, #3
+ 275 002c 8DF81730 		strb	r3, [sp, #23]
+ 129:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 276              		.loc 1 129 13
+ 277 0030 76E0     		b	.L21
+ 278              	.L22:
+ 130:libraries/zf_common/zf_common_fifo.c ****         }
+ 131:libraries/zf_common/zf_common_fifo.c **** 
+ 132:libraries/zf_common/zf_common_fifo.c ****         if(fifo->lock_state)                                                    // 判断操作锁�
+ 279              		.loc 1 132 12
+ 280 0032 019B     		ldr	r3, [sp, #4]
+ 281 0034 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 282 0036 03F00803 		and	r3, r3, #8
+ 283 003a DBB2     		uxtb	r3, r3
+ 284              		.loc 1 132 11
+ 285 003c 002B     		cmp	r3, #0
+ 286 003e 03D0     		beq	.L23
+ 133:libraries/zf_common/zf_common_fifo.c ****         {
+ 134:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_WRITE_ERROR_LOCK;                        // 如果已经被�
+ 287              		.loc 1 134 33
+ 288 0040 0423     		movs	r3, #4
+ 289 0042 8DF81730 		strb	r3, [sp, #23]
+ 135:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 290              		.loc 1 135 13
+ 291 0046 6BE0     		b	.L21
+ 292              	.L23:
+ 136:libraries/zf_common/zf_common_fifo.c ****         }
+ 137:libraries/zf_common/zf_common_fifo.c ****         if(fifo->write_state)                                                   // 判断写锁定�
+ 293              		.loc 1 137 12
+ 294 0048 019B     		ldr	r3, [sp, #4]
+ 295 004a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 296 004c 03F00203 		and	r3, r3, #2
+ 297 0050 DBB2     		uxtb	r3, r3
+ 298              		.loc 1 137 11
+ 299 0052 002B     		cmp	r3, #0
+ 300 0054 03D0     		beq	.L24
+ 138:libraries/zf_common/zf_common_fifo.c ****         {
+ 139:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_WRITE_ERROR_NESTED;                      // 如果已经被�
+ 301              		.loc 1 139 33
+ 302 0056 0523     		movs	r3, #5
+ 303 0058 8DF81730 		strb	r3, [sp, #23]
+ 140:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 304              		.loc 1 140 13
+ 305 005c 60E0     		b	.L21
+ 306              	.L24:
+ 141:libraries/zf_common/zf_common_fifo.c ****         }
+ 142:libraries/zf_common/zf_common_fifo.c **** 
+ 143:libraries/zf_common/zf_common_fifo.c ****         fifo->write_state       = ZF_TRUE;                                      // 写锁定
+ 307              		.loc 1 143 33
+ 308 005e 019A     		ldr	r2, [sp, #4]
+ 309 0060 537C     		ldrb	r3, [r2, #17]
+ 310 0062 43F00203 		orr	r3, r3, #2
+ 311 0066 5374     		strb	r3, [r2, #17]
+ 144:libraries/zf_common/zf_common_fifo.c **** 
+ 145:libraries/zf_common/zf_common_fifo.c ****         if(fifo->clean_state)                                                   // 判断是否置�
+ 312              		.loc 1 145 12
+ 313 0068 019B     		ldr	r3, [sp, #4]
+ 314 006a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 315 006c 03F01003 		and	r3, r3, #16
+ 316 0070 DBB2     		uxtb	r3, r3
+ 317              		.loc 1 145 11
+ 318 0072 002B     		cmp	r3, #0
+ 319 0074 11D0     		beq	.L25
+ 146:libraries/zf_common/zf_common_fifo.c ****         {
+ 147:libraries/zf_common/zf_common_fifo.c ****             fifo->write_ptr     = fifo->base_ptr;                               // 复位写指针
+ 320              		.loc 1 147 39
+ 321 0076 019B     		ldr	r3, [sp, #4]
+ 322 0078 1A68     		ldr	r2, [r3]
+ 323              		.loc 1 147 33
+ 324 007a 019B     		ldr	r3, [sp, #4]
+ 325 007c 9A60     		str	r2, [r3, #8]
+ 148:libraries/zf_common/zf_common_fifo.c ****             fifo->read_ptr      = fifo->base_ptr;                               // 复位读指针
+ 326              		.loc 1 148 39
+ 327 007e 019B     		ldr	r3, [sp, #4]
+ 328 0080 1A68     		ldr	r2, [r3]
+ 329              		.loc 1 148 33
+ 330 0082 019B     		ldr	r3, [sp, #4]
+ 331 0084 DA60     		str	r2, [r3, #12]
+ 149:libraries/zf_common/zf_common_fifo.c ****             fifo->full_state    = ZF_FALSE;                                     // 复位缓冲区�
+ 332              		.loc 1 149 33
+ 333 0086 019A     		ldr	r2, [sp, #4]
+ 334 0088 537C     		ldrb	r3, [r2, #17]
+ 335 008a 6FF34513 		bfc	r3, #5, #1
+ 336 008e 5374     		strb	r3, [r2, #17]
+ 150:libraries/zf_common/zf_common_fifo.c ****             fifo->clean_state   = ZF_FALSE;                                     // 复位清空指�
+ 337              		.loc 1 150 33
+ 338 0090 019A     		ldr	r2, [sp, #4]
+ 339 0092 537C     		ldrb	r3, [r2, #17]
+ 340 0094 6FF30413 		bfc	r3, #4, #1
+ 341 0098 5374     		strb	r3, [r2, #17]
+ 342              	.L25:
+ 151:libraries/zf_common/zf_common_fifo.c ****         }
+ 152:libraries/zf_common/zf_common_fifo.c ****         if(fifo->full_state)                                                    // 判断是否写�
+ 343              		.loc 1 152 12
+ 344 009a 019B     		ldr	r3, [sp, #4]
+ 345 009c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 346 009e 03F02003 		and	r3, r3, #32
+ 347 00a2 DBB2     		uxtb	r3, r3
+ 348              		.loc 1 152 11
+ 349 00a4 002B     		cmp	r3, #0
+ 350 00a6 08D0     		beq	.L26
+ 153:libraries/zf_common/zf_common_fifo.c ****         {
+ 154:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_WRITE_ERROR_NO_SPACE;                    // 写满就报空�
+ 351              		.loc 1 154 33
+ 352 00a8 0623     		movs	r3, #6
+ 353 00aa 8DF81730 		strb	r3, [sp, #23]
+ 155:libraries/zf_common/zf_common_fifo.c ****             fifo->write_state   = ZF_FALSE;                                     // 解除写锁定
+ 354              		.loc 1 155 33
+ 355 00ae 019A     		ldr	r2, [sp, #4]
+ 356 00b0 537C     		ldrb	r3, [r2, #17]
+ 357 00b2 6FF34103 		bfc	r3, #1, #1
+ 358 00b6 5374     		strb	r3, [r2, #17]
+ 156:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 359              		.loc 1 156 13
+ 360 00b8 32E0     		b	.L21
+ 361              	.L26:
+ 157:libraries/zf_common/zf_common_fifo.c ****         }
+ 158:libraries/zf_common/zf_common_fifo.c **** 
+ 159:libraries/zf_common/zf_common_fifo.c ****         uint32 start_ptr        = fifo->write_ptr;                              // 获取写指针�
+ 362              		.loc 1 159 16
+ 363 00ba 019B     		ldr	r3, [sp, #4]
+ 364 00bc 9B68     		ldr	r3, [r3, #8]
+ 365 00be 0493     		str	r3, [sp, #16]
+ 160:libraries/zf_common/zf_common_fifo.c ****         uint32 end_ptr          = fifo->read_ptr;                               // 获取读指针�
+ 366              		.loc 1 160 16
+ 367 00c0 019B     		ldr	r3, [sp, #4]
+ 368 00c2 DB68     		ldr	r3, [r3, #12]
+ 369 00c4 0393     		str	r3, [sp, #12]
+ 161:libraries/zf_common/zf_common_fifo.c **** 
+ 162:libraries/zf_common/zf_common_fifo.c ****         memcpy((void *)start_ptr, &dat, fifo->step);                            // 写入数据
+ 370              		.loc 1 162 9
+ 371 00c6 0498     		ldr	r0, [sp, #16]
+ 372              		.loc 1 162 45
+ 373 00c8 019B     		ldr	r3, [sp, #4]
+ 374 00ca 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 375              		.loc 1 162 9
+ 376 00cc 1A46     		mov	r2, r3
+ 377 00ce 6B46     		mov	r3, sp
+ 378 00d0 1946     		mov	r1, r3
+ 379 00d2 FFF7FEFF 		bl	memcpy
+ 163:libraries/zf_common/zf_common_fifo.c ****         start_ptr               += fifo->step;                                  // 写指针位移�
+ 380              		.loc 1 163 40
+ 381 00d6 019B     		ldr	r3, [sp, #4]
+ 382 00d8 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 383 00da 1A46     		mov	r2, r3
+ 384              		.loc 1 163 33
+ 385 00dc 049B     		ldr	r3, [sp, #16]
+ 386 00de 1344     		add	r3, r3, r2
+ 387 00e0 0493     		str	r3, [sp, #16]
+ 164:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr == fifo->tail_ptr)                                         // 判断是否需�
+ 388              		.loc 1 164 29
+ 389 00e2 019B     		ldr	r3, [sp, #4]
+ 390 00e4 5B68     		ldr	r3, [r3, #4]
+ 391              		.loc 1 164 11
+ 392 00e6 049A     		ldr	r2, [sp, #16]
+ 393 00e8 9A42     		cmp	r2, r3
+ 394 00ea 02D1     		bne	.L27
+ 165:libraries/zf_common/zf_common_fifo.c ****         {
+ 166:libraries/zf_common/zf_common_fifo.c ****             start_ptr           = fifo->base_ptr;
+ 395              		.loc 1 166 33
+ 396 00ec 019B     		ldr	r3, [sp, #4]
+ 397 00ee 1B68     		ldr	r3, [r3]
+ 398 00f0 0493     		str	r3, [sp, #16]
+ 399              	.L27:
+ 167:libraries/zf_common/zf_common_fifo.c ****         }
+ 168:libraries/zf_common/zf_common_fifo.c ****         fifo->full_state        = (start_ptr == end_ptr);                       // 判断是否写�
+ 400              		.loc 1 168 46
+ 401 00f2 049A     		ldr	r2, [sp, #16]
+ 402 00f4 039B     		ldr	r3, [sp, #12]
+ 403 00f6 9A42     		cmp	r2, r3
+ 404 00f8 0CBF     		ite	eq
+ 405 00fa 0123     		moveq	r3, #1
+ 406 00fc 0023     		movne	r3, #0
+ 407 00fe D9B2     		uxtb	r1, r3
+ 408              		.loc 1 168 33
+ 409 0100 019A     		ldr	r2, [sp, #4]
+ 410 0102 537C     		ldrb	r3, [r2, #17]
+ 411 0104 61F34513 		bfi	r3, r1, #5, #1
+ 412 0108 5374     		strb	r3, [r2, #17]
+ 169:libraries/zf_common/zf_common_fifo.c ****         fifo->write_ptr         = start_ptr;                                    // 写指针位移�
+ 413              		.loc 1 169 33
+ 414 010a 019B     		ldr	r3, [sp, #4]
+ 415 010c 049A     		ldr	r2, [sp, #16]
+ 416 010e 9A60     		str	r2, [r3, #8]
+ 170:libraries/zf_common/zf_common_fifo.c **** 
+ 171:libraries/zf_common/zf_common_fifo.c ****         fifo->write_state       = ZF_FALSE;                                     // 解除写锁定
+ 417              		.loc 1 171 33
+ 418 0110 019A     		ldr	r2, [sp, #4]
+ 419 0112 537C     		ldrb	r3, [r2, #17]
+ 420 0114 6FF34103 		bfc	r3, #1, #1
+ 421 0118 5374     		strb	r3, [r2, #17]
+ 172:libraries/zf_common/zf_common_fifo.c **** 
+ 173:libraries/zf_common/zf_common_fifo.c ****         return_state            = FIFO_OPERATION_NO_ERROR;
+ 422              		.loc 1 173 33
+ 423 011a 0023     		movs	r3, #0
+ 424 011c 8DF81730 		strb	r3, [sp, #23]
+ 425              	.L21:
+ 426              	.LBE3:
+ 174:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 175:libraries/zf_common/zf_common_fifo.c **** 
+ 176:libraries/zf_common/zf_common_fifo.c ****     return return_state;
+ 427              		.loc 1 176 12
+ 428 0120 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 177:libraries/zf_common/zf_common_fifo.c **** }
+ 429              		.loc 1 177 1
+ 430 0124 1846     		mov	r0, r3
+ 431 0126 07B0     		add	sp, sp, #28
+ 432              		.cfi_def_cfa_offset 4
+ 433              		@ sp needed
+ 434 0128 5DF804FB 		ldr	pc, [sp], #4
+ 435              		.cfi_endproc
+ 436              	.LFE5:
+ 438              		.section	.text.zf_fifo_write_buffer,"ax",%progbits
+ 439              		.align	1
+ 440              		.p2align 4,,15
+ 441              		.global	zf_fifo_write_buffer
+ 442              		.syntax unified
+ 443              		.thumb
+ 444              		.thumb_func
+ 446              	zf_fifo_write_buffer:
+ 447              	.LFB6:
+ 178:libraries/zf_common/zf_common_fifo.c **** 
+ 179:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 180:libraries/zf_common/zf_common_fifo.c **** // 函数简介     向 FIFO 中写入数据
+ 181:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+ 182:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *dat                数据来源缓冲区指针
+ 183:libraries/zf_common/zf_common_fifo.c **** // 参数说明     length              需要写入的数据长度
+ 184:libraries/zf_common/zf_common_fifo.c **** // 返回参数     uint8               操作状态            (详见 zf_common_fifo.h 中枚举 
+ 185:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_fifo_write_buffer(fifo, dat, length);
+ 186:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+ 187:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 188:libraries/zf_common/zf_common_fifo.c **** uint8 zf_fifo_write_buffer (zf_fifo_obj_struct *fifo, void *dat, uint32 *length)
+ 189:libraries/zf_common/zf_common_fifo.c **** {
+ 448              		.loc 1 189 1
+ 449              		.cfi_startproc
+ 450              		@ args = 0, pretend = 0, frame = 40
+ 451              		@ frame_needed = 0, uses_anonymous_args = 0
+ 452 0000 00B5     		push	{lr}
+ 453              		.cfi_def_cfa_offset 4
+ 454              		.cfi_offset 14, -4
+ 455 0002 8BB0     		sub	sp, sp, #44
+ 456              		.cfi_def_cfa_offset 48
+ 457 0004 0390     		str	r0, [sp, #12]
+ 458 0006 0291     		str	r1, [sp, #8]
+ 459 0008 0192     		str	r2, [sp, #4]
+ 190:libraries/zf_common/zf_common_fifo.c ****     zf_fifo_error_code_enum return_state = FIFO_OPERATION_ERROR_UNKNOW;
+ 460              		.loc 1 190 29
+ 461 000a 0123     		movs	r3, #1
+ 462 000c 8DF82730 		strb	r3, [sp, #39]
+ 463              	.LBB4:
+ 191:libraries/zf_common/zf_common_fifo.c **** 
+ 192:libraries/zf_common/zf_common_fifo.c ****     do
+ 193:libraries/zf_common/zf_common_fifo.c ****     {
+ 194:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo || NULL == dat || NULL == length || 0 == *length)       // 如果 FIFO 对�
+ 464              		.loc 1 194 11
+ 465 0010 039B     		ldr	r3, [sp, #12]
+ 466 0012 002B     		cmp	r3, #0
+ 467 0014 09D0     		beq	.L30
+ 468              		.loc 1 194 25 discriminator 1
+ 469 0016 029B     		ldr	r3, [sp, #8]
+ 470 0018 002B     		cmp	r3, #0
+ 471 001a 06D0     		beq	.L30
+ 472              		.loc 1 194 40 discriminator 2
+ 473 001c 019B     		ldr	r3, [sp, #4]
+ 474 001e 002B     		cmp	r3, #0
+ 475 0020 03D0     		beq	.L30
+ 476              		.loc 1 194 66 discriminator 3
+ 477 0022 019B     		ldr	r3, [sp, #4]
+ 478 0024 1B68     		ldr	r3, [r3]
+ 479              		.loc 1 194 58 discriminator 3
+ 480 0026 002B     		cmp	r3, #0
+ 481 0028 03D1     		bne	.L31
+ 482              	.L30:
+ 195:libraries/zf_common/zf_common_fifo.c ****         {
+ 196:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_ILLEGAL_PARAMETER;       // 非法参数
+ 483              		.loc 1 196 33
+ 484 002a 0223     		movs	r3, #2
+ 485 002c 8DF82730 		strb	r3, [sp, #39]
+ 197:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 486              		.loc 1 197 13
+ 487 0030 13E1     		b	.L32
+ 488              	.L31:
+ 198:libraries/zf_common/zf_common_fifo.c ****         }
+ 199:libraries/zf_common/zf_common_fifo.c **** 
+ 200:libraries/zf_common/zf_common_fifo.c ****         uint32 length_temp = *length;
+ 489              		.loc 1 200 16
+ 490 0032 019B     		ldr	r3, [sp, #4]
+ 491 0034 1B68     		ldr	r3, [r3]
+ 492 0036 0893     		str	r3, [sp, #32]
+ 201:libraries/zf_common/zf_common_fifo.c ****         *length = 0;
+ 493              		.loc 1 201 17
+ 494 0038 019B     		ldr	r3, [sp, #4]
+ 495 003a 0022     		movs	r2, #0
+ 496 003c 1A60     		str	r2, [r3]
+ 202:libraries/zf_common/zf_common_fifo.c **** 
+ 203:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+ 497              		.loc 1 203 21
+ 498 003e 039B     		ldr	r3, [sp, #12]
+ 499 0040 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 500 0042 03F00103 		and	r3, r3, #1
+ 501 0046 DBB2     		uxtb	r3, r3
+ 502              		.loc 1 203 11
+ 503 0048 002B     		cmp	r3, #0
+ 504 004a 03D1     		bne	.L33
+ 204:libraries/zf_common/zf_common_fifo.c ****         {
+ 205:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_OBJECT_UNINIT;           // FIFO 对象未�
+ 505              		.loc 1 205 33
+ 506 004c 0323     		movs	r3, #3
+ 507 004e 8DF82730 		strb	r3, [sp, #39]
+ 206:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 508              		.loc 1 206 13
+ 509 0052 02E1     		b	.L32
+ 510              	.L33:
+ 207:libraries/zf_common/zf_common_fifo.c ****         }
+ 208:libraries/zf_common/zf_common_fifo.c **** 
+ 209:libraries/zf_common/zf_common_fifo.c ****         if(fifo->lock_state)                                                    // 判断操作锁�
+ 511              		.loc 1 209 12
+ 512 0054 039B     		ldr	r3, [sp, #12]
+ 513 0056 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 514 0058 03F00803 		and	r3, r3, #8
+ 515 005c DBB2     		uxtb	r3, r3
+ 516              		.loc 1 209 11
+ 517 005e 002B     		cmp	r3, #0
+ 518 0060 03D0     		beq	.L34
+ 210:libraries/zf_common/zf_common_fifo.c ****         {
+ 211:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_WRITE_ERROR_LOCK;                        // 如果已经被�
+ 519              		.loc 1 211 33
+ 520 0062 0423     		movs	r3, #4
+ 521 0064 8DF82730 		strb	r3, [sp, #39]
+ 212:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 522              		.loc 1 212 13
+ 523 0068 F7E0     		b	.L32
+ 524              	.L34:
+ 213:libraries/zf_common/zf_common_fifo.c ****         }
+ 214:libraries/zf_common/zf_common_fifo.c ****         if(fifo->write_state)                                                   // 判断写锁定�
+ 525              		.loc 1 214 12
+ 526 006a 039B     		ldr	r3, [sp, #12]
+ 527 006c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 528 006e 03F00203 		and	r3, r3, #2
+ 529 0072 DBB2     		uxtb	r3, r3
+ 530              		.loc 1 214 11
+ 531 0074 002B     		cmp	r3, #0
+ 532 0076 03D0     		beq	.L35
+ 215:libraries/zf_common/zf_common_fifo.c ****         {
+ 216:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_WRITE_ERROR_NESTED;                      // 如果已经被�
+ 533              		.loc 1 216 33
+ 534 0078 0523     		movs	r3, #5
+ 535 007a 8DF82730 		strb	r3, [sp, #39]
+ 217:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 536              		.loc 1 217 13
+ 537 007e ECE0     		b	.L32
+ 538              	.L35:
+ 218:libraries/zf_common/zf_common_fifo.c ****         }
+ 219:libraries/zf_common/zf_common_fifo.c **** 
+ 220:libraries/zf_common/zf_common_fifo.c ****         fifo->write_state       = ZF_TRUE;                                      // 写锁定
+ 539              		.loc 1 220 33
+ 540 0080 039A     		ldr	r2, [sp, #12]
+ 541 0082 537C     		ldrb	r3, [r2, #17]
+ 542 0084 43F00203 		orr	r3, r3, #2
+ 543 0088 5374     		strb	r3, [r2, #17]
+ 221:libraries/zf_common/zf_common_fifo.c ****         
+ 222:libraries/zf_common/zf_common_fifo.c ****         if(fifo->clean_state)                                                   // 判断是否置�
+ 544              		.loc 1 222 12
+ 545 008a 039B     		ldr	r3, [sp, #12]
+ 546 008c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 547 008e 03F01003 		and	r3, r3, #16
+ 548 0092 DBB2     		uxtb	r3, r3
+ 549              		.loc 1 222 11
+ 550 0094 002B     		cmp	r3, #0
+ 551 0096 11D0     		beq	.L36
+ 223:libraries/zf_common/zf_common_fifo.c ****         {
+ 224:libraries/zf_common/zf_common_fifo.c ****             fifo->write_ptr     = fifo->base_ptr;                               // 复位写指针
+ 552              		.loc 1 224 39
+ 553 0098 039B     		ldr	r3, [sp, #12]
+ 554 009a 1A68     		ldr	r2, [r3]
+ 555              		.loc 1 224 33
+ 556 009c 039B     		ldr	r3, [sp, #12]
+ 557 009e 9A60     		str	r2, [r3, #8]
+ 225:libraries/zf_common/zf_common_fifo.c ****             fifo->read_ptr      = fifo->base_ptr;                               // 复位读指针
+ 558              		.loc 1 225 39
+ 559 00a0 039B     		ldr	r3, [sp, #12]
+ 560 00a2 1A68     		ldr	r2, [r3]
+ 561              		.loc 1 225 33
+ 562 00a4 039B     		ldr	r3, [sp, #12]
+ 563 00a6 DA60     		str	r2, [r3, #12]
+ 226:libraries/zf_common/zf_common_fifo.c ****             fifo->full_state    = ZF_FALSE;                                     // 复位缓冲区�
+ 564              		.loc 1 226 33
+ 565 00a8 039A     		ldr	r2, [sp, #12]
+ 566 00aa 537C     		ldrb	r3, [r2, #17]
+ 567 00ac 6FF34513 		bfc	r3, #5, #1
+ 568 00b0 5374     		strb	r3, [r2, #17]
+ 227:libraries/zf_common/zf_common_fifo.c ****             fifo->clean_state   = ZF_FALSE;                                     // 复位清空指�
+ 569              		.loc 1 227 33
+ 570 00b2 039A     		ldr	r2, [sp, #12]
+ 571 00b4 537C     		ldrb	r3, [r2, #17]
+ 572 00b6 6FF30413 		bfc	r3, #4, #1
+ 573 00ba 5374     		strb	r3, [r2, #17]
+ 574              	.L36:
+ 228:libraries/zf_common/zf_common_fifo.c ****         }
+ 229:libraries/zf_common/zf_common_fifo.c ****         if(fifo->full_state)                                                    // 判断是否写�
+ 575              		.loc 1 229 12
+ 576 00bc 039B     		ldr	r3, [sp, #12]
+ 577 00be 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 578 00c0 03F02003 		and	r3, r3, #32
+ 579 00c4 DBB2     		uxtb	r3, r3
+ 580              		.loc 1 229 11
+ 581 00c6 002B     		cmp	r3, #0
+ 582 00c8 08D0     		beq	.L37
+ 230:libraries/zf_common/zf_common_fifo.c ****         {
+ 231:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_WRITE_ERROR_NO_SPACE;                    // 写满就报空�
+ 583              		.loc 1 231 33
+ 584 00ca 0623     		movs	r3, #6
+ 585 00cc 8DF82730 		strb	r3, [sp, #39]
+ 232:libraries/zf_common/zf_common_fifo.c ****             fifo->write_state   = ZF_FALSE;                                     // 解除写锁定
+ 586              		.loc 1 232 33
+ 587 00d0 039A     		ldr	r2, [sp, #12]
+ 588 00d2 537C     		ldrb	r3, [r2, #17]
+ 589 00d4 6FF34103 		bfc	r3, #1, #1
+ 590 00d8 5374     		strb	r3, [r2, #17]
+ 233:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 591              		.loc 1 233 13
+ 592 00da BEE0     		b	.L32
+ 593              	.L37:
+ 234:libraries/zf_common/zf_common_fifo.c ****         }
+ 235:libraries/zf_common/zf_common_fifo.c **** 
+ 236:libraries/zf_common/zf_common_fifo.c ****         uint32 start_ptr        = fifo->write_ptr;                              // 获取写指针�
+ 594              		.loc 1 236 16
+ 595 00dc 039B     		ldr	r3, [sp, #12]
+ 596 00de 9B68     		ldr	r3, [r3, #8]
+ 597 00e0 0793     		str	r3, [sp, #28]
+ 237:libraries/zf_common/zf_common_fifo.c ****         uint32 end_ptr          = fifo->read_ptr;                               // 获取读指针�
+ 598              		.loc 1 237 16
+ 599 00e2 039B     		ldr	r3, [sp, #12]
+ 600 00e4 DB68     		ldr	r3, [r3, #12]
+ 601 00e6 0593     		str	r3, [sp, #20]
+ 238:libraries/zf_common/zf_common_fifo.c ****         uint32 data_size        = 0;
+ 602              		.loc 1 238 16
+ 603 00e8 0023     		movs	r3, #0
+ 604 00ea 0693     		str	r3, [sp, #24]
+ 239:libraries/zf_common/zf_common_fifo.c **** 
+ 240:libraries/zf_common/zf_common_fifo.c ****         if(end_ptr > start_ptr)                                                 // 如果写指针�
+ 605              		.loc 1 240 11
+ 606 00ec 059A     		ldr	r2, [sp, #20]
+ 607 00ee 079B     		ldr	r3, [sp, #28]
+ 608 00f0 9A42     		cmp	r2, r3
+ 609 00f2 2BD9     		bls	.L38
+ 241:libraries/zf_common/zf_common_fifo.c ****         {
+ 242:libraries/zf_common/zf_common_fifo.c ****             data_size           = end_ptr - start_ptr;                          // 获得可写字�
+ 610              		.loc 1 242 33
+ 611 00f4 059A     		ldr	r2, [sp, #20]
+ 612 00f6 079B     		ldr	r3, [sp, #28]
+ 613 00f8 D31A     		subs	r3, r2, r3
+ 614 00fa 0693     		str	r3, [sp, #24]
+ 243:libraries/zf_common/zf_common_fifo.c ****             if(length_temp > data_size / fifo->step)                            // 判断写入长�
+ 615              		.loc 1 243 46
+ 616 00fc 039B     		ldr	r3, [sp, #12]
+ 617 00fe 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 618 0100 1A46     		mov	r2, r3
+ 619              		.loc 1 243 40
+ 620 0102 069B     		ldr	r3, [sp, #24]
+ 621 0104 B3FBF2F3 		udiv	r3, r3, r2
+ 622              		.loc 1 243 15
+ 623 0108 089A     		ldr	r2, [sp, #32]
+ 624 010a 9A42     		cmp	r2, r3
+ 625 010c 09D9     		bls	.L39
+ 244:libraries/zf_common/zf_common_fifo.c ****             {
+ 245:libraries/zf_common/zf_common_fifo.c ****                 length_temp         = data_size / fifo->step;                   // 修正写入长�
+ 626              		.loc 1 245 55
+ 627 010e 039B     		ldr	r3, [sp, #12]
+ 628 0110 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 629 0112 1A46     		mov	r2, r3
+ 630              		.loc 1 245 37
+ 631 0114 069B     		ldr	r3, [sp, #24]
+ 632 0116 B3FBF2F3 		udiv	r3, r3, r2
+ 633 011a 0893     		str	r3, [sp, #32]
+ 246:libraries/zf_common/zf_common_fifo.c ****                 return_state    = FIFO_WRITE_ERROR_PARTIAL_DONE;                // 写满就报空�
+ 634              		.loc 1 246 33
+ 635 011c 0723     		movs	r3, #7
+ 636 011e 8DF82730 		strb	r3, [sp, #39]
+ 637              	.L39:
+ 247:libraries/zf_common/zf_common_fifo.c ****             }
+ 248:libraries/zf_common/zf_common_fifo.c ****             memcpy((void *)start_ptr, dat, length_temp * fifo->step);           // 写入数据
+ 638              		.loc 1 248 13
+ 639 0122 0798     		ldr	r0, [sp, #28]
+ 640              		.loc 1 248 62
+ 641 0124 039B     		ldr	r3, [sp, #12]
+ 642 0126 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 643 0128 1A46     		mov	r2, r3
+ 644              		.loc 1 248 56
+ 645 012a 089B     		ldr	r3, [sp, #32]
+ 646 012c 02FB03F3 		mul	r3, r2, r3
+ 647              		.loc 1 248 13
+ 648 0130 1A46     		mov	r2, r3
+ 649 0132 0299     		ldr	r1, [sp, #8]
+ 650 0134 FFF7FEFF 		bl	memcpy
+ 249:libraries/zf_common/zf_common_fifo.c ****             start_ptr           += length_temp * fifo->step;                    // 写指针位移�
+ 651              		.loc 1 249 54
+ 652 0138 039B     		ldr	r3, [sp, #12]
+ 653 013a 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 654 013c 1A46     		mov	r2, r3
+ 655              		.loc 1 249 48
+ 656 013e 089B     		ldr	r3, [sp, #32]
+ 657 0140 02FB03F3 		mul	r3, r2, r3
+ 658              		.loc 1 249 33
+ 659 0144 079A     		ldr	r2, [sp, #28]
+ 660 0146 1344     		add	r3, r3, r2
+ 661 0148 0793     		str	r3, [sp, #28]
+ 662 014a 5DE0     		b	.L40
+ 663              	.L38:
+ 250:libraries/zf_common/zf_common_fifo.c ****         }
+ 251:libraries/zf_common/zf_common_fifo.c ****         else                                                                    // 否则的话就�
+ 252:libraries/zf_common/zf_common_fifo.c ****         {
+ 253:libraries/zf_common/zf_common_fifo.c ****             data_size           = fifo->tail_ptr - start_ptr;                   // 获取写指针�
+ 664              		.loc 1 253 39
+ 665 014c 039B     		ldr	r3, [sp, #12]
+ 666 014e 5A68     		ldr	r2, [r3, #4]
+ 667              		.loc 1 253 33
+ 668 0150 079B     		ldr	r3, [sp, #28]
+ 669 0152 D31A     		subs	r3, r2, r3
+ 670 0154 0693     		str	r3, [sp, #24]
+ 254:libraries/zf_common/zf_common_fifo.c ****             if(length_temp <= data_size / fifo->step)                           // 到尾部空间�
+ 671              		.loc 1 254 47
+ 672 0156 039B     		ldr	r3, [sp, #12]
+ 673 0158 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 674 015a 1A46     		mov	r2, r3
+ 675              		.loc 1 254 41
+ 676 015c 069B     		ldr	r3, [sp, #24]
+ 677 015e B3FBF2F3 		udiv	r3, r3, r2
+ 678              		.loc 1 254 15
+ 679 0162 089A     		ldr	r2, [sp, #32]
+ 680 0164 9A42     		cmp	r2, r3
+ 681 0166 14D8     		bhi	.L41
+ 255:libraries/zf_common/zf_common_fifo.c ****             {
+ 256:libraries/zf_common/zf_common_fifo.c ****                 memcpy((void *)start_ptr, dat, length_temp * fifo->step);       // 写入数据
+ 682              		.loc 1 256 17
+ 683 0168 0798     		ldr	r0, [sp, #28]
+ 684              		.loc 1 256 66
+ 685 016a 039B     		ldr	r3, [sp, #12]
+ 686 016c 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 687 016e 1A46     		mov	r2, r3
+ 688              		.loc 1 256 60
+ 689 0170 089B     		ldr	r3, [sp, #32]
+ 690 0172 02FB03F3 		mul	r3, r2, r3
+ 691              		.loc 1 256 17
+ 692 0176 1A46     		mov	r2, r3
+ 693 0178 0299     		ldr	r1, [sp, #8]
+ 694 017a FFF7FEFF 		bl	memcpy
+ 257:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       += length_temp * fifo->step;                    // 写指针位移�
+ 695              		.loc 1 257 54
+ 696 017e 039B     		ldr	r3, [sp, #12]
+ 697 0180 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 698 0182 1A46     		mov	r2, r3
+ 699              		.loc 1 257 48
+ 700 0184 089B     		ldr	r3, [sp, #32]
+ 701 0186 02FB03F3 		mul	r3, r2, r3
+ 702              		.loc 1 257 33
+ 703 018a 079A     		ldr	r2, [sp, #28]
+ 704 018c 1344     		add	r3, r3, r2
+ 705 018e 0793     		str	r3, [sp, #28]
+ 706 0190 3AE0     		b	.L40
+ 707              	.L41:
+ 258:libraries/zf_common/zf_common_fifo.c ****             }
+ 259:libraries/zf_common/zf_common_fifo.c ****             else
+ 260:libraries/zf_common/zf_common_fifo.c ****             {
+ 261:libraries/zf_common/zf_common_fifo.c ****                 memcpy((void *)start_ptr, dat, data_size);                      // 写入第一部�
+ 708              		.loc 1 261 17
+ 709 0192 079B     		ldr	r3, [sp, #28]
+ 710 0194 069A     		ldr	r2, [sp, #24]
+ 711 0196 0299     		ldr	r1, [sp, #8]
+ 712 0198 1846     		mov	r0, r3
+ 713 019a FFF7FEFF 		bl	memcpy
+ 262:libraries/zf_common/zf_common_fifo.c **** 
+ 263:libraries/zf_common/zf_common_fifo.c ****                 dat             = (void *)((uint32)dat + data_size);            // 缓冲地址自�
+ 714              		.loc 1 263 44
+ 715 019e 029A     		ldr	r2, [sp, #8]
+ 716              		.loc 1 263 56
+ 717 01a0 069B     		ldr	r3, [sp, #24]
+ 718 01a2 1344     		add	r3, r3, r2
+ 719              		.loc 1 263 33
+ 720 01a4 0293     		str	r3, [sp, #8]
+ 264:libraries/zf_common/zf_common_fifo.c ****                 data_size       = length_temp * fifo->step - data_size;         // 获得第二部�
+ 721              		.loc 1 264 53
+ 722 01a6 039B     		ldr	r3, [sp, #12]
+ 723 01a8 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 724 01aa 1A46     		mov	r2, r3
+ 725              		.loc 1 264 47
+ 726 01ac 089B     		ldr	r3, [sp, #32]
+ 727 01ae 03FB02F2 		mul	r2, r3, r2
+ 728              		.loc 1 264 33
+ 729 01b2 069B     		ldr	r3, [sp, #24]
+ 730 01b4 D31A     		subs	r3, r2, r3
+ 731 01b6 0693     		str	r3, [sp, #24]
+ 265:libraries/zf_common/zf_common_fifo.c **** 
+ 266:libraries/zf_common/zf_common_fifo.c ****                 if(data_size > end_ptr - fifo->base_ptr)                        // 剩余数据超�
+ 732              		.loc 1 266 46
+ 733 01b8 039B     		ldr	r3, [sp, #12]
+ 734 01ba 1B68     		ldr	r3, [r3]
+ 735              		.loc 1 266 40
+ 736 01bc 059A     		ldr	r2, [sp, #20]
+ 737 01be D31A     		subs	r3, r2, r3
+ 738              		.loc 1 266 19
+ 739 01c0 069A     		ldr	r2, [sp, #24]
+ 740 01c2 9A42     		cmp	r2, r3
+ 741 01c4 14D9     		bls	.L42
+ 267:libraries/zf_common/zf_common_fifo.c ****                 {
+ 268:libraries/zf_common/zf_common_fifo.c ****                     length_temp = length_temp - (data_size - (end_ptr - fifo->base_ptr)) / fifo->st
+ 742              		.loc 1 268 77
+ 743 01c6 039B     		ldr	r3, [sp, #12]
+ 744 01c8 1A68     		ldr	r2, [r3]
+ 745              		.loc 1 268 60
+ 746 01ca 059B     		ldr	r3, [sp, #20]
+ 747 01cc D21A     		subs	r2, r2, r3
+ 748 01ce 069B     		ldr	r3, [sp, #24]
+ 749 01d0 1344     		add	r3, r3, r2
+ 750              		.loc 1 268 96
+ 751 01d2 039A     		ldr	r2, [sp, #12]
+ 752 01d4 127C     		ldrb	r2, [r2, #16]	@ zero_extendqisi2
+ 753              		.loc 1 268 90
+ 754 01d6 B3FBF2F3 		udiv	r3, r3, r2
+ 755              		.loc 1 268 33
+ 756 01da 089A     		ldr	r2, [sp, #32]
+ 757 01dc D31A     		subs	r3, r2, r3
+ 758 01de 0893     		str	r3, [sp, #32]
+ 269:libraries/zf_common/zf_common_fifo.c ****                     data_size   = end_ptr - fifo->base_ptr;                     // 更新写入长�
+ 759              		.loc 1 269 49
+ 760 01e0 039B     		ldr	r3, [sp, #12]
+ 761 01e2 1B68     		ldr	r3, [r3]
+ 762              		.loc 1 269 33
+ 763 01e4 059A     		ldr	r2, [sp, #20]
+ 764 01e6 D31A     		subs	r3, r2, r3
+ 765 01e8 0693     		str	r3, [sp, #24]
+ 270:libraries/zf_common/zf_common_fifo.c ****                     return_state= FIFO_WRITE_ERROR_PARTIAL_DONE;                // 写满就报空�
+ 766              		.loc 1 270 33
+ 767 01ea 0723     		movs	r3, #7
+ 768 01ec 8DF82730 		strb	r3, [sp, #39]
+ 769              	.L42:
+ 271:libraries/zf_common/zf_common_fifo.c ****                 }
+ 272:libraries/zf_common/zf_common_fifo.c **** 
+ 273:libraries/zf_common/zf_common_fifo.c ****                 memcpy((void *)fifo->base_ptr, dat, data_size);                 // 写入第二部�
+ 770              		.loc 1 273 36
+ 771 01f0 039B     		ldr	r3, [sp, #12]
+ 772 01f2 1B68     		ldr	r3, [r3]
+ 773              		.loc 1 273 17
+ 774 01f4 069A     		ldr	r2, [sp, #24]
+ 775 01f6 0299     		ldr	r1, [sp, #8]
+ 776 01f8 1846     		mov	r0, r3
+ 777 01fa FFF7FEFF 		bl	memcpy
+ 274:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       = fifo->base_ptr + data_size;                   // 写指针位移�
+ 778              		.loc 1 274 39
+ 779 01fe 039B     		ldr	r3, [sp, #12]
+ 780 0200 1B68     		ldr	r3, [r3]
+ 781              		.loc 1 274 33
+ 782 0202 069A     		ldr	r2, [sp, #24]
+ 783 0204 1344     		add	r3, r3, r2
+ 784 0206 0793     		str	r3, [sp, #28]
+ 785              	.L40:
+ 275:libraries/zf_common/zf_common_fifo.c ****             }
+ 276:libraries/zf_common/zf_common_fifo.c ****         }
+ 277:libraries/zf_common/zf_common_fifo.c **** 
+ 278:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr == fifo->tail_ptr)                                         // 判断是否需�
+ 786              		.loc 1 278 29
+ 787 0208 039B     		ldr	r3, [sp, #12]
+ 788 020a 5B68     		ldr	r3, [r3, #4]
+ 789              		.loc 1 278 11
+ 790 020c 079A     		ldr	r2, [sp, #28]
+ 791 020e 9A42     		cmp	r2, r3
+ 792 0210 02D1     		bne	.L43
+ 279:libraries/zf_common/zf_common_fifo.c ****         {
+ 280:libraries/zf_common/zf_common_fifo.c ****             start_ptr           = fifo->base_ptr;
+ 793              		.loc 1 280 33
+ 794 0212 039B     		ldr	r3, [sp, #12]
+ 795 0214 1B68     		ldr	r3, [r3]
+ 796 0216 0793     		str	r3, [sp, #28]
+ 797              	.L43:
+ 281:libraries/zf_common/zf_common_fifo.c ****         }
+ 282:libraries/zf_common/zf_common_fifo.c ****         fifo->full_state        = (start_ptr == end_ptr);                       // 判断是否写�
+ 798              		.loc 1 282 46
+ 799 0218 079A     		ldr	r2, [sp, #28]
+ 800 021a 059B     		ldr	r3, [sp, #20]
+ 801 021c 9A42     		cmp	r2, r3
+ 802 021e 0CBF     		ite	eq
+ 803 0220 0123     		moveq	r3, #1
+ 804 0222 0023     		movne	r3, #0
+ 805 0224 D9B2     		uxtb	r1, r3
+ 806              		.loc 1 282 33
+ 807 0226 039A     		ldr	r2, [sp, #12]
+ 808 0228 537C     		ldrb	r3, [r2, #17]
+ 809 022a 61F34513 		bfi	r3, r1, #5, #1
+ 810 022e 5374     		strb	r3, [r2, #17]
+ 283:libraries/zf_common/zf_common_fifo.c ****         fifo->write_ptr         = start_ptr;                                    // 写指针位移�
+ 811              		.loc 1 283 33
+ 812 0230 039B     		ldr	r3, [sp, #12]
+ 813 0232 079A     		ldr	r2, [sp, #28]
+ 814 0234 9A60     		str	r2, [r3, #8]
+ 284:libraries/zf_common/zf_common_fifo.c **** 
+ 285:libraries/zf_common/zf_common_fifo.c ****         fifo->write_state       = ZF_FALSE;                                     // 解除写锁定
+ 815              		.loc 1 285 33
+ 816 0236 039A     		ldr	r2, [sp, #12]
+ 817 0238 537C     		ldrb	r3, [r2, #17]
+ 818 023a 6FF34103 		bfc	r3, #1, #1
+ 819 023e 5374     		strb	r3, [r2, #17]
+ 286:libraries/zf_common/zf_common_fifo.c ****         *length                 = length_temp;
+ 820              		.loc 1 286 33
+ 821 0240 019B     		ldr	r3, [sp, #4]
+ 822 0242 089A     		ldr	r2, [sp, #32]
+ 823 0244 1A60     		str	r2, [r3]
+ 287:libraries/zf_common/zf_common_fifo.c **** 
+ 288:libraries/zf_common/zf_common_fifo.c ****         return_state            = (FIFO_OPERATION_ERROR_UNKNOW == return_state) ? FIFO_OPERATION_NO
+ 824              		.loc 1 288 107
+ 825 0246 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 826 024a 012B     		cmp	r3, #1
+ 827 024c 02D0     		beq	.L44
+ 828              		.loc 1 288 107 is_stmt 0 discriminator 1
+ 829 024e 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 830 0252 00E0     		b	.L45
+ 831              	.L44:
+ 832              		.loc 1 288 107 discriminator 2
+ 833 0254 0023     		movs	r3, #0
+ 834              	.L45:
+ 835              		.loc 1 288 33 is_stmt 1 discriminator 4
+ 836 0256 8DF82730 		strb	r3, [sp, #39]
+ 837              	.L32:
+ 838              	.LBE4:
+ 289:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 290:libraries/zf_common/zf_common_fifo.c **** 
+ 291:libraries/zf_common/zf_common_fifo.c ****     return return_state;
+ 839              		.loc 1 291 12
+ 840 025a 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 292:libraries/zf_common/zf_common_fifo.c **** }
+ 841              		.loc 1 292 1
+ 842 025e 1846     		mov	r0, r3
+ 843 0260 0BB0     		add	sp, sp, #44
+ 844              		.cfi_def_cfa_offset 4
+ 845              		@ sp needed
+ 846 0262 5DF804FB 		ldr	pc, [sp], #4
+ 847              		.cfi_endproc
+ 848              	.LFE6:
+ 850 0266 00BF     		.section	.text.zf_fifo_read_element,"ax",%progbits
+ 851              		.align	1
+ 852              		.p2align 4,,15
+ 853              		.global	zf_fifo_read_element
+ 854              		.syntax unified
+ 855              		.thumb
+ 856              		.thumb_func
+ 858              	zf_fifo_read_element:
+ 859              	.LFB7:
+ 293:libraries/zf_common/zf_common_fifo.c **** 
+ 294:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 295:libraries/zf_common/zf_common_fifo.c **** // 函数简介     从 FIFO 读取数据
+ 296:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+ 297:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *dat                目标缓冲区指针
+ 298:libraries/zf_common/zf_common_fifo.c **** // 参数说明     flag                是否变更 FIFO 状态  (详见 zf_common_fifo.h 中枚�
+ 299:libraries/zf_common/zf_common_fifo.c **** // 返回参数     uint8               操作状态            (详见 zf_common_fifo.h 中枚举 
+ 300:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_fifo_read_element(fifo, dat, flag);
+ 301:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+ 302:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 303:libraries/zf_common/zf_common_fifo.c **** uint8 zf_fifo_read_element (zf_fifo_obj_struct *fifo, void *dat, zf_fifo_operation_enum flag)
+ 304:libraries/zf_common/zf_common_fifo.c **** {
+ 860              		.loc 1 304 1
+ 861              		.cfi_startproc
+ 862              		@ args = 0, pretend = 0, frame = 32
+ 863              		@ frame_needed = 0, uses_anonymous_args = 0
+ 864 0000 00B5     		push	{lr}
+ 865              		.cfi_def_cfa_offset 4
+ 866              		.cfi_offset 14, -4
+ 867 0002 89B0     		sub	sp, sp, #36
+ 868              		.cfi_def_cfa_offset 40
+ 869 0004 0390     		str	r0, [sp, #12]
+ 870 0006 0291     		str	r1, [sp, #8]
+ 871 0008 1346     		mov	r3, r2
+ 872 000a 8DF80730 		strb	r3, [sp, #7]
+ 305:libraries/zf_common/zf_common_fifo.c ****     zf_fifo_error_code_enum return_state = FIFO_OPERATION_ERROR_UNKNOW;
+ 873              		.loc 1 305 29
+ 874 000e 0123     		movs	r3, #1
+ 875 0010 8DF81F30 		strb	r3, [sp, #31]
+ 876              	.LBB5:
+ 306:libraries/zf_common/zf_common_fifo.c **** 
+ 307:libraries/zf_common/zf_common_fifo.c ****     do
+ 308:libraries/zf_common/zf_common_fifo.c ****     {
+ 309:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo)                                                        // 如果 FIFO 对�
+ 877              		.loc 1 309 11
+ 878 0014 039B     		ldr	r3, [sp, #12]
+ 879 0016 002B     		cmp	r3, #0
+ 880 0018 03D1     		bne	.L48
+ 310:libraries/zf_common/zf_common_fifo.c ****         {
+ 311:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_ILLEGAL_PARAMETER;       // 非法参数
+ 881              		.loc 1 311 33
+ 882 001a 0223     		movs	r3, #2
+ 883 001c 8DF81F30 		strb	r3, [sp, #31]
+ 312:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 884              		.loc 1 312 13
+ 885 0020 76E0     		b	.L49
+ 886              	.L48:
+ 313:libraries/zf_common/zf_common_fifo.c ****         }
+ 314:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+ 887              		.loc 1 314 21
+ 888 0022 039B     		ldr	r3, [sp, #12]
+ 889 0024 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 890 0026 03F00103 		and	r3, r3, #1
+ 891 002a DBB2     		uxtb	r3, r3
+ 892              		.loc 1 314 11
+ 893 002c 002B     		cmp	r3, #0
+ 894 002e 03D1     		bne	.L50
+ 315:libraries/zf_common/zf_common_fifo.c ****         {
+ 316:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_OBJECT_UNINIT;           // FIFO 对象未�
+ 895              		.loc 1 316 33
+ 896 0030 0323     		movs	r3, #3
+ 897 0032 8DF81F30 		strb	r3, [sp, #31]
+ 317:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 898              		.loc 1 317 13
+ 899 0036 6BE0     		b	.L49
+ 900              	.L50:
+ 318:libraries/zf_common/zf_common_fifo.c ****         }
+ 319:libraries/zf_common/zf_common_fifo.c **** 
+ 320:libraries/zf_common/zf_common_fifo.c ****         if(fifo->clean_state)                                                   // 清空指令置�
+ 901              		.loc 1 320 12
+ 902 0038 039B     		ldr	r3, [sp, #12]
+ 903 003a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 904 003c 03F01003 		and	r3, r3, #16
+ 905 0040 DBB2     		uxtb	r3, r3
+ 906              		.loc 1 320 11
+ 907 0042 002B     		cmp	r3, #0
+ 908 0044 03D0     		beq	.L51
+ 321:libraries/zf_common/zf_common_fifo.c ****         {
+ 322:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NO_DATA;                      // 写满标志位�
+ 909              		.loc 1 322 33
+ 910 0046 0A23     		movs	r3, #10
+ 911 0048 8DF81F30 		strb	r3, [sp, #31]
+ 323:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 912              		.loc 1 323 13
+ 913 004c 60E0     		b	.L49
+ 914              	.L51:
+ 324:libraries/zf_common/zf_common_fifo.c ****         }
+ 325:libraries/zf_common/zf_common_fifo.c ****         if(fifo->lock_state)                                                    // 判断操作锁�
+ 915              		.loc 1 325 12
+ 916 004e 039B     		ldr	r3, [sp, #12]
+ 917 0050 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 918 0052 03F00803 		and	r3, r3, #8
+ 919 0056 DBB2     		uxtb	r3, r3
+ 920              		.loc 1 325 11
+ 921 0058 002B     		cmp	r3, #0
+ 922 005a 03D0     		beq	.L52
+ 326:libraries/zf_common/zf_common_fifo.c ****         {
+ 327:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_LOCK;                         // 如果已经被�
+ 923              		.loc 1 327 33
+ 924 005c 0823     		movs	r3, #8
+ 925 005e 8DF81F30 		strb	r3, [sp, #31]
+ 328:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 926              		.loc 1 328 13
+ 927 0062 55E0     		b	.L49
+ 928              	.L52:
+ 329:libraries/zf_common/zf_common_fifo.c ****         }
+ 330:libraries/zf_common/zf_common_fifo.c ****         if(fifo->read_state)                                                    // 判断读锁定
+ 929              		.loc 1 330 12
+ 930 0064 039B     		ldr	r3, [sp, #12]
+ 931 0066 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 932 0068 03F00403 		and	r3, r3, #4
+ 933 006c DBB2     		uxtb	r3, r3
+ 934              		.loc 1 330 11
+ 935 006e 002B     		cmp	r3, #0
+ 936 0070 03D0     		beq	.L53
+ 331:libraries/zf_common/zf_common_fifo.c ****         {
+ 332:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NESTED;                       // 如果已经被�
+ 937              		.loc 1 332 33
+ 938 0072 0923     		movs	r3, #9
+ 939 0074 8DF81F30 		strb	r3, [sp, #31]
+ 333:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 940              		.loc 1 333 13
+ 941 0078 4AE0     		b	.L49
+ 942              	.L53:
+ 334:libraries/zf_common/zf_common_fifo.c ****         }
+ 335:libraries/zf_common/zf_common_fifo.c **** 
+ 336:libraries/zf_common/zf_common_fifo.c ****         fifo->read_state        = ZF_TRUE;                                      // 读锁定
+ 943              		.loc 1 336 33
+ 944 007a 039A     		ldr	r2, [sp, #12]
+ 945 007c 537C     		ldrb	r3, [r2, #17]
+ 946 007e 43F00403 		orr	r3, r3, #4
+ 947 0082 5374     		strb	r3, [r2, #17]
+ 337:libraries/zf_common/zf_common_fifo.c **** 
+ 338:libraries/zf_common/zf_common_fifo.c ****         uint32 start_ptr        = fifo->read_ptr;                               // 获取读指针�
+ 948              		.loc 1 338 16
+ 949 0084 039B     		ldr	r3, [sp, #12]
+ 950 0086 DB68     		ldr	r3, [r3, #12]
+ 951 0088 0693     		str	r3, [sp, #24]
+ 339:libraries/zf_common/zf_common_fifo.c ****         uint32 end_ptr          = fifo->write_ptr;                              // 获取写指针�
+ 952              		.loc 1 339 16
+ 953 008a 039B     		ldr	r3, [sp, #12]
+ 954 008c 9B68     		ldr	r3, [r3, #8]
+ 955 008e 0593     		str	r3, [sp, #20]
+ 340:libraries/zf_common/zf_common_fifo.c **** 
+ 341:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr == end_ptr && !fifo->full_state)                           // 头尾指针位�
+ 956              		.loc 1 341 11
+ 957 0090 069A     		ldr	r2, [sp, #24]
+ 958 0092 059B     		ldr	r3, [sp, #20]
+ 959 0094 9A42     		cmp	r2, r3
+ 960 0096 0FD1     		bne	.L54
+ 961              		.loc 1 341 36 discriminator 1
+ 962 0098 039B     		ldr	r3, [sp, #12]
+ 963 009a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 964 009c 03F02003 		and	r3, r3, #32
+ 965 00a0 DBB2     		uxtb	r3, r3
+ 966              		.loc 1 341 33 discriminator 1
+ 967 00a2 002B     		cmp	r3, #0
+ 968 00a4 08D1     		bne	.L54
+ 342:libraries/zf_common/zf_common_fifo.c ****         {
+ 343:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NO_DATA;                      // 写满标志位�
+ 969              		.loc 1 343 33
+ 970 00a6 0A23     		movs	r3, #10
+ 971 00a8 8DF81F30 		strb	r3, [sp, #31]
+ 344:libraries/zf_common/zf_common_fifo.c ****             fifo->read_state    = ZF_FALSE;                                     // 解除读锁定
+ 972              		.loc 1 344 33
+ 973 00ac 039A     		ldr	r2, [sp, #12]
+ 974 00ae 537C     		ldrb	r3, [r2, #17]
+ 975 00b0 6FF38203 		bfc	r3, #2, #1
+ 976 00b4 5374     		strb	r3, [r2, #17]
+ 345:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 977              		.loc 1 345 13
+ 978 00b6 2BE0     		b	.L49
+ 979              	.L54:
+ 346:libraries/zf_common/zf_common_fifo.c ****         }
+ 347:libraries/zf_common/zf_common_fifo.c **** 
+ 348:libraries/zf_common/zf_common_fifo.c ****         if(NULL != dat)
+ 980              		.loc 1 348 11
+ 981 00b8 029B     		ldr	r3, [sp, #8]
+ 982 00ba 002B     		cmp	r3, #0
+ 983 00bc 06D0     		beq	.L55
+ 349:libraries/zf_common/zf_common_fifo.c ****         {
+ 350:libraries/zf_common/zf_common_fifo.c ****             memcpy(dat, (void *)start_ptr, fifo->step);                         // 读取数据
+ 984              		.loc 1 350 13
+ 985 00be 0699     		ldr	r1, [sp, #24]
+ 986              		.loc 1 350 48
+ 987 00c0 039B     		ldr	r3, [sp, #12]
+ 988 00c2 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 989              		.loc 1 350 13
+ 990 00c4 1A46     		mov	r2, r3
+ 991 00c6 0298     		ldr	r0, [sp, #8]
+ 992 00c8 FFF7FEFF 		bl	memcpy
+ 993              	.L55:
+ 351:libraries/zf_common/zf_common_fifo.c ****         }
+ 352:libraries/zf_common/zf_common_fifo.c ****         start_ptr               += fifo->step;                                  // 读指针位移�
+ 994              		.loc 1 352 40
+ 995 00cc 039B     		ldr	r3, [sp, #12]
+ 996 00ce 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 997 00d0 1A46     		mov	r2, r3
+ 998              		.loc 1 352 33
+ 999 00d2 069B     		ldr	r3, [sp, #24]
+ 1000 00d4 1344     		add	r3, r3, r2
+ 1001 00d6 0693     		str	r3, [sp, #24]
+ 353:libraries/zf_common/zf_common_fifo.c ****         
+ 354:libraries/zf_common/zf_common_fifo.c ****         if(flag)                                                                // 判断是否需�
+ 1002              		.loc 1 354 11
+ 1003 00d8 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1004 00dc 002B     		cmp	r3, #0
+ 1005 00de 0FD0     		beq	.L56
+ 355:libraries/zf_common/zf_common_fifo.c ****         {
+ 356:libraries/zf_common/zf_common_fifo.c ****             if(start_ptr == fifo->tail_ptr)                                     // 判断是否需�
+ 1006              		.loc 1 356 33
+ 1007 00e0 039B     		ldr	r3, [sp, #12]
+ 1008 00e2 5B68     		ldr	r3, [r3, #4]
+ 1009              		.loc 1 356 15
+ 1010 00e4 069A     		ldr	r2, [sp, #24]
+ 1011 00e6 9A42     		cmp	r2, r3
+ 1012 00e8 02D1     		bne	.L57
+ 357:libraries/zf_common/zf_common_fifo.c ****             {
+ 358:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       = fifo->base_ptr;
+ 1013              		.loc 1 358 33
+ 1014 00ea 039B     		ldr	r3, [sp, #12]
+ 1015 00ec 1B68     		ldr	r3, [r3]
+ 1016 00ee 0693     		str	r3, [sp, #24]
+ 1017              	.L57:
+ 359:libraries/zf_common/zf_common_fifo.c ****             }
+ 360:libraries/zf_common/zf_common_fifo.c ****             fifo->full_state    = ZF_FALSE;                                     // 如果数据都�
+ 1018              		.loc 1 360 33
+ 1019 00f0 039A     		ldr	r2, [sp, #12]
+ 1020 00f2 537C     		ldrb	r3, [r2, #17]
+ 1021 00f4 6FF34513 		bfc	r3, #5, #1
+ 1022 00f8 5374     		strb	r3, [r2, #17]
+ 361:libraries/zf_common/zf_common_fifo.c ****             fifo->read_ptr      = start_ptr;                                    // 读指针位移�
+ 1023              		.loc 1 361 33
+ 1024 00fa 039B     		ldr	r3, [sp, #12]
+ 1025 00fc 069A     		ldr	r2, [sp, #24]
+ 1026 00fe DA60     		str	r2, [r3, #12]
+ 1027              	.L56:
+ 362:libraries/zf_common/zf_common_fifo.c ****         }
+ 363:libraries/zf_common/zf_common_fifo.c **** 
+ 364:libraries/zf_common/zf_common_fifo.c ****         fifo->read_state        = ZF_FALSE;                                     // 解除读锁定
+ 1028              		.loc 1 364 33
+ 1029 0100 039A     		ldr	r2, [sp, #12]
+ 1030 0102 537C     		ldrb	r3, [r2, #17]
+ 1031 0104 6FF38203 		bfc	r3, #2, #1
+ 1032 0108 5374     		strb	r3, [r2, #17]
+ 365:libraries/zf_common/zf_common_fifo.c **** 
+ 366:libraries/zf_common/zf_common_fifo.c ****         return_state            = FIFO_OPERATION_NO_ERROR;
+ 1033              		.loc 1 366 33
+ 1034 010a 0023     		movs	r3, #0
+ 1035 010c 8DF81F30 		strb	r3, [sp, #31]
+ 1036              	.L49:
+ 1037              	.LBE5:
+ 367:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 368:libraries/zf_common/zf_common_fifo.c **** 
+ 369:libraries/zf_common/zf_common_fifo.c ****     return return_state;
+ 1038              		.loc 1 369 12
+ 1039 0110 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 370:libraries/zf_common/zf_common_fifo.c **** }
+ 1040              		.loc 1 370 1
+ 1041 0114 1846     		mov	r0, r3
+ 1042 0116 09B0     		add	sp, sp, #36
+ 1043              		.cfi_def_cfa_offset 4
+ 1044              		@ sp needed
+ 1045 0118 5DF804FB 		ldr	pc, [sp], #4
+ 1046              		.cfi_endproc
+ 1047              	.LFE7:
+ 1049              		.section	.text.zf_fifo_read_buffer,"ax",%progbits
+ 1050              		.align	1
+ 1051              		.p2align 4,,15
+ 1052              		.global	zf_fifo_read_buffer
+ 1053              		.syntax unified
+ 1054              		.thumb
+ 1055              		.thumb_func
+ 1057              	zf_fifo_read_buffer:
+ 1058              	.LFB8:
+ 371:libraries/zf_common/zf_common_fifo.c **** 
+ 372:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 373:libraries/zf_common/zf_common_fifo.c **** // 函数简介     从 FIFO 读取数据
+ 374:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+ 375:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *dat                目标缓冲区指针
+ 376:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *length             读取的数据长度 如果没有这么多数据这里会�
+ 377:libraries/zf_common/zf_common_fifo.c **** // 参数说明     flag                是否变更 FIFO 状态  (详见 zf_common_fifo.h 中枚�
+ 378:libraries/zf_common/zf_common_fifo.c **** // 返回参数     uint8               操作状态            (详见 zf_common_fifo.h 中枚举 
+ 379:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_fifo_read_buffer(fifo, dat, length, flag);
+ 380:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+ 381:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 382:libraries/zf_common/zf_common_fifo.c **** uint8 zf_fifo_read_buffer (zf_fifo_obj_struct *fifo, void *dat, uint32 *length, zf_fifo_operation_e
+ 383:libraries/zf_common/zf_common_fifo.c **** {
+ 1059              		.loc 1 383 1
+ 1060              		.cfi_startproc
+ 1061              		@ args = 0, pretend = 0, frame = 40
+ 1062              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1063 0000 00B5     		push	{lr}
+ 1064              		.cfi_def_cfa_offset 4
+ 1065              		.cfi_offset 14, -4
+ 1066 0002 8BB0     		sub	sp, sp, #44
+ 1067              		.cfi_def_cfa_offset 48
+ 1068 0004 0390     		str	r0, [sp, #12]
+ 1069 0006 0291     		str	r1, [sp, #8]
+ 1070 0008 0192     		str	r2, [sp, #4]
+ 1071 000a 8DF80330 		strb	r3, [sp, #3]
+ 384:libraries/zf_common/zf_common_fifo.c ****     zf_fifo_error_code_enum return_state = FIFO_OPERATION_ERROR_UNKNOW;
+ 1072              		.loc 1 384 29
+ 1073 000e 0123     		movs	r3, #1
+ 1074 0010 8DF82730 		strb	r3, [sp, #39]
+ 1075              	.LBB6:
+ 385:libraries/zf_common/zf_common_fifo.c **** 
+ 386:libraries/zf_common/zf_common_fifo.c ****     do
+ 387:libraries/zf_common/zf_common_fifo.c ****     {
+ 388:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo || NULL == length || 0 == *length)                      // 如果 FIFO 对�
+ 1076              		.loc 1 388 11
+ 1077 0014 039B     		ldr	r3, [sp, #12]
+ 1078 0016 002B     		cmp	r3, #0
+ 1079 0018 06D0     		beq	.L60
+ 1080              		.loc 1 388 25 discriminator 1
+ 1081 001a 019B     		ldr	r3, [sp, #4]
+ 1082 001c 002B     		cmp	r3, #0
+ 1083 001e 03D0     		beq	.L60
+ 1084              		.loc 1 388 51 discriminator 2
+ 1085 0020 019B     		ldr	r3, [sp, #4]
+ 1086 0022 1B68     		ldr	r3, [r3]
+ 1087              		.loc 1 388 43 discriminator 2
+ 1088 0024 002B     		cmp	r3, #0
+ 1089 0026 03D1     		bne	.L61
+ 1090              	.L60:
+ 389:libraries/zf_common/zf_common_fifo.c ****         {
+ 390:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_ILLEGAL_PARAMETER;       // 非法参数
+ 1091              		.loc 1 390 33
+ 1092 0028 0223     		movs	r3, #2
+ 1093 002a 8DF82730 		strb	r3, [sp, #39]
+ 391:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1094              		.loc 1 391 13
+ 1095 002e 12E1     		b	.L62
+ 1096              	.L61:
+ 392:libraries/zf_common/zf_common_fifo.c ****         }
+ 393:libraries/zf_common/zf_common_fifo.c **** 
+ 394:libraries/zf_common/zf_common_fifo.c ****         uint32 length_temp      = *length;
+ 1097              		.loc 1 394 16
+ 1098 0030 019B     		ldr	r3, [sp, #4]
+ 1099 0032 1B68     		ldr	r3, [r3]
+ 1100 0034 0893     		str	r3, [sp, #32]
+ 395:libraries/zf_common/zf_common_fifo.c ****         *length                 = 0;
+ 1101              		.loc 1 395 33
+ 1102 0036 019B     		ldr	r3, [sp, #4]
+ 1103 0038 0022     		movs	r2, #0
+ 1104 003a 1A60     		str	r2, [r3]
+ 396:libraries/zf_common/zf_common_fifo.c **** 
+ 397:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+ 1105              		.loc 1 397 21
+ 1106 003c 039B     		ldr	r3, [sp, #12]
+ 1107 003e 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1108 0040 03F00103 		and	r3, r3, #1
+ 1109 0044 DBB2     		uxtb	r3, r3
+ 1110              		.loc 1 397 11
+ 1111 0046 002B     		cmp	r3, #0
+ 1112 0048 03D1     		bne	.L63
+ 398:libraries/zf_common/zf_common_fifo.c ****         {
+ 399:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_OBJECT_UNINIT;           // FIFO 对象未�
+ 1113              		.loc 1 399 33
+ 1114 004a 0323     		movs	r3, #3
+ 1115 004c 8DF82730 		strb	r3, [sp, #39]
+ 400:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1116              		.loc 1 400 13
+ 1117 0050 01E1     		b	.L62
+ 1118              	.L63:
+ 401:libraries/zf_common/zf_common_fifo.c ****         }
+ 402:libraries/zf_common/zf_common_fifo.c **** 
+ 403:libraries/zf_common/zf_common_fifo.c ****         if(fifo->clean_state)                                                   // 清空指令置�
+ 1119              		.loc 1 403 12
+ 1120 0052 039B     		ldr	r3, [sp, #12]
+ 1121 0054 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1122 0056 03F01003 		and	r3, r3, #16
+ 1123 005a DBB2     		uxtb	r3, r3
+ 1124              		.loc 1 403 11
+ 1125 005c 002B     		cmp	r3, #0
+ 1126 005e 03D0     		beq	.L64
+ 404:libraries/zf_common/zf_common_fifo.c ****         {
+ 405:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NO_DATA;                      // 写满标志位�
+ 1127              		.loc 1 405 33
+ 1128 0060 0A23     		movs	r3, #10
+ 1129 0062 8DF82730 		strb	r3, [sp, #39]
+ 406:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1130              		.loc 1 406 13
+ 1131 0066 F6E0     		b	.L62
+ 1132              	.L64:
+ 407:libraries/zf_common/zf_common_fifo.c ****         }
+ 408:libraries/zf_common/zf_common_fifo.c ****         if(fifo->lock_state)                                                    // 判断操作锁�
+ 1133              		.loc 1 408 12
+ 1134 0068 039B     		ldr	r3, [sp, #12]
+ 1135 006a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1136 006c 03F00803 		and	r3, r3, #8
+ 1137 0070 DBB2     		uxtb	r3, r3
+ 1138              		.loc 1 408 11
+ 1139 0072 002B     		cmp	r3, #0
+ 1140 0074 03D0     		beq	.L65
+ 409:libraries/zf_common/zf_common_fifo.c ****         {
+ 410:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_LOCK;                         // 如果已经被�
+ 1141              		.loc 1 410 33
+ 1142 0076 0823     		movs	r3, #8
+ 1143 0078 8DF82730 		strb	r3, [sp, #39]
+ 411:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1144              		.loc 1 411 13
+ 1145 007c EBE0     		b	.L62
+ 1146              	.L65:
+ 412:libraries/zf_common/zf_common_fifo.c ****         }
+ 413:libraries/zf_common/zf_common_fifo.c ****         if(fifo->read_state)                                                    // 判断读锁定
+ 1147              		.loc 1 413 12
+ 1148 007e 039B     		ldr	r3, [sp, #12]
+ 1149 0080 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1150 0082 03F00403 		and	r3, r3, #4
+ 1151 0086 DBB2     		uxtb	r3, r3
+ 1152              		.loc 1 413 11
+ 1153 0088 002B     		cmp	r3, #0
+ 1154 008a 03D0     		beq	.L66
+ 414:libraries/zf_common/zf_common_fifo.c ****         {
+ 415:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NESTED;                       // 如果已经被�
+ 1155              		.loc 1 415 33
+ 1156 008c 0923     		movs	r3, #9
+ 1157 008e 8DF82730 		strb	r3, [sp, #39]
+ 416:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1158              		.loc 1 416 13
+ 1159 0092 E0E0     		b	.L62
+ 1160              	.L66:
+ 417:libraries/zf_common/zf_common_fifo.c ****         }
+ 418:libraries/zf_common/zf_common_fifo.c **** 
+ 419:libraries/zf_common/zf_common_fifo.c ****         fifo->read_state = ZF_TRUE;                                             // 读锁定
+ 1161              		.loc 1 419 26
+ 1162 0094 039A     		ldr	r2, [sp, #12]
+ 1163 0096 537C     		ldrb	r3, [r2, #17]
+ 1164 0098 43F00403 		orr	r3, r3, #4
+ 1165 009c 5374     		strb	r3, [r2, #17]
+ 420:libraries/zf_common/zf_common_fifo.c **** 
+ 421:libraries/zf_common/zf_common_fifo.c ****         uint32 start_ptr        = fifo->read_ptr;                               // 获取读指针�
+ 1166              		.loc 1 421 16
+ 1167 009e 039B     		ldr	r3, [sp, #12]
+ 1168 00a0 DB68     		ldr	r3, [r3, #12]
+ 1169 00a2 0793     		str	r3, [sp, #28]
+ 422:libraries/zf_common/zf_common_fifo.c ****         uint32 end_ptr          = fifo->write_ptr;                              // 获取写指针�
+ 1170              		.loc 1 422 16
+ 1171 00a4 039B     		ldr	r3, [sp, #12]
+ 1172 00a6 9B68     		ldr	r3, [r3, #8]
+ 1173 00a8 0593     		str	r3, [sp, #20]
+ 423:libraries/zf_common/zf_common_fifo.c ****         uint32 data_size        = 0;
+ 1174              		.loc 1 423 16
+ 1175 00aa 0023     		movs	r3, #0
+ 1176 00ac 0693     		str	r3, [sp, #24]
+ 424:libraries/zf_common/zf_common_fifo.c **** 
+ 425:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr == end_ptr && !fifo->full_state)                           // 头尾指针位�
+ 1177              		.loc 1 425 11
+ 1178 00ae 079A     		ldr	r2, [sp, #28]
+ 1179 00b0 059B     		ldr	r3, [sp, #20]
+ 1180 00b2 9A42     		cmp	r2, r3
+ 1181 00b4 0FD1     		bne	.L67
+ 1182              		.loc 1 425 36 discriminator 1
+ 1183 00b6 039B     		ldr	r3, [sp, #12]
+ 1184 00b8 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1185 00ba 03F02003 		and	r3, r3, #32
+ 1186 00be DBB2     		uxtb	r3, r3
+ 1187              		.loc 1 425 33 discriminator 1
+ 1188 00c0 002B     		cmp	r3, #0
+ 1189 00c2 08D1     		bne	.L67
+ 426:libraries/zf_common/zf_common_fifo.c ****         {
+ 427:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NO_DATA;                      // 写满标志位�
+ 1190              		.loc 1 427 33
+ 1191 00c4 0A23     		movs	r3, #10
+ 1192 00c6 8DF82730 		strb	r3, [sp, #39]
+ 428:libraries/zf_common/zf_common_fifo.c ****             fifo->read_state    = ZF_FALSE;                                     // 解除读锁定
+ 1193              		.loc 1 428 33
+ 1194 00ca 039A     		ldr	r2, [sp, #12]
+ 1195 00cc 537C     		ldrb	r3, [r2, #17]
+ 1196 00ce 6FF38203 		bfc	r3, #2, #1
+ 1197 00d2 5374     		strb	r3, [r2, #17]
+ 429:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1198              		.loc 1 429 13
+ 1199 00d4 BFE0     		b	.L62
+ 1200              	.L67:
+ 430:libraries/zf_common/zf_common_fifo.c ****         }
+ 431:libraries/zf_common/zf_common_fifo.c **** 
+ 432:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr < end_ptr)                                                 // 如果读指针�
+ 1201              		.loc 1 432 11
+ 1202 00d6 079A     		ldr	r2, [sp, #28]
+ 1203 00d8 059B     		ldr	r3, [sp, #20]
+ 1204 00da 9A42     		cmp	r2, r3
+ 1205 00dc 2ED2     		bcs	.L68
+ 433:libraries/zf_common/zf_common_fifo.c ****         {
+ 434:libraries/zf_common/zf_common_fifo.c ****             data_size           = end_ptr - start_ptr;
+ 1206              		.loc 1 434 33
+ 1207 00de 059A     		ldr	r2, [sp, #20]
+ 1208 00e0 079B     		ldr	r3, [sp, #28]
+ 1209 00e2 D31A     		subs	r3, r2, r3
+ 1210 00e4 0693     		str	r3, [sp, #24]
+ 435:libraries/zf_common/zf_common_fifo.c ****             if(length_temp > data_size / fifo->step)
+ 1211              		.loc 1 435 46
+ 1212 00e6 039B     		ldr	r3, [sp, #12]
+ 1213 00e8 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1214 00ea 1A46     		mov	r2, r3
+ 1215              		.loc 1 435 40
+ 1216 00ec 069B     		ldr	r3, [sp, #24]
+ 1217 00ee B3FBF2F3 		udiv	r3, r3, r2
+ 1218              		.loc 1 435 15
+ 1219 00f2 089A     		ldr	r2, [sp, #32]
+ 1220 00f4 9A42     		cmp	r2, r3
+ 1221 00f6 09D9     		bls	.L69
+ 436:libraries/zf_common/zf_common_fifo.c ****             {
+ 437:libraries/zf_common/zf_common_fifo.c ****                 length_temp     = data_size / fifo->step;                       // 修正读取长�
+ 1222              		.loc 1 437 51
+ 1223 00f8 039B     		ldr	r3, [sp, #12]
+ 1224 00fa 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1225 00fc 1A46     		mov	r2, r3
+ 1226              		.loc 1 437 33
+ 1227 00fe 069B     		ldr	r3, [sp, #24]
+ 1228 0100 B3FBF2F3 		udiv	r3, r3, r2
+ 1229 0104 0893     		str	r3, [sp, #32]
+ 438:libraries/zf_common/zf_common_fifo.c ****                 return_state    = FIFO_READ_ERROR_PARTIAL_DONE;                 // 读不满就报�
+ 1230              		.loc 1 438 33
+ 1231 0106 0B23     		movs	r3, #11
+ 1232 0108 8DF82730 		strb	r3, [sp, #39]
+ 1233              	.L69:
+ 439:libraries/zf_common/zf_common_fifo.c ****             }
+ 440:libraries/zf_common/zf_common_fifo.c ****             if(NULL != dat)
+ 1234              		.loc 1 440 15
+ 1235 010c 029B     		ldr	r3, [sp, #8]
+ 1236 010e 002B     		cmp	r3, #0
+ 1237 0110 0AD0     		beq	.L70
+ 441:libraries/zf_common/zf_common_fifo.c ****             {
+ 442:libraries/zf_common/zf_common_fifo.c ****                 memcpy(dat, (void *)start_ptr, length_temp * fifo->step);       // 读取数据
+ 1238              		.loc 1 442 17
+ 1239 0112 0799     		ldr	r1, [sp, #28]
+ 1240              		.loc 1 442 66
+ 1241 0114 039B     		ldr	r3, [sp, #12]
+ 1242 0116 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1243 0118 1A46     		mov	r2, r3
+ 1244              		.loc 1 442 60
+ 1245 011a 089B     		ldr	r3, [sp, #32]
+ 1246 011c 02FB03F3 		mul	r3, r2, r3
+ 1247              		.loc 1 442 17
+ 1248 0120 1A46     		mov	r2, r3
+ 1249 0122 0298     		ldr	r0, [sp, #8]
+ 1250 0124 FFF7FEFF 		bl	memcpy
+ 1251              	.L70:
+ 443:libraries/zf_common/zf_common_fifo.c ****             }
+ 444:libraries/zf_common/zf_common_fifo.c ****             start_ptr           += length_temp * fifo->step;                    // 读指针位移�
+ 1252              		.loc 1 444 54
+ 1253 0128 039B     		ldr	r3, [sp, #12]
+ 1254 012a 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1255 012c 1A46     		mov	r2, r3
+ 1256              		.loc 1 444 48
+ 1257 012e 089B     		ldr	r3, [sp, #32]
+ 1258 0130 02FB03F3 		mul	r3, r2, r3
+ 1259              		.loc 1 444 33
+ 1260 0134 079A     		ldr	r2, [sp, #28]
+ 1261 0136 1344     		add	r3, r3, r2
+ 1262 0138 0793     		str	r3, [sp, #28]
+ 1263 013a 66E0     		b	.L71
+ 1264              	.L68:
+ 445:libraries/zf_common/zf_common_fifo.c ****         }
+ 446:libraries/zf_common/zf_common_fifo.c ****         else
+ 447:libraries/zf_common/zf_common_fifo.c ****         {
+ 448:libraries/zf_common/zf_common_fifo.c ****             data_size           = fifo->tail_ptr - start_ptr;                   // 获取读指针�
+ 1265              		.loc 1 448 39
+ 1266 013c 039B     		ldr	r3, [sp, #12]
+ 1267 013e 5A68     		ldr	r2, [r3, #4]
+ 1268              		.loc 1 448 33
+ 1269 0140 079B     		ldr	r3, [sp, #28]
+ 1270 0142 D31A     		subs	r3, r2, r3
+ 1271 0144 0693     		str	r3, [sp, #24]
+ 449:libraries/zf_common/zf_common_fifo.c ****             if(length_temp <= data_size / fifo->step)                           // 到尾部空间�
+ 1272              		.loc 1 449 47
+ 1273 0146 039B     		ldr	r3, [sp, #12]
+ 1274 0148 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1275 014a 1A46     		mov	r2, r3
+ 1276              		.loc 1 449 41
+ 1277 014c 069B     		ldr	r3, [sp, #24]
+ 1278 014e B3FBF2F3 		udiv	r3, r3, r2
+ 1279              		.loc 1 449 15
+ 1280 0152 089A     		ldr	r2, [sp, #32]
+ 1281 0154 9A42     		cmp	r2, r3
+ 1282 0156 17D8     		bhi	.L72
+ 450:libraries/zf_common/zf_common_fifo.c ****             {
+ 451:libraries/zf_common/zf_common_fifo.c ****                 if(NULL != dat)
+ 1283              		.loc 1 451 19
+ 1284 0158 029B     		ldr	r3, [sp, #8]
+ 1285 015a 002B     		cmp	r3, #0
+ 1286 015c 0AD0     		beq	.L73
+ 452:libraries/zf_common/zf_common_fifo.c ****                 {
+ 453:libraries/zf_common/zf_common_fifo.c ****                     memcpy(dat, (void *)start_ptr, length_temp * fifo->step);   // 读取数据
+ 1287              		.loc 1 453 21
+ 1288 015e 0799     		ldr	r1, [sp, #28]
+ 1289              		.loc 1 453 70
+ 1290 0160 039B     		ldr	r3, [sp, #12]
+ 1291 0162 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1292 0164 1A46     		mov	r2, r3
+ 1293              		.loc 1 453 64
+ 1294 0166 089B     		ldr	r3, [sp, #32]
+ 1295 0168 02FB03F3 		mul	r3, r2, r3
+ 1296              		.loc 1 453 21
+ 1297 016c 1A46     		mov	r2, r3
+ 1298 016e 0298     		ldr	r0, [sp, #8]
+ 1299 0170 FFF7FEFF 		bl	memcpy
+ 1300              	.L73:
+ 454:libraries/zf_common/zf_common_fifo.c ****                 }
+ 455:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       += length_temp * fifo->step;                    // 读指针位移�
+ 1301              		.loc 1 455 54
+ 1302 0174 039B     		ldr	r3, [sp, #12]
+ 1303 0176 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1304 0178 1A46     		mov	r2, r3
+ 1305              		.loc 1 455 48
+ 1306 017a 089B     		ldr	r3, [sp, #32]
+ 1307 017c 02FB03F3 		mul	r3, r2, r3
+ 1308              		.loc 1 455 33
+ 1309 0180 079A     		ldr	r2, [sp, #28]
+ 1310 0182 1344     		add	r3, r3, r2
+ 1311 0184 0793     		str	r3, [sp, #28]
+ 1312 0186 40E0     		b	.L71
+ 1313              	.L72:
+ 456:libraries/zf_common/zf_common_fifo.c ****             }
+ 457:libraries/zf_common/zf_common_fifo.c ****             else
+ 458:libraries/zf_common/zf_common_fifo.c ****             {
+ 459:libraries/zf_common/zf_common_fifo.c ****                 if(NULL != dat)
+ 1314              		.loc 1 459 19
+ 1315 0188 029B     		ldr	r3, [sp, #8]
+ 1316 018a 002B     		cmp	r3, #0
+ 1317 018c 05D0     		beq	.L74
+ 460:libraries/zf_common/zf_common_fifo.c ****                 {
+ 461:libraries/zf_common/zf_common_fifo.c ****                     memcpy(dat, (void *)start_ptr, data_size);                  // 写入第一部�
+ 1318              		.loc 1 461 21
+ 1319 018e 079B     		ldr	r3, [sp, #28]
+ 1320 0190 069A     		ldr	r2, [sp, #24]
+ 1321 0192 1946     		mov	r1, r3
+ 1322 0194 0298     		ldr	r0, [sp, #8]
+ 1323 0196 FFF7FEFF 		bl	memcpy
+ 1324              	.L74:
+ 462:libraries/zf_common/zf_common_fifo.c ****                 }
+ 463:libraries/zf_common/zf_common_fifo.c **** 
+ 464:libraries/zf_common/zf_common_fifo.c ****                 dat             = (void *)((uint32)dat + data_size);            // 缓冲地址自�
+ 1325              		.loc 1 464 44
+ 1326 019a 029A     		ldr	r2, [sp, #8]
+ 1327              		.loc 1 464 56
+ 1328 019c 069B     		ldr	r3, [sp, #24]
+ 1329 019e 1344     		add	r3, r3, r2
+ 1330              		.loc 1 464 33
+ 1331 01a0 0293     		str	r3, [sp, #8]
+ 465:libraries/zf_common/zf_common_fifo.c ****                 data_size       = length_temp * fifo->step - data_size;         // 获得第二部�
+ 1332              		.loc 1 465 53
+ 1333 01a2 039B     		ldr	r3, [sp, #12]
+ 1334 01a4 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1335 01a6 1A46     		mov	r2, r3
+ 1336              		.loc 1 465 47
+ 1337 01a8 089B     		ldr	r3, [sp, #32]
+ 1338 01aa 03FB02F2 		mul	r2, r3, r2
+ 1339              		.loc 1 465 33
+ 1340 01ae 069B     		ldr	r3, [sp, #24]
+ 1341 01b0 D31A     		subs	r3, r2, r3
+ 1342 01b2 0693     		str	r3, [sp, #24]
+ 466:libraries/zf_common/zf_common_fifo.c **** 
+ 467:libraries/zf_common/zf_common_fifo.c ****                 if(data_size > end_ptr - fifo->base_ptr)                        // 剩余数据超�
+ 1343              		.loc 1 467 46
+ 1344 01b4 039B     		ldr	r3, [sp, #12]
+ 1345 01b6 1B68     		ldr	r3, [r3]
+ 1346              		.loc 1 467 40
+ 1347 01b8 059A     		ldr	r2, [sp, #20]
+ 1348 01ba D31A     		subs	r3, r2, r3
+ 1349              		.loc 1 467 19
+ 1350 01bc 069A     		ldr	r2, [sp, #24]
+ 1351 01be 9A42     		cmp	r2, r3
+ 1352 01c0 14D9     		bls	.L75
+ 468:libraries/zf_common/zf_common_fifo.c ****                 {
+ 469:libraries/zf_common/zf_common_fifo.c ****                     length_temp = length_temp - (data_size - (end_ptr - fifo->base_ptr)) / fifo->st
+ 1353              		.loc 1 469 77
+ 1354 01c2 039B     		ldr	r3, [sp, #12]
+ 1355 01c4 1A68     		ldr	r2, [r3]
+ 1356              		.loc 1 469 60
+ 1357 01c6 059B     		ldr	r3, [sp, #20]
+ 1358 01c8 D21A     		subs	r2, r2, r3
+ 1359 01ca 069B     		ldr	r3, [sp, #24]
+ 1360 01cc 1344     		add	r3, r3, r2
+ 1361              		.loc 1 469 96
+ 1362 01ce 039A     		ldr	r2, [sp, #12]
+ 1363 01d0 127C     		ldrb	r2, [r2, #16]	@ zero_extendqisi2
+ 1364              		.loc 1 469 90
+ 1365 01d2 B3FBF2F3 		udiv	r3, r3, r2
+ 1366              		.loc 1 469 33
+ 1367 01d6 089A     		ldr	r2, [sp, #32]
+ 1368 01d8 D31A     		subs	r3, r2, r3
+ 1369 01da 0893     		str	r3, [sp, #32]
+ 470:libraries/zf_common/zf_common_fifo.c ****                     data_size   = end_ptr - fifo->base_ptr;                     // 更新读取长�
+ 1370              		.loc 1 470 49
+ 1371 01dc 039B     		ldr	r3, [sp, #12]
+ 1372 01de 1B68     		ldr	r3, [r3]
+ 1373              		.loc 1 470 33
+ 1374 01e0 059A     		ldr	r2, [sp, #20]
+ 1375 01e2 D31A     		subs	r3, r2, r3
+ 1376 01e4 0693     		str	r3, [sp, #24]
+ 471:libraries/zf_common/zf_common_fifo.c ****                     return_state= FIFO_READ_ERROR_PARTIAL_DONE;                 // 读不满就报�
+ 1377              		.loc 1 471 33
+ 1378 01e6 0B23     		movs	r3, #11
+ 1379 01e8 8DF82730 		strb	r3, [sp, #39]
+ 1380              	.L75:
+ 472:libraries/zf_common/zf_common_fifo.c ****                 }
+ 473:libraries/zf_common/zf_common_fifo.c ****                 if(NULL != dat)
+ 1381              		.loc 1 473 19
+ 1382 01ec 029B     		ldr	r3, [sp, #8]
+ 1383 01ee 002B     		cmp	r3, #0
+ 1384 01f0 06D0     		beq	.L76
+ 474:libraries/zf_common/zf_common_fifo.c ****                 {
+ 475:libraries/zf_common/zf_common_fifo.c ****                     memcpy(dat, (void *)fifo->base_ptr, data_size);             // 读取第二部�
+ 1385              		.loc 1 475 45
+ 1386 01f2 039B     		ldr	r3, [sp, #12]
+ 1387 01f4 1B68     		ldr	r3, [r3]
+ 1388              		.loc 1 475 21
+ 1389 01f6 069A     		ldr	r2, [sp, #24]
+ 1390 01f8 1946     		mov	r1, r3
+ 1391 01fa 0298     		ldr	r0, [sp, #8]
+ 1392 01fc FFF7FEFF 		bl	memcpy
+ 1393              	.L76:
+ 476:libraries/zf_common/zf_common_fifo.c ****                 }
+ 477:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       = fifo->base_ptr + data_size;                   // 读指针位移�
+ 1394              		.loc 1 477 39
+ 1395 0200 039B     		ldr	r3, [sp, #12]
+ 1396 0202 1B68     		ldr	r3, [r3]
+ 1397              		.loc 1 477 33
+ 1398 0204 069A     		ldr	r2, [sp, #24]
+ 1399 0206 1344     		add	r3, r3, r2
+ 1400 0208 0793     		str	r3, [sp, #28]
+ 1401              	.L71:
+ 478:libraries/zf_common/zf_common_fifo.c ****             }
+ 479:libraries/zf_common/zf_common_fifo.c ****         }
+ 480:libraries/zf_common/zf_common_fifo.c **** 
+ 481:libraries/zf_common/zf_common_fifo.c ****         if(flag)                                                                // 判断是否需�
+ 1402              		.loc 1 481 11
+ 1403 020a 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 1404 020e 002B     		cmp	r3, #0
+ 1405 0210 0FD0     		beq	.L77
+ 482:libraries/zf_common/zf_common_fifo.c ****         {
+ 483:libraries/zf_common/zf_common_fifo.c ****             if(start_ptr == fifo->tail_ptr)                                     // 判断是否需�
+ 1406              		.loc 1 483 33
+ 1407 0212 039B     		ldr	r3, [sp, #12]
+ 1408 0214 5B68     		ldr	r3, [r3, #4]
+ 1409              		.loc 1 483 15
+ 1410 0216 079A     		ldr	r2, [sp, #28]
+ 1411 0218 9A42     		cmp	r2, r3
+ 1412 021a 02D1     		bne	.L78
+ 484:libraries/zf_common/zf_common_fifo.c ****             {
+ 485:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       = fifo->base_ptr;
+ 1413              		.loc 1 485 33
+ 1414 021c 039B     		ldr	r3, [sp, #12]
+ 1415 021e 1B68     		ldr	r3, [r3]
+ 1416 0220 0793     		str	r3, [sp, #28]
+ 1417              	.L78:
+ 486:libraries/zf_common/zf_common_fifo.c ****             }
+ 487:libraries/zf_common/zf_common_fifo.c ****             fifo->full_state    = ZF_FALSE;                                     // 如果数据都�
+ 1418              		.loc 1 487 33
+ 1419 0222 039A     		ldr	r2, [sp, #12]
+ 1420 0224 537C     		ldrb	r3, [r2, #17]
+ 1421 0226 6FF34513 		bfc	r3, #5, #1
+ 1422 022a 5374     		strb	r3, [r2, #17]
+ 488:libraries/zf_common/zf_common_fifo.c ****             fifo->read_ptr      = start_ptr;                                    // 读指针位移�
+ 1423              		.loc 1 488 33
+ 1424 022c 039B     		ldr	r3, [sp, #12]
+ 1425 022e 079A     		ldr	r2, [sp, #28]
+ 1426 0230 DA60     		str	r2, [r3, #12]
+ 1427              	.L77:
+ 489:libraries/zf_common/zf_common_fifo.c ****         }
+ 490:libraries/zf_common/zf_common_fifo.c **** 
+ 491:libraries/zf_common/zf_common_fifo.c ****         fifo->read_state        = ZF_FALSE;                                     // 解除读锁定
+ 1428              		.loc 1 491 33
+ 1429 0232 039A     		ldr	r2, [sp, #12]
+ 1430 0234 537C     		ldrb	r3, [r2, #17]
+ 1431 0236 6FF38203 		bfc	r3, #2, #1
+ 1432 023a 5374     		strb	r3, [r2, #17]
+ 492:libraries/zf_common/zf_common_fifo.c ****         *length                 = length_temp;
+ 1433              		.loc 1 492 33
+ 1434 023c 019B     		ldr	r3, [sp, #4]
+ 1435 023e 089A     		ldr	r2, [sp, #32]
+ 1436 0240 1A60     		str	r2, [r3]
+ 493:libraries/zf_common/zf_common_fifo.c **** 
+ 494:libraries/zf_common/zf_common_fifo.c ****         return_state            = (FIFO_OPERATION_ERROR_UNKNOW == return_state) ? FIFO_OPERATION_NO
+ 1437              		.loc 1 494 107
+ 1438 0242 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1439 0246 012B     		cmp	r3, #1
+ 1440 0248 02D0     		beq	.L79
+ 1441              		.loc 1 494 107 is_stmt 0 discriminator 1
+ 1442 024a 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 1443 024e 00E0     		b	.L80
+ 1444              	.L79:
+ 1445              		.loc 1 494 107 discriminator 2
+ 1446 0250 0023     		movs	r3, #0
+ 1447              	.L80:
+ 1448              		.loc 1 494 33 is_stmt 1 discriminator 4
+ 1449 0252 8DF82730 		strb	r3, [sp, #39]
+ 1450              	.L62:
+ 1451              	.LBE6:
+ 495:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 496:libraries/zf_common/zf_common_fifo.c **** 
+ 497:libraries/zf_common/zf_common_fifo.c ****     return return_state;
+ 1452              		.loc 1 497 12
+ 1453 0256 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 498:libraries/zf_common/zf_common_fifo.c **** }
+ 1454              		.loc 1 498 1
+ 1455 025a 1846     		mov	r0, r3
+ 1456 025c 0BB0     		add	sp, sp, #44
+ 1457              		.cfi_def_cfa_offset 4
+ 1458              		@ sp needed
+ 1459 025e 5DF804FB 		ldr	pc, [sp], #4
+ 1460              		.cfi_endproc
+ 1461              	.LFE8:
+ 1463 0262 00BF     		.section	.text.zf_fifo_read_tail_element,"ax",%progbits
+ 1464              		.align	1
+ 1465              		.p2align 4,,15
+ 1466              		.global	zf_fifo_read_tail_element
+ 1467              		.syntax unified
+ 1468              		.thumb
+ 1469              		.thumb_func
+ 1471              	zf_fifo_read_tail_element:
+ 1472              	.LFB9:
+ 499:libraries/zf_common/zf_common_fifo.c **** 
+ 500:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 501:libraries/zf_common/zf_common_fifo.c **** // 函数简介     从 FIFO 尾部读取单个元素
+ 502:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+ 503:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *dat                目标缓冲区指针 允许读取缓冲为空 如果读取
+ 504:libraries/zf_common/zf_common_fifo.c **** // 参数说明     flag                是否变更 FIFO 状态 可选择是否清空读取的数�
+ 505:libraries/zf_common/zf_common_fifo.c **** // 返回参数     zf_fifo_state_enum     操作状态
+ 506:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_log(zf_fifo_read_tail_element(&fifo, data, FIFO_READ_WITHOUT_CLEAN) == FIFO_
+ 507:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+ 508:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 509:libraries/zf_common/zf_common_fifo.c **** uint8 zf_fifo_read_tail_element (zf_fifo_obj_struct *fifo, void *dat, zf_fifo_operation_enum flag)
+ 510:libraries/zf_common/zf_common_fifo.c **** {
+ 1473              		.loc 1 510 1
+ 1474              		.cfi_startproc
+ 1475              		@ args = 0, pretend = 0, frame = 32
+ 1476              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1477 0000 00B5     		push	{lr}
+ 1478              		.cfi_def_cfa_offset 4
+ 1479              		.cfi_offset 14, -4
+ 1480 0002 89B0     		sub	sp, sp, #36
+ 1481              		.cfi_def_cfa_offset 40
+ 1482 0004 0390     		str	r0, [sp, #12]
+ 1483 0006 0291     		str	r1, [sp, #8]
+ 1484 0008 1346     		mov	r3, r2
+ 1485 000a 8DF80730 		strb	r3, [sp, #7]
+ 511:libraries/zf_common/zf_common_fifo.c ****     zf_fifo_error_code_enum return_state = FIFO_OPERATION_ERROR_UNKNOW;
+ 1486              		.loc 1 511 29
+ 1487 000e 0123     		movs	r3, #1
+ 1488 0010 8DF81F30 		strb	r3, [sp, #31]
+ 1489              	.LBB7:
+ 512:libraries/zf_common/zf_common_fifo.c **** 
+ 513:libraries/zf_common/zf_common_fifo.c ****     do
+ 514:libraries/zf_common/zf_common_fifo.c ****     {
+ 515:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo)                                                        // 如果 FIFO 对�
+ 1490              		.loc 1 515 11
+ 1491 0014 039B     		ldr	r3, [sp, #12]
+ 1492 0016 002B     		cmp	r3, #0
+ 1493 0018 03D1     		bne	.L83
+ 516:libraries/zf_common/zf_common_fifo.c ****         {
+ 517:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_ILLEGAL_PARAMETER;       // 非法参数
+ 1494              		.loc 1 517 33
+ 1495 001a 0223     		movs	r3, #2
+ 1496 001c 8DF81F30 		strb	r3, [sp, #31]
+ 518:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1497              		.loc 1 518 13
+ 1498 0020 7DE0     		b	.L84
+ 1499              	.L83:
+ 519:libraries/zf_common/zf_common_fifo.c ****         }
+ 520:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+ 1500              		.loc 1 520 21
+ 1501 0022 039B     		ldr	r3, [sp, #12]
+ 1502 0024 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1503 0026 03F00103 		and	r3, r3, #1
+ 1504 002a DBB2     		uxtb	r3, r3
+ 1505              		.loc 1 520 11
+ 1506 002c 002B     		cmp	r3, #0
+ 1507 002e 03D1     		bne	.L85
+ 521:libraries/zf_common/zf_common_fifo.c ****         {
+ 522:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_OBJECT_UNINIT;           // FIFO 对象未�
+ 1508              		.loc 1 522 33
+ 1509 0030 0323     		movs	r3, #3
+ 1510 0032 8DF81F30 		strb	r3, [sp, #31]
+ 523:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1511              		.loc 1 523 13
+ 1512 0036 72E0     		b	.L84
+ 1513              	.L85:
+ 524:libraries/zf_common/zf_common_fifo.c ****         }
+ 525:libraries/zf_common/zf_common_fifo.c **** 
+ 526:libraries/zf_common/zf_common_fifo.c ****         if(fifo->clean_state)                                                   // 清空指令置�
+ 1514              		.loc 1 526 12
+ 1515 0038 039B     		ldr	r3, [sp, #12]
+ 1516 003a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1517 003c 03F01003 		and	r3, r3, #16
+ 1518 0040 DBB2     		uxtb	r3, r3
+ 1519              		.loc 1 526 11
+ 1520 0042 002B     		cmp	r3, #0
+ 1521 0044 03D0     		beq	.L86
+ 527:libraries/zf_common/zf_common_fifo.c ****         {
+ 528:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NO_DATA;                      // 写满标志位�
+ 1522              		.loc 1 528 33
+ 1523 0046 0A23     		movs	r3, #10
+ 1524 0048 8DF81F30 		strb	r3, [sp, #31]
+ 529:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1525              		.loc 1 529 13
+ 1526 004c 67E0     		b	.L84
+ 1527              	.L86:
+ 530:libraries/zf_common/zf_common_fifo.c ****         }
+ 531:libraries/zf_common/zf_common_fifo.c ****         if(fifo->lock_state)                                                    // 判断操作锁�
+ 1528              		.loc 1 531 12
+ 1529 004e 039B     		ldr	r3, [sp, #12]
+ 1530 0050 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1531 0052 03F00803 		and	r3, r3, #8
+ 1532 0056 DBB2     		uxtb	r3, r3
+ 1533              		.loc 1 531 11
+ 1534 0058 002B     		cmp	r3, #0
+ 1535 005a 03D0     		beq	.L87
+ 532:libraries/zf_common/zf_common_fifo.c ****         {
+ 533:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_LOCK;                         // 如果已经被�
+ 1536              		.loc 1 533 33
+ 1537 005c 0823     		movs	r3, #8
+ 1538 005e 8DF81F30 		strb	r3, [sp, #31]
+ 534:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1539              		.loc 1 534 13
+ 1540 0062 5CE0     		b	.L84
+ 1541              	.L87:
+ 535:libraries/zf_common/zf_common_fifo.c ****         }
+ 536:libraries/zf_common/zf_common_fifo.c ****         if(fifo->state & FIFO_STATE_MASK_OPERATION_LOCK)                        // 判断读写锁�
+ 1542              		.loc 1 536 16
+ 1543 0064 039B     		ldr	r3, [sp, #12]
+ 1544 0066 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1545              		.loc 1 536 24
+ 1546 0068 03F00603 		and	r3, r3, #6
+ 1547              		.loc 1 536 11
+ 1548 006c 002B     		cmp	r3, #0
+ 1549 006e 03D0     		beq	.L88
+ 537:libraries/zf_common/zf_common_fifo.c ****         {
+ 538:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NESTED;                       // 如果已经被�
+ 1550              		.loc 1 538 33
+ 1551 0070 0923     		movs	r3, #9
+ 1552 0072 8DF81F30 		strb	r3, [sp, #31]
+ 539:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1553              		.loc 1 539 13
+ 1554 0076 52E0     		b	.L84
+ 1555              	.L88:
+ 540:libraries/zf_common/zf_common_fifo.c ****         }
+ 541:libraries/zf_common/zf_common_fifo.c **** 
+ 542:libraries/zf_common/zf_common_fifo.c ****         fifo->state             |= FIFO_STATE_MASK_OPERATION_LOCK;              // 读写锁定
+ 1556              		.loc 1 542 33
+ 1557 0078 039B     		ldr	r3, [sp, #12]
+ 1558 007a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1559 007c 43F00603 		orr	r3, r3, #6
+ 1560 0080 DAB2     		uxtb	r2, r3
+ 1561 0082 039B     		ldr	r3, [sp, #12]
+ 1562 0084 5A74     		strb	r2, [r3, #17]
+ 543:libraries/zf_common/zf_common_fifo.c **** 
+ 544:libraries/zf_common/zf_common_fifo.c ****         uint32 start_ptr        = fifo->write_ptr;                              // 获取写指针�
+ 1563              		.loc 1 544 16
+ 1564 0086 039B     		ldr	r3, [sp, #12]
+ 1565 0088 9B68     		ldr	r3, [r3, #8]
+ 1566 008a 0693     		str	r3, [sp, #24]
+ 545:libraries/zf_common/zf_common_fifo.c ****         uint32 end_ptr          = fifo->read_ptr;                               // 获取读指针�
+ 1567              		.loc 1 545 16
+ 1568 008c 039B     		ldr	r3, [sp, #12]
+ 1569 008e DB68     		ldr	r3, [r3, #12]
+ 1570 0090 0593     		str	r3, [sp, #20]
+ 546:libraries/zf_common/zf_common_fifo.c **** 
+ 547:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr == end_ptr && !fifo->full_state)                           // 头尾指针位�
+ 1571              		.loc 1 547 11
+ 1572 0092 069A     		ldr	r2, [sp, #24]
+ 1573 0094 059B     		ldr	r3, [sp, #20]
+ 1574 0096 9A42     		cmp	r2, r3
+ 1575 0098 11D1     		bne	.L89
+ 1576              		.loc 1 547 36 discriminator 1
+ 1577 009a 039B     		ldr	r3, [sp, #12]
+ 1578 009c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1579 009e 03F02003 		and	r3, r3, #32
+ 1580 00a2 DBB2     		uxtb	r3, r3
+ 1581              		.loc 1 547 33 discriminator 1
+ 1582 00a4 002B     		cmp	r3, #0
+ 1583 00a6 0AD1     		bne	.L89
+ 548:libraries/zf_common/zf_common_fifo.c ****         {
+ 549:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NO_DATA;                      // 写满标志位�
+ 1584              		.loc 1 549 33
+ 1585 00a8 0A23     		movs	r3, #10
+ 1586 00aa 8DF81F30 		strb	r3, [sp, #31]
+ 550:libraries/zf_common/zf_common_fifo.c ****             fifo->state         &= ~FIFO_STATE_MASK_OPERATION_LOCK;             // 读写取消锁�
+ 1587              		.loc 1 550 33
+ 1588 00ae 039B     		ldr	r3, [sp, #12]
+ 1589 00b0 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1590 00b2 23F00603 		bic	r3, r3, #6
+ 1591 00b6 DAB2     		uxtb	r2, r3
+ 1592 00b8 039B     		ldr	r3, [sp, #12]
+ 1593 00ba 5A74     		strb	r2, [r3, #17]
+ 551:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1594              		.loc 1 551 13
+ 1595 00bc 2FE0     		b	.L84
+ 1596              	.L89:
+ 552:libraries/zf_common/zf_common_fifo.c ****         }
+ 553:libraries/zf_common/zf_common_fifo.c **** 
+ 554:libraries/zf_common/zf_common_fifo.c ****         start_ptr               -= fifo->step;                                  // 写指针位移�
+ 1597              		.loc 1 554 40
+ 1598 00be 039B     		ldr	r3, [sp, #12]
+ 1599 00c0 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1600 00c2 1A46     		mov	r2, r3
+ 1601              		.loc 1 554 33
+ 1602 00c4 069B     		ldr	r3, [sp, #24]
+ 1603 00c6 9B1A     		subs	r3, r3, r2
+ 1604 00c8 0693     		str	r3, [sp, #24]
+ 555:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr == fifo->base_ptr - 1)                                     // 判断是否需�
+ 1605              		.loc 1 555 29
+ 1606 00ca 039B     		ldr	r3, [sp, #12]
+ 1607 00cc 1B68     		ldr	r3, [r3]
+ 1608              		.loc 1 555 40
+ 1609 00ce 013B     		subs	r3, r3, #1
+ 1610              		.loc 1 555 11
+ 1611 00d0 069A     		ldr	r2, [sp, #24]
+ 1612 00d2 9A42     		cmp	r2, r3
+ 1613 00d4 03D1     		bne	.L90
+ 556:libraries/zf_common/zf_common_fifo.c ****         {
+ 557:libraries/zf_common/zf_common_fifo.c ****             start_ptr           = fifo->tail_ptr - 1;
+ 1614              		.loc 1 557 39
+ 1615 00d6 039B     		ldr	r3, [sp, #12]
+ 1616 00d8 5B68     		ldr	r3, [r3, #4]
+ 1617              		.loc 1 557 33
+ 1618 00da 013B     		subs	r3, r3, #1
+ 1619 00dc 0693     		str	r3, [sp, #24]
+ 1620              	.L90:
+ 558:libraries/zf_common/zf_common_fifo.c ****         }
+ 559:libraries/zf_common/zf_common_fifo.c ****         if(NULL != dat)
+ 1621              		.loc 1 559 11
+ 1622 00de 029B     		ldr	r3, [sp, #8]
+ 1623 00e0 002B     		cmp	r3, #0
+ 1624 00e2 06D0     		beq	.L91
+ 560:libraries/zf_common/zf_common_fifo.c ****         {
+ 561:libraries/zf_common/zf_common_fifo.c ****             memcpy(dat, (void *)start_ptr, fifo->step);                         // 读取数据
+ 1625              		.loc 1 561 13
+ 1626 00e4 0699     		ldr	r1, [sp, #24]
+ 1627              		.loc 1 561 48
+ 1628 00e6 039B     		ldr	r3, [sp, #12]
+ 1629 00e8 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1630              		.loc 1 561 13
+ 1631 00ea 1A46     		mov	r2, r3
+ 1632 00ec 0298     		ldr	r0, [sp, #8]
+ 1633 00ee FFF7FEFF 		bl	memcpy
+ 1634              	.L91:
+ 562:libraries/zf_common/zf_common_fifo.c ****         }
+ 563:libraries/zf_common/zf_common_fifo.c **** 
+ 564:libraries/zf_common/zf_common_fifo.c ****         if(flag)                                                                // 判断是否需�
+ 1635              		.loc 1 564 11
+ 1636 00f2 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1637 00f6 002B     		cmp	r3, #0
+ 1638 00f8 07D0     		beq	.L92
+ 565:libraries/zf_common/zf_common_fifo.c ****         {
+ 566:libraries/zf_common/zf_common_fifo.c ****             fifo->full_state    = ZF_FALSE;                                     // 如果数据都�
+ 1639              		.loc 1 566 33
+ 1640 00fa 039A     		ldr	r2, [sp, #12]
+ 1641 00fc 537C     		ldrb	r3, [r2, #17]
+ 1642 00fe 6FF34513 		bfc	r3, #5, #1
+ 1643 0102 5374     		strb	r3, [r2, #17]
+ 567:libraries/zf_common/zf_common_fifo.c ****             fifo->write_ptr     = start_ptr;                                    // 写指针位移�
+ 1644              		.loc 1 567 33
+ 1645 0104 039B     		ldr	r3, [sp, #12]
+ 1646 0106 069A     		ldr	r2, [sp, #24]
+ 1647 0108 9A60     		str	r2, [r3, #8]
+ 1648              	.L92:
+ 568:libraries/zf_common/zf_common_fifo.c ****         }
+ 569:libraries/zf_common/zf_common_fifo.c **** 
+ 570:libraries/zf_common/zf_common_fifo.c ****         fifo->state             &= ~FIFO_STATE_MASK_OPERATION_LOCK;             // 读写取消锁�
+ 1649              		.loc 1 570 33
+ 1650 010a 039B     		ldr	r3, [sp, #12]
+ 1651 010c 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1652 010e 23F00603 		bic	r3, r3, #6
+ 1653 0112 DAB2     		uxtb	r2, r3
+ 1654 0114 039B     		ldr	r3, [sp, #12]
+ 1655 0116 5A74     		strb	r2, [r3, #17]
+ 571:libraries/zf_common/zf_common_fifo.c **** 
+ 572:libraries/zf_common/zf_common_fifo.c ****         return_state            = FIFO_OPERATION_NO_ERROR;
+ 1656              		.loc 1 572 33
+ 1657 0118 0023     		movs	r3, #0
+ 1658 011a 8DF81F30 		strb	r3, [sp, #31]
+ 1659              	.L84:
+ 1660              	.LBE7:
+ 573:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 574:libraries/zf_common/zf_common_fifo.c **** 
+ 575:libraries/zf_common/zf_common_fifo.c ****     return return_state;
+ 1661              		.loc 1 575 12
+ 1662 011e 9DF81F30 		ldrb	r3, [sp, #31]	@ zero_extendqisi2
+ 576:libraries/zf_common/zf_common_fifo.c **** }
+ 1663              		.loc 1 576 1
+ 1664 0122 1846     		mov	r0, r3
+ 1665 0124 09B0     		add	sp, sp, #36
+ 1666              		.cfi_def_cfa_offset 4
+ 1667              		@ sp needed
+ 1668 0126 5DF804FB 		ldr	pc, [sp], #4
+ 1669              		.cfi_endproc
+ 1670              	.LFE9:
+ 1672 012a 00BF     		.section	.text.zf_fifo_read_tail_buffer,"ax",%progbits
+ 1673              		.align	1
+ 1674              		.p2align 4,,15
+ 1675              		.global	zf_fifo_read_tail_buffer
+ 1676              		.syntax unified
+ 1677              		.thumb
+ 1678              		.thumb_func
+ 1680              	zf_fifo_read_tail_buffer:
+ 1681              	.LFB10:
+ 577:libraries/zf_common/zf_common_fifo.c **** 
+ 578:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 579:libraries/zf_common/zf_common_fifo.c **** // 函数简介     从 FIFO 尾部读取指定长度 buffer
+ 580:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+ 581:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *dat                目标缓冲区指针
+ 582:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *length             读取的数据长度 如果没有这么多数据这里会�
+ 583:libraries/zf_common/zf_common_fifo.c **** // 参数说明     flag                是否变更 FIFO 状态  (详见 zf_common_fifo.h 中枚�
+ 584:libraries/zf_common/zf_common_fifo.c **** // 返回参数     uint8               操作状态            (详见 zf_common_fifo.h 中枚举 
+ 585:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_fifo_read_tail_buffer(fifo, dat, length, flag);
+ 586:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+ 587:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 588:libraries/zf_common/zf_common_fifo.c **** uint8 zf_fifo_read_tail_buffer (zf_fifo_obj_struct *fifo, void *dat, uint32 *length, zf_fifo_operat
+ 589:libraries/zf_common/zf_common_fifo.c **** {
+ 1682              		.loc 1 589 1
+ 1683              		.cfi_startproc
+ 1684              		@ args = 0, pretend = 0, frame = 40
+ 1685              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1686 0000 00B5     		push	{lr}
+ 1687              		.cfi_def_cfa_offset 4
+ 1688              		.cfi_offset 14, -4
+ 1689 0002 8BB0     		sub	sp, sp, #44
+ 1690              		.cfi_def_cfa_offset 48
+ 1691 0004 0390     		str	r0, [sp, #12]
+ 1692 0006 0291     		str	r1, [sp, #8]
+ 1693 0008 0192     		str	r2, [sp, #4]
+ 1694 000a 8DF80330 		strb	r3, [sp, #3]
+ 590:libraries/zf_common/zf_common_fifo.c ****     zf_fifo_error_code_enum return_state = FIFO_OPERATION_ERROR_UNKNOW;
+ 1695              		.loc 1 590 29
+ 1696 000e 0123     		movs	r3, #1
+ 1697 0010 8DF82730 		strb	r3, [sp, #39]
+ 1698              	.LBB8:
+ 591:libraries/zf_common/zf_common_fifo.c **** 
+ 592:libraries/zf_common/zf_common_fifo.c ****     do
+ 593:libraries/zf_common/zf_common_fifo.c ****     {
+ 594:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo || NULL == length || 0 == *length)                      // 如果 FIFO 对�
+ 1699              		.loc 1 594 11
+ 1700 0014 039B     		ldr	r3, [sp, #12]
+ 1701 0016 002B     		cmp	r3, #0
+ 1702 0018 06D0     		beq	.L95
+ 1703              		.loc 1 594 25 discriminator 1
+ 1704 001a 019B     		ldr	r3, [sp, #4]
+ 1705 001c 002B     		cmp	r3, #0
+ 1706 001e 03D0     		beq	.L95
+ 1707              		.loc 1 594 51 discriminator 2
+ 1708 0020 019B     		ldr	r3, [sp, #4]
+ 1709 0022 1B68     		ldr	r3, [r3]
+ 1710              		.loc 1 594 43 discriminator 2
+ 1711 0024 002B     		cmp	r3, #0
+ 1712 0026 03D1     		bne	.L96
+ 1713              	.L95:
+ 595:libraries/zf_common/zf_common_fifo.c ****         {
+ 596:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_ILLEGAL_PARAMETER;       // 非法参数
+ 1714              		.loc 1 596 33
+ 1715 0028 0223     		movs	r3, #2
+ 1716 002a 8DF82730 		strb	r3, [sp, #39]
+ 597:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1717              		.loc 1 597 13
+ 1718 002e 01E1     		b	.L97
+ 1719              	.L96:
+ 598:libraries/zf_common/zf_common_fifo.c ****         }
+ 599:libraries/zf_common/zf_common_fifo.c **** 
+ 600:libraries/zf_common/zf_common_fifo.c ****         uint32 length_temp      = *length;
+ 1720              		.loc 1 600 16
+ 1721 0030 019B     		ldr	r3, [sp, #4]
+ 1722 0032 1B68     		ldr	r3, [r3]
+ 1723 0034 0893     		str	r3, [sp, #32]
+ 601:libraries/zf_common/zf_common_fifo.c ****         *length                 = 0;
+ 1724              		.loc 1 601 33
+ 1725 0036 019B     		ldr	r3, [sp, #4]
+ 1726 0038 0022     		movs	r2, #0
+ 1727 003a 1A60     		str	r2, [r3]
+ 602:libraries/zf_common/zf_common_fifo.c **** 
+ 603:libraries/zf_common/zf_common_fifo.c ****         if(ZF_FALSE == fifo->init_state)                                        // 如果 FIFO 对�
+ 1728              		.loc 1 603 21
+ 1729 003c 039B     		ldr	r3, [sp, #12]
+ 1730 003e 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1731 0040 03F00103 		and	r3, r3, #1
+ 1732 0044 DBB2     		uxtb	r3, r3
+ 1733              		.loc 1 603 11
+ 1734 0046 002B     		cmp	r3, #0
+ 1735 0048 03D1     		bne	.L98
+ 604:libraries/zf_common/zf_common_fifo.c ****         {
+ 605:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_OPERATION_ERROR_OBJECT_UNINIT;           // FIFO 对象未�
+ 1736              		.loc 1 605 33
+ 1737 004a 0323     		movs	r3, #3
+ 1738 004c 8DF82730 		strb	r3, [sp, #39]
+ 606:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1739              		.loc 1 606 13
+ 1740 0050 F0E0     		b	.L97
+ 1741              	.L98:
+ 607:libraries/zf_common/zf_common_fifo.c ****         }
+ 608:libraries/zf_common/zf_common_fifo.c **** 
+ 609:libraries/zf_common/zf_common_fifo.c ****         if(fifo->clean_state)                                                   // 清空指令置�
+ 1742              		.loc 1 609 12
+ 1743 0052 039B     		ldr	r3, [sp, #12]
+ 1744 0054 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1745 0056 03F01003 		and	r3, r3, #16
+ 1746 005a DBB2     		uxtb	r3, r3
+ 1747              		.loc 1 609 11
+ 1748 005c 002B     		cmp	r3, #0
+ 1749 005e 03D0     		beq	.L99
+ 610:libraries/zf_common/zf_common_fifo.c ****         {
+ 611:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NO_DATA;                      // 写满标志位�
+ 1750              		.loc 1 611 33
+ 1751 0060 0A23     		movs	r3, #10
+ 1752 0062 8DF82730 		strb	r3, [sp, #39]
+ 612:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1753              		.loc 1 612 13
+ 1754 0066 E5E0     		b	.L97
+ 1755              	.L99:
+ 613:libraries/zf_common/zf_common_fifo.c ****         }
+ 614:libraries/zf_common/zf_common_fifo.c ****         if(fifo->lock_state)                                                    // 判断操作锁�
+ 1756              		.loc 1 614 12
+ 1757 0068 039B     		ldr	r3, [sp, #12]
+ 1758 006a 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1759 006c 03F00803 		and	r3, r3, #8
+ 1760 0070 DBB2     		uxtb	r3, r3
+ 1761              		.loc 1 614 11
+ 1762 0072 002B     		cmp	r3, #0
+ 1763 0074 03D0     		beq	.L100
+ 615:libraries/zf_common/zf_common_fifo.c ****         {
+ 616:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_LOCK;                         // 如果已经被�
+ 1764              		.loc 1 616 33
+ 1765 0076 0823     		movs	r3, #8
+ 1766 0078 8DF82730 		strb	r3, [sp, #39]
+ 617:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1767              		.loc 1 617 13
+ 1768 007c DAE0     		b	.L97
+ 1769              	.L100:
+ 618:libraries/zf_common/zf_common_fifo.c ****         }
+ 619:libraries/zf_common/zf_common_fifo.c ****         if(fifo->state & FIFO_STATE_MASK_OPERATION_LOCK)                        // 判断读写锁�
+ 1770              		.loc 1 619 16
+ 1771 007e 039B     		ldr	r3, [sp, #12]
+ 1772 0080 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1773              		.loc 1 619 24
+ 1774 0082 03F00603 		and	r3, r3, #6
+ 1775              		.loc 1 619 11
+ 1776 0086 002B     		cmp	r3, #0
+ 1777 0088 03D0     		beq	.L101
+ 620:libraries/zf_common/zf_common_fifo.c ****         {
+ 621:libraries/zf_common/zf_common_fifo.c ****             return_state        = FIFO_READ_ERROR_NESTED;                       // 如果已经被�
+ 1778              		.loc 1 621 33
+ 1779 008a 0923     		movs	r3, #9
+ 1780 008c 8DF82730 		strb	r3, [sp, #39]
+ 622:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 1781              		.loc 1 622 13
+ 1782 0090 D0E0     		b	.L97
+ 1783              	.L101:
+ 623:libraries/zf_common/zf_common_fifo.c ****         }
+ 624:libraries/zf_common/zf_common_fifo.c **** 
+ 625:libraries/zf_common/zf_common_fifo.c ****         fifo->state             |= FIFO_STATE_MASK_OPERATION_LOCK;              // 读写锁定
+ 1784              		.loc 1 625 33
+ 1785 0092 039B     		ldr	r3, [sp, #12]
+ 1786 0094 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 1787 0096 43F00603 		orr	r3, r3, #6
+ 1788 009a DAB2     		uxtb	r2, r3
+ 1789 009c 039B     		ldr	r3, [sp, #12]
+ 1790 009e 5A74     		strb	r2, [r3, #17]
+ 626:libraries/zf_common/zf_common_fifo.c **** 
+ 627:libraries/zf_common/zf_common_fifo.c ****         uint32 start_ptr        = fifo->write_ptr;                              // 获取写指针�
+ 1791              		.loc 1 627 16
+ 1792 00a0 039B     		ldr	r3, [sp, #12]
+ 1793 00a2 9B68     		ldr	r3, [r3, #8]
+ 1794 00a4 0793     		str	r3, [sp, #28]
+ 628:libraries/zf_common/zf_common_fifo.c ****         uint32 end_ptr          = fifo->read_ptr;                               // 获取读指针�
+ 1795              		.loc 1 628 16
+ 1796 00a6 039B     		ldr	r3, [sp, #12]
+ 1797 00a8 DB68     		ldr	r3, [r3, #12]
+ 1798 00aa 0593     		str	r3, [sp, #20]
+ 629:libraries/zf_common/zf_common_fifo.c ****         uint32 data_size        = 0;
+ 1799              		.loc 1 629 16
+ 1800 00ac 0023     		movs	r3, #0
+ 1801 00ae 0693     		str	r3, [sp, #24]
+ 630:libraries/zf_common/zf_common_fifo.c **** 
+ 631:libraries/zf_common/zf_common_fifo.c ****         if(start_ptr > end_ptr)                                                 // 如果写指针�
+ 1802              		.loc 1 631 11
+ 1803 00b0 079A     		ldr	r2, [sp, #28]
+ 1804 00b2 059B     		ldr	r3, [sp, #20]
+ 1805 00b4 9A42     		cmp	r2, r3
+ 1806 00b6 2ED9     		bls	.L102
+ 632:libraries/zf_common/zf_common_fifo.c ****         {
+ 633:libraries/zf_common/zf_common_fifo.c ****             data_size           = start_ptr - end_ptr;                          // 获得可读字�
+ 1807              		.loc 1 633 33
+ 1808 00b8 079A     		ldr	r2, [sp, #28]
+ 1809 00ba 059B     		ldr	r3, [sp, #20]
+ 1810 00bc D31A     		subs	r3, r2, r3
+ 1811 00be 0693     		str	r3, [sp, #24]
+ 634:libraries/zf_common/zf_common_fifo.c ****             if(length_temp > data_size / fifo->step)                            // 判断写入长�
+ 1812              		.loc 1 634 46
+ 1813 00c0 039B     		ldr	r3, [sp, #12]
+ 1814 00c2 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1815 00c4 1A46     		mov	r2, r3
+ 1816              		.loc 1 634 40
+ 1817 00c6 069B     		ldr	r3, [sp, #24]
+ 1818 00c8 B3FBF2F3 		udiv	r3, r3, r2
+ 1819              		.loc 1 634 15
+ 1820 00cc 089A     		ldr	r2, [sp, #32]
+ 1821 00ce 9A42     		cmp	r2, r3
+ 1822 00d0 09D9     		bls	.L103
+ 635:libraries/zf_common/zf_common_fifo.c ****             {
+ 636:libraries/zf_common/zf_common_fifo.c ****                 length_temp     = data_size / fifo->step;                       // 修正读取长�
+ 1823              		.loc 1 636 51
+ 1824 00d2 039B     		ldr	r3, [sp, #12]
+ 1825 00d4 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1826 00d6 1A46     		mov	r2, r3
+ 1827              		.loc 1 636 33
+ 1828 00d8 069B     		ldr	r3, [sp, #24]
+ 1829 00da B3FBF2F3 		udiv	r3, r3, r2
+ 1830 00de 0893     		str	r3, [sp, #32]
+ 637:libraries/zf_common/zf_common_fifo.c ****                 return_state    = FIFO_READ_ERROR_PARTIAL_DONE;                 // 读不满就报�
+ 1831              		.loc 1 637 33
+ 1832 00e0 0B23     		movs	r3, #11
+ 1833 00e2 8DF82730 		strb	r3, [sp, #39]
+ 1834              	.L103:
+ 638:libraries/zf_common/zf_common_fifo.c ****             }
+ 639:libraries/zf_common/zf_common_fifo.c ****             start_ptr           -= length_temp * fifo->step;                    // 写指针位移�
+ 1835              		.loc 1 639 54
+ 1836 00e6 039B     		ldr	r3, [sp, #12]
+ 1837 00e8 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1838 00ea 1A46     		mov	r2, r3
+ 1839              		.loc 1 639 48
+ 1840 00ec 089B     		ldr	r3, [sp, #32]
+ 1841 00ee 02FB03F3 		mul	r3, r2, r3
+ 1842              		.loc 1 639 33
+ 1843 00f2 079A     		ldr	r2, [sp, #28]
+ 1844 00f4 D31A     		subs	r3, r2, r3
+ 1845 00f6 0793     		str	r3, [sp, #28]
+ 640:libraries/zf_common/zf_common_fifo.c ****             if(NULL != dat)
+ 1846              		.loc 1 640 15
+ 1847 00f8 029B     		ldr	r3, [sp, #8]
+ 1848 00fa 002B     		cmp	r3, #0
+ 1849 00fc 73D0     		beq	.L104
+ 641:libraries/zf_common/zf_common_fifo.c ****             {
+ 642:libraries/zf_common/zf_common_fifo.c ****                 memcpy(dat, (void *)start_ptr, length_temp * fifo->step);       // 读取数据
+ 1850              		.loc 1 642 17
+ 1851 00fe 0799     		ldr	r1, [sp, #28]
+ 1852              		.loc 1 642 66
+ 1853 0100 039B     		ldr	r3, [sp, #12]
+ 1854 0102 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1855 0104 1A46     		mov	r2, r3
+ 1856              		.loc 1 642 60
+ 1857 0106 089B     		ldr	r3, [sp, #32]
+ 1858 0108 02FB03F3 		mul	r3, r2, r3
+ 1859              		.loc 1 642 17
+ 1860 010c 1A46     		mov	r2, r3
+ 1861 010e 0298     		ldr	r0, [sp, #8]
+ 1862 0110 FFF7FEFF 		bl	memcpy
+ 1863 0114 67E0     		b	.L104
+ 1864              	.L102:
+ 643:libraries/zf_common/zf_common_fifo.c ****             }
+ 644:libraries/zf_common/zf_common_fifo.c ****         }
+ 645:libraries/zf_common/zf_common_fifo.c ****         else                                                                    // 否则的话就�
+ 646:libraries/zf_common/zf_common_fifo.c ****         {
+ 647:libraries/zf_common/zf_common_fifo.c ****             data_size           = start_ptr - fifo->base_ptr;                   // 获取写指针�
+ 1865              		.loc 1 647 51
+ 1866 0116 039B     		ldr	r3, [sp, #12]
+ 1867 0118 1B68     		ldr	r3, [r3]
+ 1868              		.loc 1 647 33
+ 1869 011a 079A     		ldr	r2, [sp, #28]
+ 1870 011c D31A     		subs	r3, r2, r3
+ 1871 011e 0693     		str	r3, [sp, #24]
+ 648:libraries/zf_common/zf_common_fifo.c ****             if(length_temp <= data_size / fifo->step)                           // 到尾部空间�
+ 1872              		.loc 1 648 47
+ 1873 0120 039B     		ldr	r3, [sp, #12]
+ 1874 0122 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1875 0124 1A46     		mov	r2, r3
+ 1876              		.loc 1 648 41
+ 1877 0126 069B     		ldr	r3, [sp, #24]
+ 1878 0128 B3FBF2F3 		udiv	r3, r3, r2
+ 1879              		.loc 1 648 15
+ 1880 012c 089A     		ldr	r2, [sp, #32]
+ 1881 012e 9A42     		cmp	r2, r3
+ 1882 0130 17D8     		bhi	.L105
+ 649:libraries/zf_common/zf_common_fifo.c ****             {
+ 650:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       -= length_temp * fifo->step;                    // 写指针位移�
+ 1883              		.loc 1 650 54
+ 1884 0132 039B     		ldr	r3, [sp, #12]
+ 1885 0134 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1886 0136 1A46     		mov	r2, r3
+ 1887              		.loc 1 650 48
+ 1888 0138 089B     		ldr	r3, [sp, #32]
+ 1889 013a 02FB03F3 		mul	r3, r2, r3
+ 1890              		.loc 1 650 33
+ 1891 013e 079A     		ldr	r2, [sp, #28]
+ 1892 0140 D31A     		subs	r3, r2, r3
+ 1893 0142 0793     		str	r3, [sp, #28]
+ 651:libraries/zf_common/zf_common_fifo.c ****                 if(NULL != dat)
+ 1894              		.loc 1 651 19
+ 1895 0144 029B     		ldr	r3, [sp, #8]
+ 1896 0146 002B     		cmp	r3, #0
+ 1897 0148 4DD0     		beq	.L104
+ 652:libraries/zf_common/zf_common_fifo.c ****                 {
+ 653:libraries/zf_common/zf_common_fifo.c ****                     memcpy(dat, (void *)start_ptr, length_temp * fifo->step);   // 读取数据
+ 1898              		.loc 1 653 21
+ 1899 014a 0799     		ldr	r1, [sp, #28]
+ 1900              		.loc 1 653 70
+ 1901 014c 039B     		ldr	r3, [sp, #12]
+ 1902 014e 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1903 0150 1A46     		mov	r2, r3
+ 1904              		.loc 1 653 64
+ 1905 0152 089B     		ldr	r3, [sp, #32]
+ 1906 0154 02FB03F3 		mul	r3, r2, r3
+ 1907              		.loc 1 653 21
+ 1908 0158 1A46     		mov	r2, r3
+ 1909 015a 0298     		ldr	r0, [sp, #8]
+ 1910 015c FFF7FEFF 		bl	memcpy
+ 1911 0160 41E0     		b	.L104
+ 1912              	.L105:
+ 654:libraries/zf_common/zf_common_fifo.c ****                 }
+ 655:libraries/zf_common/zf_common_fifo.c ****             }
+ 656:libraries/zf_common/zf_common_fifo.c ****             else
+ 657:libraries/zf_common/zf_common_fifo.c ****             {
+ 658:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       = fifo->base_ptr;                               // 写指针位移�
+ 1913              		.loc 1 658 33
+ 1914 0162 039B     		ldr	r3, [sp, #12]
+ 1915 0164 1B68     		ldr	r3, [r3]
+ 1916 0166 0793     		str	r3, [sp, #28]
+ 659:libraries/zf_common/zf_common_fifo.c ****                 if(NULL != dat)
+ 1917              		.loc 1 659 19
+ 1918 0168 029B     		ldr	r3, [sp, #8]
+ 1919 016a 002B     		cmp	r3, #0
+ 1920 016c 08D0     		beq	.L106
+ 660:libraries/zf_common/zf_common_fifo.c ****                 {
+ 661:libraries/zf_common/zf_common_fifo.c ****                     memcpy((void *)((uint32)dat + data_size), (void *)start_ptr, data_size);    // 
+ 1921              		.loc 1 661 37
+ 1922 016e 029A     		ldr	r2, [sp, #8]
+ 1923              		.loc 1 661 49
+ 1924 0170 069B     		ldr	r3, [sp, #24]
+ 1925 0172 1344     		add	r3, r3, r2
+ 1926              		.loc 1 661 21
+ 1927 0174 1846     		mov	r0, r3
+ 1928 0176 079B     		ldr	r3, [sp, #28]
+ 1929 0178 069A     		ldr	r2, [sp, #24]
+ 1930 017a 1946     		mov	r1, r3
+ 1931 017c FFF7FEFF 		bl	memcpy
+ 1932              	.L106:
+ 662:libraries/zf_common/zf_common_fifo.c ****                 }
+ 663:libraries/zf_common/zf_common_fifo.c **** 
+ 664:libraries/zf_common/zf_common_fifo.c ****                 data_size       = length_temp * fifo->step - data_size;         // 获得第二部�
+ 1933              		.loc 1 664 53
+ 1934 0180 039B     		ldr	r3, [sp, #12]
+ 1935 0182 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+ 1936 0184 1A46     		mov	r2, r3
+ 1937              		.loc 1 664 47
+ 1938 0186 089B     		ldr	r3, [sp, #32]
+ 1939 0188 03FB02F2 		mul	r2, r3, r2
+ 1940              		.loc 1 664 33
+ 1941 018c 069B     		ldr	r3, [sp, #24]
+ 1942 018e D31A     		subs	r3, r2, r3
+ 1943 0190 0693     		str	r3, [sp, #24]
+ 665:libraries/zf_common/zf_common_fifo.c **** 
+ 666:libraries/zf_common/zf_common_fifo.c ****                 if(data_size > fifo->tail_ptr - end_ptr)                        // 剩余数据超�
+ 1944              		.loc 1 666 36
+ 1945 0192 039B     		ldr	r3, [sp, #12]
+ 1946 0194 5A68     		ldr	r2, [r3, #4]
+ 1947              		.loc 1 666 47
+ 1948 0196 059B     		ldr	r3, [sp, #20]
+ 1949 0198 D31A     		subs	r3, r2, r3
+ 1950              		.loc 1 666 19
+ 1951 019a 069A     		ldr	r2, [sp, #24]
+ 1952 019c 9A42     		cmp	r2, r3
+ 1953 019e 14D9     		bls	.L107
+ 667:libraries/zf_common/zf_common_fifo.c ****                 {
+ 668:libraries/zf_common/zf_common_fifo.c ****                     length_temp = length_temp - (data_size - (fifo->tail_ptr - end_ptr)) / fifo->st
+ 1954              		.loc 1 668 67
+ 1955 01a0 039B     		ldr	r3, [sp, #12]
+ 1956 01a2 5B68     		ldr	r3, [r3, #4]
+ 1957              		.loc 1 668 60
+ 1958 01a4 059A     		ldr	r2, [sp, #20]
+ 1959 01a6 D21A     		subs	r2, r2, r3
+ 1960 01a8 069B     		ldr	r3, [sp, #24]
+ 1961 01aa 1344     		add	r3, r3, r2
+ 1962              		.loc 1 668 96
+ 1963 01ac 039A     		ldr	r2, [sp, #12]
+ 1964 01ae 127C     		ldrb	r2, [r2, #16]	@ zero_extendqisi2
+ 1965              		.loc 1 668 90
+ 1966 01b0 B3FBF2F3 		udiv	r3, r3, r2
+ 1967              		.loc 1 668 33
+ 1968 01b4 089A     		ldr	r2, [sp, #32]
+ 1969 01b6 D31A     		subs	r3, r2, r3
+ 1970 01b8 0893     		str	r3, [sp, #32]
+ 669:libraries/zf_common/zf_common_fifo.c ****                     data_size   = fifo->tail_ptr - end_ptr;                     // 更新读取长�
+ 1971              		.loc 1 669 39
+ 1972 01ba 039B     		ldr	r3, [sp, #12]
+ 1973 01bc 5A68     		ldr	r2, [r3, #4]
+ 1974              		.loc 1 669 33
+ 1975 01be 059B     		ldr	r3, [sp, #20]
+ 1976 01c0 D31A     		subs	r3, r2, r3
+ 1977 01c2 0693     		str	r3, [sp, #24]
+ 670:libraries/zf_common/zf_common_fifo.c ****                     return_state= FIFO_READ_ERROR_PARTIAL_DONE;                 // 读不满就报�
+ 1978              		.loc 1 670 33
+ 1979 01c4 0B23     		movs	r3, #11
+ 1980 01c6 8DF82730 		strb	r3, [sp, #39]
+ 1981              	.L107:
+ 671:libraries/zf_common/zf_common_fifo.c ****                 }
+ 672:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       = fifo->tail_ptr - data_size;
+ 1982              		.loc 1 672 39
+ 1983 01ca 039B     		ldr	r3, [sp, #12]
+ 1984 01cc 5A68     		ldr	r2, [r3, #4]
+ 1985              		.loc 1 672 33
+ 1986 01ce 069B     		ldr	r3, [sp, #24]
+ 1987 01d0 D31A     		subs	r3, r2, r3
+ 1988 01d2 0793     		str	r3, [sp, #28]
+ 673:libraries/zf_common/zf_common_fifo.c ****                 if(NULL != dat)
+ 1989              		.loc 1 673 19
+ 1990 01d4 029B     		ldr	r3, [sp, #8]
+ 1991 01d6 002B     		cmp	r3, #0
+ 1992 01d8 05D0     		beq	.L104
+ 674:libraries/zf_common/zf_common_fifo.c ****                 {
+ 675:libraries/zf_common/zf_common_fifo.c ****                     memcpy(dat, (void *)start_ptr, data_size);                  // 读取第二部�
+ 1993              		.loc 1 675 21
+ 1994 01da 079B     		ldr	r3, [sp, #28]
+ 1995 01dc 069A     		ldr	r2, [sp, #24]
+ 1996 01de 1946     		mov	r1, r3
+ 1997 01e0 0298     		ldr	r0, [sp, #8]
+ 1998 01e2 FFF7FEFF 		bl	memcpy
+ 1999              	.L104:
+ 676:libraries/zf_common/zf_common_fifo.c ****                 }
+ 677:libraries/zf_common/zf_common_fifo.c ****             }
+ 678:libraries/zf_common/zf_common_fifo.c ****         }
+ 679:libraries/zf_common/zf_common_fifo.c **** 
+ 680:libraries/zf_common/zf_common_fifo.c ****         if(flag)                                                                // 判断是否需�
+ 2000              		.loc 1 680 11
+ 2001 01e6 9DF80330 		ldrb	r3, [sp, #3]	@ zero_extendqisi2
+ 2002 01ea 002B     		cmp	r3, #0
+ 2003 01ec 11D0     		beq	.L108
+ 681:libraries/zf_common/zf_common_fifo.c ****         {
+ 682:libraries/zf_common/zf_common_fifo.c ****             if(start_ptr == fifo->base_ptr - 1)                                 // 判断是否需�
+ 2004              		.loc 1 682 33
+ 2005 01ee 039B     		ldr	r3, [sp, #12]
+ 2006 01f0 1B68     		ldr	r3, [r3]
+ 2007              		.loc 1 682 44
+ 2008 01f2 013B     		subs	r3, r3, #1
+ 2009              		.loc 1 682 15
+ 2010 01f4 079A     		ldr	r2, [sp, #28]
+ 2011 01f6 9A42     		cmp	r2, r3
+ 2012 01f8 03D1     		bne	.L109
+ 683:libraries/zf_common/zf_common_fifo.c ****             {
+ 684:libraries/zf_common/zf_common_fifo.c ****                 start_ptr       = fifo->tail_ptr - 1;
+ 2013              		.loc 1 684 39
+ 2014 01fa 039B     		ldr	r3, [sp, #12]
+ 2015 01fc 5B68     		ldr	r3, [r3, #4]
+ 2016              		.loc 1 684 33
+ 2017 01fe 013B     		subs	r3, r3, #1
+ 2018 0200 0793     		str	r3, [sp, #28]
+ 2019              	.L109:
+ 685:libraries/zf_common/zf_common_fifo.c ****             }
+ 686:libraries/zf_common/zf_common_fifo.c ****             fifo->full_state    = ZF_FALSE;                                     // 如果数据都�
+ 2020              		.loc 1 686 33
+ 2021 0202 039A     		ldr	r2, [sp, #12]
+ 2022 0204 537C     		ldrb	r3, [r2, #17]
+ 2023 0206 6FF34513 		bfc	r3, #5, #1
+ 2024 020a 5374     		strb	r3, [r2, #17]
+ 687:libraries/zf_common/zf_common_fifo.c ****             fifo->write_ptr     = start_ptr;                                    // 写指针位移�
+ 2025              		.loc 1 687 33
+ 2026 020c 039B     		ldr	r3, [sp, #12]
+ 2027 020e 079A     		ldr	r2, [sp, #28]
+ 2028 0210 9A60     		str	r2, [r3, #8]
+ 2029              	.L108:
+ 688:libraries/zf_common/zf_common_fifo.c ****         }
+ 689:libraries/zf_common/zf_common_fifo.c **** 
+ 690:libraries/zf_common/zf_common_fifo.c ****         fifo->state             &= ~FIFO_STATE_MASK_OPERATION_LOCK;             // 读写取消锁�
+ 2030              		.loc 1 690 33
+ 2031 0212 039B     		ldr	r3, [sp, #12]
+ 2032 0214 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 2033 0216 23F00603 		bic	r3, r3, #6
+ 2034 021a DAB2     		uxtb	r2, r3
+ 2035 021c 039B     		ldr	r3, [sp, #12]
+ 2036 021e 5A74     		strb	r2, [r3, #17]
+ 691:libraries/zf_common/zf_common_fifo.c **** 
+ 692:libraries/zf_common/zf_common_fifo.c ****         return_state            = (FIFO_OPERATION_ERROR_UNKNOW == return_state) ? FIFO_OPERATION_NO
+ 2037              		.loc 1 692 107
+ 2038 0220 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 2039 0224 012B     		cmp	r3, #1
+ 2040 0226 02D0     		beq	.L110
+ 2041              		.loc 1 692 107 is_stmt 0 discriminator 1
+ 2042 0228 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 2043 022c 00E0     		b	.L111
+ 2044              	.L110:
+ 2045              		.loc 1 692 107 discriminator 2
+ 2046 022e 0023     		movs	r3, #0
+ 2047              	.L111:
+ 2048              		.loc 1 692 33 is_stmt 1 discriminator 4
+ 2049 0230 8DF82730 		strb	r3, [sp, #39]
+ 2050              	.L97:
+ 2051              	.LBE8:
+ 693:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 694:libraries/zf_common/zf_common_fifo.c **** 
+ 695:libraries/zf_common/zf_common_fifo.c ****     return return_state;
+ 2052              		.loc 1 695 12
+ 2053 0234 9DF82730 		ldrb	r3, [sp, #39]	@ zero_extendqisi2
+ 696:libraries/zf_common/zf_common_fifo.c **** }
+ 2054              		.loc 1 696 1
+ 2055 0238 1846     		mov	r0, r3
+ 2056 023a 0BB0     		add	sp, sp, #44
+ 2057              		.cfi_def_cfa_offset 4
+ 2058              		@ sp needed
+ 2059 023c 5DF804FB 		ldr	pc, [sp], #4
+ 2060              		.cfi_endproc
+ 2061              	.LFE10:
+ 2063              		.section	.text.zf_fifo_init,"ax",%progbits
+ 2064              		.align	1
+ 2065              		.p2align 4,,15
+ 2066              		.global	zf_fifo_init
+ 2067              		.syntax unified
+ 2068              		.thumb
+ 2069              		.thumb_func
+ 2071              	zf_fifo_init:
+ 2072              	.LFB11:
+ 697:libraries/zf_common/zf_common_fifo.c **** 
+ 698:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 699:libraries/zf_common/zf_common_fifo.c **** // 函数简介     FIFO 初始化 挂载对应缓冲区
+ 700:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *fifo               FIFO 对象指针
+ 701:libraries/zf_common/zf_common_fifo.c **** // 参数说明     type                FIFO 数据位数       (详见 zf_common_fifo.h 中枚举 
+ 702:libraries/zf_common/zf_common_fifo.c **** // 参数说明     *buffer_addr        要挂载的缓冲区
+ 703:libraries/zf_common/zf_common_fifo.c **** // 参数说明     size                缓冲区大小 字节单位 建议使用 sizeof 来获得�
+ 704:libraries/zf_common/zf_common_fifo.c **** // 返回参数     uint8               操作状态            (详见 zf_common_fifo.h 中枚举 
+ 705:libraries/zf_common/zf_common_fifo.c **** // 使用示例     zf_fifo_init(&user_fifo, type, buffer_addr, size);
+ 706:libraries/zf_common/zf_common_fifo.c **** // 备注信息     
+ 707:libraries/zf_common/zf_common_fifo.c **** //-------------------------------------------------------------------------------------------------
+ 708:libraries/zf_common/zf_common_fifo.c **** uint8 zf_fifo_init (zf_fifo_obj_struct *fifo, zf_fifo_data_type_enum type, void *buffer_addr, uint3
+ 709:libraries/zf_common/zf_common_fifo.c **** {
+ 2073              		.loc 1 709 1
+ 2074              		.cfi_startproc
+ 2075              		@ args = 0, pretend = 0, frame = 24
+ 2076              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2077              		@ link register save eliminated.
+ 2078 0000 86B0     		sub	sp, sp, #24
+ 2079              		.cfi_def_cfa_offset 24
+ 2080 0002 0390     		str	r0, [sp, #12]
+ 2081 0004 0192     		str	r2, [sp, #4]
+ 2082 0006 0093     		str	r3, [sp]
+ 2083 0008 0B46     		mov	r3, r1
+ 2084 000a 8DF80B30 		strb	r3, [sp, #11]
+ 710:libraries/zf_common/zf_common_fifo.c ****     zf_fifo_error_code_enum return_state = FIFO_OPERATION_ERROR_UNKNOW;
+ 2085              		.loc 1 710 29
+ 2086 000e 0123     		movs	r3, #1
+ 2087 0010 8DF81730 		strb	r3, [sp, #23]
+ 711:libraries/zf_common/zf_common_fifo.c **** 
+ 712:libraries/zf_common/zf_common_fifo.c ****     do
+ 713:libraries/zf_common/zf_common_fifo.c ****     {
+ 714:libraries/zf_common/zf_common_fifo.c ****         if(NULL == fifo || NULL == buffer_addr || 0 == size)                    // 如果 FIFO 对�
+ 2088              		.loc 1 714 11
+ 2089 0014 039B     		ldr	r3, [sp, #12]
+ 2090 0016 002B     		cmp	r3, #0
+ 2091 0018 05D0     		beq	.L114
+ 2092              		.loc 1 714 25 discriminator 1
+ 2093 001a 019B     		ldr	r3, [sp, #4]
+ 2094 001c 002B     		cmp	r3, #0
+ 2095 001e 02D0     		beq	.L114
+ 2096              		.loc 1 714 48 discriminator 2
+ 2097 0020 009B     		ldr	r3, [sp]
+ 2098 0022 002B     		cmp	r3, #0
+ 2099 0024 03D1     		bne	.L115
+ 2100              	.L114:
+ 715:libraries/zf_common/zf_common_fifo.c ****         {
+ 716:libraries/zf_common/zf_common_fifo.c ****             return_state    = FIFO_OPERATION_ERROR_ILLEGAL_PARAMETER;           // 非法参数
+ 2101              		.loc 1 716 29
+ 2102 0026 0223     		movs	r3, #2
+ 2103 0028 8DF81730 		strb	r3, [sp, #23]
+ 717:libraries/zf_common/zf_common_fifo.c ****             break;                                                              // 退出操作
+ 2104              		.loc 1 717 13
+ 2105 002c 1DE0     		b	.L116
+ 2106              	.L115:
+ 718:libraries/zf_common/zf_common_fifo.c ****         }
+ 719:libraries/zf_common/zf_common_fifo.c **** 
+ 720:libraries/zf_common/zf_common_fifo.c ****         fifo->state         = FIFO_STATE_MASK;                                  // 首先是将对�
+ 2107              		.loc 1 720 29
+ 2108 002e 039B     		ldr	r3, [sp, #12]
+ 2109 0030 3E22     		movs	r2, #62
+ 2110 0032 5A74     		strb	r2, [r3, #17]
+ 721:libraries/zf_common/zf_common_fifo.c **** 
+ 722:libraries/zf_common/zf_common_fifo.c ****         fifo->base_ptr      = (uint32)buffer_addr;                              // 缓存基地址
+ 2111              		.loc 1 722 31
+ 2112 0034 019A     		ldr	r2, [sp, #4]
+ 2113              		.loc 1 722 29
+ 2114 0036 039B     		ldr	r3, [sp, #12]
+ 2115 0038 1A60     		str	r2, [r3]
+ 723:libraries/zf_common/zf_common_fifo.c ****         fifo->tail_ptr      = fifo->base_ptr + size;                            // 缓存尾地址
+ 2116              		.loc 1 723 35
+ 2117 003a 039B     		ldr	r3, [sp, #12]
+ 2118 003c 1A68     		ldr	r2, [r3]
+ 2119              		.loc 1 723 46
+ 2120 003e 009B     		ldr	r3, [sp]
+ 2121 0040 1A44     		add	r2, r2, r3
+ 2122              		.loc 1 723 29
+ 2123 0042 039B     		ldr	r3, [sp, #12]
+ 2124 0044 5A60     		str	r2, [r3, #4]
+ 724:libraries/zf_common/zf_common_fifo.c **** 
+ 725:libraries/zf_common/zf_common_fifo.c ****         fifo->write_ptr     = fifo->base_ptr;                                   // 写指针 指向
+ 2125              		.loc 1 725 35
+ 2126 0046 039B     		ldr	r3, [sp, #12]
+ 2127 0048 1A68     		ldr	r2, [r3]
+ 2128              		.loc 1 725 29
+ 2129 004a 039B     		ldr	r3, [sp, #12]
+ 2130 004c 9A60     		str	r2, [r3, #8]
+ 726:libraries/zf_common/zf_common_fifo.c ****         fifo->read_ptr      = fifo->base_ptr;                                   // 读指针 指向
+ 2131              		.loc 1 726 35
+ 2132 004e 039B     		ldr	r3, [sp, #12]
+ 2133 0050 1A68     		ldr	r2, [r3]
+ 2134              		.loc 1 726 29
+ 2135 0052 039B     		ldr	r3, [sp, #12]
+ 2136 0054 DA60     		str	r2, [r3, #12]
+ 727:libraries/zf_common/zf_common_fifo.c **** 
+ 728:libraries/zf_common/zf_common_fifo.c ****         fifo->step          = type;                                             // 数据类型 地
+ 2137              		.loc 1 728 29
+ 2138 0056 039B     		ldr	r3, [sp, #12]
+ 2139 0058 9DF80B20 		ldrb	r2, [sp, #11]
+ 2140 005c 1A74     		strb	r2, [r3, #16]
+ 729:libraries/zf_common/zf_common_fifo.c **** 
+ 730:libraries/zf_common/zf_common_fifo.c ****         fifo->state         = FIFO_STATE_MASK_INIT_DONE;                        // 完成配置后�
+ 2141              		.loc 1 730 29
+ 2142 005e 039B     		ldr	r3, [sp, #12]
+ 2143 0060 0122     		movs	r2, #1
+ 2144 0062 5A74     		strb	r2, [r3, #17]
+ 731:libraries/zf_common/zf_common_fifo.c **** 
+ 732:libraries/zf_common/zf_common_fifo.c ****         return_state        = FIFO_OPERATION_NO_ERROR;
+ 2145              		.loc 1 732 29
+ 2146 0064 0023     		movs	r3, #0
+ 2147 0066 8DF81730 		strb	r3, [sp, #23]
+ 2148              	.L116:
+ 733:libraries/zf_common/zf_common_fifo.c ****     }while(0);
+ 734:libraries/zf_common/zf_common_fifo.c **** 
+ 735:libraries/zf_common/zf_common_fifo.c ****     return return_state;
+ 2149              		.loc 1 735 12
+ 2150 006a 9DF81730 		ldrb	r3, [sp, #23]	@ zero_extendqisi2
+ 736:libraries/zf_common/zf_common_fifo.c **** }
+ 2151              		.loc 1 736 1
+ 2152 006e 1846     		mov	r0, r3
+ 2153 0070 06B0     		add	sp, sp, #24
+ 2154              		.cfi_def_cfa_offset 0
+ 2155              		@ sp needed
+ 2156 0072 7047     		bx	lr
+ 2157              		.cfi_endproc
+ 2158              	.LFE11:
+ 2160              		.text
+ 2161              	.Letext0:
+ 2162              		.file 2 "libraries/zf_common/zf_common_typedef.h"
+ 2163              		.file 3 "libraries/zf_common/zf_common_fifo.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 zf_common_fifo.c
+D:\Users\TMP\ccdnRyuu.s:19     .text.zf_fifo_clear:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:26     .text.zf_fifo_clear:00000000 zf_fifo_clear
+D:\Users\TMP\ccdnRyuu.s:75     .text.zf_fifo_used:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:82     .text.zf_fifo_used:00000000 zf_fifo_used
+D:\Users\TMP\ccdnRyuu.s:231    .text.zf_fifo_write_element:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:238    .text.zf_fifo_write_element:00000000 zf_fifo_write_element
+D:\Users\TMP\ccdnRyuu.s:439    .text.zf_fifo_write_buffer:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:446    .text.zf_fifo_write_buffer:00000000 zf_fifo_write_buffer
+D:\Users\TMP\ccdnRyuu.s:851    .text.zf_fifo_read_element:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:858    .text.zf_fifo_read_element:00000000 zf_fifo_read_element
+D:\Users\TMP\ccdnRyuu.s:1050   .text.zf_fifo_read_buffer:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:1057   .text.zf_fifo_read_buffer:00000000 zf_fifo_read_buffer
+D:\Users\TMP\ccdnRyuu.s:1464   .text.zf_fifo_read_tail_element:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:1471   .text.zf_fifo_read_tail_element:00000000 zf_fifo_read_tail_element
+D:\Users\TMP\ccdnRyuu.s:1673   .text.zf_fifo_read_tail_buffer:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:1680   .text.zf_fifo_read_tail_buffer:00000000 zf_fifo_read_tail_buffer
+D:\Users\TMP\ccdnRyuu.s:2064   .text.zf_fifo_init:00000000 $t
+D:\Users\TMP\ccdnRyuu.s:2071   .text.zf_fifo_init:00000000 zf_fifo_init
+                           .group:00000000 wm4.0.1ea29c7543256e0887205fa7f8c557c8
+                           .group:00000000 wm4._newlib_version.h.4.bfdf54b0af045d4a71376ae00f63a22c
+                           .group:00000000 wm4.newlib.h.18.1c9fedb6b3cd797cff253cc0fd593ef2
+                           .group:00000000 wm4.ieeefp.h.77.2bc94c1d1ed8b02df437510a04ac1e45
+                           .group:00000000 wm4.features.h.22.026edb2397769f4ae13f35900dbdb560
+                           .group:00000000 wm4.config.h.224.c701144a7b0518c6ee9b9b5465b79f81
+                           .group:00000000 wm4._ansi.h.31.de524f58584151836e90d8620a16f8e8
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4._default_types.h.6.959254cf5f09734ea7516c89e8bb21bd
+                           .group:00000000 wm4.stddef.h.181.c3f52a3b0f4c288bddb5dda1562858e2
+                           .group:00000000 wm4.cdefs.h.49.a54b2d5c07711bc7320a3fea9f12cb56
+                           .group:00000000 wm4.stddef.h.39.c161261b198ee3a963897077fd6fa59f
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._types.h.20.dd0d04dca3800a0d2a6129b87f3adbb2
+                           .group:00000000 wm4.stddef.h.155.3588ebfdd1e8c7ede80509bb9c3b8009
+                           .group:00000000 wm4._types.h.127.34941de1b2539d59d5cac00e0dd27a45
+                           .group:00000000 wm4.reent.h.17.e292bf8b0bec6c96e131a54347145a30
+                           .group:00000000 wm4.lock.h.2.1461d1fff82dffe8bfddc23307f6484f
+                           .group:00000000 wm4.reent.h.77.dcd6129ff07fe81bd5636db29abe53b2
+                           .group:00000000 wm4.types.h.40.8b6acba56cefbb11746718204edc8f5e
+                           .group:00000000 wm4._stdint.h.10.c24fa3af3bc1706662bb5593a907e841
+                           .group:00000000 wm4._endian.h.31.65a10590763c3dde1ac4a7f66d7d4891
+                           .group:00000000 wm4.endian.h.9.49f3a4695c1b61e8a0808de3c4a106cb
+                           .group:00000000 wm4._timeval.h.32.bec3221fa7a9bb0bdde696c9c57e47d2
+                           .group:00000000 wm4.timespec.h.41.d855182eb0e690443ab8651bcedca6e1
+                           .group:00000000 wm4.select.h.19.40cd3f2bfc456b193b790c2754690ebf
+                           .group:00000000 wm4.types.h.51.5571ec98f267d17d3c670b7a3ba33afa
+                           .group:00000000 wm4.sched.h.22.c60982713a5c428609783c78f9c78d95
+                           .group:00000000 wm4._pthreadtypes.h.36.fcee9961c35163dde6267ef772ad1972
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.81.932d0c162786b883f622b8d05c120c78
+                           .group:00000000 wm4._intsup.h.10.48bafbb683905c4daa4565a85aeeb264
+                           .group:00000000 wm4.stdint.h.23.d53047a68f4a85177f80b422d52785ed
+                           .group:00000000 wm4.stdbool.h.29.07dce69c3b78884144b7f7bd19483461
+                           .group:00000000 wm4.stdarg.h.31.3fa7b8f6daaa31edd1696c08c77f2a73
+                           .group:00000000 wm4.string.h.8.c4b8571ce60dff2817f43fec8b86aecd
+                           .group:00000000 wm4.stddef.h.155.ba788add86a0e365f264484f110c3c29
+                           .group:00000000 wm4.stdlib.h.13.4ed386f5c1a80d71e72172885d946ef2
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.56.f4862cfbf4363a1db01842d5bdf72c18
+                           .group:00000000 wm4.zf_common_typedef.h.47.8c368673885c9d07221c267e15ab1069
+                           .group:00000000 wm4.zf_common_fifo.h.114.cace62233bb13c2a4f57ef2746f514d9
+
+UNDEFINED SYMBOLS
+__aeabi_ldivmod
+memcpy
