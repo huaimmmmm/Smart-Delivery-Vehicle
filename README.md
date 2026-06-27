@@ -14,16 +14,18 @@
 
 🛠️ 安装与编译运行 
 本项目分为“主控底盘”与“视觉中枢”两部分，需分别独立编译与烧录
-主控端 (MCU) 编译与烧录：
+主控端 (MCU) 编译与烧录(具体环境配置见文档)：
 1.克隆本仓库到本地计算机
 2.使用对应的 IDE（如 ADS）打开工程目录下的 .project 或 .cproject 文件
 3.确保 zf_libraries 文件夹已正确包含在工程构建路径 (Build Path) 中
 4.点击 Build Project 编译代码，检查控制台无 Error 输出
 5.通过 DAP-Link 或 miniWiggler 仿真器将程序 Download/Flash 至主控板
+![alt text](image-1.png)
 视觉端 (OpenMV) 调试运行：
 1.使用 Type-C 数据线将 OpenMV 连接至电脑，打开 OpenMV IDE
 2.在 IDE 中打开本仓库中的 人脸图片采集.py 脚本，点击左下角的运行按钮，按照提示完成人脸数据的采集与本地存储
 3.打开核心视觉代码，点击运行，在 IDE 右上角的帧缓冲区 (Frame Buffer) 观察红块识别与人脸追踪效果
+![alt text](image.png)
 
 🚀 部署注意事项 
 当代码调试完毕，准备将小车放入实际场地进行脱机部署时，请务必注意以下工程事项：
